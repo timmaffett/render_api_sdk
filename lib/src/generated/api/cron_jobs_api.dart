@@ -14,7 +14,7 @@ class CronJobsEndpoints {
   /// Trigger cron job run
   ///
   /// Trigger a run for a cron job and cancel any active runs.
-  Future<CronJobRun> runCronJob(String cronJobId) async {
+  Future<CronJobRun> runCronJob({required String cronJobId}) async {
     final json = await _client.sendObject(
       'POST',
       '/cron-jobs/$cronJobId/runs',
@@ -26,7 +26,7 @@ class CronJobsEndpoints {
   /// Cancel running cron job
   ///
   /// Cancel a currently running cron job.
-  Future<void> cancelCronJobRun(String cronJobId) async {
+  Future<void> cancelCronJobRun({required String cronJobId}) async {
     await _client.send(
       'DELETE',
       '/cron-jobs/$cronJobId/runs',

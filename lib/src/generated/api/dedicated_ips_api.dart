@@ -14,7 +14,13 @@ class DedicatedIpsEndpoints {
   /// List dedicated IPs
   ///
   /// List dedicated IP sets for a workspace.
-  Future<List<DedicatedIp>> listDedicatedIps({required Object? ownerId, Object? environmentId}) async {
+  ///
+  /// [ownerId] The ID of the workspace to list dedicated IP sets for.
+  ///
+  /// [environmentId] Filter dedicated IP sets limited to this environment. Excludes workspace-scoped dedicated IP sets.
+  ///
+  /// The environment must belong to the workspace named by `ownerId`.
+  Future<List<DedicatedIp>> listDedicatedIps({required String ownerId, String? environmentId}) async {
     final json = await _client.sendList(
       'GET',
       '/dedicated-ips',
@@ -45,7 +51,7 @@ class DedicatedIpsEndpoints {
   /// Retrieve dedicated IP set
   ///
   /// Retrieve the dedicated IP set with the provided ID.
-  Future<DedicatedIp> retrieveDedicatedIp(String dedicatedIpId) async {
+  Future<DedicatedIp> retrieveDedicatedIp({required String dedicatedIpId}) async {
     final json = await _client.sendObject(
       'GET',
       '/dedicated-ips/$dedicatedIpId',
@@ -57,7 +63,7 @@ class DedicatedIpsEndpoints {
   /// Update dedicated IP set
   ///
   /// Update the dedicated IP set with the provided ID. All fields are optional. Omitted fields are left unchanged. To switch from environment-scoped to workspace-scoped, provide `environmentIds: []`.
-  Future<DedicatedIp> updateDedicatedIp(String dedicatedIpId, {required Map<String, Object?> body}) async {
+  Future<DedicatedIp> updateDedicatedIp({required String dedicatedIpId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/dedicated-ips/$dedicatedIpId',
@@ -70,7 +76,7 @@ class DedicatedIpsEndpoints {
   /// Delete dedicated IP set
   ///
   /// Delete the dedicated IP set with the provided ID.
-  Future<void> deleteDedicatedIp(String dedicatedIpId) async {
+  Future<void> deleteDedicatedIp({required String dedicatedIpId}) async {
     await _client.send(
       'DELETE',
       '/dedicated-ips/$dedicatedIpId',

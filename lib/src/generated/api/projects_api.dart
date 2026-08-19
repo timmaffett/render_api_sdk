@@ -14,7 +14,23 @@ class ProjectsEndpoints {
   /// List projects
   ///
   /// List projects matching the provided filters. If no filters are provided, all projects are returned.
-  Future<List<ProjectWithCursor>> listProjects({Object? name, Object? createdBefore, Object? createdAfter, Object? updatedBefore, Object? updatedAfter, Object? ownerId, Object? cursor, Object? limit}) async {
+  ///
+  /// [name] Filter by name
+  ///
+  /// [createdBefore] Filter for resources created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for resources created after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedBefore] Filter for resources updated before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedAfter] Filter for resources updated after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<ProjectWithCursor>> listProjects({List<String>? name, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/projects',
@@ -49,7 +65,7 @@ class ProjectsEndpoints {
   /// Retrieve Project
   ///
   /// Retrieve the project with the provided ID.
-  Future<Project> retrieveProject(String projectId) async {
+  Future<Project> retrieveProject({required String projectId}) async {
     final json = await _client.sendObject(
       'GET',
       '/projects/$projectId',
@@ -63,7 +79,7 @@ class ProjectsEndpoints {
   /// Update the details of a project.
   ///
   /// To update the details of a particular _environment_ in the project, instead use the [Update environment](https://api-docs.render.com/reference/update-environment) endpoint.
-  Future<Project> updateProject(String projectId, {required Map<String, Object?> body}) async {
+  Future<Project> updateProject({required String projectId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/projects/$projectId',
@@ -82,7 +98,7 @@ class ProjectsEndpoints {
   /// To delete a non-empty project, do one of the following:
   /// - First move or delete all contained services and other resources.
   /// - Delete the project in the [Render Dashboard](https://dashboard.render.com).
-  Future<void> deleteProject(String projectId) async {
+  Future<void> deleteProject({required String projectId}) async {
     await _client.send(
       'DELETE',
       '/projects/$projectId',

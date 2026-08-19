@@ -20,7 +20,7 @@ Future<void> main() async {
 
     // A typed error still surfaces through the generated layer.
     try {
-      await render.raw.services.retrieveService('srv-nope');
+      await render.raw.services.retrieveService(serviceId: 'srv-nope');
       print('ERROR: expected a failure');
     } on RenderException catch (e) {
       print('typed error: ${e.runtimeType}');

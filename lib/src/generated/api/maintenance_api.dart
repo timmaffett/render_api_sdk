@@ -13,7 +13,9 @@ class MaintenanceEndpoints {
   /// List maintenance runs
   ///
   /// List scheduled and/or recent maintenance runs for specified resources.
-  Future<List<Object?>> listMaintenance({Object? resourceId, Object? ownerId, Object? state}) async {
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  Future<List<Object?>> listMaintenance({List<String>? resourceId, List<String>? ownerId, List<String>? state}) async {
     final json = await _client.sendList(
       'GET',
       '/maintenance',
@@ -30,7 +32,7 @@ class MaintenanceEndpoints {
   /// Retrieve maintenance run
   ///
   /// Retrieve the maintenance run with the provided ID.
-  Future<Map<String, Object?>> retrieveMaintenance(String maintenanceRunId) async {
+  Future<Map<String, Object?>> retrieveMaintenance({required String maintenanceRunId}) async {
     final json = await _client.sendObject(
       'GET',
       '/maintenance/$maintenanceRunId',
@@ -44,7 +46,7 @@ class MaintenanceEndpoints {
   /// Update the maintenance run with the provided ID.
   ///
   /// Updates from this endpoint are asynchronous. To check your update's status, use the [Retrieve maintenance run](https://api-docs.render.com/reference/retrieve-maintenance) endpoint.
-  Future<void> updateMaintenance(String maintenanceRunId, {required Map<String, Object?> body}) async {
+  Future<void> updateMaintenance({required String maintenanceRunId, required Map<String, Object?> body}) async {
     await _client.send(
       'PATCH',
       '/maintenance/$maintenanceRunId',
@@ -60,7 +62,7 @@ class MaintenanceEndpoints {
   /// Triggering maintenance is asynchronous. To check whether maintenance has started, use the [Retrieve maintenance run](https://api-docs.render.com/reference/retrieve-maintenance) endpoint.
   ///
   /// As maintenance progresses, the run's `state` will change from `scheduled` to other values, such as `in_progress` and `succeeded`.
-  Future<void> triggerMaintenance(String maintenanceRunId) async {
+  Future<void> triggerMaintenance({required String maintenanceRunId}) async {
     await _client.send(
       'POST',
       '/maintenance/$maintenanceRunId/trigger',

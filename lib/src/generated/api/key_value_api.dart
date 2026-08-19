@@ -14,7 +14,27 @@ class KeyValueEndpoints {
   /// List Key Value instances
   ///
   /// List Key Value instances matching the provided filters. If no filters are provided, all Key Value instances are returned.
-  Future<List<KeyValueWithCursor>> listKeyValue({Object? name, Object? region, Object? createdBefore, Object? createdAfter, Object? updatedBefore, Object? updatedAfter, Object? ownerId, Object? environmentId, Object? cursor, Object? limit}) async {
+  ///
+  /// [name] Filter by name
+  ///
+  /// [region] Filter by resource region
+  ///
+  /// [createdBefore] Filter for resources created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for resources created after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedBefore] Filter for resources updated before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedAfter] Filter for resources updated after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [environmentId] Filter for resources that belong to an environment
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<KeyValueWithCursor>> listKeyValue({List<String>? name, List<String>? region, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, List<String>? environmentId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/key-value',
@@ -51,7 +71,7 @@ class KeyValueEndpoints {
   /// Retrieve Key Value instance
   ///
   /// Retrieve a Key Value instance by ID.
-  Future<KeyValueDetail> retrieveKeyValue(String redisId) async {
+  Future<KeyValueDetail> retrieveKeyValue({required String redisId}) async {
     final json = await _client.sendObject(
       'GET',
       '/key-value/$redisId',
@@ -63,7 +83,7 @@ class KeyValueEndpoints {
   /// Update Key Value instance
   ///
   /// Update a Key Value instance by ID. Note that changing your plan, max memory policy, or persistence mode will restart your Key Value instance.
-  Future<KeyValueDetail> updateKeyValue(String redisId, {required Map<String, Object?> body}) async {
+  Future<KeyValueDetail> updateKeyValue({required String redisId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/key-value/$redisId',
@@ -76,7 +96,7 @@ class KeyValueEndpoints {
   /// Delete Key Value instance
   ///
   /// Delete a Key Value instance by ID.
-  Future<void> deleteKeyValue(String redisId) async {
+  Future<void> deleteKeyValue({required String redisId}) async {
     await _client.send(
       'DELETE',
       '/key-value/$redisId',
@@ -87,7 +107,7 @@ class KeyValueEndpoints {
   /// Retrieve Key Value connection info
   ///
   /// Retrieve connection info for a Key Value instance by ID. Connection info includes sensitive information.
-  Future<KeyValueConnectionInfo> retrieveKeyValueConnectionInfo(String redisId) async {
+  Future<KeyValueConnectionInfo> retrieveKeyValueConnectionInfo({required String redisId}) async {
     final json = await _client.sendObject(
       'GET',
       '/key-value/$redisId/connection-info',
@@ -99,7 +119,7 @@ class KeyValueEndpoints {
   /// Suspend Key Value instance
   ///
   /// Suspend a Key Value instance by ID.
-  Future<void> suspendKeyValue(String redisId) async {
+  Future<void> suspendKeyValue({required String redisId}) async {
     await _client.send(
       'POST',
       '/key-value/$redisId/suspend',
@@ -110,7 +130,7 @@ class KeyValueEndpoints {
   /// Resume Key Value instance
   ///
   /// Resume a Key Value instance by ID.
-  Future<void> resumeKeyValue(String redisId) async {
+  Future<void> resumeKeyValue({required String redisId}) async {
     await _client.send(
       'POST',
       '/key-value/$redisId/resume',

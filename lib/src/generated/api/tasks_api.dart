@@ -14,7 +14,19 @@ class TasksEndpoints {
   /// List tasks
   ///
   /// List workflow tasks that match the provided filters. If no filters are provided, all task definitions accessible by the authenticated user are returned.
-  Future<List<TaskWithCursor>> listTasks({Object? cursor, Object? limit, Object? ownerId, Object? taskSlug, Object? workflowVersionId, Object? workflowId}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [taskSlug] An array of task slugs in the format workflow-slug/task-name. An optional version can be appended (workflow-slug/task-name:version). If no version is provided, the latest version is used.
+  ///
+  /// [workflowVersionId] An array of workflow version IDs
+  ///
+  /// [workflowId] An array of workflow IDs
+  Future<List<TaskWithCursor>> listTasks({String? cursor, int? limit, List<String>? ownerId, List<String>? taskSlug, List<String>? workflowVersionId, List<String>? workflowId}) async {
     final json = await _client.sendList(
       'GET',
       '/tasks',
@@ -34,7 +46,7 @@ class TasksEndpoints {
   /// Retrieve task
   ///
   /// Retrieve the workflow task with the provided ID.
-  Future<Map<String, Object?>> getTask(String taskId) async {
+  Future<Map<String, Object?>> getTask({required String taskId}) async {
     final json = await _client.sendObject(
       'GET',
       '/tasks/$taskId',

@@ -14,7 +14,27 @@ class DisksEndpoints {
   /// List disks
   ///
   /// List persistent disks matching the provided filters. If no filters are provided, returns all disks you have permissions to view.
-  Future<List<DiskWithCursor>> listDisks({Object? ownerId, Object? diskId, Object? name, Object? createdBefore, Object? createdAfter, Object? updatedBefore, Object? updatedAfter, Object? serviceId, Object? cursor, Object? limit}) async {
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [diskId] Filter by disk IDs
+  ///
+  /// [name] Filter by name
+  ///
+  /// [createdBefore] Filter for resources created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for resources created after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedBefore] Filter for resources updated before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedAfter] Filter for resources updated after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [serviceId] Filter for resources by service ID
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<DiskWithCursor>> listDisks({List<String>? ownerId, List<String>? diskId, List<String>? name, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? serviceId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/disks',
@@ -53,7 +73,7 @@ class DisksEndpoints {
   /// Retrieve disk
   ///
   /// Retrieve the persistent disk with the provided ID.
-  Future<Map<String, Object?>> retrieveDisk(String diskId) async {
+  Future<Map<String, Object?>> retrieveDisk({required String diskId}) async {
     final json = await _client.sendObject(
       'GET',
       '/disks/$diskId',
@@ -69,7 +89,7 @@ class DisksEndpoints {
   /// The disk's associated service must be deployed and active for updates to take effect.
   ///
   /// When resizing a disk, the new size must be greater than the current size.
-  Future<Map<String, Object?>> updateDisk(String diskId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> updateDisk({required String diskId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/disks/$diskId',
@@ -84,7 +104,7 @@ class DisksEndpoints {
   /// Delete a persistent disk attached to a service.
   ///
   /// **All data on the disk will be lost.** The disk's associated service will immediately lose access to it.
-  Future<void> deleteDisk(String diskId) async {
+  Future<void> deleteDisk({required String diskId}) async {
     await _client.send(
       'DELETE',
       '/disks/$diskId',
@@ -95,7 +115,7 @@ class DisksEndpoints {
   /// List snapshots
   ///
   /// List snapshots for the persistent disk with the provided ID. Each snapshot is a point-in-time copy of the disk's data.
-  Future<List<DiskSnapshot>> listSnapshots(String diskId) async {
+  Future<List<DiskSnapshot>> listSnapshots({required String diskId}) async {
     final json = await _client.sendList(
       'GET',
       '/disks/$diskId/snapshots',
@@ -111,7 +131,7 @@ class DisksEndpoints {
   /// **This operation is irreversible.** It will overwrite the current disk data. It might also trigger a service deploy.
   ///
   /// Snapshot keys returned from the [List snapshots](https://api-docs.render.com/reference/list-snapshots) endpoint expire after 24 hours. If a snapshot key has expired, query the endpoint again for a new key.
-  Future<Map<String, Object?>> restoreSnapshot(String diskId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> restoreSnapshot({required String diskId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/disks/$diskId/snapshots/restore',

@@ -13,7 +13,7 @@ class EventsEndpoints {
   /// Retrieve event
   ///
   /// Retrieve the details of a particular event
-  Future<Map<String, Object?>> retrieveEvent(String eventId) async {
+  Future<Map<String, Object?>> retrieveEvent({required String eventId}) async {
     final json = await _client.sendObject(
       'GET',
       '/events/$eventId',

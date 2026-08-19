@@ -14,7 +14,13 @@ class BlueprintsEndpoints {
   /// List Blueprints
   ///
   /// List Blueprints for the specified workspaces. If no workspaces are provided, returns all Blueprints the API key has access to.
-  Future<List<BlueprintWithCursor>> listBlueprints({Object? ownerId, Object? cursor, Object? limit}) async {
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<BlueprintWithCursor>> listBlueprints({List<String>? ownerId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/blueprints',
@@ -45,7 +51,7 @@ class BlueprintsEndpoints {
   /// Retrieve Blueprint
   ///
   /// Retrieve the Blueprint with the provided ID.
-  Future<Map<String, Object?>> retrieveBlueprint(String blueprintId) async {
+  Future<Map<String, Object?>> retrieveBlueprint({required String blueprintId}) async {
     final json = await _client.sendObject(
       'GET',
       '/blueprints/$blueprintId',
@@ -57,7 +63,7 @@ class BlueprintsEndpoints {
   /// Update Blueprint
   ///
   /// Update the Blueprint with the provided ID.
-  Future<Map<String, Object?>> updateBlueprint(String blueprintId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/blueprints/$blueprintId',
@@ -72,7 +78,7 @@ class BlueprintsEndpoints {
   /// Disconnect the Blueprint with the provided ID.
   ///
   /// Disconnecting a Blueprint stops automatic resource syncing via the associated `render.yaml` file. It does not _delete_ any services or other resources that were managed by the blueprint.
-  Future<void> disconnectBlueprint(String blueprintId) async {
+  Future<void> disconnectBlueprint({required String blueprintId}) async {
     await _client.send(
       'DELETE',
       '/blueprints/$blueprintId',
@@ -83,7 +89,11 @@ class BlueprintsEndpoints {
   /// List Blueprint syncs
   ///
   /// List syncs for the Blueprint with the provided ID.
-  Future<List<SyncWithCursor>> listBlueprintSyncs(String blueprintId, {Object? cursor, Object? limit}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<SyncWithCursor>> listBlueprintSyncs({required String blueprintId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/blueprints/$blueprintId/syncs',

@@ -14,7 +14,21 @@ class TaskRunsEndpoints {
   /// List task runs
   ///
   /// List task runs that match the provided filters. If no filters are provided, all task runs accessible by the authenticated user are returned.
-  Future<List<TaskRunWithCursor>> listTaskRuns({Object? cursor, Object? limit, Object? taskSlug, Object? rootTaskRunId, Object? ownerId, Object? workflowVersionId, Object? workflowId}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [taskSlug] An array of task slugs in the format workflow-slug/task-name. An optional version can be appended (workflow-slug/task-name:version). If no version is provided, the latest version is used.
+  ///
+  /// [rootTaskRunId] An array of root task run IDs to filter on
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [workflowVersionId] An array of workflow version IDs
+  ///
+  /// [workflowId] An array of workflow IDs
+  Future<List<TaskRunWithCursor>> listTaskRuns({String? cursor, int? limit, List<String>? taskSlug, List<String>? rootTaskRunId, List<String>? ownerId, List<String>? workflowVersionId, List<String>? workflowId}) async {
     final json = await _client.sendList(
       'GET',
       '/task-runs',
@@ -50,7 +64,9 @@ class TaskRunsEndpoints {
   /// Establishes a unidirectional event stream. The server sends events as lines
   /// formatted per the SSE spec. Clients SHOULD set `Accept: text/event-stream`
   /// and keep the connection open.
-  Future<void> streamTaskRunsEvents({required Object? taskRunIds}) async {
+  ///
+  /// [taskRunIds] Filter to a subset of task run IDs.
+  Future<void> streamTaskRunsEvents({required List<String> taskRunIds}) async {
     await _client.send(
       'GET',
       '/task-runs/events',
@@ -64,7 +80,7 @@ class TaskRunsEndpoints {
   /// Retrieve task run
   ///
   /// Retrieve the workflow task run with the provided ID.
-  Future<Map<String, Object?>> getTaskRun(String taskRunId) async {
+  Future<Map<String, Object?>> getTaskRun({required String taskRunId}) async {
     final json = await _client.sendObject(
       'GET',
       '/task-runs/$taskRunId',
@@ -76,7 +92,7 @@ class TaskRunsEndpoints {
   /// Cancel task run
   ///
   /// Cancel a running task run with the provided ID.
-  Future<void> cancelTaskRun(String taskRunId) async {
+  Future<void> cancelTaskRun({required String taskRunId}) async {
     await _client.send(
       'DELETE',
       '/task-runs/$taskRunId',

@@ -12,7 +12,13 @@ class WebhooksEndpoints {
   final RenderApiClient _client;
 
   /// List webhooks
-  Future<List<WebhookWithCursor>> listWebhooks({Object? cursor, Object? limit, Object? ownerId}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  Future<List<WebhookWithCursor>> listWebhooks({String? cursor, int? limit, List<String>? ownerId}) async {
     final json = await _client.sendList(
       'GET',
       '/webhooks',
@@ -42,7 +48,7 @@ class WebhooksEndpoints {
   /// Retrieve a webhook
   ///
   /// Retrieve the webhook with the provided ID
-  Future<Map<String, Object?>> retrieveWebhook(String webhookId) async {
+  Future<Map<String, Object?>> retrieveWebhook({required String webhookId}) async {
     final json = await _client.sendObject(
       'GET',
       '/webhooks/$webhookId',
@@ -54,7 +60,7 @@ class WebhooksEndpoints {
   /// Update a webhook
   ///
   /// Update the webhook with the provided ID.
-  Future<Map<String, Object?>> updateWebhook(String webhookId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> updateWebhook({required String webhookId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/webhooks/$webhookId',
@@ -67,7 +73,7 @@ class WebhooksEndpoints {
   /// Delete a webhook
   ///
   /// Delete the webhook with the provided ID.
-  Future<void> deleteWebhook(String webhookId) async {
+  Future<void> deleteWebhook({required String webhookId}) async {
     await _client.send(
       'DELETE',
       '/webhooks/$webhookId',
@@ -78,7 +84,15 @@ class WebhooksEndpoints {
   /// List webhook events
   ///
   /// Retrieve a list of events that have been sent to this webhook, with optional filtering by timestamp.
-  Future<List<WebhookEventWithCursor>> listWebhookEvents(String webhookId, {Object? sentBefore, Object? sentAfter, Object? limit, Object? cursor}) async {
+  ///
+  /// [sentBefore] Filter events sent before this time (specified as an ISO 8601 timestamp)
+  ///
+  /// [sentAfter] Filter for resources sent after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<WebhookEventWithCursor>> listWebhookEvents({required String webhookId, String? sentBefore, String? sentAfter, int? limit, String? cursor}) async {
     final json = await _client.sendList(
       'GET',
       '/webhooks/$webhookId/events',

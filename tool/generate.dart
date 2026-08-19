@@ -547,8 +547,13 @@ String _emitMethod(String name, _Op op) {
     if (loc == 'path') {
       pathParams.add(pname);
     } else if (loc == 'query') {
-      queryParams.add(_QueryParam(pname, _fieldName(pname),
-          (p['required'] as bool?) ?? false, p['description'] as String?));
+      queryParams.add(_QueryParam(
+        pname,
+        _fieldName(pname),
+        (p['required'] as bool?) ?? false,
+        p['description'] as String?,
+        _queryType((p['schema'] as Map<String, dynamic>?) ?? const {}),
+      ));
     }
   }
 
@@ -561,20 +566,23 @@ String _emitMethod(String name, _Op op) {
   // Return type
   final ret = _returnType(op);
 
-  final args = <String>[
-    for (final p in pathParams) 'String ${_fieldName(p)}',
-  ];
+  // Every parameter is named, path segments included. That reads better at
+  // the call site than positional ids, and mirrors the single-object argument
+  // the official Node bindings take.
   final named = <String>[
+    for (final p in pathParams) 'required String ${_fieldName(p)}',
     if (bodySchema != null) 'required Map<String, Object?> body',
     for (final q in queryParams)
-      '${q.required ? 'required ' : ''}Object? ${q.dartName}',
+      '${q.required ? 'required ${q.type}' : '${q.type}?'} ${q.dartName}',
   ];
 
-  final signature = [
-    args.join(', '),
-    if (named.isNotEmpty) '{${named.join(', ')}}',
-  ].where((s) => s.isNotEmpty).join(', ');
+  final signature = named.isEmpty ? '' : '{${named.join(', ')}}';
 
+  for (final q in queryParams) {
+    if (q.doc == null) continue;
+    buf.writeln('  ///');
+    buf.writeln(_doc('[${q.dartName}] ${q.doc}', indent: '  '));
+  }
   buf.writeln('  Future<${ret.type}> $name($signature) async {');
 
   final dartPath = op.path.replaceAllMapped(
@@ -604,11 +612,36 @@ String _emitMethod(String name, _Op op) {
 }
 
 class _QueryParam {
-  _QueryParam(this.wireName, this.dartName, this.required, this.doc);
+  _QueryParam(this.wireName, this.dartName, this.required, this.doc, this.type);
   final String wireName;
   final String dartName;
   final bool required;
   final String? doc;
+
+  /// The Dart type from the parameter's schema. The spec types these properly
+  /// -- strings, string lists, integers -- so there is no reason to hand the
+  /// caller an untyped Object.
+  final String type;
+}
+
+/// Maps a query parameter's schema to a Dart type.
+String _queryType(Map<String, dynamic> schema) {
+  final s = _resolve(schema);
+  switch (s['type']) {
+    case 'array':
+      final items = _resolve((s['items'] as Map<String, dynamic>?) ?? const {});
+      return items['type'] == 'integer' ? 'List<int>' : 'List<String>';
+    case 'integer':
+      return 'int';
+    case 'number':
+      return 'double';
+    case 'boolean':
+      return 'bool';
+    case 'string':
+      return 'String';
+    default:
+      return 'Object';
+  }
 }
 
 class _Return {

@@ -14,7 +14,35 @@ class ServicesEndpoints {
   /// List services
   ///
   /// List services matching the provided filters. If no filters are provided, returns all services you have permissions to view.
-  Future<List<ServiceWithCursor>> listServices({Object? name, Object? type, Object? environmentId, Object? env, Object? region, Object? suspended, Object? createdBefore, Object? createdAfter, Object? updatedBefore, Object? updatedAfter, Object? ownerId, Object? includePreviews, Object? cursor, Object? limit}) async {
+  ///
+  /// [name] Filter by name
+  ///
+  /// [type] Filter for types of services
+  ///
+  /// [environmentId] Filter for resources that belong to an environment
+  ///
+  /// [env] Filter for environments (runtimes) of services (deprecated; use `runtime` instead)
+  ///
+  /// [region] Filter by resource region
+  ///
+  /// [suspended] Filter resources based on whether they're suspended or not suspended
+  ///
+  /// [createdBefore] Filter for resources created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for resources created after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedBefore] Filter for resources updated before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedAfter] Filter for resources updated after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [ownerId] The ID of the workspaces to return resources for
+  ///
+  /// [includePreviews] Include previews in the response
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<ServiceWithCursor>> listServices({List<String>? name, List<String>? type, List<String>? environmentId, List<String>? env, List<String>? region, List<String>? suspended, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, bool? includePreviews, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services',
@@ -55,7 +83,7 @@ class ServicesEndpoints {
   /// Retrieve service
   ///
   /// Retrieve the service with the provided ID.
-  Future<Service> retrieveService(String serviceId) async {
+  Future<Service> retrieveService({required String serviceId}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId',
@@ -67,7 +95,7 @@ class ServicesEndpoints {
   /// Update service
   ///
   /// Update the service with the provided ID.
-  Future<Service> updateService(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Service> updateService({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/services/$serviceId',
@@ -80,7 +108,7 @@ class ServicesEndpoints {
   /// Delete service
   ///
   /// Delete the service with the provided ID.
-  Future<void> deleteService(String serviceId) async {
+  Future<void> deleteService({required String serviceId}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId',
@@ -91,7 +119,7 @@ class ServicesEndpoints {
   /// Purge Web Service Cache
   ///
   /// Trigger cache purge for the web service if caching is enabled.
-  Future<void> purgeCache(String serviceId) async {
+  Future<void> purgeCache({required String serviceId}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/cache/purge',
@@ -102,7 +130,25 @@ class ServicesEndpoints {
   /// List deploys
   ///
   /// List deploys matching the provided filters. If no filters are provided, all deploys for the service are returned.
-  Future<List<DeployWithCursor>> listDeploys(String serviceId, {Object? status, Object? createdBefore, Object? createdAfter, Object? updatedBefore, Object? updatedAfter, Object? finishedBefore, Object? finishedAfter, Object? cursor, Object? limit}) async {
+  ///
+  /// [status] Filter for deploys with the specified statuses
+  ///
+  /// [createdBefore] Filter for deploys created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for deploys created after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedBefore] Filter for deploys updated before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [updatedAfter] Filter for deploys updated after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [finishedBefore] Filter for deploys finished before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [finishedAfter] Filter for deploys finished after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<DeployWithCursor>> listDeploys({required String serviceId, List<String>? status, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, String? finishedBefore, String? finishedAfter, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/deploys',
@@ -125,7 +171,7 @@ class ServicesEndpoints {
   /// Trigger deploy
   ///
   /// Trigger a deploy for the service with the provided ID.
-  Future<Deploy> createDeploy(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Deploy> createDeploy({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/deploys',
@@ -138,7 +184,7 @@ class ServicesEndpoints {
   /// Retrieve deploy
   ///
   /// Retrieve the details of a particular deploy for a particular service.
-  Future<Deploy> retrieveDeploy(String serviceId, String deployId) async {
+  Future<Deploy> retrieveDeploy({required String serviceId, required String deployId}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/deploys/$deployId',
@@ -152,7 +198,7 @@ class ServicesEndpoints {
   /// Cancel an in-progress deploy for a service.
   ///
   /// Not supported for cron jobs.
-  Future<Deploy> cancelDeploy(String serviceId, String deployId) async {
+  Future<Deploy> cancelDeploy({required String serviceId, required String deployId}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/deploys/$deployId/cancel',
@@ -168,7 +214,7 @@ class ServicesEndpoints {
   /// Triggering a rollback with this endpoint does not disable autodeploys for the service. This means an autodeploy might restore changes you had intentionally rolled back.
   ///
   /// You can toggle autodeploys for your service with the [Update service](https://api-docs.render.com/reference/update-service) endpoint or in the Render Dashboard.
-  Future<Deploy> rollbackDeploy(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Deploy> rollbackDeploy({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/rollback',
@@ -181,7 +227,11 @@ class ServicesEndpoints {
   /// List environment variables
   ///
   /// List all environment variables for the service with the provided ID.
-  Future<List<EnvVarWithCursor>> getEnvVarsForService(String serviceId, {Object? cursor, Object? limit}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<EnvVarWithCursor>> getEnvVarsForService({required String serviceId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/env-vars',
@@ -197,7 +247,7 @@ class ServicesEndpoints {
   /// Update environment variables
   ///
   /// Replace all environment variables for a service with the provided list of environment variables.
-  Future<List<EnvVarWithCursor>> updateEnvVarsForService(String serviceId, {required Map<String, Object?> body}) async {
+  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/env-vars',
@@ -212,7 +262,7 @@ class ServicesEndpoints {
   /// Retrieve a particular environment variable for a particular service.
   ///
   /// This only applies to environment variables set directly on the service, not to environment variables in a linked environment group.
-  Future<EnvVar> retrieveEnvVar(String serviceId, String envVarKey) async {
+  Future<EnvVar> retrieveEnvVar({required String serviceId, required String envVarKey}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/env-vars/$envVarKey',
@@ -226,7 +276,7 @@ class ServicesEndpoints {
   /// Add or update a particular environment variable for a particular service.
   ///
   /// This only applies to environment variables set directly on the service, not to environment variables in a linked environment group.
-  Future<EnvVar> updateEnvVar(String serviceId, String envVarKey, {required Map<String, Object?> body}) async {
+  Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/env-vars/$envVarKey',
@@ -241,7 +291,7 @@ class ServicesEndpoints {
   /// Delete a particular environment variable from a particular service.
   ///
   /// This only applies to environment variables set directly on the service, not to environment variables in a linked environment group.
-  Future<void> deleteEnvVar(String serviceId, String envVarKey) async {
+  Future<void> deleteEnvVar({required String serviceId, required String envVarKey}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId/env-vars/$envVarKey',
@@ -252,7 +302,11 @@ class ServicesEndpoints {
   /// List secret files
   ///
   /// List all secret files for the service with the provided ID.
-  Future<List<SecretFileWithCursor>> listSecretFilesForService(String serviceId, {Object? cursor, Object? limit}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<SecretFileWithCursor>> listSecretFilesForService({required String serviceId, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/secret-files',
@@ -272,7 +326,7 @@ class ServicesEndpoints {
   /// **Any of the service's existing secret files not included in this request will be deleted.**
   ///
   /// This only applies to secret files set directly on the service, not to secret files in a linked environment group.
-  Future<List<SecretFileWithCursor>> updateSecretFilesForService(String serviceId, {required Map<String, Object?> body}) async {
+  Future<List<SecretFileWithCursor>> updateSecretFilesForService({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/secret-files',
@@ -287,7 +341,7 @@ class ServicesEndpoints {
   /// Retrieve a particular secret file for a particular service.
   ///
   /// This only applies to secret files set directly on the service, not to secret files in a linked environment group.
-  Future<SecretFile> retrieveSecretFile(String serviceId, String envVarKey) async {
+  Future<SecretFile> retrieveSecretFile({required String serviceId, required String envVarKey}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/secret-files/$envVarKey',
@@ -301,7 +355,7 @@ class ServicesEndpoints {
   /// Add or update a particular secret file for a particular service.
   ///
   /// This only applies to secret files set directly on the service, not to secret files in a linked environment group.
-  Future<SecretFile> addOrUpdateSecretFile(String serviceId, String envVarKey, {required Map<String, Object?> body}) async {
+  Future<SecretFile> addOrUpdateSecretFile({required String serviceId, required String envVarKey, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/secret-files/$envVarKey',
@@ -316,7 +370,7 @@ class ServicesEndpoints {
   /// Delete a particular secret file from a particular service.
   ///
   /// This only applies to secret files set directly on the service, not to secret files in a linked environment group.
-  Future<void> deleteSecretFile(String serviceId, String envVarKey) async {
+  Future<void> deleteSecretFile({required String serviceId, required String envVarKey}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId/secret-files/$envVarKey',
@@ -327,7 +381,17 @@ class ServicesEndpoints {
   /// List events
   ///
   /// List recent events that occurred for the service with the provided ID.
-  Future<List<ServiceEventWithCursor>> listEvents(String serviceId, {Object? type, Object? startTime, Object? endTime, Object? cursor, Object? limit}) async {
+  ///
+  /// [type] The type of event to filter to
+  ///
+  /// [startTime] Epoch/Unix timestamp of start of time range to return. Defaults to `now() - 1 hour`.
+  ///
+  /// [endTime] Epoch/Unix timestamp of end of time range to return. Defaults to `now()`.
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<ServiceEventWithCursor>> listEvents({required String serviceId, Object? type, String? startTime, String? endTime, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/events',
@@ -346,7 +410,17 @@ class ServicesEndpoints {
   /// List header rules
   ///
   /// List a particular service's response header rules that match the provided filters. If no filters are provided, all rules for the service are returned.
-  Future<List<HeaderWithCursor>> listHeaders(String serviceId, {Object? path, Object? name, Object? value, Object? cursor, Object? limit}) async {
+  ///
+  /// [path] Filter for specific paths that headers apply to
+  ///
+  /// [name] Filter for header names
+  ///
+  /// [value] Filter for header values
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<HeaderWithCursor>> listHeaders({required String serviceId, List<String>? path, List<String>? name, List<String>? value, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/headers',
@@ -365,7 +439,7 @@ class ServicesEndpoints {
   /// Add header rule
   ///
   /// Add a response header rule to the service with the provided ID.
-  Future<Map<String, Object?>> addHeaders(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> addHeaders({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/headers',
@@ -380,7 +454,7 @@ class ServicesEndpoints {
   /// Replace all header rules for a particular service with the provided list.
   ///
   /// **This deletes all existing header rules for the service that aren't included in the request.**
-  Future<List<Header>> updateHeaders(String serviceId, {required Map<String, Object?> body}) async {
+  Future<List<Header>> updateHeaders({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/headers',
@@ -393,7 +467,7 @@ class ServicesEndpoints {
   /// Delete header rule
   ///
   /// Delete a particular response header rule for a particular service.
-  Future<void> deleteHeader(String serviceId, String headerId) async {
+  Future<void> deleteHeader({required String serviceId, required String headerId}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId/headers/$headerId',
@@ -404,7 +478,17 @@ class ServicesEndpoints {
   /// List redirect/rewrite rules
   ///
   /// List a particular service's redirect/rewrite rules that match the provided filters. If no filters are provided, all rules for the service are returned.
-  Future<List<RouteWithCursor>> listRoutes(String serviceId, {Object? type, Object? source, Object? destination, Object? cursor, Object? limit}) async {
+  ///
+  /// [type] Filter for the type of route rule
+  ///
+  /// [source] Filter for the source path of the route
+  ///
+  /// [destination] Filter for the destination path of the route
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  Future<List<RouteWithCursor>> listRoutes({required String serviceId, List<String>? type, List<String>? source, List<String>? destination, String? cursor, int? limit}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/routes',
@@ -423,7 +507,7 @@ class ServicesEndpoints {
   /// Add redirect/rewrite rules
   ///
   /// Add redirect/rewrite rules to the service with the provided ID.
-  Future<Route> addRoute(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Route> addRoute({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/routes',
@@ -440,7 +524,7 @@ class ServicesEndpoints {
   /// **This deletes all existing redirect/rewrite rules for the service that aren't included in the request.**
   ///
   /// Rule priority is assigned according to list order (the first rule in the list has the highest priority).
-  Future<List<Route>> putRoutes(String serviceId, {required Map<String, Object?> body}) async {
+  Future<List<Route>> putRoutes({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/routes',
@@ -457,7 +541,7 @@ class ServicesEndpoints {
   /// To apply redirect/rewrite rules to an incoming request, Render starts from the rule with priority `0` and applies the first encountered rule that matches the request's path (if any).
   ///
   /// Render increments the priority of other rules by `1` as necessary to make space for the updated rule.
-  Future<Map<String, Object?>> patchRoute(String serviceId, String routeId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/services/$serviceId/routes/$routeId',
@@ -470,7 +554,7 @@ class ServicesEndpoints {
   /// Delete redirect/rewrite rule
   ///
   /// Delete a particular redirect/rewrite rule for a particular service.
-  Future<void> deleteRoute(String serviceId, String routeId) async {
+  Future<void> deleteRoute({required String serviceId, required String routeId}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId/routes/$routeId',
@@ -481,7 +565,21 @@ class ServicesEndpoints {
   /// List custom domains
   ///
   /// List a particular service's custom domains that match the provided filters. If no filters are provided, all custom domains for the service are returned.
-  Future<List<CustomDomainWithCursor>> listCustomDomains(String serviceId, {Object? cursor, Object? limit, Object? name, Object? domainType, Object? verificationStatus, Object? createdBefore, Object? createdAfter}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [name] Filter for the names of custom domain
+  ///
+  /// [domainType] Filter for domain type
+  ///
+  /// [verificationStatus] Filter for domain verification status (`verified` or `unverified`)
+  ///
+  /// [createdBefore] Filter for custom domains created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for custom domains created after a certain time (specified as an ISO 8601 timestamp)
+  Future<List<CustomDomainWithCursor>> listCustomDomains({required String serviceId, String? cursor, int? limit, List<String>? name, String? domainType, String? verificationStatus, String? createdBefore, String? createdAfter}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/custom-domains',
@@ -502,7 +600,7 @@ class ServicesEndpoints {
   /// Add custom domain
   ///
   /// Add a custom domain to the service with the provided ID.
-  Future<List<CustomDomain>> createCustomDomain(String serviceId, {required Map<String, Object?> body}) async {
+  Future<List<CustomDomain>> createCustomDomain({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendList(
       'POST',
       '/services/$serviceId/custom-domains',
@@ -515,7 +613,7 @@ class ServicesEndpoints {
   /// Retrieve custom domain
   ///
   /// Retrieve a particular custom domain for a particular service.
-  Future<CustomDomain> retrieveCustomDomain(String serviceId, String customDomainNameOrId) async {
+  Future<CustomDomain> retrieveCustomDomain({required String serviceId, required String customDomainNameOrId}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/custom-domains/$customDomainNameOrId',
@@ -527,7 +625,7 @@ class ServicesEndpoints {
   /// Delete custom domain
   ///
   /// Delete a custom domain for a service given the service id and custom domain id or name.
-  Future<void> deleteCustomDomain(String serviceId, String customDomainNameOrId) async {
+  Future<void> deleteCustomDomain({required String serviceId, required String customDomainNameOrId}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId/custom-domains/$customDomainNameOrId',
@@ -538,7 +636,7 @@ class ServicesEndpoints {
   /// Verify DNS configuration
   ///
   /// Verify the DNS configuration for a custom domain.
-  Future<void> refreshCustomDomain(String serviceId, String customDomainNameOrId) async {
+  Future<void> refreshCustomDomain({required String serviceId, required String customDomainNameOrId}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/custom-domains/$customDomainNameOrId/verify',
@@ -549,7 +647,7 @@ class ServicesEndpoints {
   /// Suspend service
   ///
   /// Suspend the service with the provided ID.
-  Future<void> suspendService(String serviceId) async {
+  Future<void> suspendService({required String serviceId}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/suspend',
@@ -560,7 +658,7 @@ class ServicesEndpoints {
   /// Resume service
   ///
   /// Resume the service with the provided ID (if it's currently suspended).
-  Future<void> resumeService(String serviceId) async {
+  Future<void> resumeService({required String serviceId}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/resume',
@@ -573,7 +671,7 @@ class ServicesEndpoints {
   /// Restart the service with the provided ID.
   ///
   /// Not supported for cron jobs.
-  Future<void> restartService(String serviceId) async {
+  Future<void> restartService({required String serviceId}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/restart',
@@ -586,7 +684,7 @@ class ServicesEndpoints {
   /// [Scale](https://render.com/docs/scaling#manual-scaling) the service with the provided ID to a fixed number of instances.
   ///
   /// Render ignores this value as long as autoscaling is enabled for the service.
-  Future<void> scaleService(String serviceId, {required Map<String, Object?> body}) async {
+  Future<void> scaleService({required String serviceId, required Map<String, Object?> body}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/scale',
@@ -598,7 +696,7 @@ class ServicesEndpoints {
   /// Update autoscaling config
   ///
   /// Update the [autoscaling](https://render.com/docs/scaling#autoscaling) config for the service with the provided ID.
-  Future<Map<String, Object?>> autoscaleService(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> autoscaleService({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/autoscaling',
@@ -611,7 +709,7 @@ class ServicesEndpoints {
   /// Delete autoscaling config
   ///
   /// Delete the autoscaling config for a service given the service id.
-  Future<void> deleteAutoscalingConfig(String serviceId) async {
+  Future<void> deleteAutoscalingConfig({required String serviceId}) async {
     await _client.send(
       'DELETE',
       '/services/$serviceId/autoscaling',
@@ -626,7 +724,7 @@ class ServicesEndpoints {
   /// View all active previews from your service's Previews tab in the Render Dashboard.
   ///
   /// Note that you can't create previews for Git-backed services using the Render API.
-  Future<ServiceAndDeploy> previewService(String serviceId, {required Map<String, Object?> body}) async {
+  Future<ServiceAndDeploy> previewService({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/preview',
@@ -639,7 +737,25 @@ class ServicesEndpoints {
   /// List jobs
   ///
   /// List jobs for the provided service that match the provided filters. If no filters are provided, all jobs for the service are returned.
-  Future<List<JobWithCursor>> listJob(String serviceId, {Object? cursor, Object? limit, Object? status, Object? createdBefore, Object? createdAfter, Object? startedBefore, Object? startedAfter, Object? finishedBefore, Object? finishedAfter}) async {
+  ///
+  /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
+  ///
+  /// [status] Filter for the status of the job (`pending`, `running`, `succeeded`, `failed`, or `canceled`)
+  ///
+  /// [createdBefore] Filter for jobs created before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [createdAfter] Filter for jobs created after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [startedBefore] Filter for jobs started before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [startedAfter] Filter for jobs started after a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [finishedBefore] Filter for jobs finished before a certain time (specified as an ISO 8601 timestamp)
+  ///
+  /// [finishedAfter] Filter for jobs finished after a certain time (specified as an ISO 8601 timestamp)
+  Future<List<JobWithCursor>> listJob({required String serviceId, String? cursor, int? limit, List<String>? status, String? createdBefore, String? createdAfter, String? startedBefore, String? startedAfter, String? finishedBefore, String? finishedAfter}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/jobs',
@@ -662,7 +778,7 @@ class ServicesEndpoints {
   /// Create job
   ///
   /// Create a one-off job using the provided service. For details, see [One-Off Jobs](https://render.com/docs/one-off-jobs).
-  Future<Map<String, Object?>> postJob(String serviceId, {required Map<String, Object?> body}) async {
+  Future<Map<String, Object?>> postJob({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/jobs',
@@ -675,7 +791,7 @@ class ServicesEndpoints {
   /// Retrieve job
   ///
   /// Retrieve the details of a particular one-off job for a particular service.
-  Future<Map<String, Object?>> retrieveJob(String serviceId, String jobId) async {
+  Future<Map<String, Object?>> retrieveJob({required String serviceId, required String jobId}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/jobs/$jobId',
@@ -687,7 +803,7 @@ class ServicesEndpoints {
   /// Cancel running job
   ///
   /// Cancel a particular one-off job for a particular service.
-  Future<Map<String, Object?>> cancelJob(String serviceId, String jobId) async {
+  Future<Map<String, Object?>> cancelJob({required String serviceId, required String jobId}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/jobs/$jobId/cancel',
@@ -699,7 +815,7 @@ class ServicesEndpoints {
   /// List instances
   ///
   /// List instances for the provided service.
-  Future<List<ServiceInstance>> listInstances(String serviceId) async {
+  Future<List<ServiceInstance>> listInstances({required String serviceId}) async {
     final json = await _client.sendList(
       'GET',
       '/services/$serviceId/instances',
@@ -713,7 +829,7 @@ class ServicesEndpoints {
   /// Retrieve the IP addresses the service's outbound traffic originates from.
   ///
   /// A service uses either a dedicated IP set that applies to it, or the shared Render IPs for its region.
-  Future<OutboundIps> retrieveServiceOutboundIps(String serviceId) async {
+  Future<OutboundIps> retrieveServiceOutboundIps({required String serviceId}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/outbound-ips',
