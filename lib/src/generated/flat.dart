@@ -65,7 +65,7 @@ extension RenderRestApi on RenderApi {
       raw.services.createDeploy(serviceId: serviceId, body: body);
 
   /// Create environment group
-  Future<Map<String, Object?>> createEnvGroup({required Map<String, Object?> body}) =>
+  Future<EnvGroup> createEnvGroup({required Map<String, Object?> body}) =>
       raw.envGroups.createEnvGroup(body: body);
 
   /// Create environment
@@ -329,7 +329,7 @@ extension RenderRestApi on RenderApi {
       raw.workflowversions.getWorkflowVersion(workflowVersionId: workflowVersionId);
 
   /// Link service
-  Future<Map<String, Object?>> linkServiceToEnvGroup({required String envGroupId, required String serviceId}) =>
+  Future<EnvGroup> linkServiceToEnvGroup({required String envGroupId, required String serviceId}) =>
       raw.envGroups.linkServiceToEnvGroup(envGroupId: envGroupId, serviceId: serviceId);
 
   /// List queryable instance values
@@ -601,7 +601,7 @@ extension RenderRestApi on RenderApi {
       raw.disks.retrieveDisk(diskId: diskId);
 
   /// Retrieve environment group
-  Future<Map<String, Object?>> retrieveEnvGroup({required String envGroupId}) =>
+  Future<EnvGroup> retrieveEnvGroup({required String envGroupId}) =>
       raw.envGroups.retrieveEnvGroup(envGroupId: envGroupId);
 
   /// Retrieve environment variable
@@ -757,15 +757,15 @@ extension RenderRestApi on RenderApi {
       raw.disks.updateDisk(diskId: diskId, body: body);
 
   /// Update environment group
-  Future<Map<String, Object?>> updateEnvGroup({required String envGroupId, required Map<String, Object?> body}) =>
+  Future<EnvGroup> updateEnvGroup({required String envGroupId, required Map<String, Object?> body}) =>
       raw.envGroups.updateEnvGroup(envGroupId: envGroupId, body: body);
 
   /// Add or update environment variable
-  Future<Map<String, Object?>> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) =>
+  Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) =>
       raw.envGroups.updateEnvGroupEnvVar(envGroupId: envGroupId, envVarKey: envVarKey, body: body);
 
   /// Add or update secret file
-  Future<Map<String, Object?>> updateEnvGroupSecretFile({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) =>
+  Future<EnvGroup> updateEnvGroupSecretFile({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) =>
       raw.envGroups.updateEnvGroupSecretFile(envGroupId: envGroupId, envVarKey: envVarKey, body: body);
 
   /// Add or update environment variable

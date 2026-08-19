@@ -2054,7 +2054,6 @@ class DockerDetailsPost {
 }
 
 
-
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum ServiceTypeShort {
@@ -2100,6 +2099,96 @@ class EnvGroupLink {
         'type': type.wireValue,
       };
 }
+
+class EnvVar {
+  const EnvVar({
+    required this.key,
+    required this.value,
+  });
+
+  factory EnvVar.fromJson(Map<String, Object?> json) => EnvVar(
+        key: json['key'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String key;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'key': key,
+        'value': value,
+      };
+}
+
+class SecretFile {
+  const SecretFile({
+    required this.name,
+    required this.content,
+  });
+
+  factory SecretFile.fromJson(Map<String, Object?> json) => SecretFile(
+        name: json['name'] as String? ?? '',
+        content: json['content'] as String? ?? '',
+      );
+
+  final String name;
+  final String content;
+
+  Map<String, Object?> toJson() => {
+        'name': name,
+        'content': content,
+      };
+}
+
+class EnvGroup {
+  const EnvGroup({
+    required this.id,
+    required this.name,
+    required this.ownerId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.serviceLinks,
+    this.environmentId,
+    required this.envVars,
+    required this.secretFiles,
+  });
+
+  factory EnvGroup.fromJson(Map<String, Object?> json) => EnvGroup(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        ownerId: json['ownerId'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        serviceLinks: ((json['serviceLinks'] as List<Object?>?) ?? const []).map((e) => EnvGroupLink.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        environmentId: json['environmentId'] as String?,
+        envVars: ((json['envVars'] as List<Object?>?) ?? const []).map((e) => EnvVar.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        secretFiles: ((json['secretFiles'] as List<Object?>?) ?? const []).map((e) => SecretFile.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final String id;
+  final String name;
+  final String ownerId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  /// List of serviceIds linked to the envGroup
+  final List<EnvGroupLink> serviceLinks;
+  final String? environmentId;
+  final List<EnvVar> envVars;
+  final List<SecretFile> secretFiles;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'ownerId': ownerId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'serviceLinks': serviceLinks.map((e) => e.toJson()).toList(),
+        if (environmentId != null) 'environmentId': environmentId,
+        'envVars': envVars.map((e) => e.toJson()).toList(),
+        'secretFiles': secretFiles.map((e) => e.toJson()).toList(),
+      };
+}
+
 
 
 class EnvGroupMeta {
@@ -2220,26 +2309,6 @@ class EnvGroupPostinput {
 
 
 
-
-class EnvVar {
-  const EnvVar({
-    required this.key,
-    required this.value,
-  });
-
-  factory EnvVar.fromJson(Map<String, Object?> json) => EnvVar(
-        key: json['key'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
-
-  final String key;
-  final String value;
-
-  Map<String, Object?> toJson() => {
-        'key': key,
-        'value': value,
-      };
-}
 
 
 class EnvVarGenerateValue {
@@ -5329,26 +5398,6 @@ class RouteWithCursor {
       };
 }
 
-
-class SecretFile {
-  const SecretFile({
-    required this.name,
-    required this.content,
-  });
-
-  factory SecretFile.fromJson(Map<String, Object?> json) => SecretFile(
-        name: json['name'] as String? ?? '',
-        content: json['content'] as String? ?? '',
-      );
-
-  final String name;
-  final String content;
-
-  Map<String, Object?> toJson() => {
-        'name': name,
-        'content': content,
-      };
-}
 
 
 class SecretFileWithCursor {

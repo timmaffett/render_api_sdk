@@ -24,10 +24,16 @@ On the web there is no environment, so pass the token explicitly:
 
 ## Typed responses
 
-Roughly a third of the spec's responses describe their shape inline rather
-than by reference. Those would otherwise come back as untyped maps, so each
-gets a class named after its operation — `getWorkflow` returns a
-`GetWorkflowResponse`, not a `Map`.
+Every operation that returns JSON returns a typed model. Two things in the
+spec would otherwise have left large gaps:
+
+Roughly a third of responses describe their shape inline rather than by
+reference. Each of those gets a class named after its operation, so
+`getWorkflow` returns a `GetWorkflowResponse`, not a `Map`.
+
+Another handful compose their response with `allOf` — the env-group endpoints
+all do. Since the spec uses it only to combine plain objects, those are merged
+into one class: `EnvGroup` carries the fields of both members.
 
 Enums with identical value sets are one type rather than many: every response
 carrying a `region` shares `Region`, instead of each getting its own

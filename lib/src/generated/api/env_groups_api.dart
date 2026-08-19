@@ -55,38 +55,38 @@ class EnvGroupsEndpoints {
   /// Create environment group
   ///
   /// Create a new environment group.
-  Future<Map<String, Object?>> createEnvGroup({required Map<String, Object?> body}) async {
+  Future<EnvGroup> createEnvGroup({required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/env-groups',
       body: body,
     );
-    return json;
+    return EnvGroup.fromJson(json);
   }
 
 
   /// Retrieve environment group
   ///
   /// Retrieve an environment group by ID.
-  Future<Map<String, Object?>> retrieveEnvGroup({required String envGroupId}) async {
+  Future<EnvGroup> retrieveEnvGroup({required String envGroupId}) async {
     final json = await _client.sendObject(
       'GET',
       '/env-groups/$envGroupId',
     );
-    return json;
+    return EnvGroup.fromJson(json);
   }
 
 
   /// Update environment group
   ///
   /// Update the attributes of an environment group.
-  Future<Map<String, Object?>> updateEnvGroup({required String envGroupId, required Map<String, Object?> body}) async {
+  Future<EnvGroup> updateEnvGroup({required String envGroupId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/env-groups/$envGroupId',
       body: body,
     );
-    return json;
+    return EnvGroup.fromJson(json);
   }
 
 
@@ -106,12 +106,12 @@ class EnvGroupsEndpoints {
   /// Link a particular service to a particular environment group.
   ///
   /// The linked service will have access to the environment variables and secret files in the group.
-  Future<Map<String, Object?>> linkServiceToEnvGroup({required String envGroupId, required String serviceId}) async {
+  Future<EnvGroup> linkServiceToEnvGroup({required String envGroupId, required String serviceId}) async {
     final json = await _client.sendObject(
       'POST',
       '/env-groups/$envGroupId/services/$serviceId',
     );
-    return json;
+    return EnvGroup.fromJson(json);
   }
 
 
@@ -143,13 +143,13 @@ class EnvGroupsEndpoints {
   /// Add or update environment variable
   ///
   /// Add or update a particular environment variable in a particular environment group.
-  Future<Map<String, Object?>> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) async {
+  Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/env-groups/$envGroupId/env-vars/$envVarKey',
       body: body,
     );
-    return json;
+    return EnvGroup.fromJson(json);
   }
 
 
@@ -179,13 +179,13 @@ class EnvGroupsEndpoints {
   /// Add or update secret file
   ///
   /// Add or update a particular secret file in an particular environment group.
-  Future<Map<String, Object?>> updateEnvGroupSecretFile({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) async {
+  Future<EnvGroup> updateEnvGroupSecretFile({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/env-groups/$envGroupId/secret-files/$envVarKey',
       body: body,
     );
-    return json;
+    return EnvGroup.fromJson(json);
   }
 
 

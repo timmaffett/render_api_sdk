@@ -202,7 +202,36 @@ Map<String, dynamic> _resolve(Map<String, dynamic> node) {
     }
     current = target as Map<String, dynamic>;
   }
-  return current;
+  return current['allOf'] is List ? _flattenAllOf(current) : current;
+}
+
+/// Collapses `allOf` into one object schema.
+///
+/// The spec uses it only to compose plain objects -- no discriminators, no
+/// conflicting members -- so merging properties and required lists is exactly
+/// what it means. Without this the six env-group operations that compose their
+/// responses this way fall back to an untyped map.
+Map<String, dynamic> _flattenAllOf(Map<String, dynamic> node) {
+  final properties = <String, dynamic>{};
+  final required = <String>[];
+  final merged = <String, dynamic>{
+    for (final entry in node.entries)
+      if (entry.key != 'allOf') entry.key: entry.value,
+    'type': 'object',
+  };
+
+  for (final member in (node['allOf'] as List)) {
+    final resolved = _resolve((member as Map).cast<String, dynamic>());
+    properties.addAll(
+        (resolved['properties'] as Map<String, dynamic>?) ?? const {});
+    required.addAll(((resolved['required'] as List?) ?? const []).cast<String>());
+    // A description on a member is better than none on the whole.
+    merged['description'] ??= resolved['description'];
+  }
+
+  merged['properties'] = properties;
+  merged['required'] = required.toSet().toList();
+  return merged;
 }
 
 /// The class name a `$ref` points at, so nested references reuse types rather
