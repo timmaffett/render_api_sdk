@@ -23,6 +23,20 @@ const _header = '''
 late Map<String, dynamic> spec;
 final emittedModels = <String, String>{};
 
+/// One generated method, remembered so the flat facade can forward to it.
+class _Emitted {
+  _Emitted(this.group, this.name, this.signature, this.args, this.returnType,
+      this.summary);
+  final String group;
+  final String name;
+  final String signature;
+  final String args;
+  final String returnType;
+  final String? summary;
+}
+
+final emittedMethods = <_Emitted>[];
+
 void main() {
   final file = File('tool/render-openapi.json');
   if (!file.existsSync()) {
@@ -65,7 +79,7 @@ void main() {
       final shared = (item['parameters'] as List?) ?? const [];
       groups
           .putIfAbsent(group, () => [])
-          .add(_Op(path, method, op, shared));
+          .add(_Op(path, method, op, shared, group));
     }
   }
 
@@ -119,6 +133,30 @@ void main() {
   }
   endpoints.writeln('}');
   File('lib/src/generated/endpoints.dart').writeAsStringSync(endpoints.toString());
+
+  // A flat facade, so every call matches Render's official Node bindings
+  // one for one: renderApi.listHeaders({...}) becomes render.listHeaders(...).
+  final flat = StringBuffer()
+    ..writeln(_header)
+    ..writeln("import '../../render_api.dart';")
+    ..writeln()
+    ..writeln('/// Every REST operation, named exactly as Render names it.')
+    ..writeln('///')
+    ..writeln("/// The official Node bindings expose one flat object, so")
+    ..writeln('/// `renderApi.listHeaders({serviceId, limit})` becomes')
+    ..writeln('/// `render.listHeaders(serviceId: ..., limit: ...)`. Each of')
+    ..writeln('/// these forwards to the grouped form on [RenderApi.raw],')
+    ..writeln('/// which is the same call by a different route.')
+    ..writeln('extension RenderRestApi on RenderApi {');
+  final sorted = [...emittedMethods]..sort((a, b) => a.name.compareTo(b.name));
+  for (final m in sorted) {
+    if (m.summary != null) flat.writeln(_doc(m.summary!, indent: '  '));
+    flat.writeln('  Future<${m.returnType}> ${m.name}(${m.signature}) =>');
+    flat.writeln('      raw.${_fieldName(m.group)}.${m.name}(${m.args});');
+    flat.writeln();
+  }
+  flat.writeln('}');
+  File('lib/src/generated/flat.dart').writeAsStringSync(flat.toString());
 
   final ops = groups.values.fold<int>(0, (n, l) => n + l.length);
   stdout.writeln('generated ${names.length} models and $ops operations '
@@ -469,7 +507,8 @@ DateTime? parseDate(Object? value) =>
 // ---------------------------------------------------------------------------
 
 class _Op {
-  _Op(this.path, this.method, this.op, this.sharedParams);
+  _Op(this.path, this.method, this.op, this.sharedParams, this.group);
+  final String group;
   final String path;
   final String method;
   final Map<String, dynamic> op;
@@ -577,6 +616,14 @@ String _emitMethod(String name, _Op op) {
   ];
 
   final signature = named.isEmpty ? '' : '{${named.join(', ')}}';
+
+  final forwardArgs = [
+    for (final p in pathParams) '${_fieldName(p)}: ${_fieldName(p)}',
+    if (bodySchema != null) 'body: body',
+    for (final q in queryParams) '${q.dartName}: ${q.dartName}',
+  ].join(', ');
+  emittedMethods.add(_Emitted(op.group, name, signature, forwardArgs,
+      ret.type, summary));
 
   for (final q in queryParams) {
     if (q.doc == null) continue;

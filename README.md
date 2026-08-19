@@ -79,8 +79,43 @@ dart run example/smoke.dart        # live, needs RENDER_API_KEY
 
 ## Coverage
 
-Implemented: workflows, workflow versions, tasks, task runs.
+All 208 operations across 26 resource groups, generated from the vendored
+OpenAPI spec, with 164 typed models.
 
-Not yet: services, databases, deploys, metrics, env groups. The transport
-handles them already — `render.client.send('GET', '/services')` works today;
-they simply lack typed wrappers.
+## Two routes to the same API
+
+Every operation is named exactly as Render names it, because both this package
+and Render's official Node bindings derive their names from the spec's
+`operationId`. An example from the docs translates directly:
+
+```js
+// @api/render-api
+renderApi.listHeaders({limit: '20', serviceId: 'serviceId'})
+```
+
+```dart
+// flat — the same spelling
+await render.listHeaders(serviceId: 'srv-x', limit: 20);
+
+// grouped — the same call, organised by resource
+await render.raw.services.listHeaders(serviceId: 'srv-x', limit: 20);
+```
+
+Query parameters are typed from the spec rather than passed as strings, so
+`limit` is an `int` and repeated filters are a `List<String>`.
+
+Above both sits a small hand-written facade for the workflows surface —
+`render.workflows`, `render.tasks`, `render.taskRuns` — which adds pagination
+as a `Stream`, local validation of Render's 4 MB input cap, and errors that
+explain themselves. Prefer it where it exists.
+
+## Regenerating
+
+```bash
+dart run tool/generate.dart
+```
+
+The spec is vendored at `tool/render-openapi.json` with a checksum beside it.
+Render notes that the spec is unversioned and names may change, so regenerate
+deliberately: `test/parity_test.dart` fails if the generated surface stops
+matching the spec's operation set.

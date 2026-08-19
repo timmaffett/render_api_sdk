@@ -28,6 +28,7 @@ export 'src/exceptions.dart' hide exceptionFor, hintFor;
 export 'src/models/enums.dart';
 export 'src/models/task_run.dart';
 export 'src/models/workflow.dart';
+export 'src/generated/flat.dart';
 export 'src/generated/generated.dart';
 export 'src/generated/endpoints.dart' show RenderEndpoints;
 export 'src/pagination.dart' show Page, paginate;
