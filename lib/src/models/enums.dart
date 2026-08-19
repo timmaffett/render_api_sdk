@@ -1,9 +1,19 @@
-/// Enumerations mirroring the Render API spec.
+/// Enumerations for the hand-written facade.
+///
+/// These mirror the spec but stay hand-written where the facade depends on
+/// them having convenience the generated versions lack — [TaskRunStatus] and
+/// its terminality helpers, for instance.
 ///
 /// Every enum here decodes unknown values rather than throwing. Render
 /// documents Workflows as beta with breaking changes expected, so a value the
 /// spec doesn't list yet must not crash a client that is otherwise fine.
 library;
+
+// `Region` is not redeclared here: the generated models define an identical
+// enum, and two structurally-equal-but-distinct types would be a trap the
+// moment a generated model's region met a hand-written one.
+export '../generated/models.dart' show Region;
+
 
 /// Lifecycle of a task run.
 ///
@@ -60,26 +70,6 @@ enum WorkflowRuntime {
   final String wireValue;
 
   static WorkflowRuntime fromWire(String? value) => values.firstWhere(
-        (r) => r.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
-/// Region a workflow's task runs execute in. Determines which of your other
-/// Render services they can reach over the private network.
-enum Region {
-  frankfurt('frankfurt'),
-  ohio('ohio'),
-  oregon('oregon'),
-  singapore('singapore'),
-  virginia('virginia'),
-  unknown('');
-
-  const Region(this.wireValue);
-
-  final String wireValue;
-
-  static Region fromWire(String? value) => values.firstWhere(
         (r) => r.wireValue == value,
         orElse: () => unknown,
       );

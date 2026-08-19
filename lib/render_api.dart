@@ -17,6 +17,7 @@ import 'src/api/tasks_api.dart';
 import 'src/api/task_runs_api.dart';
 import 'src/api/workflows_api.dart';
 import 'src/client.dart';
+import 'src/generated/endpoints.dart';
 
 export 'src/api/task_runs_api.dart' show TaskRunsApi, TaskRunListX;
 export 'src/api/tasks_api.dart' show TasksApi;
@@ -27,6 +28,8 @@ export 'src/exceptions.dart' hide exceptionFor, hintFor;
 export 'src/models/enums.dart';
 export 'src/models/task_run.dart';
 export 'src/models/workflow.dart';
+export 'src/generated/generated.dart';
+export 'src/generated/endpoints.dart' show RenderEndpoints;
 export 'src/pagination.dart' show Page, paginate;
 
 /// Entry point to the Render API.
@@ -59,7 +62,8 @@ class RenderApi {
   RenderApi.fromClient(this.client)
       : workflows = WorkflowsApi(client),
         tasks = TasksApi(client),
-        taskRuns = TaskRunsApi(client);
+        taskRuns = TaskRunsApi(client),
+        raw = RenderEndpoints(client);
 
   /// Points at the CLI's local task server (`render workflows dev`).
   ///
@@ -82,6 +86,18 @@ class RenderApi {
 
   /// Task runs: starting, inspecting, cancelling and watching.
   final TaskRunsApi taskRuns;
+
+  /// Every endpoint in the Render API, generated from the spec — services,
+  /// databases, deploys, metrics, environments and the rest.
+  ///
+  /// Complete but literal. Where a hand-written facade exists above
+  /// ([workflows], [tasks], [taskRuns]), prefer it: those add pagination as a
+  /// `Stream`, local validation, and errors that explain themselves.
+  ///
+  /// ```dart
+  /// final services = await render.raw.services.listServices();
+  /// ```
+  final RenderEndpoints raw;
 
   /// Releases the underlying HTTP client.
   void close() => client.close();
