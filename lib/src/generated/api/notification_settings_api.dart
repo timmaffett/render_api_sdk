@@ -16,25 +16,25 @@ class NotificationSettingsEndpoints {
   /// Retrieve notification settings for the owner with the provided ID.
   ///
   /// Note that you provide an owner ID to this endpoint, not the ID for a particular resource.
-  Future<Map<String, Object?>> retrieveOwnerNotificationSettings({required String ownerId}) async {
+  Future<RetrieveOwnerNotificationSettingsResponse> retrieveOwnerNotificationSettings({required String ownerId}) async {
     final json = await _client.sendObject(
       'GET',
       '/notification-settings/owners/$ownerId',
     );
-    return json;
+    return RetrieveOwnerNotificationSettingsResponse.fromJson(json);
   }
 
 
   /// Update notification settings
   ///
   /// Update notification settings for the owner with the provided ID.
-  Future<Map<String, Object?>> patchOwnerNotificationSettings({required String ownerId, required Map<String, Object?> body}) async {
+  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/notification-settings/owners/$ownerId',
       body: body,
     );
-    return json;
+    return PatchOwnerNotificationSettingsResponse.fromJson(json);
   }
 
 
@@ -69,25 +69,25 @@ class NotificationSettingsEndpoints {
   /// Retrieve the notification override for the service with the provided ID.
   ///
   /// Note that you provide a service ID to this endpoint, not the ID for a particular override.
-  Future<Map<String, Object?>> retrieveServiceNotificationOverrides({required String serviceId}) async {
+  Future<RetrieveServiceNotificationOverridesResponse> retrieveServiceNotificationOverrides({required String serviceId}) async {
     final json = await _client.sendObject(
       'GET',
       '/notification-settings/overrides/services/$serviceId',
     );
-    return json;
+    return RetrieveServiceNotificationOverridesResponse.fromJson(json);
   }
 
 
   /// Update notification override
   ///
   /// Update the notification override for the service with the provided ID.
-  Future<Map<String, Object?>> patchServiceNotificationOverrides({required String serviceId, required Map<String, Object?> body}) async {
+  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/notification-settings/overrides/services/$serviceId',
       body: body,
     );
-    return json;
+    return PatchServiceNotificationOverridesResponse.fromJson(json);
   }
 
 

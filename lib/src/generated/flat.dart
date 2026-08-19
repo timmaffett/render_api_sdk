@@ -13,11 +13,11 @@ import '../../render_api.dart';
 /// which is the same call by a different route.
 extension RenderRestApi on RenderApi {
   /// Add disk
-  Future<Map<String, Object?>> addDisk({required Map<String, Object?> body}) =>
+  Future<AddDiskResponse> addDisk({required Map<String, Object?> body}) =>
       raw.disks.addDisk(body: body);
 
   /// Add header rule
-  Future<Map<String, Object?>> addHeaders({required String serviceId, required Map<String, Object?> body}) =>
+  Future<AddHeadersResponse> addHeaders({required String serviceId, required Map<String, Object?> body}) =>
       raw.services.addHeaders(serviceId: serviceId, body: body);
 
   /// Add or update secret file
@@ -33,7 +33,7 @@ extension RenderRestApi on RenderApi {
       raw.services.addRoute(serviceId: serviceId, body: body);
 
   /// Update autoscaling config
-  Future<Map<String, Object?>> autoscaleService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<AutoscaleServiceResponse> autoscaleService({required String serviceId, required Map<String, Object?> body}) =>
       raw.services.autoscaleService(serviceId: serviceId, body: body);
 
   /// Cancel running cron job
@@ -45,7 +45,7 @@ extension RenderRestApi on RenderApi {
       raw.services.cancelDeploy(serviceId: serviceId, deployId: deployId);
 
   /// Cancel running job
-  Future<Map<String, Object?>> cancelJob({required String serviceId, required String jobId}) =>
+  Future<CancelJobResponse> cancelJob({required String serviceId, required String jobId}) =>
       raw.services.cancelJob(serviceId: serviceId, jobId: jobId);
 
   /// Cancel task run
@@ -105,15 +105,15 @@ extension RenderRestApi on RenderApi {
       raw.services.createService(body: body);
 
   /// Run task
-  Future<Map<String, Object?>> createTask({required Map<String, Object?> body}) =>
+  Future<CreateTaskResponse> createTask({required Map<String, Object?> body}) =>
       raw.taskRuns.createTask(body: body);
 
   /// Create a webhook
-  Future<Map<String, Object?>> createWebhook({required Map<String, Object?> body}) =>
+  Future<CreateWebhookResponse> createWebhook({required Map<String, Object?> body}) =>
       raw.webhooks.createWebhook(body: body);
 
   /// Create a workflow
-  Future<Map<String, Object?>> createWorkflow({required Map<String, Object?> body}) =>
+  Future<CreateWorkflowResponse> createWorkflow({required Map<String, Object?> body}) =>
       raw.workflows.createWorkflow(body: body);
 
   /// Deploy a workflow version
@@ -225,35 +225,35 @@ extension RenderRestApi on RenderApi {
       raw.postgres.failoverPostgres(postgresId: postgresId);
 
   /// Get active connection count
-  Future<List<Object?>> getActiveConnections({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) =>
+  Future<List<GetActiveConnectionsResponse>> getActiveConnections({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) =>
       raw.metrics.getActiveConnections(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource);
 
   /// Get bandwidth usage
-  Future<List<Object?>> getBandwidth({String? startTime, String? endTime, String? resource, String? service}) =>
+  Future<List<GetBandwidthResponse>> getBandwidth({String? startTime, String? endTime, String? resource, String? service}) =>
       raw.metrics.getBandwidth(startTime: startTime, endTime: endTime, resource: resource, service: service);
 
   /// Get bandwidth usage breakdown by traffic source
-  Future<Map<String, Object?>> getBandwidthSources({String? startTime, String? endTime, String? resource, String? service}) =>
+  Future<GetBandwidthSourcesResponse> getBandwidthSources({String? startTime, String? endTime, String? resource, String? service}) =>
       raw.metrics.getBandwidthSources(startTime: startTime, endTime: endTime, resource: resource, service: service);
 
   /// Get CPU usage
-  Future<List<Object?>> getCpu({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance, String? aggregationMethod}) =>
+  Future<List<GetCpuResponse>> getCpu({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance, String? aggregationMethod}) =>
       raw.metrics.getCpu(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, instance: instance, aggregationMethod: aggregationMethod);
 
   /// Get CPU limit
-  Future<List<Object?>> getCpuLimit({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
+  Future<List<GetCpuLimitResponse>> getCpuLimit({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
       raw.metrics.getCpuLimit(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, instance: instance);
 
   /// Get CPU target
-  Future<List<Object?>> getCpuTarget({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
+  Future<List<GetCpuTargetResponse>> getCpuTarget({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
       raw.metrics.getCpuTarget(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, instance: instance);
 
   /// Get disk capacity
-  Future<List<Object?>> getDiskCapacity({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
+  Future<List<GetDiskCapacityResponse>> getDiskCapacity({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
       raw.metrics.getDiskCapacity(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service);
 
   /// Get disk usage
-  Future<List<Object?>> getDiskUsage({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
+  Future<List<GetDiskUsageResponse>> getDiskUsage({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
       raw.metrics.getDiskUsage(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service);
 
   /// List environment variables
@@ -261,59 +261,59 @@ extension RenderRestApi on RenderApi {
       raw.services.getEnvVarsForService(serviceId: serviceId, cursor: cursor, limit: limit);
 
   /// Get HTTP latency
-  Future<List<Object?>> getHttpLatency({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? path, double? quantile}) =>
+  Future<List<GetHttpLatencyResponse>> getHttpLatency({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? path, double? quantile}) =>
       raw.metrics.getHttpLatency(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, host: host, path: path, quantile: quantile);
 
   /// Get HTTP request count
-  Future<List<Object?>> getHttpRequests({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? path, String? aggregateBy}) =>
+  Future<List<GetHttpRequestsResponse>> getHttpRequests({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? path, String? aggregateBy}) =>
       raw.metrics.getHttpRequests(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, host: host, path: path, aggregateBy: aggregateBy);
 
   /// Get instance count
-  Future<List<Object?>> getInstanceCount({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
+  Future<List<GetInstanceCountResponse>> getInstanceCount({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
       raw.metrics.getInstanceCount(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service);
 
   /// Get memory usage
-  Future<List<Object?>> getMemory({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
+  Future<List<GetMemoryResponse>> getMemory({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
       raw.metrics.getMemory(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, instance: instance);
 
   /// Get memory limit
-  Future<List<Object?>> getMemoryLimit({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
+  Future<List<GetMemoryLimitResponse>> getMemoryLimit({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
       raw.metrics.getMemoryLimit(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, instance: instance);
 
   /// Get memory target
-  Future<List<Object?>> getMemoryTarget({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
+  Future<List<GetMemoryTargetResponse>> getMemoryTarget({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) =>
       raw.metrics.getMemoryTarget(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, instance: instance);
 
   /// Retrieve log stream
-  Future<Map<String, Object?>> getOwnerLogStream({required String ownerId}) =>
+  Future<GetOwnerLogStreamResponse> getOwnerLogStream({required String ownerId}) =>
       raw.logs.getOwnerLogStream(ownerId: ownerId);
 
   /// Retrieve metrics stream
-  Future<Map<String, Object?>> getOwnerMetricsStream({required String ownerId}) =>
+  Future<GetOwnerMetricsStreamResponse> getOwnerMetricsStream({required String ownerId}) =>
       raw.metricsStream.getOwnerMetricsStream(ownerId: ownerId);
 
   /// Get replica lag
-  Future<List<Object?>> getReplicationLag({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) =>
+  Future<List<GetReplicationLagResponse>> getReplicationLag({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) =>
       raw.metrics.getReplicationLag(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource);
 
   /// Retrieve log stream override
-  Future<Map<String, Object?>> getResourceLogStream({required String resourceId}) =>
+  Future<GetResourceLogStreamResponse> getResourceLogStream({required String resourceId}) =>
       raw.logs.getResourceLogStream(resourceId: resourceId);
 
   /// Retrieve task
-  Future<Map<String, Object?>> getTask({required String taskId}) =>
+  Future<GetTaskResponse> getTask({required String taskId}) =>
       raw.tasks.getTask(taskId: taskId);
 
   /// Retrieve task run
-  Future<Map<String, Object?>> getTaskRun({required String taskRunId}) =>
+  Future<GetTaskRunResponse> getTaskRun({required String taskRunId}) =>
       raw.taskRuns.getTaskRun(taskRunId: taskRunId);
 
   /// Get task runs completed count
-  Future<List<Object?>> getTaskRunsCompleted({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? state, String? aggregateBy}) =>
+  Future<List<GetTaskRunsCompletedResponse>> getTaskRunsCompleted({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? state, String? aggregateBy}) =>
       raw.metrics.getTaskRunsCompleted(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, state: state, aggregateBy: aggregateBy);
 
   /// Get task runs queued count
-  Future<List<Object?>> getTaskRunsQueued({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) =>
+  Future<List<GetTaskRunsQueuedResponse>> getTaskRunsQueued({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) =>
       raw.metrics.getTaskRunsQueued(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource);
 
   /// Get the authenticated user
@@ -321,11 +321,11 @@ extension RenderRestApi on RenderApi {
       raw.users.getUser();
 
   /// Retrieve workflow
-  Future<Map<String, Object?>> getWorkflow({required String workflowId}) =>
+  Future<GetWorkflowResponse> getWorkflow({required String workflowId}) =>
       raw.workflows.getWorkflow(workflowId: workflowId);
 
   /// Retrieve workflow version
-  Future<Map<String, Object?>> getWorkflowVersion({required String workflowVersionId}) =>
+  Future<GetWorkflowVersionResponse> getWorkflowVersion({required String workflowVersionId}) =>
       raw.workflowversions.getWorkflowVersion(workflowVersionId: workflowVersionId);
 
   /// Link service
@@ -333,7 +333,7 @@ extension RenderRestApi on RenderApi {
       raw.envGroups.linkServiceToEnvGroup(envGroupId: envGroupId, serviceId: serviceId);
 
   /// List queryable instance values
-  Future<List<Object?>> listApplicationFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
+  Future<List<ListApplicationFilterValuesResponse>> listApplicationFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) =>
       raw.metrics.listApplicationFilterValues(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service);
 
   /// List Blueprint syncs
@@ -377,7 +377,7 @@ extension RenderRestApi on RenderApi {
       raw.services.listHeaders(serviceId: serviceId, path: path, name: name, value: value, cursor: cursor, limit: limit);
 
   /// List queryable status codes and host values
-  Future<List<Object?>> listHttpFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? statusCode}) =>
+  Future<List<ListHttpFilterValuesResponse>> listHttpFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? statusCode}) =>
       raw.metrics.listHttpFilterValues(startTime: startTime, endTime: endTime, resolutionSeconds: resolutionSeconds, resource: resource, service: service, host: host, statusCode: statusCode);
 
   /// List instances
@@ -393,7 +393,7 @@ extension RenderRestApi on RenderApi {
       raw.keyValue.listKeyValue(name: name, region: region, createdBefore: createdBefore, createdAfter: createdAfter, updatedBefore: updatedBefore, updatedAfter: updatedAfter, ownerId: ownerId, environmentId: environmentId, cursor: cursor, limit: limit);
 
   /// List logs
-  Future<Map<String, Object?>> listLogs({required String ownerId, String? startTime, String? endTime, String? direction, required List<String> resource, List<String>? instance, List<String>? host, List<String>? statusCode, List<String>? method, List<String>? task, List<String>? taskRun, List<String>? sandbox, List<String>? level, List<String>? type, List<String>? text, List<String>? path, int? limit}) =>
+  Future<ListLogsResponse> listLogs({required String ownerId, String? startTime, String? endTime, String? direction, required List<String> resource, List<String>? instance, List<String>? host, List<String>? statusCode, List<String>? method, List<String>? task, List<String>? taskRun, List<String>? sandbox, List<String>? level, List<String>? type, List<String>? text, List<String>? path, int? limit}) =>
       raw.logs.listLogs(ownerId: ownerId, startTime: startTime, endTime: endTime, direction: direction, resource: resource, instance: instance, host: host, statusCode: statusCode, method: method, task: task, taskRun: taskRun, sandbox: sandbox, level: level, type: type, text: text, path: path, limit: limit);
 
   /// List log label values
@@ -401,7 +401,7 @@ extension RenderRestApi on RenderApi {
       raw.logs.listLogsValues(ownerId: ownerId, label: label, startTime: startTime, endTime: endTime, direction: direction, resource: resource, instance: instance, host: host, statusCode: statusCode, method: method, task: task, taskRun: taskRun, sandbox: sandbox, level: level, type: type, text: text, path: path, limit: limit);
 
   /// List maintenance runs
-  Future<List<Object?>> listMaintenance({List<String>? resourceId, List<String>? ownerId, List<String>? state}) =>
+  Future<List<ListMaintenanceResponse>> listMaintenance({List<String>? resourceId, List<String>? ownerId, List<String>? state}) =>
       raw.maintenance.listMaintenance(resourceId: resourceId, ownerId: ownerId, state: state);
 
   /// List notification overrides
@@ -429,27 +429,27 @@ extension RenderRestApi on RenderApi {
       raw.postgres.listPostgres(name: name, region: region, suspended: suspended, createdBefore: createdBefore, createdAfter: createdAfter, updatedBefore: updatedBefore, updatedAfter: updatedAfter, ownerId: ownerId, environmentId: environmentId, includeReplicas: includeReplicas, cursor: cursor, limit: limit);
 
   /// List Postgres exports
-  Future<List<Object?>> listPostgresExport({required String postgresId}) =>
+  Future<List<ListPostgresExportResponse>> listPostgresExport({required String postgresId}) =>
       raw.postgres.listPostgresExport(postgresId: postgresId);
 
   /// List live queries
-  Future<Map<String, Object?>> listPostgresProcesses({required String postgresId}) =>
+  Future<ListPostgresProcessesResponse> listPostgresProcesses({required String postgresId}) =>
       raw.postgres.listPostgresProcesses(postgresId: postgresId);
 
   /// List database, table, and index sizes
-  Future<Map<String, Object?>> listPostgresSizes({required String postgresId}) =>
+  Future<ListPostgresSizesResponse> listPostgresSizes({required String postgresId}) =>
       raw.postgres.listPostgresSizes(postgresId: postgresId);
 
   /// List table scans
-  Future<Map<String, Object?>> listPostgresTableScans({required String postgresId}) =>
+  Future<ListPostgresTableScansResponse> listPostgresTableScans({required String postgresId}) =>
       raw.postgres.listPostgresTableScans(postgresId: postgresId);
 
   /// List top queries
-  Future<Map<String, Object?>> listPostgresTopQueries({required String postgresId}) =>
+  Future<ListPostgresTopQueriesResponse> listPostgresTopQueries({required String postgresId}) =>
       raw.postgres.listPostgresTopQueries(postgresId: postgresId);
 
   /// List PostgreSQL Users
-  Future<List<Object?>> listPostgresUsers({required String postgresId}) =>
+  Future<List<ListPostgresUsersResponse>> listPostgresUsers({required String postgresId}) =>
       raw.postgres.listPostgresUsers(postgresId: postgresId);
 
   /// List projects
@@ -465,7 +465,7 @@ extension RenderRestApi on RenderApi {
       raw.registrycredentials.listRegistryCredentials(name: name, username: username, type: type, createdBefore: createdBefore, createdAfter: createdAfter, updatedBefore: updatedBefore, updatedAfter: updatedAfter, ownerId: ownerId, cursor: cursor, limit: limit);
 
   /// List log stream overrides
-  Future<List<Object?>> listResourceLogStreams({List<String>? ownerId, List<String>? logStreamId, List<String>? resourceId, List<String>? setting, String? cursor, int? limit}) =>
+  Future<List<ListResourceLogStreamsResponse>> listResourceLogStreams({List<String>? ownerId, List<String>? logStreamId, List<String>? resourceId, List<String>? setting, String? cursor, int? limit}) =>
       raw.logs.listResourceLogStreams(ownerId: ownerId, logStreamId: logStreamId, resourceId: resourceId, setting: setting, cursor: cursor, limit: limit);
 
   /// List redirect/rewrite rules
@@ -509,19 +509,19 @@ extension RenderRestApi on RenderApi {
       raw.workflows.listWorkflows(name: name, ownerId: ownerId, workflowId: workflowId, environmentId: environmentId, cursor: cursor, limit: limit);
 
   /// Update notification settings
-  Future<Map<String, Object?>> patchOwnerNotificationSettings({required String ownerId, required Map<String, Object?> body}) =>
+  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required Map<String, Object?> body}) =>
       raw.notificationSettings.patchOwnerNotificationSettings(ownerId: ownerId, body: body);
 
   /// Update redirect/rewrite rule priority
-  Future<Map<String, Object?>> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) =>
+  Future<PatchRouteResponse> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) =>
       raw.services.patchRoute(serviceId: serviceId, routeId: routeId, body: body);
 
   /// Update notification override
-  Future<Map<String, Object?>> patchServiceNotificationOverrides({required String serviceId, required Map<String, Object?> body}) =>
+  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required Map<String, Object?> body}) =>
       raw.notificationSettings.patchServiceNotificationOverrides(serviceId: serviceId, body: body);
 
   /// Create job
-  Future<Map<String, Object?>> postJob({required String serviceId, required Map<String, Object?> body}) =>
+  Future<PostJobResponse> postJob({required String serviceId, required Map<String, Object?> body}) =>
       raw.services.postJob(serviceId: serviceId, body: body);
 
   /// Create service preview (image-backed)
@@ -561,7 +561,7 @@ extension RenderRestApi on RenderApi {
       raw.services.restartService(serviceId: serviceId);
 
   /// Restore snapshot
-  Future<Map<String, Object?>> restoreSnapshot({required String diskId, required Map<String, Object?> body}) =>
+  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required Map<String, Object?> body}) =>
       raw.disks.restoreSnapshot(diskId: diskId, body: body);
 
   /// Resume Key Value instance
@@ -581,7 +581,7 @@ extension RenderRestApi on RenderApi {
       raw.services.resumeService(serviceId: serviceId);
 
   /// Retrieve Blueprint
-  Future<Map<String, Object?>> retrieveBlueprint({required String blueprintId}) =>
+  Future<RetrieveBlueprintResponse> retrieveBlueprint({required String blueprintId}) =>
       raw.blueprints.retrieveBlueprint(blueprintId: blueprintId);
 
   /// Retrieve custom domain
@@ -597,7 +597,7 @@ extension RenderRestApi on RenderApi {
       raw.services.retrieveDeploy(serviceId: serviceId, deployId: deployId);
 
   /// Retrieve disk
-  Future<Map<String, Object?>> retrieveDisk({required String diskId}) =>
+  Future<RetrieveDiskResponse> retrieveDisk({required String diskId}) =>
       raw.disks.retrieveDisk(diskId: diskId);
 
   /// Retrieve environment group
@@ -621,11 +621,11 @@ extension RenderRestApi on RenderApi {
       raw.environments.retrieveEnvironment(environmentId: environmentId);
 
   /// Retrieve event
-  Future<Map<String, Object?>> retrieveEvent({required String eventId}) =>
+  Future<RetrieveEventResponse> retrieveEvent({required String eventId}) =>
       raw.events.retrieveEvent(eventId: eventId);
 
   /// Retrieve job
-  Future<Map<String, Object?>> retrieveJob({required String serviceId, required String jobId}) =>
+  Future<RetrieveJobResponse> retrieveJob({required String serviceId, required String jobId}) =>
       raw.services.retrieveJob(serviceId: serviceId, jobId: jobId);
 
   /// Retrieve Key Value instance
@@ -637,7 +637,7 @@ extension RenderRestApi on RenderApi {
       raw.keyValue.retrieveKeyValueConnectionInfo(redisId: redisId);
 
   /// Retrieve maintenance run
-  Future<Map<String, Object?>> retrieveMaintenance({required String maintenanceRunId}) =>
+  Future<RetrieveMaintenanceResponse> retrieveMaintenance({required String maintenanceRunId}) =>
       raw.maintenance.retrieveMaintenance(maintenanceRunId: maintenanceRunId);
 
   /// Retrieve workspace
@@ -649,7 +649,7 @@ extension RenderRestApi on RenderApi {
       raw.owners.retrieveOwnerMembers(ownerId: ownerId);
 
   /// Retrieve notification settings
-  Future<Map<String, Object?>> retrieveOwnerNotificationSettings({required String ownerId}) =>
+  Future<RetrieveOwnerNotificationSettingsResponse> retrieveOwnerNotificationSettings({required String ownerId}) =>
       raw.notificationSettings.retrieveOwnerNotificationSettings(ownerId: ownerId);
 
   /// Retrieve Postgres instance
@@ -661,7 +661,7 @@ extension RenderRestApi on RenderApi {
       raw.postgres.retrievePostgresConnectionInfo(postgresId: postgresId);
 
   /// Retrieve point-in-time recovery status
-  Future<Map<String, Object?>> retrievePostgresRecoveryInfo({required String postgresId}) =>
+  Future<RetrievePostgresRecoveryInfoResponse> retrievePostgresRecoveryInfo({required String postgresId}) =>
       raw.postgres.retrievePostgresRecoveryInfo(postgresId: postgresId);
 
   /// Retrieve Project
@@ -689,7 +689,7 @@ extension RenderRestApi on RenderApi {
       raw.services.retrieveService(serviceId: serviceId);
 
   /// Retrieve notification override
-  Future<Map<String, Object?>> retrieveServiceNotificationOverrides({required String serviceId}) =>
+  Future<RetrieveServiceNotificationOverridesResponse> retrieveServiceNotificationOverrides({required String serviceId}) =>
       raw.notificationSettings.retrieveServiceNotificationOverrides(serviceId: serviceId);
 
   /// Retrieve service outbound IPs
@@ -697,7 +697,7 @@ extension RenderRestApi on RenderApi {
       raw.services.retrieveServiceOutboundIps(serviceId: serviceId);
 
   /// Retrieve a webhook
-  Future<Map<String, Object?>> retrieveWebhook({required String webhookId}) =>
+  Future<RetrieveWebhookResponse> retrieveWebhook({required String webhookId}) =>
       raw.webhooks.retrieveWebhook(webhookId: webhookId);
 
   /// Roll back deploy
@@ -745,7 +745,7 @@ extension RenderRestApi on RenderApi {
       raw.envGroups.unlinkServiceFromEnvGroup(envGroupId: envGroupId, serviceId: serviceId);
 
   /// Update Blueprint
-  Future<Map<String, Object?>> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) =>
+  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) =>
       raw.blueprints.updateBlueprint(blueprintId: blueprintId, body: body);
 
   /// Update dedicated IP set
@@ -753,7 +753,7 @@ extension RenderRestApi on RenderApi {
       raw.dedicatedIps.updateDedicatedIp(dedicatedIpId: dedicatedIpId, body: body);
 
   /// Update disk
-  Future<Map<String, Object?>> updateDisk({required String diskId, required Map<String, Object?> body}) =>
+  Future<UpdateDiskResponse> updateDisk({required String diskId, required Map<String, Object?> body}) =>
       raw.disks.updateDisk(diskId: diskId, body: body);
 
   /// Update environment group
@@ -793,7 +793,7 @@ extension RenderRestApi on RenderApi {
       raw.maintenance.updateMaintenance(maintenanceRunId: maintenanceRunId, body: body);
 
   /// Update log stream
-  Future<Map<String, Object?>> updateOwnerLogStream({required String ownerId, required Map<String, Object?> body}) =>
+  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({required String ownerId, required Map<String, Object?> body}) =>
       raw.logs.updateOwnerLogStream(ownerId: ownerId, body: body);
 
   /// Update Postgres instance
@@ -813,7 +813,7 @@ extension RenderRestApi on RenderApi {
       raw.registrycredentials.updateRegistryCredential(registryCredentialId: registryCredentialId, body: body);
 
   /// Update log stream override
-  Future<Map<String, Object?>> updateResourceLogStream({required String resourceId, required Map<String, Object?> body}) =>
+  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({required String resourceId, required Map<String, Object?> body}) =>
       raw.logs.updateResourceLogStream(resourceId: resourceId, body: body);
 
   /// Update secret files
@@ -825,11 +825,11 @@ extension RenderRestApi on RenderApi {
       raw.services.updateService(serviceId: serviceId, body: body);
 
   /// Update a webhook
-  Future<Map<String, Object?>> updateWebhook({required String webhookId, required Map<String, Object?> body}) =>
+  Future<UpdateWebhookResponse> updateWebhook({required String webhookId, required Map<String, Object?> body}) =>
       raw.webhooks.updateWebhook(webhookId: webhookId, body: body);
 
   /// Update workflow
-  Future<Map<String, Object?>> updateWorkflow({required String workflowId, required Map<String, Object?> body}) =>
+  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required Map<String, Object?> body}) =>
       raw.workflows.updateWorkflow(workflowId: workflowId, body: body);
 
   /// Update workspace member role
@@ -837,11 +837,11 @@ extension RenderRestApi on RenderApi {
       raw.owners.updateWorkspaceMember(ownerId: ownerId, userId: userId, body: body);
 
   /// Create or update metrics stream
-  Future<Map<String, Object?>> upsertOwnerMetricsStream({required String ownerId, required Map<String, Object?> body}) =>
+  Future<UpsertOwnerMetricsStreamResponse> upsertOwnerMetricsStream({required String ownerId, required Map<String, Object?> body}) =>
       raw.metricsStream.upsertOwnerMetricsStream(ownerId: ownerId, body: body);
 
   /// Validate Blueprint
-  Future<Map<String, Object?>> validateBlueprint() =>
+  Future<ValidateBlueprintResponse> validateBlueprint() =>
       raw.blueprints.validateBlueprint();
 
 }

@@ -46,38 +46,38 @@ class WorkflowsEndpoints {
   /// Create a workflow
   ///
   /// Create a new workflow service with the specified configuration.
-  Future<Map<String, Object?>> createWorkflow({required Map<String, Object?> body}) async {
+  Future<CreateWorkflowResponse> createWorkflow({required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/workflows',
       body: body,
     );
-    return json;
+    return CreateWorkflowResponse.fromJson(json);
   }
 
 
   /// Retrieve workflow
   ///
   /// Retrieve the workflow service with the provided ID.
-  Future<Map<String, Object?>> getWorkflow({required String workflowId}) async {
+  Future<GetWorkflowResponse> getWorkflow({required String workflowId}) async {
     final json = await _client.sendObject(
       'GET',
       '/workflows/$workflowId',
     );
-    return json;
+    return GetWorkflowResponse.fromJson(json);
   }
 
 
   /// Update workflow
   ///
   /// Update the workflow service with the provided ID.
-  Future<Map<String, Object?>> updateWorkflow({required String workflowId, required Map<String, Object?> body}) async {
+  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/workflows/$workflowId',
       body: body,
     );
-    return json;
+    return UpdateWorkflowResponse.fromJson(json);
   }
 
 

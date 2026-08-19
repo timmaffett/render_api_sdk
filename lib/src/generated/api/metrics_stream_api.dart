@@ -3,6 +3,7 @@
 // Source: tool/render-openapi.json
 
 import '../../client.dart';
+import '../models.dart';
 
 /// Generated bindings for the `/metrics-stream` endpoints.
 class MetricsStreamEndpoints {
@@ -13,25 +14,25 @@ class MetricsStreamEndpoints {
   /// Retrieve metrics stream
   ///
   /// Returns metrics stream information for the specified workspace.
-  Future<Map<String, Object?>> getOwnerMetricsStream({required String ownerId}) async {
+  Future<GetOwnerMetricsStreamResponse> getOwnerMetricsStream({required String ownerId}) async {
     final json = await _client.sendObject(
       'GET',
       '/metrics-stream/$ownerId',
     );
-    return json;
+    return GetOwnerMetricsStreamResponse.fromJson(json);
   }
 
 
   /// Create or update metrics stream
   ///
   /// Creates or updates the metrics stream for the specified workspace.
-  Future<Map<String, Object?>> upsertOwnerMetricsStream({required String ownerId, required Map<String, Object?> body}) async {
+  Future<UpsertOwnerMetricsStreamResponse> upsertOwnerMetricsStream({required String ownerId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/metrics-stream/$ownerId',
       body: body,
     );
-    return json;
+    return UpsertOwnerMetricsStreamResponse.fromJson(json);
   }
 
 

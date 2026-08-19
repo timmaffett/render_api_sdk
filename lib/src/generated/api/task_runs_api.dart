@@ -49,13 +49,13 @@ class TaskRunsEndpoints {
   /// Run task
   ///
   /// Kicks off a run of the workflow task with the provided ID, passing the provided input data.
-  Future<Map<String, Object?>> createTask({required Map<String, Object?> body}) async {
+  Future<CreateTaskResponse> createTask({required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/task-runs',
       body: body,
     );
-    return json;
+    return CreateTaskResponse.fromJson(json);
   }
 
 
@@ -80,12 +80,12 @@ class TaskRunsEndpoints {
   /// Retrieve task run
   ///
   /// Retrieve the workflow task run with the provided ID.
-  Future<Map<String, Object?>> getTaskRun({required String taskRunId}) async {
+  Future<GetTaskRunResponse> getTaskRun({required String taskRunId}) async {
     final json = await _client.sendObject(
       'GET',
       '/task-runs/$taskRunId',
     );
-    return json;
+    return GetTaskRunResponse.fromJson(json);
   }
 
 

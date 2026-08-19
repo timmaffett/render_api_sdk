@@ -55,12 +55,12 @@ class WorkflowversionsEndpoints {
   /// Retrieve workflow version
   ///
   /// Retrieve the specific workflow service version with the provided ID.
-  Future<Map<String, Object?>> getWorkflowVersion({required String workflowVersionId}) async {
+  Future<GetWorkflowVersionResponse> getWorkflowVersion({required String workflowVersionId}) async {
     final json = await _client.sendObject(
       'GET',
       '/workflowversions/$workflowVersionId',
     );
-    return json;
+    return GetWorkflowVersionResponse.fromJson(json);
   }
 
 

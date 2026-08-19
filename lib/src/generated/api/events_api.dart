@@ -3,6 +3,7 @@
 // Source: tool/render-openapi.json
 
 import '../../client.dart';
+import '../models.dart';
 
 /// Generated bindings for the `/events` endpoints.
 class EventsEndpoints {
@@ -13,12 +14,12 @@ class EventsEndpoints {
   /// Retrieve event
   ///
   /// Retrieve the details of a particular event
-  Future<Map<String, Object?>> retrieveEvent({required String eventId}) async {
+  Future<RetrieveEventResponse> retrieveEvent({required String eventId}) async {
     final json = await _client.sendObject(
       'GET',
       '/events/$eventId',
     );
-    return json;
+    return RetrieveEventResponse.fromJson(json);
   }
 
 

@@ -13,25 +13,15 @@ library;
 
 import 'package:http/http.dart' as http;
 
-import 'src/api/tasks_api.dart';
-import 'src/api/task_runs_api.dart';
-import 'src/api/workflows_api.dart';
 import 'src/client.dart';
 import 'src/generated/endpoints.dart';
 
-export 'src/api/task_runs_api.dart' show TaskRunsApi, TaskRunListX;
-export 'src/api/tasks_api.dart' show TasksApi;
-export 'src/api/workflows_api.dart' show WorkflowsApi;
 export 'src/client.dart'
     show RenderApiClient, kRenderBaseUrl, kRenderLocalDevUrl;
 export 'src/exceptions.dart' hide exceptionFor, hintFor;
-export 'src/models/enums.dart';
-export 'src/models/task_run.dart';
-export 'src/models/workflow.dart';
+export 'src/generated/endpoints.dart' show RenderEndpoints;
 export 'src/generated/flat.dart';
 export 'src/generated/generated.dart';
-export 'src/generated/endpoints.dart' show RenderEndpoints;
-export 'src/pagination.dart' show Page, paginate;
 
 /// Entry point to the Render API.
 ///
@@ -60,16 +50,12 @@ class RenderApi {
 
   /// Wraps an existing [RenderApiClient] — useful for tests, or for pointing
   /// at a different transport.
-  RenderApi.fromClient(this.client)
-      : workflows = WorkflowsApi(client),
-        tasks = TasksApi(client),
-        taskRuns = TaskRunsApi(client),
-        raw = RenderEndpoints(client);
+  RenderApi.fromClient(this.client) : raw = RenderEndpoints(client);
 
   /// Points at the CLI's local task server (`render workflows dev`).
   ///
-  /// Only task endpoints are simulated there; workflow and version endpoints
-  /// will fail.
+  /// Only task endpoints are simulated there. For running tasks, prefer
+  /// `package:render_workflows`, which is built for it.
   factory RenderApi.localDev({String? url, http.Client? httpClient}) =>
       RenderApi.fromClient(
         RenderApiClient.localDev(url: url, httpClient: httpClient),
@@ -78,15 +64,6 @@ class RenderApi {
   /// The underlying transport. Use it for endpoints this package does not
   /// model yet.
   final RenderApiClient client;
-
-  /// Workflow services and their versions.
-  final WorkflowsApi workflows;
-
-  /// Registered task definitions.
-  final TasksApi tasks;
-
-  /// Task runs: starting, inspecting, cancelling and watching.
-  final TaskRunsApi taskRuns;
 
   /// Every endpoint in the Render API, generated from the spec — services,
   /// databases, deploys, metrics, environments and the rest.

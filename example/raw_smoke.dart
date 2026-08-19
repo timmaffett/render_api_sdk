@@ -12,15 +12,20 @@ Future<void> main() async {
     final projects = await render.raw.projects.listProjects(limit: 5);
     print('projects:    ${projects.length}');
 
-    // A generated call and the hand-written facade against the same resource.
-    final rawWorkflows = await render.raw.workflows.listWorkflows(limit: 10);
-    final facadeWorkflows = await render.workflows.list().toList();
-    print('workflows:   raw=${rawWorkflows.length} facade=${facadeWorkflows.length}');
-    print('facade slug: ${facadeWorkflows.first.slug}');
+    // The flat and grouped forms are the same call by different routes.
+    final flat = await render.listWorkflows(limit: 10);
+    final grouped = await render.raw.workflows.listWorkflows(limit: 10);
+    print('workflows:   flat=${flat.length} grouped=${grouped.length}');
+
+    // Inline response schemas are typed too, not handed back as maps.
+    if (flat.isNotEmpty) {
+      final one = await render.getWorkflow(workflowId: flat.first.workflow.id);
+      print('typed:       ${one.name} (${one.buildConfig.runtime.wireValue})');
+    }
 
     // A typed error still surfaces through the generated layer.
     try {
-      await render.raw.services.retrieveService(serviceId: 'srv-nope');
+      await render.retrieveService(serviceId: 'srv-nope');
       print('ERROR: expected a failure');
     } on RenderException catch (e) {
       print('typed error: ${e.runtimeType}');

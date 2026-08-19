@@ -37,6 +37,24 @@ class _Emitted {
 
 final emittedMethods = <_Emitted>[];
 
+/// Types generated for inline response schemas, appended to models.dart.
+///
+/// Roughly a third of responses describe their shape inline rather than by
+/// reference. Falling back to an untyped map for those would leave a third of
+/// the API without types, so each gets a class named after its operation.
+final extraModels = StringBuffer();
+
+/// Enums already emitted, keyed by their value set.
+///
+/// Inline schemas repeat the same enumerations constantly — every response
+/// carrying a `region` would otherwise get its own Region type, and two
+/// structurally identical but distinct enums are a trap the moment a value
+/// from one meets a parameter expecting the other. Identical value sets are
+/// therefore one type.
+final enumsByValues = <String, String>{};
+
+String _enumKey(List<dynamic> values) => values.join('\u0000');
+
 void main() {
   final file = File('tool/render-openapi.json');
   if (!file.existsSync()) {
@@ -64,7 +82,6 @@ void main() {
   models.writeln(_helpers());
 
   Directory('lib/src/generated/api').createSync(recursive: true);
-  File('lib/src/generated/models.dart').writeAsStringSync(models.toString());
 
   // ---- APIs, grouped by the first path segment --------------------------
   final groups = <String, List<_Op>>{};
@@ -84,12 +101,18 @@ void main() {
   }
 
   final exports = <String>[];
+  final apiFiles = <String, String>{};
   for (final group in groups.keys.toList()..sort()) {
     final fileName = '${_snake(group)}_api.dart';
-    File('lib/src/generated/api/$fileName')
-        .writeAsStringSync(_emitApi(group, groups[group]!));
+    apiFiles[fileName] = _emitApi(group, groups[group]!);
     exports.add(fileName);
   }
+
+  // Written now, after API emission has contributed its inline response types.
+  models.write(extraModels);
+  File('lib/src/generated/models.dart').writeAsStringSync(models.toString());
+  apiFiles.forEach((name, source) =>
+      File('lib/src/generated/api/$name').writeAsStringSync(source));
 
   final barrel = StringBuffer()..writeln(_header);
   for (final e in exports..sort()) {
@@ -221,6 +244,7 @@ String _emitType(String name, Map<String, dynamic> schema) {
 
 String _emitEnum(String name, Map<String, dynamic> schema) {
   final values = (schema['enum'] as List).cast<String>();
+  enumsByValues.putIfAbsent(_enumKey(values), () => name);
   final buf = StringBuffer();
   final doc = schema['description'] as String?;
   if (doc != null) buf.writeln(_doc(doc));
@@ -401,9 +425,13 @@ _TypeRef _dartType(String owner, String hint, Map<String, dynamic> schema,
   }
 
   if (s['enum'] is List && (s['type'] ?? 'string') == 'string') {
-    final name = _className('$owner${_pascal(hint)}');
-    nested.write(_emitEnum(name, s));
-    emittedModels[name] = '';
+    final values = (s['enum'] as List).cast<String>();
+    final existing = enumsByValues[_enumKey(values)];
+    final name = existing ?? _className('$owner${_pascal(hint)}');
+    if (existing == null) {
+      nested.write(_emitEnum(name, s));
+      emittedModels[name] = '';
+    }
     return _TypeRef(
       name,
       (a, n) => '$name.fromWire($a)',
@@ -700,6 +728,7 @@ class _Return {
 }
 
 _Return _returnType(_Op op) {
+  final inlineName = '${_className(op.id)}Response';
   final responses = (op.op['responses'] as Map<String, dynamic>?) ?? const {};
   final ok = responses.entries
       .where((e) => e.key.startsWith('2'))
@@ -728,6 +757,15 @@ _Return _returnType(_Op op) {
         true,
       );
     }
+    if (itemResolved['properties'] is Map) {
+      extraModels.write(_emitType(inlineName, itemResolved));
+      return _Return(
+        'List<$inlineName>',
+        'sendList',
+        'json.whereType<Map<String, Object?>>().map($inlineName.fromJson).toList()',
+        true,
+      );
+    }
     return _Return('List<Object?>', 'sendList', 'json', true);
   }
 
@@ -735,7 +773,8 @@ _Return _returnType(_Op op) {
     return _Return(refName, 'sendObject', '$refName.fromJson(json)', true);
   }
   if (resolved['properties'] is Map) {
-    return _Return('Map<String, Object?>', 'sendObject', 'json', true);
+    extraModels.write(_emitType(inlineName, resolved));
+    return _Return(inlineName, 'sendObject', '$inlineName.fromJson(json)', true);
   }
   return _Return('Map<String, Object?>', 'sendObject', 'json', true);
 }

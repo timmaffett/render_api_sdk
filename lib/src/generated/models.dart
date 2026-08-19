@@ -3779,29 +3779,6 @@ class PostgresConnectionInfo {
 }
 
 
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum PostgresDetailMaintenanceState {
-  scheduled('scheduled'),
-  inProgress('in_progress'),
-  userFixRequired('user_fix_required'),
-  cancelled('cancelled'),
-  succeeded('succeeded'),
-  failed('failed'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const PostgresDetailMaintenanceState(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static PostgresDetailMaintenanceState fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
 class PostgresDetailMaintenance {
   const PostgresDetailMaintenance({
     required this.id,
@@ -3816,7 +3793,7 @@ class PostgresDetailMaintenance {
         type: json['type'] as String? ?? '',
         scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
-        state: PostgresDetailMaintenanceState.fromWire(json['state']),
+        state: KeyValueDetailMaintenanceState.fromWire(json['state']),
       );
 
   final String id;
@@ -3824,7 +3801,7 @@ class PostgresDetailMaintenance {
   final DateTime scheduledAt;
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
-  final PostgresDetailMaintenanceState state;
+  final KeyValueDetailMaintenanceState state;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -3833,70 +3810,6 @@ class PostgresDetailMaintenance {
         if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
         'state': state.wireValue,
       };
-}
-
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum PostgresDetailPlan {
-  free('free'),
-  starter('starter'),
-  standard('standard'),
-  pro('pro'),
-  proPlus('pro_plus'),
-  custom('custom'),
-  basic256mb('basic_256mb'),
-  basic1gb('basic_1gb'),
-  basic4gb('basic_4gb'),
-  pro4gb('pro_4gb'),
-  pro8gb('pro_8gb'),
-  pro16gb('pro_16gb'),
-  pro32gb('pro_32gb'),
-  pro64gb('pro_64gb'),
-  pro128gb('pro_128gb'),
-  pro192gb('pro_192gb'),
-  pro256gb('pro_256gb'),
-  pro384gb('pro_384gb'),
-  pro512gb('pro_512gb'),
-  accelerated16gb('accelerated_16gb'),
-  accelerated32gb('accelerated_32gb'),
-  accelerated64gb('accelerated_64gb'),
-  accelerated128gb('accelerated_128gb'),
-  accelerated256gb('accelerated_256gb'),
-  accelerated384gb('accelerated_384gb'),
-  accelerated512gb('accelerated_512gb'),
-  accelerated768gb('accelerated_768gb'),
-  accelerated1024gb('accelerated_1024gb'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const PostgresDetailPlan(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static PostgresDetailPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum PostgresDetailSuspended {
-  suspended('suspended'),
-  notSuspended('not_suspended'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const PostgresDetailSuspended(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static PostgresDetailSuspended fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
 }
 
 class PostgresDetail {
@@ -3943,7 +3856,7 @@ class PostgresDetail {
         maintenance: json['maintenance'] == null ? null : PostgresDetailMaintenance.fromJson(json['maintenance']! as Map<String, Object?>),
         name: json['name'] as String? ?? '',
         owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        plan: PostgresDetailPlan.fromWire(json['plan']),
+        plan: PostgresPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
         primaryPostgresId: json['primaryPostgresID'] as String?,
@@ -3952,7 +3865,7 @@ class PostgresDetail {
         role: DatabaseRole.fromWire(json['role']),
         status: DatabaseStatus.fromWire(json['status']),
         version: PostgresVersion.fromWire(json['version']),
-        suspended: PostgresDetailSuspended.fromWire(json['suspended']),
+        suspended: PostgresSuspended.fromWire(json['suspended']),
         suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
         diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
         connectionPool: json['connectionPool'] as String? ?? '',
@@ -3973,7 +3886,7 @@ class PostgresDetail {
   final PostgresDetailMaintenance? maintenance;
   final String name;
   final Owner owner;
-  final PostgresDetailPlan plan;
+  final PostgresPlan plan;
   final int? diskSizeGb;
   final Map<String, Object?>? parameterOverrides;
   final String? primaryPostgresId;
@@ -3984,7 +3897,7 @@ class PostgresDetail {
   final DatabaseStatus status;
   /// The PostgreSQL version
   final PostgresVersion version;
-  final PostgresDetailSuspended suspended;
+  final PostgresSuspended suspended;
   final List<SuspenderType> suspenders;
   final bool diskAutoscalingEnabled;
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
@@ -4020,51 +3933,6 @@ class PostgresDetail {
       };
 }
 
-
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum PostgresPatchinputPlan {
-  free('free'),
-  starter('starter'),
-  standard('standard'),
-  pro('pro'),
-  proPlus('pro_plus'),
-  custom('custom'),
-  basic256mb('basic_256mb'),
-  basic1gb('basic_1gb'),
-  basic4gb('basic_4gb'),
-  pro4gb('pro_4gb'),
-  pro8gb('pro_8gb'),
-  pro16gb('pro_16gb'),
-  pro32gb('pro_32gb'),
-  pro64gb('pro_64gb'),
-  pro128gb('pro_128gb'),
-  pro192gb('pro_192gb'),
-  pro256gb('pro_256gb'),
-  pro384gb('pro_384gb'),
-  pro512gb('pro_512gb'),
-  accelerated16gb('accelerated_16gb'),
-  accelerated32gb('accelerated_32gb'),
-  accelerated64gb('accelerated_64gb'),
-  accelerated128gb('accelerated_128gb'),
-  accelerated256gb('accelerated_256gb'),
-  accelerated384gb('accelerated_384gb'),
-  accelerated512gb('accelerated_512gb'),
-  accelerated768gb('accelerated_768gb'),
-  accelerated1024gb('accelerated_1024gb'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const PostgresPatchinputPlan(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static PostgresPatchinputPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
 
 class ReadReplicaInput {
   const ReadReplicaInput({
@@ -4104,7 +3972,7 @@ class PostgresPatchinput {
 
   factory PostgresPatchinput.fromJson(Map<String, Object?> json) => PostgresPatchinput(
         name: json['name'] as String?,
-        plan: PostgresPatchinputPlan.fromWire(json['plan']),
+        plan: PostgresPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         enableDiskAutoscaling: json['enableDiskAutoscaling'] as bool?,
         connectionPool: json['connectionPool'] as String?,
@@ -4117,7 +3985,7 @@ class PostgresPatchinput {
       );
 
   final String? name;
-  final PostgresPatchinputPlan? plan;
+  final PostgresPlan? plan;
   /// The number of gigabytes of disk space to allocate for the database
   final int? diskSizeGb;
   final bool? enableDiskAutoscaling;
@@ -4147,51 +4015,6 @@ class PostgresPatchinput {
       };
 }
 
-
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum PostgresPostinputPlan {
-  free('free'),
-  starter('starter'),
-  standard('standard'),
-  pro('pro'),
-  proPlus('pro_plus'),
-  custom('custom'),
-  basic256mb('basic_256mb'),
-  basic1gb('basic_1gb'),
-  basic4gb('basic_4gb'),
-  pro4gb('pro_4gb'),
-  pro8gb('pro_8gb'),
-  pro16gb('pro_16gb'),
-  pro32gb('pro_32gb'),
-  pro64gb('pro_64gb'),
-  pro128gb('pro_128gb'),
-  pro192gb('pro_192gb'),
-  pro256gb('pro_256gb'),
-  pro384gb('pro_384gb'),
-  pro512gb('pro_512gb'),
-  accelerated16gb('accelerated_16gb'),
-  accelerated32gb('accelerated_32gb'),
-  accelerated64gb('accelerated_64gb'),
-  accelerated128gb('accelerated_128gb'),
-  accelerated256gb('accelerated_256gb'),
-  accelerated384gb('accelerated_384gb'),
-  accelerated512gb('accelerated_512gb'),
-  accelerated768gb('accelerated_768gb'),
-  accelerated1024gb('accelerated_1024gb'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const PostgresPostinputPlan(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static PostgresPostinputPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
 
 /// Input for creating a database
 class PostgresPostinput {
@@ -4224,7 +4047,7 @@ class PostgresPostinput {
         enableHighAvailability: json['enableHighAvailability'] as bool?,
         environmentId: json['environmentId'] as String?,
         ownerId: json['ownerId'] as String? ?? '',
-        plan: PostgresPostinputPlan.fromWire(json['plan']),
+        plan: PostgresPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         enableDiskAutoscaling: json['enableDiskAutoscaling'] as bool?,
         connectionPool: json['connectionPool'] as String?,
@@ -4247,7 +4070,7 @@ class PostgresPostinput {
   final String? environmentId;
   /// The ID of the workspace to create the database for
   final String ownerId;
-  final PostgresPostinputPlan plan;
+  final PostgresPlan plan;
   /// The number of gigabytes of disk space to allocate for the database
   final int? diskSizeGb;
   final bool? enableDiskAutoscaling;
@@ -5093,29 +4916,6 @@ class RedisConnectionInfo {
 }
 
 
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum RedisDetailMaintenanceState {
-  scheduled('scheduled'),
-  inProgress('in_progress'),
-  userFixRequired('user_fix_required'),
-  cancelled('cancelled'),
-  succeeded('succeeded'),
-  failed('failed'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const RedisDetailMaintenanceState(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static RedisDetailMaintenanceState fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
 class RedisDetailMaintenance {
   const RedisDetailMaintenance({
     required this.id,
@@ -5130,7 +4930,7 @@ class RedisDetailMaintenance {
         type: json['type'] as String? ?? '',
         scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
-        state: RedisDetailMaintenanceState.fromWire(json['state']),
+        state: KeyValueDetailMaintenanceState.fromWire(json['state']),
       );
 
   final String id;
@@ -5138,7 +4938,7 @@ class RedisDetailMaintenance {
   final DateTime scheduledAt;
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
-  final RedisDetailMaintenanceState state;
+  final KeyValueDetailMaintenanceState state;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -5575,25 +5375,6 @@ class SecretFileWithCursor {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum ServiceSuspended {
-  suspended('suspended'),
-  notSuspended('not_suspended'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const ServiceSuspended(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static ServiceSuspended fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
 enum ServiceType {
   staticSite('static_site'),
   webService('web_service'),
@@ -5654,7 +5435,7 @@ class Service {
         repo: json['repo'] as String?,
         rootDir: json['rootDir'] as String? ?? '',
         slug: json['slug'] as String? ?? '',
-        suspended: ServiceSuspended.fromWire(json['suspended']),
+        suspended: PostgresSuspended.fromWire(json['suspended']),
         suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
         type: ServiceType.fromWire(json['type']),
         updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
@@ -5677,7 +5458,7 @@ class Service {
   final String? repo;
   final String rootDir;
   final String slug;
-  final ServiceSuspended suspended;
+  final PostgresSuspended suspended;
   final List<SuspenderType> suspenders;
   final ServiceType type;
   final DateTime updatedAt;
@@ -6298,30 +6079,6 @@ enum TaskRunWithCursorTaskRunStatus {
       );
 }
 
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum TaskRunWithCursorTaskRunAttemptsItemStatus {
-  pending('pending'),
-  running('running'),
-  completed('completed'),
-  succeeded('succeeded'),
-  failed('failed'),
-  canceled('canceled'),
-  paused('paused'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const TaskRunWithCursorTaskRunAttemptsItemStatus(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static TaskRunWithCursorTaskRunAttemptsItemStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
 class TaskRunWithCursorTaskRunAttemptsItem {
   const TaskRunWithCursorTaskRunAttemptsItem({
     this.taskRunId,
@@ -6335,7 +6092,7 @@ class TaskRunWithCursorTaskRunAttemptsItem {
   factory TaskRunWithCursorTaskRunAttemptsItem.fromJson(Map<String, Object?> json) => TaskRunWithCursorTaskRunAttemptsItem(
         taskRunId: json['taskRunId'] as String?,
         attempt: (json['attempt'] as num?)?.toInt() ?? 0,
-        status: TaskRunWithCursorTaskRunAttemptsItemStatus.fromWire(json['status']),
+        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
         enqueuedAt: parseDate(json['enqueuedAt']),
         startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
@@ -6345,7 +6102,7 @@ class TaskRunWithCursorTaskRunAttemptsItem {
   final String? taskRunId;
   /// The 0-indexed attempt number.
   final int attempt;
-  final TaskRunWithCursorTaskRunAttemptsItemStatus status;
+  final TaskRunWithCursorTaskRunStatus status;
   final DateTime? enqueuedAt;
   final DateTime startedAt;
   final DateTime? completedAt;
@@ -7207,90 +6964,6 @@ class WebhookEventWithCursor {
 }
 
 
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum WebhookWithCursorWebhookEventFilterItem {
-  artifactFetchFailed('artifact_fetch_failed'),
-  artifactSourceChanged('artifact_source_changed'),
-  autoscalingConfigChanged('autoscaling_config_changed'),
-  autoscalingEnded('autoscaling_ended'),
-  autoscalingStarted('autoscaling_started'),
-  branchDeleted('branch_deleted'),
-  buildEnded('build_ended'),
-  buildStarted('build_started'),
-  commitIgnored('commit_ignored'),
-  cronJobRunEnded('cron_job_run_ended'),
-  cronJobRunStarted('cron_job_run_started'),
-  deployEnded('deploy_ended'),
-  deployStarted('deploy_started'),
-  diskCreated('disk_created'),
-  diskUpdated('disk_updated'),
-  diskDeleted('disk_deleted'),
-  imagePullFailed('image_pull_failed'),
-  instanceCountChanged('instance_count_changed'),
-  jobRunEnded('job_run_ended'),
-  maintenanceModeEnabled('maintenance_mode_enabled'),
-  maintenanceModeUriUpdated('maintenance_mode_uri_updated'),
-  maintenanceEnded('maintenance_ended'),
-  maintenanceStarted('maintenance_started'),
-  pipelineMinutesExhausted('pipeline_minutes_exhausted'),
-  planChanged('plan_changed'),
-  preDeployEnded('pre_deploy_ended'),
-  preDeployStarted('pre_deploy_started'),
-  serverAvailable('server_available'),
-  serverFailed('server_failed'),
-  serverHardwareFailure('server_hardware_failure'),
-  serverRestarted('server_restarted'),
-  serviceResumed('service_resumed'),
-  serviceSuspended('service_suspended'),
-  zeroDowntimeRedeployEnded('zero_downtime_redeploy_ended'),
-  zeroDowntimeRedeployStarted('zero_downtime_redeploy_started'),
-  edgeCacheEnabled('edge_cache_enabled'),
-  edgeCacheDisabled('edge_cache_disabled'),
-  edgeCachePurged('edge_cache_purged'),
-  autoDeployDisabled('auto_deploy_disabled'),
-  autoDeployEnabled('auto_deploy_enabled'),
-  postgresAvailable('postgres_available'),
-  postgresBackupCompleted('postgres_backup_completed'),
-  postgresBackupFailed('postgres_backup_failed'),
-  postgresBackupStarted('postgres_backup_started'),
-  postgresClusterLeaderChanged('postgres_cluster_leader_changed'),
-  postgresConnectionPoolChanged('postgres_connection_pool_changed'),
-  postgresConnectionPoolEnabledChanged('postgres_connection_pool_enabled_changed'),
-  postgresCreated('postgres_created'),
-  postgresDiskSizeChanged('postgres_disk_size_changed'),
-  postgresDiskAutoscalingEnabledChanged('postgres_disk_autoscaling_enabled_changed'),
-  postgresHaStatusChanged('postgres_ha_status_changed'),
-  postgresRestarted('postgres_restarted'),
-  postgresUnavailable('postgres_unavailable'),
-  postgresUpgradeFailed('postgres_upgrade_failed'),
-  postgresUpgradeStarted('postgres_upgrade_started'),
-  postgresUpgradeSucceeded('postgres_upgrade_succeeded'),
-  postgresRestoreFailed('postgres_restore_failed'),
-  postgresRestoreSucceeded('postgres_restore_succeeded'),
-  postgresReadReplicasChanged('postgres_read_replicas_changed'),
-  postgresPitrCheckpointStarted('postgres_pitr_checkpoint_started'),
-  postgresPitrCheckpointFailed('postgres_pitr_checkpoint_failed'),
-  postgresPitrCheckpointCompleted('postgres_pitr_checkpoint_completed'),
-  postgresReadReplicaStale('postgres_read_replica_stale'),
-  postgresWalArchiveFailed('postgres_wal_archive_failed'),
-  keyValueAvailable('key_value_available'),
-  keyValueConfigRestart('key_value_config_restart'),
-  keyValueUnhealthy('key_value_unhealthy'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const WebhookWithCursorWebhookEventFilterItem(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static WebhookWithCursorWebhookEventFilterItem fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
 class WebhookWithCursorWebhook {
   const WebhookWithCursorWebhook({
     required this.id,
@@ -7307,7 +6980,7 @@ class WebhookWithCursorWebhook {
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookWithCursorWebhookEventFilterItem.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
       );
 
   final String id;
@@ -7316,7 +6989,7 @@ class WebhookWithCursorWebhook {
   final String secret;
   final bool enabled;
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
-  final List<WebhookWithCursorWebhookEventFilterItem> eventFilter;
+  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -7485,29 +7158,6 @@ class WorkflowWithCursorWorkflowBuildConfig {
       };
 }
 
-/// Defaults to "oregon"
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum WorkflowWithCursorWorkflowRegion {
-  frankfurt('frankfurt'),
-  oregon('oregon'),
-  ohio('ohio'),
-  singapore('singapore'),
-  virginia('virginia'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const WorkflowWithCursorWorkflowRegion(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static WorkflowWithCursorWorkflowRegion fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
 /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -7552,7 +7202,7 @@ class WorkflowWithCursorWorkflow {
         updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         buildConfig: WorkflowWithCursorWorkflowBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
         runCommand: json['runCommand'] as String? ?? '',
-        region: WorkflowWithCursorWorkflowRegion.fromWire(json['region']),
+        region: Region.fromWire(json['region']),
         environmentId: json['environmentId'] as String?,
         slug: json['slug'] as String?,
         autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
@@ -7567,7 +7217,7 @@ class WorkflowWithCursorWorkflow {
   /// Command to run the workflow.
   final String runCommand;
   /// Defaults to "oregon"
-  final WorkflowWithCursorWorkflowRegion region;
+  final Region region;
   final String? environmentId;
   final String? slug;
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
@@ -7613,4 +7263,3591 @@ class WorkflowWithCursor {
 /// failing an entire response.
 DateTime? parseDate(Object? value) =>
     value is String ? DateTime.tryParse(value) : null;
+
+class ValidateBlueprintResponseErrorsItem {
+  const ValidateBlueprintResponseErrorsItem({
+    this.path,
+    required this.error,
+    this.line,
+    this.column,
+  });
+
+  factory ValidateBlueprintResponseErrorsItem.fromJson(Map<String, Object?> json) => ValidateBlueprintResponseErrorsItem(
+        path: json['path'] as String?,
+        error: json['error'] as String? ?? '',
+        line: (json['line'] as num?)?.toInt(),
+        column: (json['column'] as num?)?.toInt(),
+      );
+
+  /// The path to the field with the error (e.g., `services[0].plan`)
+  final String? path;
+  /// The error message
+  final String error;
+  /// The line number in the YAML file (1-indexed)
+  final int? line;
+  /// The column number in the YAML file (1-indexed)
+  final int? column;
+
+  Map<String, Object?> toJson() => {
+        if (path != null) 'path': path,
+        'error': error,
+        if (line != null) 'line': line,
+        if (column != null) 'column': column,
+      };
+}
+
+/// A summary of the resources that would be created as part of the Blueprint. Only present if `valid` is `true`.
+class ValidateBlueprintResponsePlan {
+  const ValidateBlueprintResponsePlan({
+    this.services,
+    this.databases,
+    this.keyValue,
+    this.envGroups,
+    this.totalActions,
+  });
+
+  factory ValidateBlueprintResponsePlan.fromJson(Map<String, Object?> json) => ValidateBlueprintResponsePlan(
+        services: (json['services'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        databases: (json['databases'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        keyValue: (json['keyValue'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        envGroups: (json['envGroups'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        totalActions: (json['totalActions'] as num?)?.toInt(),
+      );
+
+  /// The names of services that would be created as part of the Blueprint.
+  final List<String>? services;
+  /// The names of Render Postgres databases that would be created as part of the Blueprint.
+  final List<String>? databases;
+  /// The names of Render Key Value instances that would be created as part of the Blueprint.
+  final List<String>? keyValue;
+  /// The names of environment groups that would be created as part of the Blueprint.
+  final List<String>? envGroups;
+  /// The total number of actions that would be performed by the Blueprint. In addition to created resources, this includes modifications to individual configuration fields.
+  final int? totalActions;
+
+  Map<String, Object?> toJson() => {
+        if (services != null) 'services': services!.map((e) => e).toList(),
+        if (databases != null) 'databases': databases!.map((e) => e).toList(),
+        if (keyValue != null) 'keyValue': keyValue!.map((e) => e).toList(),
+        if (envGroups != null) 'envGroups': envGroups!.map((e) => e).toList(),
+        if (totalActions != null) 'totalActions': totalActions,
+      };
+}
+
+class ValidateBlueprintResponse {
+  const ValidateBlueprintResponse({
+    required this.valid,
+    this.errors,
+    this.plan,
+  });
+
+  factory ValidateBlueprintResponse.fromJson(Map<String, Object?> json) => ValidateBlueprintResponse(
+        valid: json['valid'] as bool? ?? false,
+        errors: (json['errors'] as List<Object?>?)?.map((e) => ValidateBlueprintResponseErrorsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        plan: json['plan'] == null ? null : ValidateBlueprintResponsePlan.fromJson(json['plan']! as Map<String, Object?>),
+      );
+
+  /// If `true`, the Blueprint validated successfully. If `false`, at least one validation error occurred.
+  final bool valid;
+  /// A list of validation errors. Only present if `valid` is `false`.
+  final List<ValidateBlueprintResponseErrorsItem>? errors;
+  /// A summary of the resources that would be created as part of the Blueprint. Only present if `valid` is `true`.
+  final ValidateBlueprintResponsePlan? plan;
+
+  Map<String, Object?> toJson() => {
+        'valid': valid,
+        if (errors != null) 'errors': errors!.map((e) => e.toJson()).toList(),
+        if (plan != null) 'plan': plan!.toJson(),
+      };
+}
+
+/// type of the resource (ex. web_service or postgres)
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum RetrieveBlueprintResponseResourcesItemType {
+  staticSite('static_site'),
+  webService('web_service'),
+  privateService('private_service'),
+  backgroundWorker('background_worker'),
+  cronJob('cron_job'),
+  redis('redis'),
+  keyValue('key_value'),
+  postgres('postgres'),
+  environmentGroup('environment_group'),
+  artifactSource('artifact_source'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const RetrieveBlueprintResponseResourcesItemType(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static RetrieveBlueprintResponseResourcesItemType fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class RetrieveBlueprintResponseResourcesItem {
+  const RetrieveBlueprintResponseResourcesItem({
+    required this.id,
+    required this.name,
+    required this.type,
+  });
+
+  factory RetrieveBlueprintResponseResourcesItem.fromJson(Map<String, Object?> json) => RetrieveBlueprintResponseResourcesItem(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        type: RetrieveBlueprintResponseResourcesItemType.fromWire(json['type']),
+      );
+
+  final String id;
+  final String name;
+  /// type of the resource (ex. web_service or postgres)
+  final RetrieveBlueprintResponseResourcesItemType type;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'type': type.wireValue,
+      };
+}
+
+class RetrieveBlueprintResponse {
+  const RetrieveBlueprintResponse({
+    required this.id,
+    required this.name,
+    required this.status,
+    required this.autoSync,
+    required this.repo,
+    required this.branch,
+    required this.path,
+    this.lastSync,
+    required this.resources,
+  });
+
+  factory RetrieveBlueprintResponse.fromJson(Map<String, Object?> json) => RetrieveBlueprintResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        status: BlueprintWithCursorBlueprintStatus.fromWire(json['status']),
+        autoSync: json['autoSync'] as bool? ?? false,
+        repo: json['repo'] as String? ?? '',
+        branch: json['branch'] as String? ?? '',
+        path: json['path'] as String? ?? '',
+        lastSync: parseDate(json['lastSync']),
+        resources: ((json['resources'] as List<Object?>?) ?? const []).map((e) => RetrieveBlueprintResponseResourcesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final String id;
+  final String name;
+  final BlueprintWithCursorBlueprintStatus status;
+  /// Automatically sync changes to render.yaml
+  final bool autoSync;
+  final String repo;
+  final String branch;
+  /// Path to the Blueprint file in the repository
+  final String path;
+  final DateTime? lastSync;
+  final List<RetrieveBlueprintResponseResourcesItem> resources;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'status': status.wireValue,
+        'autoSync': autoSync,
+        'repo': repo,
+        'branch': branch,
+        'path': path,
+        if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
+        'resources': resources.map((e) => e.toJson()).toList(),
+      };
+}
+
+class UpdateBlueprintResponse {
+  const UpdateBlueprintResponse({
+    required this.id,
+    required this.name,
+    required this.status,
+    required this.autoSync,
+    required this.repo,
+    required this.branch,
+    required this.path,
+    this.lastSync,
+  });
+
+  factory UpdateBlueprintResponse.fromJson(Map<String, Object?> json) => UpdateBlueprintResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        status: BlueprintWithCursorBlueprintStatus.fromWire(json['status']),
+        autoSync: json['autoSync'] as bool? ?? false,
+        repo: json['repo'] as String? ?? '',
+        branch: json['branch'] as String? ?? '',
+        path: json['path'] as String? ?? '',
+        lastSync: parseDate(json['lastSync']),
+      );
+
+  final String id;
+  final String name;
+  final BlueprintWithCursorBlueprintStatus status;
+  /// Automatically sync changes to render.yaml
+  final bool autoSync;
+  final String repo;
+  final String branch;
+  /// Path to the Blueprint file in the repository
+  final String path;
+  final DateTime? lastSync;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'status': status.wireValue,
+        'autoSync': autoSync,
+        'repo': repo,
+        'branch': branch,
+        'path': path,
+        if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
+      };
+}
+
+class AddDiskResponse {
+  const AddDiskResponse({
+    required this.id,
+    required this.name,
+    required this.sizeGb,
+    required this.mountPath,
+    this.serviceId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory AddDiskResponse.fromJson(Map<String, Object?> json) => AddDiskResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+        mountPath: json['mountPath'] as String? ?? '',
+        serviceId: json['serviceId'] as String?,
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      );
+
+  final String id;
+  final String name;
+  final int sizeGb;
+  final String mountPath;
+  final String? serviceId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'sizeGB': sizeGb,
+        'mountPath': mountPath,
+        if (serviceId != null) 'serviceId': serviceId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+}
+
+class RetrieveDiskResponse {
+  const RetrieveDiskResponse({
+    required this.id,
+    required this.name,
+    required this.sizeGb,
+    required this.mountPath,
+    this.serviceId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory RetrieveDiskResponse.fromJson(Map<String, Object?> json) => RetrieveDiskResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+        mountPath: json['mountPath'] as String? ?? '',
+        serviceId: json['serviceId'] as String?,
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      );
+
+  final String id;
+  final String name;
+  final int sizeGb;
+  final String mountPath;
+  final String? serviceId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'sizeGB': sizeGb,
+        'mountPath': mountPath,
+        if (serviceId != null) 'serviceId': serviceId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+}
+
+class UpdateDiskResponse {
+  const UpdateDiskResponse({
+    required this.id,
+    required this.name,
+    required this.sizeGb,
+    required this.mountPath,
+    this.serviceId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory UpdateDiskResponse.fromJson(Map<String, Object?> json) => UpdateDiskResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+        mountPath: json['mountPath'] as String? ?? '',
+        serviceId: json['serviceId'] as String?,
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      );
+
+  final String id;
+  final String name;
+  final int sizeGb;
+  final String mountPath;
+  final String? serviceId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'sizeGB': sizeGb,
+        'mountPath': mountPath,
+        if (serviceId != null) 'serviceId': serviceId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+}
+
+class RestoreSnapshotResponse {
+  const RestoreSnapshotResponse({
+    required this.id,
+    required this.name,
+    required this.sizeGb,
+    required this.mountPath,
+    this.serviceId,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory RestoreSnapshotResponse.fromJson(Map<String, Object?> json) => RestoreSnapshotResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+        mountPath: json['mountPath'] as String? ?? '',
+        serviceId: json['serviceId'] as String?,
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      );
+
+  final String id;
+  final String name;
+  final int sizeGb;
+  final String mountPath;
+  final String? serviceId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'sizeGB': sizeGb,
+        'mountPath': mountPath,
+        if (serviceId != null) 'serviceId': serviceId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+}
+
+class RetrieveEventResponse {
+  const RetrieveEventResponse({
+    required this.id,
+    required this.timestamp,
+    required this.serviceId,
+    required this.type,
+    required this.details,
+  });
+
+  factory RetrieveEventResponse.fromJson(Map<String, Object?> json) => RetrieveEventResponse(
+        id: json['id'] as String? ?? '',
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        serviceId: json['serviceId'] as String? ?? '',
+        type: WebhookEventWithCursorWebhookEventEventType.fromWire(json['type']),
+        details: json['details'],
+      );
+
+  final String id;
+  final DateTime timestamp;
+  final String serviceId;
+  final WebhookEventWithCursorWebhookEventEventType type;
+  final Object? details;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'timestamp': timestamp.toIso8601String(),
+        'serviceId': serviceId,
+        'type': type.wireValue,
+        'details': details,
+      };
+}
+
+/// The name of the log label
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum ListLogsResponseLogsItemLabelsItemName {
+  resource('resource'),
+  instance('instance'),
+  host('host'),
+  statusCode('statusCode'),
+  method('method'),
+  level('level'),
+  workflowService('workflowService'),
+  workflowVeresion('workflowVeresion'),
+  task('task'),
+  taskRun('taskRun'),
+  sandbox('sandbox'),
+  type('type'),
+  text('text'),
+  path('path'),
+  blocked('blocked'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const ListLogsResponseLogsItemLabelsItemName(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static ListLogsResponseLogsItemLabelsItemName fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+/// A log label
+class ListLogsResponseLogsItemLabelsItem {
+  const ListLogsResponseLogsItemLabelsItem({
+    required this.name,
+    required this.value,
+  });
+
+  factory ListLogsResponseLogsItemLabelsItem.fromJson(Map<String, Object?> json) => ListLogsResponseLogsItemLabelsItem(
+        name: ListLogsResponseLogsItemLabelsItemName.fromWire(json['name']),
+        value: json['value'] as String? ?? '',
+      );
+
+  /// The name of the log label
+  final ListLogsResponseLogsItemLabelsItemName name;
+  /// The value of the log label
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'name': name.wireValue,
+        'value': value,
+      };
+}
+
+/// A log entry with metadata
+class ListLogsResponseLogsItem {
+  const ListLogsResponseLogsItem({
+    required this.id,
+    required this.message,
+    required this.timestamp,
+    required this.labels,
+  });
+
+  factory ListLogsResponseLogsItem.fromJson(Map<String, Object?> json) => ListLogsResponseLogsItem(
+        id: json['id'] as String? ?? '',
+        message: json['message'] as String? ?? '',
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => ListLogsResponseLogsItemLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  /// A unique ID of the log entry
+  final String id;
+  /// The message of the log entry
+  final String message;
+  /// The timestamp of the log entry
+  final DateTime timestamp;
+  final List<ListLogsResponseLogsItemLabelsItem> labels;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'message': message,
+        'timestamp': timestamp.toIso8601String(),
+        'labels': labels.map((e) => e.toJson()).toList(),
+      };
+}
+
+/// A run of a cron job
+class ListLogsResponse {
+  const ListLogsResponse({
+    required this.hasMore,
+    required this.nextStartTime,
+    required this.nextEndTime,
+    required this.logs,
+  });
+
+  factory ListLogsResponse.fromJson(Map<String, Object?> json) => ListLogsResponse(
+        hasMore: json['hasMore'] as bool? ?? false,
+        nextStartTime: parseDate(json['nextStartTime']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        nextEndTime: parseDate(json['nextEndTime']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        logs: ((json['logs'] as List<Object?>?) ?? const []).map((e) => ListLogsResponseLogsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  /// True if there are more logs to fetch
+  final bool hasMore;
+  /// The start time to use in the next query to fetch the next set of logs
+  final DateTime nextStartTime;
+  /// The end time to use in the next query to fetch the next set of logs
+  final DateTime nextEndTime;
+  final List<ListLogsResponseLogsItem> logs;
+
+  Map<String, Object?> toJson() => {
+        'hasMore': hasMore,
+        'nextStartTime': nextStartTime.toIso8601String(),
+        'nextEndTime': nextEndTime.toIso8601String(),
+        'logs': logs.map((e) => e.toJson()).toList(),
+      };
+}
+
+/// Whether to send logs or drop them.
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum GetOwnerLogStreamResponsePreview {
+  send('send'),
+  drop('drop'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const GetOwnerLogStreamResponsePreview(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static GetOwnerLogStreamResponsePreview fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+/// Owner log stream settings
+class GetOwnerLogStreamResponse {
+  const GetOwnerLogStreamResponse({
+    this.ownerId,
+    this.endpoint,
+    this.preview,
+  });
+
+  factory GetOwnerLogStreamResponse.fromJson(Map<String, Object?> json) => GetOwnerLogStreamResponse(
+        ownerId: json['ownerId'] as String?,
+        endpoint: json['endpoint'] as String?,
+        preview: GetOwnerLogStreamResponsePreview.fromWire(json['preview']),
+      );
+
+  /// The ID of the owner.
+  final String? ownerId;
+  /// The endpoint to stream logs to.
+  final String? endpoint;
+  /// Whether to send logs or drop them.
+  final GetOwnerLogStreamResponsePreview? preview;
+
+  Map<String, Object?> toJson() => {
+        if (ownerId != null) 'ownerId': ownerId,
+        if (endpoint != null) 'endpoint': endpoint,
+        if (preview != null) 'preview': preview!.wireValue,
+      };
+}
+
+/// Owner log stream settings
+class UpdateOwnerLogStreamResponse {
+  const UpdateOwnerLogStreamResponse({
+    this.ownerId,
+    this.endpoint,
+    this.preview,
+  });
+
+  factory UpdateOwnerLogStreamResponse.fromJson(Map<String, Object?> json) => UpdateOwnerLogStreamResponse(
+        ownerId: json['ownerId'] as String?,
+        endpoint: json['endpoint'] as String?,
+        preview: GetOwnerLogStreamResponsePreview.fromWire(json['preview']),
+      );
+
+  /// The ID of the owner.
+  final String? ownerId;
+  /// The endpoint to stream logs to.
+  final String? endpoint;
+  /// Whether to send logs or drop them.
+  final GetOwnerLogStreamResponsePreview? preview;
+
+  Map<String, Object?> toJson() => {
+        if (ownerId != null) 'ownerId': ownerId,
+        if (endpoint != null) 'endpoint': endpoint,
+        if (preview != null) 'preview': preview!.wireValue,
+      };
+}
+
+/// Resource log stream overrides
+class ListResourceLogStreamsResponse {
+  const ListResourceLogStreamsResponse({
+    this.resourceId,
+    this.endpoint,
+    this.setting,
+  });
+
+  factory ListResourceLogStreamsResponse.fromJson(Map<String, Object?> json) => ListResourceLogStreamsResponse(
+        resourceId: json['resourceId'] as String?,
+        endpoint: json['endpoint'] as String?,
+        setting: GetOwnerLogStreamResponsePreview.fromWire(json['setting']),
+      );
+
+  /// The ID of the resource.
+  final String? resourceId;
+  /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
+  final String? endpoint;
+  /// Whether to send logs or drop them.
+  final GetOwnerLogStreamResponsePreview? setting;
+
+  Map<String, Object?> toJson() => {
+        if (resourceId != null) 'resourceId': resourceId,
+        if (endpoint != null) 'endpoint': endpoint,
+        if (setting != null) 'setting': setting!.wireValue,
+      };
+}
+
+/// Resource log stream overrides
+class GetResourceLogStreamResponse {
+  const GetResourceLogStreamResponse({
+    this.resourceId,
+    this.endpoint,
+    this.setting,
+  });
+
+  factory GetResourceLogStreamResponse.fromJson(Map<String, Object?> json) => GetResourceLogStreamResponse(
+        resourceId: json['resourceId'] as String?,
+        endpoint: json['endpoint'] as String?,
+        setting: GetOwnerLogStreamResponsePreview.fromWire(json['setting']),
+      );
+
+  /// The ID of the resource.
+  final String? resourceId;
+  /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
+  final String? endpoint;
+  /// Whether to send logs or drop them.
+  final GetOwnerLogStreamResponsePreview? setting;
+
+  Map<String, Object?> toJson() => {
+        if (resourceId != null) 'resourceId': resourceId,
+        if (endpoint != null) 'endpoint': endpoint,
+        if (setting != null) 'setting': setting!.wireValue,
+      };
+}
+
+/// Resource log stream overrides
+class UpdateResourceLogStreamResponse {
+  const UpdateResourceLogStreamResponse({
+    this.resourceId,
+    this.endpoint,
+    this.setting,
+  });
+
+  factory UpdateResourceLogStreamResponse.fromJson(Map<String, Object?> json) => UpdateResourceLogStreamResponse(
+        resourceId: json['resourceId'] as String?,
+        endpoint: json['endpoint'] as String?,
+        setting: GetOwnerLogStreamResponsePreview.fromWire(json['setting']),
+      );
+
+  /// The ID of the resource.
+  final String? resourceId;
+  /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
+  final String? endpoint;
+  /// Whether to send logs or drop them.
+  final GetOwnerLogStreamResponsePreview? setting;
+
+  Map<String, Object?> toJson() => {
+        if (resourceId != null) 'resourceId': resourceId,
+        if (endpoint != null) 'endpoint': endpoint,
+        if (setting != null) 'setting': setting!.wireValue,
+      };
+}
+
+class ListMaintenanceResponse {
+  const ListMaintenanceResponse({
+    required this.id,
+    required this.type,
+    required this.scheduledAt,
+    this.pendingMaintenanceBy,
+    required this.state,
+    required this.resourceId,
+  });
+
+  factory ListMaintenanceResponse.fromJson(Map<String, Object?> json) => ListMaintenanceResponse(
+        id: json['id'] as String? ?? '',
+        type: json['type'] as String? ?? '',
+        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
+        state: KeyValueDetailMaintenanceState.fromWire(json['state']),
+        resourceId: json['resourceId'] as String? ?? '',
+      );
+
+  final String id;
+  final String type;
+  final DateTime scheduledAt;
+  /// If present, the maintenance run cannot be scheduled for later than this date-time.
+  final DateTime? pendingMaintenanceBy;
+  final KeyValueDetailMaintenanceState state;
+  /// The Id of a resource that can undergo maintenance (Id of a service, a Postgres instance, or a Redis instance)
+  final String resourceId;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'type': type,
+        'scheduledAt': scheduledAt.toIso8601String(),
+        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+        'state': state.wireValue,
+        'resourceId': resourceId,
+      };
+}
+
+class RetrieveMaintenanceResponse {
+  const RetrieveMaintenanceResponse({
+    required this.id,
+    required this.type,
+    required this.scheduledAt,
+    this.pendingMaintenanceBy,
+    required this.state,
+    required this.resourceId,
+  });
+
+  factory RetrieveMaintenanceResponse.fromJson(Map<String, Object?> json) => RetrieveMaintenanceResponse(
+        id: json['id'] as String? ?? '',
+        type: json['type'] as String? ?? '',
+        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
+        state: KeyValueDetailMaintenanceState.fromWire(json['state']),
+        resourceId: json['resourceId'] as String? ?? '',
+      );
+
+  final String id;
+  final String type;
+  final DateTime scheduledAt;
+  /// If present, the maintenance run cannot be scheduled for later than this date-time.
+  final DateTime? pendingMaintenanceBy;
+  final KeyValueDetailMaintenanceState state;
+  /// The Id of a resource that can undergo maintenance (Id of a service, a Postgres instance, or a Redis instance)
+  final String resourceId;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'type': type,
+        'scheduledAt': scheduledAt.toIso8601String(),
+        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+        'state': state.wireValue,
+        'resourceId': resourceId,
+      };
+}
+
+/// A time series datapoint label
+class GetCpuResponseLabelsItem {
+  const GetCpuResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetCpuResponseLabelsItem.fromJson(Map<String, Object?> json) => GetCpuResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetCpuResponseValuesItem {
+  const GetCpuResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetCpuResponseValuesItem.fromJson(Map<String, Object?> json) => GetCpuResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetCpuResponse {
+  const GetCpuResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetCpuResponse.fromJson(Map<String, Object?> json) => GetCpuResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetCpuResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetCpuResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetCpuResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetCpuResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetCpuLimitResponseLabelsItem {
+  const GetCpuLimitResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetCpuLimitResponseLabelsItem.fromJson(Map<String, Object?> json) => GetCpuLimitResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetCpuLimitResponseValuesItem {
+  const GetCpuLimitResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetCpuLimitResponseValuesItem.fromJson(Map<String, Object?> json) => GetCpuLimitResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetCpuLimitResponse {
+  const GetCpuLimitResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetCpuLimitResponse.fromJson(Map<String, Object?> json) => GetCpuLimitResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetCpuLimitResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetCpuLimitResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetCpuLimitResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetCpuLimitResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetCpuTargetResponseLabelsItem {
+  const GetCpuTargetResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetCpuTargetResponseLabelsItem.fromJson(Map<String, Object?> json) => GetCpuTargetResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetCpuTargetResponseValuesItem {
+  const GetCpuTargetResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetCpuTargetResponseValuesItem.fromJson(Map<String, Object?> json) => GetCpuTargetResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetCpuTargetResponse {
+  const GetCpuTargetResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetCpuTargetResponse.fromJson(Map<String, Object?> json) => GetCpuTargetResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetCpuTargetResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetCpuTargetResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetCpuTargetResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetCpuTargetResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetMemoryResponseLabelsItem {
+  const GetMemoryResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetMemoryResponseLabelsItem.fromJson(Map<String, Object?> json) => GetMemoryResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetMemoryResponseValuesItem {
+  const GetMemoryResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetMemoryResponseValuesItem.fromJson(Map<String, Object?> json) => GetMemoryResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetMemoryResponse {
+  const GetMemoryResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetMemoryResponse.fromJson(Map<String, Object?> json) => GetMemoryResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetMemoryResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetMemoryResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetMemoryResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetMemoryResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetMemoryLimitResponseLabelsItem {
+  const GetMemoryLimitResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetMemoryLimitResponseLabelsItem.fromJson(Map<String, Object?> json) => GetMemoryLimitResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetMemoryLimitResponseValuesItem {
+  const GetMemoryLimitResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetMemoryLimitResponseValuesItem.fromJson(Map<String, Object?> json) => GetMemoryLimitResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetMemoryLimitResponse {
+  const GetMemoryLimitResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetMemoryLimitResponse.fromJson(Map<String, Object?> json) => GetMemoryLimitResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetMemoryLimitResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetMemoryLimitResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetMemoryLimitResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetMemoryLimitResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetMemoryTargetResponseLabelsItem {
+  const GetMemoryTargetResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetMemoryTargetResponseLabelsItem.fromJson(Map<String, Object?> json) => GetMemoryTargetResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetMemoryTargetResponseValuesItem {
+  const GetMemoryTargetResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetMemoryTargetResponseValuesItem.fromJson(Map<String, Object?> json) => GetMemoryTargetResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetMemoryTargetResponse {
+  const GetMemoryTargetResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetMemoryTargetResponse.fromJson(Map<String, Object?> json) => GetMemoryTargetResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetMemoryTargetResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetMemoryTargetResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetMemoryTargetResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetMemoryTargetResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetHttpRequestsResponseLabelsItem {
+  const GetHttpRequestsResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetHttpRequestsResponseLabelsItem.fromJson(Map<String, Object?> json) => GetHttpRequestsResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetHttpRequestsResponseValuesItem {
+  const GetHttpRequestsResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetHttpRequestsResponseValuesItem.fromJson(Map<String, Object?> json) => GetHttpRequestsResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetHttpRequestsResponse {
+  const GetHttpRequestsResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetHttpRequestsResponse.fromJson(Map<String, Object?> json) => GetHttpRequestsResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetHttpRequestsResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetHttpRequestsResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetHttpRequestsResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetHttpRequestsResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetHttpLatencyResponseLabelsItem {
+  const GetHttpLatencyResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetHttpLatencyResponseLabelsItem.fromJson(Map<String, Object?> json) => GetHttpLatencyResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetHttpLatencyResponseValuesItem {
+  const GetHttpLatencyResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetHttpLatencyResponseValuesItem.fromJson(Map<String, Object?> json) => GetHttpLatencyResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetHttpLatencyResponse {
+  const GetHttpLatencyResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetHttpLatencyResponse.fromJson(Map<String, Object?> json) => GetHttpLatencyResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetHttpLatencyResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetHttpLatencyResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetHttpLatencyResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetHttpLatencyResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetBandwidthResponseLabelsItem {
+  const GetBandwidthResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetBandwidthResponseLabelsItem.fromJson(Map<String, Object?> json) => GetBandwidthResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetBandwidthResponseValuesItem {
+  const GetBandwidthResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetBandwidthResponseValuesItem.fromJson(Map<String, Object?> json) => GetBandwidthResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetBandwidthResponse {
+  const GetBandwidthResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetBandwidthResponse.fromJson(Map<String, Object?> json) => GetBandwidthResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetBandwidthResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetBandwidthResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetBandwidthResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetBandwidthResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum GetBandwidthSourcesResponseDataItemLabelsTrafficSource {
+  total('total'),
+  http('http'),
+  websocket('websocket'),
+  nat('nat'),
+  privatelink('privatelink'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const GetBandwidthSourcesResponseDataItemLabelsTrafficSource(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static GetBandwidthSourcesResponseDataItemLabelsTrafficSource fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class GetBandwidthSourcesResponseDataItemLabels {
+  const GetBandwidthSourcesResponseDataItemLabels({
+    this.resource,
+    this.trafficSource,
+  });
+
+  factory GetBandwidthSourcesResponseDataItemLabels.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItemLabels(
+        resource: json['resource'] as String?,
+        trafficSource: GetBandwidthSourcesResponseDataItemLabelsTrafficSource.fromWire(json['trafficSource']),
+      );
+
+  final String? resource;
+  final GetBandwidthSourcesResponseDataItemLabelsTrafficSource? trafficSource;
+
+  Map<String, Object?> toJson() => {
+        if (resource != null) 'resource': resource,
+        if (trafficSource != null) 'trafficSource': trafficSource!.wireValue,
+      };
+}
+
+class GetBandwidthSourcesResponseDataItemValuesItem {
+  const GetBandwidthSourcesResponseDataItemValuesItem({
+    this.timestamp,
+    this.value,
+  });
+
+  factory GetBandwidthSourcesResponseDataItemValuesItem.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItemValuesItem(
+        timestamp: (json['timestamp'] as num?)?.toInt(),
+        value: (json['value'] as num?)?.toDouble(),
+      );
+
+  final int? timestamp;
+  final double? value;
+
+  Map<String, Object?> toJson() => {
+        if (timestamp != null) 'timestamp': timestamp,
+        if (value != null) 'value': value,
+      };
+}
+
+class GetBandwidthSourcesResponseDataItem {
+  const GetBandwidthSourcesResponseDataItem({
+    this.labels,
+    this.values,
+  });
+
+  factory GetBandwidthSourcesResponseDataItem.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItem(
+        labels: json['labels'] == null ? null : GetBandwidthSourcesResponseDataItemLabels.fromJson(json['labels']! as Map<String, Object?>),
+        values: (json['values'] as List<Object?>?)?.map((e) => GetBandwidthSourcesResponseDataItemValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final GetBandwidthSourcesResponseDataItemLabels? labels;
+  final List<GetBandwidthSourcesResponseDataItemValuesItem>? values;
+
+  Map<String, Object?> toJson() => {
+        if (labels != null) 'labels': labels!.toJson(),
+        if (values != null) 'values': values!.map((e) => e.toJson()).toList(),
+      };
+}
+
+class GetBandwidthSourcesResponse {
+  const GetBandwidthSourcesResponse({
+    this.data,
+  });
+
+  factory GetBandwidthSourcesResponse.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponse(
+        data: (json['data'] as List<Object?>?)?.map((e) => GetBandwidthSourcesResponseDataItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final List<GetBandwidthSourcesResponseDataItem>? data;
+
+  Map<String, Object?> toJson() => {
+        if (data != null) 'data': data!.map((e) => e.toJson()).toList(),
+      };
+}
+
+/// A time series datapoint label
+class GetDiskUsageResponseLabelsItem {
+  const GetDiskUsageResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetDiskUsageResponseLabelsItem.fromJson(Map<String, Object?> json) => GetDiskUsageResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetDiskUsageResponseValuesItem {
+  const GetDiskUsageResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetDiskUsageResponseValuesItem.fromJson(Map<String, Object?> json) => GetDiskUsageResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetDiskUsageResponse {
+  const GetDiskUsageResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetDiskUsageResponse.fromJson(Map<String, Object?> json) => GetDiskUsageResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetDiskUsageResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetDiskUsageResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetDiskUsageResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetDiskUsageResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetDiskCapacityResponseLabelsItem {
+  const GetDiskCapacityResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetDiskCapacityResponseLabelsItem.fromJson(Map<String, Object?> json) => GetDiskCapacityResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetDiskCapacityResponseValuesItem {
+  const GetDiskCapacityResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetDiskCapacityResponseValuesItem.fromJson(Map<String, Object?> json) => GetDiskCapacityResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetDiskCapacityResponse {
+  const GetDiskCapacityResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetDiskCapacityResponse.fromJson(Map<String, Object?> json) => GetDiskCapacityResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetDiskCapacityResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetDiskCapacityResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetDiskCapacityResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetDiskCapacityResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetInstanceCountResponseLabelsItem {
+  const GetInstanceCountResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetInstanceCountResponseLabelsItem.fromJson(Map<String, Object?> json) => GetInstanceCountResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetInstanceCountResponseValuesItem {
+  const GetInstanceCountResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetInstanceCountResponseValuesItem.fromJson(Map<String, Object?> json) => GetInstanceCountResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetInstanceCountResponse {
+  const GetInstanceCountResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetInstanceCountResponse.fromJson(Map<String, Object?> json) => GetInstanceCountResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetInstanceCountResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetInstanceCountResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetInstanceCountResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetInstanceCountResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetActiveConnectionsResponseLabelsItem {
+  const GetActiveConnectionsResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetActiveConnectionsResponseLabelsItem.fromJson(Map<String, Object?> json) => GetActiveConnectionsResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetActiveConnectionsResponseValuesItem {
+  const GetActiveConnectionsResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetActiveConnectionsResponseValuesItem.fromJson(Map<String, Object?> json) => GetActiveConnectionsResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetActiveConnectionsResponse {
+  const GetActiveConnectionsResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetActiveConnectionsResponse.fromJson(Map<String, Object?> json) => GetActiveConnectionsResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetActiveConnectionsResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetActiveConnectionsResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetActiveConnectionsResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetActiveConnectionsResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetReplicationLagResponseLabelsItem {
+  const GetReplicationLagResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetReplicationLagResponseLabelsItem.fromJson(Map<String, Object?> json) => GetReplicationLagResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetReplicationLagResponseValuesItem {
+  const GetReplicationLagResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetReplicationLagResponseValuesItem.fromJson(Map<String, Object?> json) => GetReplicationLagResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetReplicationLagResponse {
+  const GetReplicationLagResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetReplicationLagResponse.fromJson(Map<String, Object?> json) => GetReplicationLagResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetReplicationLagResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetReplicationLagResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetReplicationLagResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetReplicationLagResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum ListApplicationFilterValuesResponseFilter {
+  instance('instance'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const ListApplicationFilterValuesResponseFilter(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static ListApplicationFilterValuesResponseFilter fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class ListApplicationFilterValuesResponse {
+  const ListApplicationFilterValuesResponse({
+    this.filter,
+    this.values,
+  });
+
+  factory ListApplicationFilterValuesResponse.fromJson(Map<String, Object?> json) => ListApplicationFilterValuesResponse(
+        filter: ListApplicationFilterValuesResponseFilter.fromWire(json['filter']),
+        values: (json['values'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+      );
+
+  final ListApplicationFilterValuesResponseFilter? filter;
+  final List<String>? values;
+
+  Map<String, Object?> toJson() => {
+        if (filter != null) 'filter': filter!.wireValue,
+        if (values != null) 'values': values!.map((e) => e).toList(),
+      };
+}
+
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum ListHttpFilterValuesResponseFilter {
+  host('host'),
+  statusCode('statusCode'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const ListHttpFilterValuesResponseFilter(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static ListHttpFilterValuesResponseFilter fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class ListHttpFilterValuesResponse {
+  const ListHttpFilterValuesResponse({
+    this.filter,
+    this.values,
+  });
+
+  factory ListHttpFilterValuesResponse.fromJson(Map<String, Object?> json) => ListHttpFilterValuesResponse(
+        filter: ListHttpFilterValuesResponseFilter.fromWire(json['filter']),
+        values: (json['values'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+      );
+
+  final ListHttpFilterValuesResponseFilter? filter;
+  final List<String>? values;
+
+  Map<String, Object?> toJson() => {
+        if (filter != null) 'filter': filter!.wireValue,
+        if (values != null) 'values': values!.map((e) => e).toList(),
+      };
+}
+
+/// A time series datapoint label
+class GetTaskRunsQueuedResponseLabelsItem {
+  const GetTaskRunsQueuedResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetTaskRunsQueuedResponseLabelsItem.fromJson(Map<String, Object?> json) => GetTaskRunsQueuedResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetTaskRunsQueuedResponseValuesItem {
+  const GetTaskRunsQueuedResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetTaskRunsQueuedResponseValuesItem.fromJson(Map<String, Object?> json) => GetTaskRunsQueuedResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetTaskRunsQueuedResponse {
+  const GetTaskRunsQueuedResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetTaskRunsQueuedResponse.fromJson(Map<String, Object?> json) => GetTaskRunsQueuedResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsQueuedResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsQueuedResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetTaskRunsQueuedResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetTaskRunsQueuedResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// A time series datapoint label
+class GetTaskRunsCompletedResponseLabelsItem {
+  const GetTaskRunsCompletedResponseLabelsItem({
+    required this.field,
+    required this.value,
+  });
+
+  factory GetTaskRunsCompletedResponseLabelsItem.fromJson(Map<String, Object?> json) => GetTaskRunsCompletedResponseLabelsItem(
+        field: json['field'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String field;
+  final String value;
+
+  Map<String, Object?> toJson() => {
+        'field': field,
+        'value': value,
+      };
+}
+
+/// A time series datapoint value
+class GetTaskRunsCompletedResponseValuesItem {
+  const GetTaskRunsCompletedResponseValuesItem({
+    required this.timestamp,
+    required this.value,
+  });
+
+  factory GetTaskRunsCompletedResponseValuesItem.fromJson(Map<String, Object?> json) => GetTaskRunsCompletedResponseValuesItem(
+        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        value: (json['value'] as num?)?.toDouble() ?? 0,
+      );
+
+  final DateTime timestamp;
+  final double value;
+
+  Map<String, Object?> toJson() => {
+        'timestamp': timestamp.toIso8601String(),
+        'value': value,
+      };
+}
+
+/// A time series data point
+class GetTaskRunsCompletedResponse {
+  const GetTaskRunsCompletedResponse({
+    required this.labels,
+    required this.values,
+    required this.unit,
+  });
+
+  factory GetTaskRunsCompletedResponse.fromJson(Map<String, Object?> json) => GetTaskRunsCompletedResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsCompletedResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsCompletedResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        unit: json['unit'] as String? ?? '',
+      );
+
+  /// List of labels describing the time series
+  final List<GetTaskRunsCompletedResponseLabelsItem> labels;
+  /// The values of the time series
+  final List<GetTaskRunsCompletedResponseValuesItem> values;
+  final String unit;
+
+  Map<String, Object?> toJson() => {
+        'labels': labels.map((e) => e.toJson()).toList(),
+        'values': values.map((e) => e.toJson()).toList(),
+        'unit': unit,
+      };
+}
+
+/// Provider to send metrics to
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum GetOwnerMetricsStreamResponseProvider {
+  betterStack('BETTER_STACK'),
+  grafana('GRAFANA'),
+  datadog('DATADOG'),
+  newRelic('NEW_RELIC'),
+  honeycomb('HONEYCOMB'),
+  signoz('SIGNOZ'),
+  groundcover('GROUNDCOVER'),
+  logfire('LOGFIRE'),
+  custom('CUSTOM'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const GetOwnerMetricsStreamResponseProvider(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static GetOwnerMetricsStreamResponseProvider fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class GetOwnerMetricsStreamResponse {
+  const GetOwnerMetricsStreamResponse({
+    required this.ownerId,
+    required this.provider,
+    required this.url,
+  });
+
+  factory GetOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) => GetOwnerMetricsStreamResponse(
+        ownerId: json['ownerId'] as String? ?? '',
+        provider: GetOwnerMetricsStreamResponseProvider.fromWire(json['provider']),
+        url: json['url'] as String? ?? '',
+      );
+
+  /// The ID of the owner
+  final String ownerId;
+  /// Provider to send metrics to
+  final GetOwnerMetricsStreamResponseProvider provider;
+  /// The endpoint URL to stream metrics to
+  final String url;
+
+  Map<String, Object?> toJson() => {
+        'ownerId': ownerId,
+        'provider': provider.wireValue,
+        'url': url,
+      };
+}
+
+class UpsertOwnerMetricsStreamResponse {
+  const UpsertOwnerMetricsStreamResponse({
+    required this.ownerId,
+    required this.provider,
+    required this.url,
+  });
+
+  factory UpsertOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) => UpsertOwnerMetricsStreamResponse(
+        ownerId: json['ownerId'] as String? ?? '',
+        provider: GetOwnerMetricsStreamResponseProvider.fromWire(json['provider']),
+        url: json['url'] as String? ?? '',
+      );
+
+  /// The ID of the owner
+  final String ownerId;
+  /// Provider to send metrics to
+  final GetOwnerMetricsStreamResponseProvider provider;
+  /// The endpoint URL to stream metrics to
+  final String url;
+
+  Map<String, Object?> toJson() => {
+        'ownerId': ownerId,
+        'provider': provider.wireValue,
+        'url': url,
+      };
+}
+
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum RetrieveOwnerNotificationSettingsResponseNotificationsToSend {
+  none('none'),
+  failure('failure'),
+  all('all'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const RetrieveOwnerNotificationSettingsResponseNotificationsToSend(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static RetrieveOwnerNotificationSettingsResponseNotificationsToSend fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class RetrieveOwnerNotificationSettingsResponse {
+  const RetrieveOwnerNotificationSettingsResponse({
+    required this.ownerId,
+    required this.slackEnabled,
+    required this.emailEnabled,
+    required this.previewNotificationsEnabled,
+    required this.notificationsToSend,
+  });
+
+  factory RetrieveOwnerNotificationSettingsResponse.fromJson(Map<String, Object?> json) => RetrieveOwnerNotificationSettingsResponse(
+        ownerId: json['ownerId'] as String? ?? '',
+        slackEnabled: json['slackEnabled'] as bool? ?? false,
+        emailEnabled: json['emailEnabled'] as bool? ?? false,
+        previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool? ?? false,
+        notificationsToSend: RetrieveOwnerNotificationSettingsResponseNotificationsToSend.fromWire(json['notificationsToSend']),
+      );
+
+  final String ownerId;
+  final bool slackEnabled;
+  final bool emailEnabled;
+  final bool previewNotificationsEnabled;
+  final RetrieveOwnerNotificationSettingsResponseNotificationsToSend notificationsToSend;
+
+  Map<String, Object?> toJson() => {
+        'ownerId': ownerId,
+        'slackEnabled': slackEnabled,
+        'emailEnabled': emailEnabled,
+        'previewNotificationsEnabled': previewNotificationsEnabled,
+        'notificationsToSend': notificationsToSend.wireValue,
+      };
+}
+
+class PatchOwnerNotificationSettingsResponse {
+  const PatchOwnerNotificationSettingsResponse({
+    required this.ownerId,
+    required this.slackEnabled,
+    required this.emailEnabled,
+    required this.previewNotificationsEnabled,
+    required this.notificationsToSend,
+  });
+
+  factory PatchOwnerNotificationSettingsResponse.fromJson(Map<String, Object?> json) => PatchOwnerNotificationSettingsResponse(
+        ownerId: json['ownerId'] as String? ?? '',
+        slackEnabled: json['slackEnabled'] as bool? ?? false,
+        emailEnabled: json['emailEnabled'] as bool? ?? false,
+        previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool? ?? false,
+        notificationsToSend: RetrieveOwnerNotificationSettingsResponseNotificationsToSend.fromWire(json['notificationsToSend']),
+      );
+
+  final String ownerId;
+  final bool slackEnabled;
+  final bool emailEnabled;
+  final bool previewNotificationsEnabled;
+  final RetrieveOwnerNotificationSettingsResponseNotificationsToSend notificationsToSend;
+
+  Map<String, Object?> toJson() => {
+        'ownerId': ownerId,
+        'slackEnabled': slackEnabled,
+        'emailEnabled': emailEnabled,
+        'previewNotificationsEnabled': previewNotificationsEnabled,
+        'notificationsToSend': notificationsToSend.wireValue,
+      };
+}
+
+class RetrieveServiceNotificationOverridesResponse {
+  const RetrieveServiceNotificationOverridesResponse({
+    required this.serviceId,
+    required this.previewNotificationsEnabled,
+    required this.notificationsToSend,
+  });
+
+  factory RetrieveServiceNotificationOverridesResponse.fromJson(Map<String, Object?> json) => RetrieveServiceNotificationOverridesResponse(
+        serviceId: json['serviceId'] as String? ?? '',
+        previewNotificationsEnabled: NotificationOverrideWithCursorOverridePreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
+        notificationsToSend: NotificationOverrideWithCursorOverrideNotificationsToSend.fromWire(json['notificationsToSend']),
+      );
+
+  final String serviceId;
+  final NotificationOverrideWithCursorOverridePreviewNotificationsEnabled previewNotificationsEnabled;
+  final NotificationOverrideWithCursorOverrideNotificationsToSend notificationsToSend;
+
+  Map<String, Object?> toJson() => {
+        'serviceId': serviceId,
+        'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
+        'notificationsToSend': notificationsToSend.wireValue,
+      };
+}
+
+class PatchServiceNotificationOverridesResponse {
+  const PatchServiceNotificationOverridesResponse({
+    required this.serviceId,
+    required this.previewNotificationsEnabled,
+    required this.notificationsToSend,
+  });
+
+  factory PatchServiceNotificationOverridesResponse.fromJson(Map<String, Object?> json) => PatchServiceNotificationOverridesResponse(
+        serviceId: json['serviceId'] as String? ?? '',
+        previewNotificationsEnabled: NotificationOverrideWithCursorOverridePreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
+        notificationsToSend: NotificationOverrideWithCursorOverrideNotificationsToSend.fromWire(json['notificationsToSend']),
+      );
+
+  final String serviceId;
+  final NotificationOverrideWithCursorOverridePreviewNotificationsEnabled previewNotificationsEnabled;
+  final NotificationOverrideWithCursorOverrideNotificationsToSend notificationsToSend;
+
+  Map<String, Object?> toJson() => {
+        'serviceId': serviceId,
+        'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
+        'notificationsToSend': notificationsToSend.wireValue,
+      };
+}
+
+/// Availability of point-in-time recovery.
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum RetrievePostgresRecoveryInfoResponseRecoveryStatus {
+  available('AVAILABLE'),
+  backupNotReady('BACKUP_NOT_READY'),
+  notAvailable('NOT_AVAILABLE'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const RetrievePostgresRecoveryInfoResponseRecoveryStatus(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static RetrievePostgresRecoveryInfoResponseRecoveryStatus fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class RetrievePostgresRecoveryInfoResponse {
+  const RetrievePostgresRecoveryInfoResponse({
+    required this.recoveryStatus,
+    this.startsAt,
+  });
+
+  factory RetrievePostgresRecoveryInfoResponse.fromJson(Map<String, Object?> json) => RetrievePostgresRecoveryInfoResponse(
+        recoveryStatus: RetrievePostgresRecoveryInfoResponseRecoveryStatus.fromWire(json['recoveryStatus']),
+        startsAt: parseDate(json['startsAt']),
+      );
+
+  /// Availability of point-in-time recovery.
+  final RetrievePostgresRecoveryInfoResponseRecoveryStatus recoveryStatus;
+  final DateTime? startsAt;
+
+  Map<String, Object?> toJson() => {
+        'recoveryStatus': recoveryStatus.wireValue,
+        if (startsAt != null) 'startsAt': startsAt!.toIso8601String(),
+      };
+}
+
+class ListPostgresExportResponse {
+  const ListPostgresExportResponse({
+    required this.id,
+    required this.createdAt,
+    this.url,
+  });
+
+  factory ListPostgresExportResponse.fromJson(Map<String, Object?> json) => ListPostgresExportResponse(
+        id: json['id'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        url: json['url'] as String?,
+      );
+
+  final String id;
+  final DateTime createdAt;
+  /// URL to download the Postgres export
+  final String? url;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'createdAt': createdAt.toIso8601String(),
+        if (url != null) 'url': url,
+      };
+}
+
+class ListPostgresUsersResponse {
+  const ListPostgresUsersResponse({
+    this.username,
+    this.default_,
+    this.createdAt,
+    this.openConnections,
+  });
+
+  factory ListPostgresUsersResponse.fromJson(Map<String, Object?> json) => ListPostgresUsersResponse(
+        username: json['username'] as String?,
+        default_: json['default'] as bool?,
+        createdAt: json['createdAt'] as String?,
+        openConnections: (json['openConnections'] as num?)?.toInt(),
+      );
+
+  final String? username;
+  final bool? default_;
+  final String? createdAt;
+  final int? openConnections;
+
+  Map<String, Object?> toJson() => {
+        if (username != null) 'username': username,
+        if (default_ != null) 'default': default_,
+        if (createdAt != null) 'createdAt': createdAt,
+        if (openConnections != null) 'openConnections': openConnections,
+      };
+}
+
+/// A single live process from pg_stat_activity.
+class ListPostgresProcessesResponseProcessesItem {
+  const ListPostgresProcessesResponseProcessesItem({
+    this.pid,
+    this.databaseName,
+    this.username,
+    this.applicationName,
+    this.clientAddr,
+    this.backendStart,
+    this.queryStart,
+    this.state,
+    this.waitEvent,
+    this.waitEventType,
+    this.query,
+    this.duration,
+    this.isLeader,
+  });
+
+  factory ListPostgresProcessesResponseProcessesItem.fromJson(Map<String, Object?> json) => ListPostgresProcessesResponseProcessesItem(
+        pid: (json['pid'] as num?)?.toInt(),
+        databaseName: json['databaseName'] as String?,
+        username: json['username'] as String?,
+        applicationName: json['applicationName'] as String?,
+        clientAddr: json['clientAddr'] as String?,
+        backendStart: parseDate(json['backendStart']),
+        queryStart: parseDate(json['queryStart']),
+        state: json['state'] as String?,
+        waitEvent: json['waitEvent'] as String?,
+        waitEventType: json['waitEventType'] as String?,
+        query: json['query'] as String?,
+        duration: (json['duration'] as num?)?.toDouble(),
+        isLeader: json['isLeader'] as bool?,
+      );
+
+  final int? pid;
+  final String? databaseName;
+  final String? username;
+  final String? applicationName;
+  final String? clientAddr;
+  final DateTime? backendStart;
+  final DateTime? queryStart;
+  final String? state;
+  final String? waitEvent;
+  final String? waitEventType;
+  final String? query;
+  /// Duration of the query, in seconds.
+  final double? duration;
+  /// Whether this process is running against the primary instance of a highly available database.
+  final bool? isLeader;
+
+  Map<String, Object?> toJson() => {
+        if (pid != null) 'pid': pid,
+        if (databaseName != null) 'databaseName': databaseName,
+        if (username != null) 'username': username,
+        if (applicationName != null) 'applicationName': applicationName,
+        if (clientAddr != null) 'clientAddr': clientAddr,
+        if (backendStart != null) 'backendStart': backendStart!.toIso8601String(),
+        if (queryStart != null) 'queryStart': queryStart!.toIso8601String(),
+        if (state != null) 'state': state,
+        if (waitEvent != null) 'waitEvent': waitEvent,
+        if (waitEventType != null) 'waitEventType': waitEventType,
+        if (query != null) 'query': query,
+        if (duration != null) 'duration': duration,
+        if (isLeader != null) 'isLeader': isLeader,
+      };
+}
+
+class ListPostgresProcessesResponse {
+  const ListPostgresProcessesResponse({
+    required this.processes,
+  });
+
+  factory ListPostgresProcessesResponse.fromJson(Map<String, Object?> json) => ListPostgresProcessesResponse(
+        processes: ((json['processes'] as List<Object?>?) ?? const []).map((e) => ListPostgresProcessesResponseProcessesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final List<ListPostgresProcessesResponseProcessesItem> processes;
+
+  Map<String, Object?> toJson() => {
+        'processes': processes.map((e) => e.toJson()).toList(),
+      };
+}
+
+/// A single query from pg_stat_statements.
+class ListPostgresTopQueriesResponseTopQueriesItem {
+  const ListPostgresTopQueriesResponseTopQueriesItem({
+    this.queryId,
+    this.query,
+    this.calls,
+    this.totalTimeMs,
+    this.minTimeMs,
+    this.maxTimeMs,
+    this.meanTimeMs,
+    this.stddevTimeMs,
+    this.rows,
+    this.sharedBlocksHit,
+    this.sharedBlocksRead,
+    this.sharedBlocksDirtied,
+    this.sharedBlocksWritten,
+    this.localBlocksHit,
+    this.localBlocksRead,
+    this.localBlocksDirtied,
+    this.localBlocksWritten,
+    this.tempBlocksRead,
+    this.tempBlocksWritten,
+  });
+
+  factory ListPostgresTopQueriesResponseTopQueriesItem.fromJson(Map<String, Object?> json) => ListPostgresTopQueriesResponseTopQueriesItem(
+        queryId: json['queryId'] as String?,
+        query: json['query'] as String?,
+        calls: (json['calls'] as num?)?.toInt(),
+        totalTimeMs: (json['totalTimeMs'] as num?)?.toDouble(),
+        minTimeMs: (json['minTimeMs'] as num?)?.toDouble(),
+        maxTimeMs: (json['maxTimeMs'] as num?)?.toDouble(),
+        meanTimeMs: (json['meanTimeMs'] as num?)?.toDouble(),
+        stddevTimeMs: (json['stddevTimeMs'] as num?)?.toDouble(),
+        rows: (json['rows'] as num?)?.toInt(),
+        sharedBlocksHit: (json['sharedBlocksHit'] as num?)?.toInt(),
+        sharedBlocksRead: (json['sharedBlocksRead'] as num?)?.toInt(),
+        sharedBlocksDirtied: (json['sharedBlocksDirtied'] as num?)?.toInt(),
+        sharedBlocksWritten: (json['sharedBlocksWritten'] as num?)?.toInt(),
+        localBlocksHit: (json['localBlocksHit'] as num?)?.toInt(),
+        localBlocksRead: (json['localBlocksRead'] as num?)?.toInt(),
+        localBlocksDirtied: (json['localBlocksDirtied'] as num?)?.toInt(),
+        localBlocksWritten: (json['localBlocksWritten'] as num?)?.toInt(),
+        tempBlocksRead: (json['tempBlocksRead'] as num?)?.toInt(),
+        tempBlocksWritten: (json['tempBlocksWritten'] as num?)?.toInt(),
+      );
+
+  final String? queryId;
+  final String? query;
+  final int? calls;
+  final double? totalTimeMs;
+  final double? minTimeMs;
+  final double? maxTimeMs;
+  final double? meanTimeMs;
+  final double? stddevTimeMs;
+  final int? rows;
+  final int? sharedBlocksHit;
+  final int? sharedBlocksRead;
+  final int? sharedBlocksDirtied;
+  final int? sharedBlocksWritten;
+  final int? localBlocksHit;
+  final int? localBlocksRead;
+  final int? localBlocksDirtied;
+  final int? localBlocksWritten;
+  final int? tempBlocksRead;
+  final int? tempBlocksWritten;
+
+  Map<String, Object?> toJson() => {
+        if (queryId != null) 'queryId': queryId,
+        if (query != null) 'query': query,
+        if (calls != null) 'calls': calls,
+        if (totalTimeMs != null) 'totalTimeMs': totalTimeMs,
+        if (minTimeMs != null) 'minTimeMs': minTimeMs,
+        if (maxTimeMs != null) 'maxTimeMs': maxTimeMs,
+        if (meanTimeMs != null) 'meanTimeMs': meanTimeMs,
+        if (stddevTimeMs != null) 'stddevTimeMs': stddevTimeMs,
+        if (rows != null) 'rows': rows,
+        if (sharedBlocksHit != null) 'sharedBlocksHit': sharedBlocksHit,
+        if (sharedBlocksRead != null) 'sharedBlocksRead': sharedBlocksRead,
+        if (sharedBlocksDirtied != null) 'sharedBlocksDirtied': sharedBlocksDirtied,
+        if (sharedBlocksWritten != null) 'sharedBlocksWritten': sharedBlocksWritten,
+        if (localBlocksHit != null) 'localBlocksHit': localBlocksHit,
+        if (localBlocksRead != null) 'localBlocksRead': localBlocksRead,
+        if (localBlocksDirtied != null) 'localBlocksDirtied': localBlocksDirtied,
+        if (localBlocksWritten != null) 'localBlocksWritten': localBlocksWritten,
+        if (tempBlocksRead != null) 'tempBlocksRead': tempBlocksRead,
+        if (tempBlocksWritten != null) 'tempBlocksWritten': tempBlocksWritten,
+      };
+}
+
+class ListPostgresTopQueriesResponse {
+  const ListPostgresTopQueriesResponse({
+    required this.topQueries,
+  });
+
+  factory ListPostgresTopQueriesResponse.fromJson(Map<String, Object?> json) => ListPostgresTopQueriesResponse(
+        topQueries: ((json['topQueries'] as List<Object?>?) ?? const []).map((e) => ListPostgresTopQueriesResponseTopQueriesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final List<ListPostgresTopQueriesResponseTopQueriesItem> topQueries;
+
+  Map<String, Object?> toJson() => {
+        'topQueries': topQueries.map((e) => e.toJson()).toList(),
+      };
+}
+
+/// The size of an index, table, or database.
+class ListPostgresSizesResponseSizesItem {
+  const ListPostgresSizesResponseSizesItem({
+    this.database,
+    this.schema,
+    this.table,
+    this.index,
+    this.bytes,
+  });
+
+  factory ListPostgresSizesResponseSizesItem.fromJson(Map<String, Object?> json) => ListPostgresSizesResponseSizesItem(
+        database: json['Database'] as String?,
+        schema: json['Schema'] as String?,
+        table: json['Table'] as String?,
+        index: json['Index'] as String?,
+        bytes: (json['Bytes'] as num?)?.toInt(),
+      );
+
+  final String? database;
+  final String? schema;
+  final String? table;
+  final String? index;
+  final int? bytes;
+
+  Map<String, Object?> toJson() => {
+        if (database != null) 'Database': database,
+        if (schema != null) 'Schema': schema,
+        if (table != null) 'Table': table,
+        if (index != null) 'Index': index,
+        if (bytes != null) 'Bytes': bytes,
+      };
+}
+
+class ListPostgresSizesResponse {
+  const ListPostgresSizesResponse({
+    required this.sizes,
+  });
+
+  factory ListPostgresSizesResponse.fromJson(Map<String, Object?> json) => ListPostgresSizesResponse(
+        sizes: ((json['sizes'] as List<Object?>?) ?? const []).map((e) => ListPostgresSizesResponseSizesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final List<ListPostgresSizesResponseSizesItem> sizes;
+
+  Map<String, Object?> toJson() => {
+        'sizes': sizes.map((e) => e.toJson()).toList(),
+      };
+}
+
+/// The number of sequential scans performed against a table.
+class ListPostgresTableScansResponseTableScansItem {
+  const ListPostgresTableScansResponseTableScansItem({
+    this.database,
+    this.schema,
+    this.table,
+    this.scans,
+  });
+
+  factory ListPostgresTableScansResponseTableScansItem.fromJson(Map<String, Object?> json) => ListPostgresTableScansResponseTableScansItem(
+        database: json['Database'] as String?,
+        schema: json['Schema'] as String?,
+        table: json['Table'] as String?,
+        scans: (json['Scans'] as num?)?.toInt(),
+      );
+
+  final String? database;
+  final String? schema;
+  final String? table;
+  final int? scans;
+
+  Map<String, Object?> toJson() => {
+        if (database != null) 'Database': database,
+        if (schema != null) 'Schema': schema,
+        if (table != null) 'Table': table,
+        if (scans != null) 'Scans': scans,
+      };
+}
+
+class ListPostgresTableScansResponse {
+  const ListPostgresTableScansResponse({
+    required this.tableScans,
+  });
+
+  factory ListPostgresTableScansResponse.fromJson(Map<String, Object?> json) => ListPostgresTableScansResponse(
+        tableScans: ((json['tableScans'] as List<Object?>?) ?? const []).map((e) => ListPostgresTableScansResponseTableScansItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final List<ListPostgresTableScansResponseTableScansItem> tableScans;
+
+  Map<String, Object?> toJson() => {
+        'tableScans': tableScans.map((e) => e.toJson()).toList(),
+      };
+}
+
+class AddHeadersResponse {
+  const AddHeadersResponse({
+    this.headers,
+  });
+
+  factory AddHeadersResponse.fromJson(Map<String, Object?> json) => AddHeadersResponse(
+        headers: json['headers'] == null ? null : Header.fromJson(json['headers']! as Map<String, Object?>),
+      );
+
+  final Header? headers;
+
+  Map<String, Object?> toJson() => {
+        if (headers != null) 'headers': headers!.toJson(),
+      };
+}
+
+class PatchRouteResponse {
+  const PatchRouteResponse({
+    this.headers,
+  });
+
+  factory PatchRouteResponse.fromJson(Map<String, Object?> json) => PatchRouteResponse(
+        headers: json['headers'] == null ? null : Route.fromJson(json['headers']! as Map<String, Object?>),
+      );
+
+  final Route? headers;
+
+  Map<String, Object?> toJson() => {
+        if (headers != null) 'headers': headers!.toJson(),
+      };
+}
+
+class AutoscaleServiceResponseCriteriaCpu {
+  const AutoscaleServiceResponseCriteriaCpu({
+    required this.enabled,
+    required this.percentage,
+  });
+
+  factory AutoscaleServiceResponseCriteriaCpu.fromJson(Map<String, Object?> json) => AutoscaleServiceResponseCriteriaCpu(
+        enabled: json['enabled'] as bool? ?? false,
+        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+      );
+
+  final bool enabled;
+  /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
+  final int percentage;
+
+  Map<String, Object?> toJson() => {
+        'enabled': enabled,
+        'percentage': percentage,
+      };
+}
+
+class AutoscaleServiceResponseCriteriaMemory {
+  const AutoscaleServiceResponseCriteriaMemory({
+    required this.enabled,
+    required this.percentage,
+  });
+
+  factory AutoscaleServiceResponseCriteriaMemory.fromJson(Map<String, Object?> json) => AutoscaleServiceResponseCriteriaMemory(
+        enabled: json['enabled'] as bool? ?? false,
+        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+      );
+
+  final bool enabled;
+  /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
+  final int percentage;
+
+  Map<String, Object?> toJson() => {
+        'enabled': enabled,
+        'percentage': percentage,
+      };
+}
+
+class AutoscaleServiceResponseCriteria {
+  const AutoscaleServiceResponseCriteria({
+    required this.cpu,
+    required this.memory,
+  });
+
+  factory AutoscaleServiceResponseCriteria.fromJson(Map<String, Object?> json) => AutoscaleServiceResponseCriteria(
+        cpu: AutoscaleServiceResponseCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
+        memory: AutoscaleServiceResponseCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
+      );
+
+  final AutoscaleServiceResponseCriteriaCpu cpu;
+  final AutoscaleServiceResponseCriteriaMemory memory;
+
+  Map<String, Object?> toJson() => {
+        'cpu': cpu.toJson(),
+        'memory': memory.toJson(),
+      };
+}
+
+class AutoscaleServiceResponse {
+  const AutoscaleServiceResponse({
+    required this.enabled,
+    required this.min,
+    required this.max,
+    required this.criteria,
+  });
+
+  factory AutoscaleServiceResponse.fromJson(Map<String, Object?> json) => AutoscaleServiceResponse(
+        enabled: json['enabled'] as bool? ?? false,
+        min: (json['min'] as num?)?.toInt() ?? 0,
+        max: (json['max'] as num?)?.toInt() ?? 0,
+        criteria: AutoscaleServiceResponseCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
+      );
+
+  final bool enabled;
+  /// The minimum number of instances for the service
+  final int min;
+  /// The maximum number of instances for the service
+  final int max;
+  final AutoscaleServiceResponseCriteria criteria;
+
+  Map<String, Object?> toJson() => {
+        'enabled': enabled,
+        'min': min,
+        'max': max,
+        'criteria': criteria.toJson(),
+      };
+}
+
+class PostJobResponse {
+  const PostJobResponse({
+    required this.id,
+    required this.serviceId,
+    required this.startCommand,
+    required this.planId,
+    this.status,
+    required this.createdAt,
+    this.startedAt,
+    this.finishedAt,
+  });
+
+  factory PostJobResponse.fromJson(Map<String, Object?> json) => PostJobResponse(
+        id: json['id'] as String? ?? '',
+        serviceId: json['serviceId'] as String? ?? '',
+        startCommand: json['startCommand'] as String? ?? '',
+        planId: json['planId'] as String? ?? '',
+        status: JobWithCursorJobStatus.fromWire(json['status']),
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        startedAt: parseDate(json['startedAt']),
+        finishedAt: parseDate(json['finishedAt']),
+      );
+
+  final String id;
+  final String serviceId;
+  final String startCommand;
+  final String planId;
+  final JobWithCursorJobStatus? status;
+  final DateTime createdAt;
+  final DateTime? startedAt;
+  final DateTime? finishedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'serviceId': serviceId,
+        'startCommand': startCommand,
+        'planId': planId,
+        if (status != null) 'status': status!.wireValue,
+        'createdAt': createdAt.toIso8601String(),
+        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+      };
+}
+
+class RetrieveJobResponse {
+  const RetrieveJobResponse({
+    required this.id,
+    required this.serviceId,
+    required this.startCommand,
+    required this.planId,
+    this.status,
+    required this.createdAt,
+    this.startedAt,
+    this.finishedAt,
+  });
+
+  factory RetrieveJobResponse.fromJson(Map<String, Object?> json) => RetrieveJobResponse(
+        id: json['id'] as String? ?? '',
+        serviceId: json['serviceId'] as String? ?? '',
+        startCommand: json['startCommand'] as String? ?? '',
+        planId: json['planId'] as String? ?? '',
+        status: JobWithCursorJobStatus.fromWire(json['status']),
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        startedAt: parseDate(json['startedAt']),
+        finishedAt: parseDate(json['finishedAt']),
+      );
+
+  final String id;
+  final String serviceId;
+  final String startCommand;
+  final String planId;
+  final JobWithCursorJobStatus? status;
+  final DateTime createdAt;
+  final DateTime? startedAt;
+  final DateTime? finishedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'serviceId': serviceId,
+        'startCommand': startCommand,
+        'planId': planId,
+        if (status != null) 'status': status!.wireValue,
+        'createdAt': createdAt.toIso8601String(),
+        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+      };
+}
+
+class CancelJobResponse {
+  const CancelJobResponse({
+    required this.id,
+    required this.serviceId,
+    required this.startCommand,
+    required this.planId,
+    this.status,
+    required this.createdAt,
+    this.startedAt,
+    this.finishedAt,
+  });
+
+  factory CancelJobResponse.fromJson(Map<String, Object?> json) => CancelJobResponse(
+        id: json['id'] as String? ?? '',
+        serviceId: json['serviceId'] as String? ?? '',
+        startCommand: json['startCommand'] as String? ?? '',
+        planId: json['planId'] as String? ?? '',
+        status: JobWithCursorJobStatus.fromWire(json['status']),
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        startedAt: parseDate(json['startedAt']),
+        finishedAt: parseDate(json['finishedAt']),
+      );
+
+  final String id;
+  final String serviceId;
+  final String startCommand;
+  final String planId;
+  final JobWithCursorJobStatus? status;
+  final DateTime createdAt;
+  final DateTime? startedAt;
+  final DateTime? finishedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'serviceId': serviceId,
+        'startCommand': startCommand,
+        'planId': planId,
+        if (status != null) 'status': status!.wireValue,
+        'createdAt': createdAt.toIso8601String(),
+        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+      };
+}
+
+class CreateTaskResponseAttemptsItem {
+  const CreateTaskResponseAttemptsItem({
+    this.taskRunId,
+    required this.attempt,
+    required this.status,
+    this.enqueuedAt,
+    required this.startedAt,
+    this.completedAt,
+  });
+
+  factory CreateTaskResponseAttemptsItem.fromJson(Map<String, Object?> json) => CreateTaskResponseAttemptsItem(
+        taskRunId: json['taskRunId'] as String?,
+        attempt: (json['attempt'] as num?)?.toInt() ?? 0,
+        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        enqueuedAt: parseDate(json['enqueuedAt']),
+        startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        completedAt: parseDate(json['completedAt']),
+      );
+
+  /// The ID of the task run this attempt belongs to.
+  final String? taskRunId;
+  /// The 0-indexed attempt number.
+  final int attempt;
+  final TaskRunWithCursorTaskRunStatus status;
+  final DateTime? enqueuedAt;
+  final DateTime startedAt;
+  final DateTime? completedAt;
+
+  Map<String, Object?> toJson() => {
+        if (taskRunId != null) 'taskRunId': taskRunId,
+        'attempt': attempt,
+        'status': status.wireValue,
+        if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
+        'startedAt': startedAt.toIso8601String(),
+        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+      };
+}
+
+class CreateTaskResponse {
+  const CreateTaskResponse({
+    required this.id,
+    required this.taskId,
+    required this.status,
+    this.startedAt,
+    this.completedAt,
+    required this.parentTaskRunId,
+    this.parentTaskAttempt,
+    required this.rootTaskRunId,
+    required this.retries,
+    required this.attempts,
+  });
+
+  factory CreateTaskResponse.fromJson(Map<String, Object?> json) => CreateTaskResponse(
+        id: json['id'] as String? ?? '',
+        taskId: json['taskId'] as String? ?? '',
+        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        startedAt: parseDate(json['startedAt']),
+        completedAt: parseDate(json['completedAt']),
+        parentTaskRunId: json['parentTaskRunId'] as String? ?? '',
+        parentTaskAttempt: (json['parentTaskAttempt'] as num?)?.toInt(),
+        rootTaskRunId: json['rootTaskRunId'] as String? ?? '',
+        retries: (json['retries'] as num?)?.toInt() ?? 0,
+        attempts: ((json['attempts'] as List<Object?>?) ?? const []).map((e) => CreateTaskResponseAttemptsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final String id;
+  final String taskId;
+  final TaskRunWithCursorTaskRunStatus status;
+  final DateTime? startedAt;
+  final DateTime? completedAt;
+  final String parentTaskRunId;
+  /// The 0-indexed attempt of the parent task run that spawned this task run. Omitted for root task runs and for task runs created before this field was introduced.
+  final int? parentTaskAttempt;
+  final String rootTaskRunId;
+  final int retries;
+  final List<CreateTaskResponseAttemptsItem> attempts;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'taskId': taskId,
+        'status': status.wireValue,
+        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+        'parentTaskRunId': parentTaskRunId,
+        if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
+        'rootTaskRunId': rootTaskRunId,
+        'retries': retries,
+        'attempts': attempts.map((e) => e.toJson()).toList(),
+      };
+}
+
+class GetTaskRunResponseAttemptsItem {
+  const GetTaskRunResponseAttemptsItem({
+    this.taskRunId,
+    required this.attempt,
+    required this.status,
+    this.enqueuedAt,
+    required this.startedAt,
+    this.completedAt,
+    this.error,
+    this.results,
+  });
+
+  factory GetTaskRunResponseAttemptsItem.fromJson(Map<String, Object?> json) => GetTaskRunResponseAttemptsItem(
+        taskRunId: json['taskRunId'] as String?,
+        attempt: (json['attempt'] as num?)?.toInt() ?? 0,
+        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        enqueuedAt: parseDate(json['enqueuedAt']),
+        startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        completedAt: parseDate(json['completedAt']),
+        error: json['error'] as String?,
+        results: (json['results'] as List<Object?>?)?.map((e) => e).toList(),
+      );
+
+  /// The ID of the task run this attempt belongs to.
+  final String? taskRunId;
+  /// The 0-indexed attempt number.
+  final int attempt;
+  final TaskRunWithCursorTaskRunStatus status;
+  final DateTime? enqueuedAt;
+  final DateTime startedAt;
+  final DateTime? completedAt;
+  /// Error message if the task attempt failed.
+  final String? error;
+  final List<Object?>? results;
+
+  Map<String, Object?> toJson() => {
+        if (taskRunId != null) 'taskRunId': taskRunId,
+        'attempt': attempt,
+        'status': status.wireValue,
+        if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
+        'startedAt': startedAt.toIso8601String(),
+        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+        if (error != null) 'error': error,
+        if (results != null) 'results': results!.map((e) => e).toList(),
+      };
+}
+
+class GetTaskRunResponse {
+  const GetTaskRunResponse({
+    required this.id,
+    required this.taskId,
+    required this.status,
+    required this.results,
+    this.error,
+    this.startedAt,
+    this.completedAt,
+    required this.input,
+    required this.parentTaskRunId,
+    this.parentTaskAttempt,
+    required this.rootTaskRunId,
+    required this.retries,
+    required this.attempts,
+  });
+
+  factory GetTaskRunResponse.fromJson(Map<String, Object?> json) => GetTaskRunResponse(
+        id: json['id'] as String? ?? '',
+        taskId: json['taskId'] as String? ?? '',
+        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        results: ((json['results'] as List<Object?>?) ?? const []).map((e) => e).toList(),
+        error: json['error'] as String?,
+        startedAt: parseDate(json['startedAt']),
+        completedAt: parseDate(json['completedAt']),
+        input: json['input'],
+        parentTaskRunId: json['parentTaskRunId'] as String? ?? '',
+        parentTaskAttempt: (json['parentTaskAttempt'] as num?)?.toInt(),
+        rootTaskRunId: json['rootTaskRunId'] as String? ?? '',
+        retries: (json['retries'] as num?)?.toInt() ?? 0,
+        attempts: ((json['attempts'] as List<Object?>?) ?? const []).map((e) => GetTaskRunResponseAttemptsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+      );
+
+  final String id;
+  final String taskId;
+  final TaskRunWithCursorTaskRunStatus status;
+  final List<Object?> results;
+  /// Error message if the task run failed.
+  final String? error;
+  final DateTime? startedAt;
+  final DateTime? completedAt;
+  /// Input data for a task. Can be either an array (for positional arguments) or an object (for named parameters).
+  final Object? input;
+  final String parentTaskRunId;
+  /// The 0-indexed attempt of the parent task run that spawned this task run. Omitted for root task runs and for task runs created before this field was introduced.
+  final int? parentTaskAttempt;
+  final String rootTaskRunId;
+  final int retries;
+  final List<GetTaskRunResponseAttemptsItem> attempts;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'taskId': taskId,
+        'status': status.wireValue,
+        'results': results.map((e) => e).toList(),
+        if (error != null) 'error': error,
+        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+        'input': input,
+        'parentTaskRunId': parentTaskRunId,
+        if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
+        'rootTaskRunId': rootTaskRunId,
+        'retries': retries,
+        'attempts': attempts.map((e) => e.toJson()).toList(),
+      };
+}
+
+class GetTaskResponse {
+  const GetTaskResponse({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    this.workflowId,
+    this.workflowVersionId,
+  });
+
+  factory GetTaskResponse.fromJson(Map<String, Object?> json) => GetTaskResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        workflowId: json['workflowId'] as String?,
+        workflowVersionId: json['workflowVersionId'] as String?,
+      );
+
+  final String id;
+  final String name;
+  final DateTime createdAt;
+  final String? workflowId;
+  final String? workflowVersionId;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'createdAt': createdAt.toIso8601String(),
+        if (workflowId != null) 'workflowId': workflowId,
+        if (workflowVersionId != null) 'workflowVersionId': workflowVersionId,
+      };
+}
+
+class CreateWebhookResponse {
+  const CreateWebhookResponse({
+    required this.id,
+    required this.url,
+    required this.name,
+    required this.secret,
+    required this.enabled,
+    required this.eventFilter,
+  });
+
+  factory CreateWebhookResponse.fromJson(Map<String, Object?> json) => CreateWebhookResponse(
+        id: json['id'] as String? ?? '',
+        url: json['url'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        secret: json['secret'] as String? ?? '',
+        enabled: json['enabled'] as bool? ?? false,
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+      );
+
+  final String id;
+  final String url;
+  final String name;
+  final String secret;
+  final bool enabled;
+  /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
+  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'url': url,
+        'name': name,
+        'secret': secret,
+        'enabled': enabled,
+        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+      };
+}
+
+class RetrieveWebhookResponse {
+  const RetrieveWebhookResponse({
+    required this.id,
+    required this.url,
+    required this.name,
+    required this.secret,
+    required this.enabled,
+    required this.eventFilter,
+  });
+
+  factory RetrieveWebhookResponse.fromJson(Map<String, Object?> json) => RetrieveWebhookResponse(
+        id: json['id'] as String? ?? '',
+        url: json['url'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        secret: json['secret'] as String? ?? '',
+        enabled: json['enabled'] as bool? ?? false,
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+      );
+
+  final String id;
+  final String url;
+  final String name;
+  final String secret;
+  final bool enabled;
+  /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
+  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'url': url,
+        'name': name,
+        'secret': secret,
+        'enabled': enabled,
+        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+      };
+}
+
+class UpdateWebhookResponse {
+  const UpdateWebhookResponse({
+    required this.id,
+    required this.url,
+    required this.name,
+    required this.secret,
+    required this.enabled,
+    required this.eventFilter,
+  });
+
+  factory UpdateWebhookResponse.fromJson(Map<String, Object?> json) => UpdateWebhookResponse(
+        id: json['id'] as String? ?? '',
+        url: json['url'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        secret: json['secret'] as String? ?? '',
+        enabled: json['enabled'] as bool? ?? false,
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+      );
+
+  final String id;
+  final String url;
+  final String name;
+  final String secret;
+  final bool enabled;
+  /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
+  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'url': url,
+        'name': name,
+        'secret': secret,
+        'enabled': enabled,
+        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+      };
+}
+
+class CreateWorkflowResponseBuildConfig {
+  const CreateWorkflowResponseBuildConfig({
+    this.branch,
+    required this.buildCommand,
+    required this.repo,
+    this.rootDir,
+    required this.runtime,
+  });
+
+  factory CreateWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) => CreateWorkflowResponseBuildConfig(
+        branch: json['branch'] as String?,
+        buildCommand: json['buildCommand'] as String? ?? '',
+        repo: json['repo'] as String? ?? '',
+        rootDir: json['rootDir'] as String?,
+        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+      );
+
+  /// The branch to use for the build, if applicable.
+  final String? branch;
+  /// The command to run to build the workflow.
+  final String buildCommand;
+  /// The repository URL to use for the build.
+  final String repo;
+  /// The root directory of the repository to use for the build, if applicable.
+  final String? rootDir;
+  /// The runtime environment for the workflow (e.g., node, python, etc.).
+  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+
+  Map<String, Object?> toJson() => {
+        if (branch != null) 'branch': branch,
+        'buildCommand': buildCommand,
+        'repo': repo,
+        if (rootDir != null) 'rootDir': rootDir,
+        'runtime': runtime.wireValue,
+      };
+}
+
+class CreateWorkflowResponse {
+  const CreateWorkflowResponse({
+    required this.id,
+    required this.name,
+    required this.ownerId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.buildConfig,
+    required this.runCommand,
+    required this.region,
+    this.environmentId,
+    this.slug,
+    this.autoDeployTrigger,
+  });
+
+  factory CreateWorkflowResponse.fromJson(Map<String, Object?> json) => CreateWorkflowResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        ownerId: json['ownerId'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        buildConfig: CreateWorkflowResponseBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
+        runCommand: json['runCommand'] as String? ?? '',
+        region: Region.fromWire(json['region']),
+        environmentId: json['environmentId'] as String?,
+        slug: json['slug'] as String?,
+        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+      );
+
+  final String id;
+  final String name;
+  final String ownerId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final CreateWorkflowResponseBuildConfig buildConfig;
+  /// Command to run the workflow.
+  final String runCommand;
+  /// Defaults to "oregon"
+  final Region region;
+  final String? environmentId;
+  final String? slug;
+  /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
+  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'ownerId': ownerId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'buildConfig': buildConfig.toJson(),
+        'runCommand': runCommand,
+        'region': region.wireValue,
+        if (environmentId != null) 'environmentId': environmentId,
+        if (slug != null) 'slug': slug,
+        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
+      };
+}
+
+class GetWorkflowResponseBuildConfig {
+  const GetWorkflowResponseBuildConfig({
+    this.branch,
+    required this.buildCommand,
+    required this.repo,
+    this.rootDir,
+    required this.runtime,
+  });
+
+  factory GetWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) => GetWorkflowResponseBuildConfig(
+        branch: json['branch'] as String?,
+        buildCommand: json['buildCommand'] as String? ?? '',
+        repo: json['repo'] as String? ?? '',
+        rootDir: json['rootDir'] as String?,
+        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+      );
+
+  /// The branch to use for the build, if applicable.
+  final String? branch;
+  /// The command to run to build the workflow.
+  final String buildCommand;
+  /// The repository URL to use for the build.
+  final String repo;
+  /// The root directory of the repository to use for the build, if applicable.
+  final String? rootDir;
+  /// The runtime environment for the workflow (e.g., node, python, etc.).
+  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+
+  Map<String, Object?> toJson() => {
+        if (branch != null) 'branch': branch,
+        'buildCommand': buildCommand,
+        'repo': repo,
+        if (rootDir != null) 'rootDir': rootDir,
+        'runtime': runtime.wireValue,
+      };
+}
+
+class GetWorkflowResponse {
+  const GetWorkflowResponse({
+    required this.id,
+    required this.name,
+    required this.ownerId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.buildConfig,
+    required this.runCommand,
+    required this.region,
+    this.environmentId,
+    this.slug,
+    this.autoDeployTrigger,
+  });
+
+  factory GetWorkflowResponse.fromJson(Map<String, Object?> json) => GetWorkflowResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        ownerId: json['ownerId'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        buildConfig: GetWorkflowResponseBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
+        runCommand: json['runCommand'] as String? ?? '',
+        region: Region.fromWire(json['region']),
+        environmentId: json['environmentId'] as String?,
+        slug: json['slug'] as String?,
+        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+      );
+
+  final String id;
+  final String name;
+  final String ownerId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final GetWorkflowResponseBuildConfig buildConfig;
+  /// Command to run the workflow.
+  final String runCommand;
+  /// Defaults to "oregon"
+  final Region region;
+  final String? environmentId;
+  final String? slug;
+  /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
+  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'ownerId': ownerId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'buildConfig': buildConfig.toJson(),
+        'runCommand': runCommand,
+        'region': region.wireValue,
+        if (environmentId != null) 'environmentId': environmentId,
+        if (slug != null) 'slug': slug,
+        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
+      };
+}
+
+class UpdateWorkflowResponseBuildConfig {
+  const UpdateWorkflowResponseBuildConfig({
+    this.branch,
+    required this.buildCommand,
+    required this.repo,
+    this.rootDir,
+    required this.runtime,
+  });
+
+  factory UpdateWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) => UpdateWorkflowResponseBuildConfig(
+        branch: json['branch'] as String?,
+        buildCommand: json['buildCommand'] as String? ?? '',
+        repo: json['repo'] as String? ?? '',
+        rootDir: json['rootDir'] as String?,
+        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+      );
+
+  /// The branch to use for the build, if applicable.
+  final String? branch;
+  /// The command to run to build the workflow.
+  final String buildCommand;
+  /// The repository URL to use for the build.
+  final String repo;
+  /// The root directory of the repository to use for the build, if applicable.
+  final String? rootDir;
+  /// The runtime environment for the workflow (e.g., node, python, etc.).
+  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+
+  Map<String, Object?> toJson() => {
+        if (branch != null) 'branch': branch,
+        'buildCommand': buildCommand,
+        'repo': repo,
+        if (rootDir != null) 'rootDir': rootDir,
+        'runtime': runtime.wireValue,
+      };
+}
+
+class UpdateWorkflowResponse {
+  const UpdateWorkflowResponse({
+    required this.id,
+    required this.name,
+    required this.ownerId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.buildConfig,
+    required this.runCommand,
+    required this.region,
+    this.environmentId,
+    this.slug,
+    this.autoDeployTrigger,
+  });
+
+  factory UpdateWorkflowResponse.fromJson(Map<String, Object?> json) => UpdateWorkflowResponse(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        ownerId: json['ownerId'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        buildConfig: UpdateWorkflowResponseBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
+        runCommand: json['runCommand'] as String? ?? '',
+        region: Region.fromWire(json['region']),
+        environmentId: json['environmentId'] as String?,
+        slug: json['slug'] as String?,
+        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+      );
+
+  final String id;
+  final String name;
+  final String ownerId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final UpdateWorkflowResponseBuildConfig buildConfig;
+  /// Command to run the workflow.
+  final String runCommand;
+  /// Defaults to "oregon"
+  final Region region;
+  final String? environmentId;
+  final String? slug;
+  /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
+  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'ownerId': ownerId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'buildConfig': buildConfig.toJson(),
+        'runCommand': runCommand,
+        'region': region.wireValue,
+        if (environmentId != null) 'environmentId': environmentId,
+        if (slug != null) 'slug': slug,
+        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
+      };
+}
+
+class GetWorkflowVersionResponse {
+  const GetWorkflowVersionResponse({
+    required this.id,
+    required this.workflowId,
+    required this.name,
+    required this.createdAt,
+    required this.status,
+  });
+
+  factory GetWorkflowVersionResponse.fromJson(Map<String, Object?> json) => GetWorkflowVersionResponse(
+        id: json['id'] as String? ?? '',
+        workflowId: json['workflowId'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        status: WorkflowVersionWithCursorWorkflowVersionStatus.fromWire(json['status']),
+      );
+
+  final String id;
+  final String workflowId;
+  final String name;
+  final DateTime createdAt;
+  final WorkflowVersionWithCursorWorkflowVersionStatus status;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'workflowId': workflowId,
+        'name': name,
+        'createdAt': createdAt.toIso8601String(),
+        'status': status.wireValue,
+      };
+}
 

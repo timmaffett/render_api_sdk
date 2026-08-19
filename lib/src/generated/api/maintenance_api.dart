@@ -3,6 +3,7 @@
 // Source: tool/render-openapi.json
 
 import '../../client.dart';
+import '../models.dart';
 
 /// Generated bindings for the `/maintenance` endpoints.
 class MaintenanceEndpoints {
@@ -15,7 +16,7 @@ class MaintenanceEndpoints {
   /// List scheduled and/or recent maintenance runs for specified resources.
   ///
   /// [ownerId] The ID of the workspaces to return resources for
-  Future<List<Object?>> listMaintenance({List<String>? resourceId, List<String>? ownerId, List<String>? state}) async {
+  Future<List<ListMaintenanceResponse>> listMaintenance({List<String>? resourceId, List<String>? ownerId, List<String>? state}) async {
     final json = await _client.sendList(
       'GET',
       '/maintenance',
@@ -25,19 +26,19 @@ class MaintenanceEndpoints {
         'state': state,
       },
     );
-    return json;
+    return json.whereType<Map<String, Object?>>().map(ListMaintenanceResponse.fromJson).toList();
   }
 
 
   /// Retrieve maintenance run
   ///
   /// Retrieve the maintenance run with the provided ID.
-  Future<Map<String, Object?>> retrieveMaintenance({required String maintenanceRunId}) async {
+  Future<RetrieveMaintenanceResponse> retrieveMaintenance({required String maintenanceRunId}) async {
     final json = await _client.sendObject(
       'GET',
       '/maintenance/$maintenanceRunId',
     );
-    return json;
+    return RetrieveMaintenanceResponse.fromJson(json);
   }
 
 

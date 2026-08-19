@@ -229,6 +229,12 @@ String? hintFor({
         'https://dashboard.render.com/billing';
   }
 
+  if (statusCode >= 500 && path.startsWith('/task-runs/')) {
+    return 'Render answers 500 rather than 404 for a task run id that does '
+        'not exist or is malformed. Check the id before assuming the service '
+        'is unhealthy — ids look like trn-xxxxxxxxxxxxxxxxxxxx.';
+  }
+
   if (statusCode >= 500 && creatingWorkflow) {
     return 'Render returns a bare 500 here when it cannot reach the repository. '
         'Check that the Render GitHub/GitLab app has been granted access to it, '

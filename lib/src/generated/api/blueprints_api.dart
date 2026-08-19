@@ -39,37 +39,37 @@ class BlueprintsEndpoints {
   /// Validate a `render.yaml` Blueprint file without creating or modifying any resources. This endpoint checks the syntax and structure of the Blueprint, validates that all required fields are present, and returns a plan indicating the resources that would be created.
   ///
   /// Requests to this endpoint use `Content-Type: multipart/form-data`. The request body (including the Blueprint file) cannot exceed 10MB in size.
-  Future<Map<String, Object?>> validateBlueprint() async {
+  Future<ValidateBlueprintResponse> validateBlueprint() async {
     final json = await _client.sendObject(
       'POST',
       '/blueprints/validate',
     );
-    return json;
+    return ValidateBlueprintResponse.fromJson(json);
   }
 
 
   /// Retrieve Blueprint
   ///
   /// Retrieve the Blueprint with the provided ID.
-  Future<Map<String, Object?>> retrieveBlueprint({required String blueprintId}) async {
+  Future<RetrieveBlueprintResponse> retrieveBlueprint({required String blueprintId}) async {
     final json = await _client.sendObject(
       'GET',
       '/blueprints/$blueprintId',
     );
-    return json;
+    return RetrieveBlueprintResponse.fromJson(json);
   }
 
 
   /// Update Blueprint
   ///
   /// Update the Blueprint with the provided ID.
-  Future<Map<String, Object?>> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) async {
+  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/blueprints/$blueprintId',
       body: body,
     );
-    return json;
+    return UpdateBlueprintResponse.fromJson(json);
   }
 
 

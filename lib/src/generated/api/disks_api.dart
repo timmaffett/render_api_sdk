@@ -60,25 +60,25 @@ class DisksEndpoints {
   /// Attach a persistent disk to a web service, private service, or background worker.
   ///
   /// The service must be redeployed for the disk to be attached.
-  Future<Map<String, Object?>> addDisk({required Map<String, Object?> body}) async {
+  Future<AddDiskResponse> addDisk({required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/disks',
       body: body,
     );
-    return json;
+    return AddDiskResponse.fromJson(json);
   }
 
 
   /// Retrieve disk
   ///
   /// Retrieve the persistent disk with the provided ID.
-  Future<Map<String, Object?>> retrieveDisk({required String diskId}) async {
+  Future<RetrieveDiskResponse> retrieveDisk({required String diskId}) async {
     final json = await _client.sendObject(
       'GET',
       '/disks/$diskId',
     );
-    return json;
+    return RetrieveDiskResponse.fromJson(json);
   }
 
 
@@ -89,13 +89,13 @@ class DisksEndpoints {
   /// The disk's associated service must be deployed and active for updates to take effect.
   ///
   /// When resizing a disk, the new size must be greater than the current size.
-  Future<Map<String, Object?>> updateDisk({required String diskId, required Map<String, Object?> body}) async {
+  Future<UpdateDiskResponse> updateDisk({required String diskId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/disks/$diskId',
       body: body,
     );
-    return json;
+    return UpdateDiskResponse.fromJson(json);
   }
 
 
@@ -131,13 +131,13 @@ class DisksEndpoints {
   /// **This operation is irreversible.** It will overwrite the current disk data. It might also trigger a service deploy.
   ///
   /// Snapshot keys returned from the [List snapshots](https://api-docs.render.com/reference/list-snapshots) endpoint expire after 24 hours. If a snapshot key has expired, query the endpoint again for a new key.
-  Future<Map<String, Object?>> restoreSnapshot({required String diskId, required Map<String, Object?> body}) async {
+  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/disks/$diskId/snapshots/restore',
       body: body,
     );
-    return json;
+    return RestoreSnapshotResponse.fromJson(json);
   }
 
 

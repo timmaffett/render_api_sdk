@@ -35,38 +35,38 @@ class WebhooksEndpoints {
   /// Create a webhook
   ///
   /// Create a new webhook.
-  Future<Map<String, Object?>> createWebhook({required Map<String, Object?> body}) async {
+  Future<CreateWebhookResponse> createWebhook({required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/webhooks',
       body: body,
     );
-    return json;
+    return CreateWebhookResponse.fromJson(json);
   }
 
 
   /// Retrieve a webhook
   ///
   /// Retrieve the webhook with the provided ID
-  Future<Map<String, Object?>> retrieveWebhook({required String webhookId}) async {
+  Future<RetrieveWebhookResponse> retrieveWebhook({required String webhookId}) async {
     final json = await _client.sendObject(
       'GET',
       '/webhooks/$webhookId',
     );
-    return json;
+    return RetrieveWebhookResponse.fromJson(json);
   }
 
 
   /// Update a webhook
   ///
   /// Update the webhook with the provided ID.
-  Future<Map<String, Object?>> updateWebhook({required String webhookId, required Map<String, Object?> body}) async {
+  Future<UpdateWebhookResponse> updateWebhook({required String webhookId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/webhooks/$webhookId',
       body: body,
     );
-    return json;
+    return UpdateWebhookResponse.fromJson(json);
   }
 
 

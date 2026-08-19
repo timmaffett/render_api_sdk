@@ -22,6 +22,17 @@ render.close();
 On the web there is no environment, so pass the token explicitly:
 `RenderApi(token: ...)`.
 
+## Typed responses
+
+Roughly a third of the spec's responses describe their shape inline rather
+than by reference. Those would otherwise come back as untyped maps, so each
+gets a class named after its operation — `getWorkflow` returns a
+`GetWorkflowResponse`, not a `Map`.
+
+Enums with identical value sets are one type rather than many: every response
+carrying a `region` shares `Region`, instead of each getting its own
+structurally-identical copy.
+
 ## Why the errors are opinionated
 
 Render's API frequently reports failures without saying what went wrong.
@@ -32,13 +43,16 @@ naming the likely cause where one can be inferred:
 
 ```dart
 try {
-  await render.workflows.create(...);
+  await render.createWorkflow(body: {...});
 } on RenderServerException catch (e) {
   print(e.hint);
   // Render returns a bare 500 here when it cannot reach the repository.
   // Check that the Render GitHub/GitLab app has been granted access to it...
 }
 ```
+
+It answers `500` rather than `404` for an unknown task run id, too. Both hints
+exist because the bare status cost real debugging time.
 
 The same instinct applies to limits Render enforces remotely: a task input over
 4 MB is rejected locally, before the request, so the error names the real
@@ -104,10 +118,15 @@ await render.raw.services.listHeaders(serviceId: 'srv-x', limit: 20);
 Query parameters are typed from the spec rather than passed as strings, so
 `limit` is an `int` and repeated filters are a `List<String>`.
 
-Above both sits a small hand-written facade for the workflows surface —
-`render.workflows`, `render.tasks`, `render.taskRuns` — which adds pagination
-as a `Stream`, local validation of Render's 4 MB input cap, and errors that
-explain themselves. Prefer it where it exists.
+## Running workflow tasks
+
+Starting and watching task runs lives in
+[`package:render_workflows`](https://github.com/timmaffett/render_workflows_sdk),
+which depends on this package for its transport. Render splits the same way:
+`@renderinc/sdk` runs tasks, `@api/render-api` covers REST.
+
+Workflow *services* — creating them, deploying versions, listing task
+definitions — are REST, and generated here.
 
 ## Regenerating
 

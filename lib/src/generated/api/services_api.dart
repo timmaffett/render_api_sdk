@@ -439,13 +439,13 @@ class ServicesEndpoints {
   /// Add header rule
   ///
   /// Add a response header rule to the service with the provided ID.
-  Future<Map<String, Object?>> addHeaders({required String serviceId, required Map<String, Object?> body}) async {
+  Future<AddHeadersResponse> addHeaders({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/headers',
       body: body,
     );
-    return json;
+    return AddHeadersResponse.fromJson(json);
   }
 
 
@@ -541,13 +541,13 @@ class ServicesEndpoints {
   /// To apply redirect/rewrite rules to an incoming request, Render starts from the rule with priority `0` and applies the first encountered rule that matches the request's path (if any).
   ///
   /// Render increments the priority of other rules by `1` as necessary to make space for the updated rule.
-  Future<Map<String, Object?>> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) async {
+  Future<PatchRouteResponse> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/services/$serviceId/routes/$routeId',
       body: body,
     );
-    return json;
+    return PatchRouteResponse.fromJson(json);
   }
 
 
@@ -696,13 +696,13 @@ class ServicesEndpoints {
   /// Update autoscaling config
   ///
   /// Update the [autoscaling](https://render.com/docs/scaling#autoscaling) config for the service with the provided ID.
-  Future<Map<String, Object?>> autoscaleService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<AutoscaleServiceResponse> autoscaleService({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/autoscaling',
       body: body,
     );
-    return json;
+    return AutoscaleServiceResponse.fromJson(json);
   }
 
 
@@ -778,37 +778,37 @@ class ServicesEndpoints {
   /// Create job
   ///
   /// Create a one-off job using the provided service. For details, see [One-Off Jobs](https://render.com/docs/one-off-jobs).
-  Future<Map<String, Object?>> postJob({required String serviceId, required Map<String, Object?> body}) async {
+  Future<PostJobResponse> postJob({required String serviceId, required Map<String, Object?> body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/jobs',
       body: body,
     );
-    return json;
+    return PostJobResponse.fromJson(json);
   }
 
 
   /// Retrieve job
   ///
   /// Retrieve the details of a particular one-off job for a particular service.
-  Future<Map<String, Object?>> retrieveJob({required String serviceId, required String jobId}) async {
+  Future<RetrieveJobResponse> retrieveJob({required String serviceId, required String jobId}) async {
     final json = await _client.sendObject(
       'GET',
       '/services/$serviceId/jobs/$jobId',
     );
-    return json;
+    return RetrieveJobResponse.fromJson(json);
   }
 
 
   /// Cancel running job
   ///
   /// Cancel a particular one-off job for a particular service.
-  Future<Map<String, Object?>> cancelJob({required String serviceId, required String jobId}) async {
+  Future<CancelJobResponse> cancelJob({required String serviceId, required String jobId}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/jobs/$jobId/cancel',
     );
-    return json;
+    return CancelJobResponse.fromJson(json);
   }
 
 

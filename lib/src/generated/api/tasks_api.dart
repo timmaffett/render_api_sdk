@@ -46,12 +46,12 @@ class TasksEndpoints {
   /// Retrieve task
   ///
   /// Retrieve the workflow task with the provided ID.
-  Future<Map<String, Object?>> getTask({required String taskId}) async {
+  Future<GetTaskResponse> getTask({required String taskId}) async {
     final json = await _client.sendObject(
       'GET',
       '/tasks/$taskId',
     );
-    return json;
+    return GetTaskResponse.fromJson(json);
   }
 
 
