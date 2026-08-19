@@ -47,11 +47,11 @@ class MaintenanceEndpoints {
   /// Update the maintenance run with the provided ID.
   ///
   /// Updates from this endpoint are asynchronous. To check your update's status, use the [Retrieve maintenance run](https://api-docs.render.com/reference/retrieve-maintenance) endpoint.
-  Future<void> updateMaintenance({required String maintenanceRunId, required Map<String, Object?> body}) async {
+  Future<void> updateMaintenance({required String maintenanceRunId, required UpdateMaintenanceRequest body}) async {
     await _client.send(
       'PATCH',
       '/maintenance/$maintenanceRunId',
-      body: body,
+      body: body.toJson(),
     );
   }
 

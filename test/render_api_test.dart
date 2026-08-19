@@ -5,6 +5,19 @@ import 'package:http/testing.dart';
 import 'package:render_api/render_api.dart';
 import 'package:test/test.dart';
 
+/// A minimal valid body, now that request bodies are typed rather than maps.
+CreateWorkflowRequest workflowBody() => CreateWorkflowRequest(
+      name: 'w',
+      ownerId: 'tea-1',
+      runCommand: 'node index.js',
+      region: Region.oregon,
+      buildConfig: CreateWorkflowRequestBuildConfig(
+        repo: 'https://github.com/o/r',
+        buildCommand: 'npm install',
+        runtime: Runtime.node,
+      ),
+    );
+
 /// Builds an API whose transport is driven by [handler], so tests need no
 /// credentials and no network.
 RenderApi apiWith(
@@ -70,7 +83,7 @@ void main() {
           apiWith((_) async => http.Response('internal server error', 500));
 
       await expectLater(
-        api.createWorkflow(body: const {}),
+        api.createWorkflow(body: workflowBody()),
         throwsA(isA<RenderServerException>()
             .having((e) => e.hint, 'hint', contains('grant'))),
       );
@@ -124,7 +137,7 @@ void main() {
       });
 
       await expectLater(
-        api.createWorkflow(body: const {}),
+        api.createWorkflow(body: workflowBody()),
         throwsA(isA<RenderServerException>()),
       );
       expect(calls, 1);

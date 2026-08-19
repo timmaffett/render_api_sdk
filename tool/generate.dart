@@ -25,14 +25,43 @@ final emittedModels = <String, String>{};
 
 /// One generated method, remembered so the flat facade can forward to it.
 class _Emitted {
-  _Emitted(this.group, this.name, this.signature, this.args, this.returnType,
-      this.summary);
+  _Emitted({
+    required this.group,
+    required this.name,
+    required this.signature,
+    required this.args,
+    required this.returnType,
+    required this.operationId,
+    required this.httpMethod,
+    required this.path,
+    required this.params,
+    this.summary,
+    this.description,
+    this.bodyType,
+  });
+
   final String group;
   final String name;
   final String signature;
   final String args;
   final String returnType;
+  final String operationId;
+  final String httpMethod;
+  final String path;
+  final List<_DocParam> params;
   final String? summary;
+  final String? description;
+  final String? bodyType;
+}
+
+/// A parameter as it should appear in the generated documentation.
+class _DocParam {
+  _DocParam(this.name, this.type, this.required, this.location, this.doc);
+  final String name;
+  final String type;
+  final bool required;
+  final String location;
+  final String? doc;
 }
 
 final emittedMethods = <_Emitted>[];
@@ -43,6 +72,17 @@ final emittedMethods = <_Emitted>[];
 /// reference. Falling back to an untyped map for those would leave a third of
 /// the API without types, so each gets a class named after its operation.
 final extraModels = StringBuffer();
+
+/// Fields of every emitted model, so documentation can describe what an
+/// operation actually returns rather than only naming the type.
+final modelFields = <String, List<_DocField>>{};
+
+class _DocField {
+  _DocField(this.name, this.type, this.doc);
+  final String name;
+  final String type;
+  final String? doc;
+}
 
 /// Enums already emitted, keyed by their value set.
 ///
@@ -55,6 +95,104 @@ final enumsByValues = <String, String>{};
 
 String _enumKey(List<dynamic> values) => values.join('\u0000');
 
+/// Chooses a name for every enum before anything is emitted.
+///
+/// Enums are deduplicated by value set, so whichever schema happened to be
+/// visited first used to decide the name — which produced gems like
+/// `WorkflowWithCursorWorkflowBuildConfigRuntime` for what is simply a
+/// runtime. Naming them up front, after the property they describe, keeps the
+/// generated API and its documentation readable.
+void _planEnumNames() {
+  final schemas =
+      (spec['components']?['schemas'] as Map<String, dynamic>?) ?? const {};
+
+  // A component schema that *is* an enum keeps its own name; those are the
+  // most deliberate names the spec offers.
+  schemas.forEach((name, schema) {
+    if (schema is Map<String, dynamic> && schema['enum'] is List) {
+      enumsByValues.putIfAbsent(
+          _enumKey(schema['enum'] as List), () => _className(name));
+    }
+  });
+
+  // Everything else is named after the property it describes, preferring the
+  // spelling that occurs most often. Where several distinct enums share a
+  // property name -- `status` is used by a dozen unrelated things -- the
+  // owning schema disambiguates, giving DeployStatus and JobStatus rather
+  // than Status, StatusValue, StatusValueValue.
+  final byProperty = <String, Map<String, int>>{};
+  final byOwner = <String, Map<String, int>>{};
+
+  void count(Map<String, Map<String, int>> into, String key, String? value) {
+    if (value == null || value.isEmpty) return;
+    (into[key] ??= {}).update(value, (n) => n + 1, ifAbsent: () => 1);
+  }
+
+  void walk(Object? node, String? propertyName, String? owner) {
+    if (node is Map<String, dynamic>) {
+      if (node['enum'] is List && propertyName != null) {
+        final key = _enumKey(node['enum'] as List);
+        if (!enumsByValues.containsKey(key)) {
+          count(byProperty, key, propertyName);
+          count(byOwner, key, owner);
+        }
+      }
+      final props = node['properties'];
+      if (props is Map<String, dynamic>) {
+        props.forEach((name, child) => walk(child, name, owner));
+      }
+      for (final entry in node.entries) {
+        if (entry.key == 'properties') continue;
+        // An array inherits the property name of the array itself.
+        walk(entry.value, entry.key == 'items' ? propertyName : null, owner);
+      }
+    } else if (node is List) {
+      for (final child in node) {
+        walk(child, propertyName, owner);
+      }
+    }
+  }
+
+  // Each component schema labels everything beneath it.
+  schemas.forEach((name, schema) => walk(schema, null, name));
+
+  // Enums declared inside an operation rather than a schema take the
+  // operation's name, so a filter on list-deploys becomes ListDeploysStatus
+  // rather than Status2.
+  (spec['paths'] as Map<String, dynamic>).forEach((_, item) {
+    (item as Map<String, dynamic>).forEach((method, op) {
+      if (op is Map<String, dynamic> && op['operationId'] is String) {
+        walk(op, null, op['operationId'] as String);
+      }
+    });
+  });
+
+  String mostCommon(Map<String, int>? counts) => counts == null
+      ? ''
+      : counts.entries.reduce((a, b) => b.value > a.value ? b : a).key;
+
+  final taken = enumsByValues.values.toSet();
+  for (final key in byProperty.keys) {
+    final property = _className(mostCommon(byProperty[key]));
+    // Check the raw value: _className turns an empty string into "Unnamed",
+    // which would read as a real owner and produce UnnamedStatus.
+    final rawOwner = mostCommon(byOwner[key]);
+    final owner = rawOwner.isEmpty ? '' : _className(rawOwner);
+
+    var name = property;
+    if (taken.contains(name) && owner.isNotEmpty) {
+      // Avoid ServiceServiceStatus when the owner already names the property.
+      name = owner.endsWith(property) ? owner : '$owner$property';
+    }
+    var attempt = 2;
+    while (!taken.add(name)) {
+      name = '$property$attempt';
+      attempt++;
+    }
+    enumsByValues[key] = name;
+  }
+}
+
 void main() {
   final file = File('tool/render-openapi.json');
   if (!file.existsSync()) {
@@ -62,6 +200,7 @@ void main() {
     exit(1);
   }
   spec = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+  _planEnumNames();
 
   final schemas =
       (spec['components']?['schemas'] as Map<String, dynamic>?) ?? const {};
@@ -181,6 +320,8 @@ void main() {
   flat.writeln('}');
   File('lib/src/generated/flat.dart').writeAsStringSync(flat.toString());
 
+  _emitDocs(groups);
+
   final ops = groups.values.fold<int>(0, (n, l) => n + l.length);
   stdout.writeln('generated ${names.length} models and $ops operations '
       'across ${groups.length} groups');
@@ -274,6 +415,7 @@ String _emitType(String name, Map<String, dynamic> schema) {
 String _emitEnum(String name, Map<String, dynamic> schema) {
   final values = (schema['enum'] as List).cast<String>();
   enumsByValues.putIfAbsent(_enumKey(values), () => name);
+  emittedModels[name] = '';
   final buf = StringBuffer();
   final doc = schema['description'] as String?;
   if (doc != null) buf.writeln(_doc(doc));
@@ -317,6 +459,11 @@ String _emitClass(String name, Map<String, dynamic> schema) {
         required.contains(entry.key), nested);
     fields.add(field);
   }
+
+  modelFields[name] = [
+    for (final f in fields)
+      _DocField(f.dartName, '${f.dartType}${f.dartType.endsWith('?') ? '' : (f.nullable ? '?' : '')}', f.doc),
+  ];
 
   final buf = StringBuffer();
   final doc = schema['description'] as String?;
@@ -455,11 +602,11 @@ _TypeRef _dartType(String owner, String hint, Map<String, dynamic> schema,
 
   if (s['enum'] is List && (s['type'] ?? 'string') == 'string') {
     final values = (s['enum'] as List).cast<String>();
-    final existing = enumsByValues[_enumKey(values)];
-    final name = existing ?? _className('$owner${_pascal(hint)}');
-    if (existing == null) {
-      nested.write(_emitEnum(name, s));
+    final name = enumsByValues[_enumKey(values)] ??
+        _className('$owner${_pascal(hint)}');
+    if (!emittedModels.containsKey(name)) {
       emittedModels[name] = '';
+      nested.write(_emitEnum(name, s));
     }
     return _TypeRef(
       name,
@@ -658,6 +805,7 @@ String _emitMethod(String name, _Op op) {
   final bodySchema =
       (body?['content'] as Map<String, dynamic>?)?['application/json']
           ?['schema'] as Map<String, dynamic>?;
+  final bodyType = bodySchema == null ? null : _bodyType(op, bodySchema);
 
   // Return type
   final ret = _returnType(op);
@@ -667,7 +815,7 @@ String _emitMethod(String name, _Op op) {
   // the official Node bindings take.
   final named = <String>[
     for (final p in pathParams) 'required String ${_fieldName(p)}',
-    if (bodySchema != null) 'required Map<String, Object?> body',
+    if (bodyType != null) 'required ${bodyType.type} body',
     for (final q in queryParams)
       '${q.required ? 'required ${q.type}' : '${q.type}?'} ${q.dartName}',
   ];
@@ -676,11 +824,30 @@ String _emitMethod(String name, _Op op) {
 
   final forwardArgs = [
     for (final p in pathParams) '${_fieldName(p)}: ${_fieldName(p)}',
-    if (bodySchema != null) 'body: body',
+    if (bodyType != null) 'body: body',
     for (final q in queryParams) '${q.dartName}: ${q.dartName}',
   ].join(', ');
-  emittedMethods.add(_Emitted(op.group, name, signature, forwardArgs,
-      ret.type, summary));
+  emittedMethods.add(_Emitted(
+    group: op.group,
+    name: name,
+    signature: signature,
+    args: forwardArgs,
+    returnType: ret.type,
+    operationId: op.id,
+    httpMethod: op.method.toUpperCase(),
+    path: op.path,
+    summary: summary,
+    description: description,
+    bodyType: bodyType?.type,
+    params: [
+      for (final p in pathParams)
+        _DocParam(_fieldName(p), 'String', true, 'path', null),
+      if (bodyType != null)
+        _DocParam('body', bodyType.type, true, 'body', null),
+      for (final q in queryParams)
+        _DocParam(q.dartName, q.type, q.required, 'query', q.doc),
+    ],
+  ));
 
   for (final q in queryParams) {
     if (q.doc == null) continue;
@@ -705,7 +872,7 @@ String _emitMethod(String name, _Op op) {
     }
     call.writeln('      },');
   }
-  if (bodySchema != null) call.writeln('      body: body,');
+  if (bodyType != null) call.writeln('      body: ${bodyType.encode},');
   call.writeln('    );');
   buf.write(call);
 
@@ -713,6 +880,58 @@ String _emitMethod(String name, _Op op) {
   buf.writeln('  }');
   buf.writeln();
   return buf.toString();
+}
+
+/// The Dart type a request body takes, and how to serialise it.
+class _Body {
+  _Body(this.type, this.encode);
+  final String type;
+  final String encode;
+}
+
+/// Types a request body.
+///
+/// Responses were typed first, which made reading safe while writing still
+/// meant guessing key names against the docs — the direction where being wrong
+/// costs more. Named schemas are reused; inline ones get a class named after
+/// their operation, exactly as inline responses do.
+_Body _bodyType(_Op op, Map<String, dynamic> schema) {
+  final refName = _refName(schema);
+  final resolved = _resolve(schema);
+
+  if (refName != null && resolved['properties'] is Map) {
+    if (!emittedModels.containsKey(refName)) {
+      extraModels.write(_emitType(refName, resolved));
+    }
+    return _Body(refName, 'body.toJson()');
+  }
+
+  if (resolved['type'] == 'array') {
+    final items = (resolved['items'] as Map<String, dynamic>?) ?? const {};
+    final itemRef = _refName(items);
+    final itemResolved = _resolve(items);
+    if (itemRef != null && itemResolved['properties'] is Map) {
+      if (!emittedModels.containsKey(itemRef)) {
+        extraModels.write(_emitType(itemRef, itemResolved));
+      }
+      return _Body('List<$itemRef>', 'body.map((e) => e.toJson()).toList()');
+    }
+    if (itemResolved['properties'] is Map) {
+      final name = '${_className(op.id)}RequestItem';
+      extraModels.write(_emitType(name, itemResolved));
+      return _Body('List<$name>', 'body.map((e) => e.toJson()).toList()');
+    }
+    // Items are a union with no discriminator; raw JSON is the honest type.
+    return _Body('List<Map<String, Object?>>', 'body');
+  }
+
+  if (resolved['properties'] is Map) {
+    final name = '${_className(op.id)}Request';
+    extraModels.write(_emitType(name, resolved));
+    return _Body(name, 'body.toJson()');
+  }
+
+  return _Body('Map<String, Object?>', 'body');
 }
 
 class _QueryParam {
@@ -807,6 +1026,127 @@ _Return _returnType(_Op op) {
   }
   return _Return('Map<String, Object?>', 'sendObject', 'json', true);
 }
+
+
+// ---------------------------------------------------------------------------
+// Documentation
+// ---------------------------------------------------------------------------
+
+/// Writes doc/api/*.md: one page per resource group, plus an index.
+///
+/// Generated from the same spec the code is, and from the same spec Render's
+/// own reference pages render from — so the three cannot drift apart.
+void _emitDocs(Map<String, List<_Op>> groups) {
+  Directory('doc/api').createSync(recursive: true);
+
+  final byGroup = <String, List<_Emitted>>{};
+  for (final m in emittedMethods) {
+    byGroup.putIfAbsent(m.group, () => []).add(m);
+  }
+
+  final index = StringBuffer()
+    ..writeln('# Render API reference')
+    ..writeln()
+    ..writeln('Every operation in the Render REST API, named exactly as Render')
+    ..writeln('names it. Generated from `tool/render-openapi.json`, the same')
+    ..writeln('spec [api-docs.render.com](https://api-docs.render.com) renders')
+    ..writeln('from.')
+    ..writeln()
+    ..writeln('Each operation can be called two ways:')
+    ..writeln()
+    ..writeln('```dart')
+    ..writeln('await render.listHeaders(serviceId: id);            // flat')
+    ..writeln('await render.raw.services.listHeaders(serviceId: id); // grouped')
+    ..writeln('```')
+    ..writeln()
+    ..writeln('| Group | Operations | |')
+    ..writeln('| --- | --- | --- |');
+
+  for (final group in byGroup.keys.toList()..sort()) {
+    final methods = byGroup[group]!..sort((a, b) => a.name.compareTo(b.name));
+    index.writeln('| `${_fieldName(group)}` | ${methods.length} | '
+        '[reference](${_snake(group)}.md) |');
+
+    final page = StringBuffer()
+      ..writeln('# ${_className(group)}')
+      ..writeln()
+      ..writeln('`render.raw.${_fieldName(group)}` — ${methods.length} '
+          'operation${methods.length == 1 ? '' : 's'} on `/$group`.')
+      ..writeln()
+      ..writeln('| Method | | |')
+      ..writeln('| --- | --- | --- |');
+    for (final m in methods) {
+      final line = m.summary?.split('\n').first ?? '';
+      page.writeln('| [`${m.name}`](#${m.name.toLowerCase()}) | '
+          '`${m.httpMethod} ${m.path}` | $line |');
+    }
+    page.writeln();
+    page.writeln('---');
+    page.writeln();
+
+    for (final m in methods) {
+      page.writeln('## ${m.name}');
+      page.writeln();
+      if (m.summary != null) page.writeln('**${m.summary}**');
+      page.writeln();
+      if (m.description != null && m.description != m.summary) {
+        page.writeln(m.description);
+        page.writeln();
+      }
+      page.writeln('```dart');
+      page.writeln('Future<${m.returnType}> ${m.name}(${m.signature})');
+      page.writeln('```');
+      page.writeln();
+      page.writeln('`${m.httpMethod} ${m.path}`');
+      page.writeln();
+
+      if (m.params.isEmpty) {
+        page.writeln('Takes no parameters.');
+        page.writeln();
+      } else {
+        page.writeln('| Parameter | Type | In | Required | |');
+        page.writeln('| --- | --- | --- | --- | --- |');
+        for (final p in m.params) {
+          final doc = (p.doc ?? '').replaceAll('\n', ' ').replaceAll('|', '\\|');
+          page.writeln('| `${p.name}` | `${p.type}` | ${p.location} | '
+              '${p.required ? 'yes' : 'no'} | $doc |');
+        }
+        page.writeln();
+      }
+
+      final element = _bareType(m.returnType);
+      page.writeln(element == m.returnType
+          ? 'Returns `${m.returnType}`.'
+          : 'Returns `${m.returnType}` — each element carries:');
+      final fields = modelFields[element];
+      if (fields != null && fields.isNotEmpty) {
+        page.writeln();
+        page.writeln('| Field | Type | |');
+        page.writeln('| --- | --- | --- |');
+        for (final f in fields) {
+          final doc = (f.doc ?? '').replaceAll('\n', ' ').replaceAll('|', '\\|');
+          page.writeln('| `${f.name}` | `${f.type}` | $doc |');
+        }
+      }
+      page.writeln();
+      page.writeln('[Render documentation]'
+          '(https://api-docs.render.com/reference/${m.operationId})');
+      page.writeln();
+    }
+
+    File('doc/api/${_snake(group)}.md').writeAsStringSync(page.toString());
+  }
+
+  index.writeln();
+  index.writeln('Generated by `dart run tool/generate.dart`.');
+  File('doc/api/README.md').writeAsStringSync(index.toString());
+  stdout.writeln('wrote doc/api for ${byGroup.length} groups');
+}
+
+/// `List<Foo>` -> `Foo`, so a list return can still document its element.
+String _bareType(String type) => type.startsWith('List<') && type.endsWith('>')
+    ? type.substring('List<'.length, type.length - 1)
+    : type;
 
 // ---------------------------------------------------------------------------
 // Naming

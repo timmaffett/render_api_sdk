@@ -49,11 +49,11 @@ class TaskRunsEndpoints {
   /// Run task
   ///
   /// Kicks off a run of the workflow task with the provided ID, passing the provided input data.
-  Future<CreateTaskResponse> createTask({required Map<String, Object?> body}) async {
+  Future<CreateTaskResponse> createTask({required CreateTaskRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/task-runs',
-      body: body,
+      body: body.toJson(),
     );
     return CreateTaskResponse.fromJson(json);
   }

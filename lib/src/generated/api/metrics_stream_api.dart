@@ -26,11 +26,11 @@ class MetricsStreamEndpoints {
   /// Create or update metrics stream
   ///
   /// Creates or updates the metrics stream for the specified workspace.
-  Future<UpsertOwnerMetricsStreamResponse> upsertOwnerMetricsStream({required String ownerId, required Map<String, Object?> body}) async {
+  Future<UpsertOwnerMetricsStreamResponse> upsertOwnerMetricsStream({required String ownerId, required UpsertOwnerMetricsStreamRequest body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/metrics-stream/$ownerId',
-      body: body,
+      body: body.toJson(),
     );
     return UpsertOwnerMetricsStreamResponse.fromJson(json);
   }

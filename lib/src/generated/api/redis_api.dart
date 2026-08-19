@@ -59,11 +59,11 @@ class RedisEndpoints {
   /// Create Redis instance
   ///
   /// Create a new Redis instance. This API is deprecated in favor of the Key Value API.
-  Future<RedisDetail> createRedis({required Map<String, Object?> body}) async {
+  Future<RedisDetail> createRedis({required RedisPostinput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/redis',
-      body: body,
+      body: body.toJson(),
     );
     return RedisDetail.fromJson(json);
   }
@@ -84,11 +84,11 @@ class RedisEndpoints {
   /// Update Redis instance
   ///
   /// Update a Redis instance by ID. This API is deprecated in favor of the Key Value API.
-  Future<RedisDetail> updateRedis({required String redisId, required Map<String, Object?> body}) async {
+  Future<RedisDetail> updateRedis({required String redisId, required RedisPatchinput body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/redis/$redisId',
-      body: body,
+      body: body.toJson(),
     );
     return RedisDetail.fromJson(json);
   }

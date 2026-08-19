@@ -38,11 +38,11 @@ class DedicatedIpsEndpoints {
   /// Create a dedicated IP set. Provisioning an IP set is asynchronous. The response returns immediately with `status: CREATING` and `ips: []`. When provisioning completes, status changes to `RUNNING` and `ips` contains your assigned addresses.
   ///
   /// If `environmentIds` is omitted or empty, this IP set applies to all services in the workspace in the selected region. Otherwise, it applies only to services in the listed environments in that region.
-  Future<DedicatedIp> createDedicatedIp({required Map<String, Object?> body}) async {
+  Future<DedicatedIp> createDedicatedIp({required DedicatedIppost body}) async {
     final json = await _client.sendObject(
       'POST',
       '/dedicated-ips',
-      body: body,
+      body: body.toJson(),
     );
     return DedicatedIp.fromJson(json);
   }
@@ -63,11 +63,11 @@ class DedicatedIpsEndpoints {
   /// Update dedicated IP set
   ///
   /// Update the dedicated IP set with the provided ID. All fields are optional. Omitted fields are left unchanged. To switch from environment-scoped to workspace-scoped, provide `environmentIds: []`.
-  Future<DedicatedIp> updateDedicatedIp({required String dedicatedIpId, required Map<String, Object?> body}) async {
+  Future<DedicatedIp> updateDedicatedIp({required String dedicatedIpId, required DedicatedIppatch body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/dedicated-ips/$dedicatedIpId',
-      body: body,
+      body: body.toJson(),
     );
     return DedicatedIp.fromJson(json);
   }

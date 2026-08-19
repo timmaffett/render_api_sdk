@@ -63,11 +63,11 @@ class BlueprintsEndpoints {
   /// Update Blueprint
   ///
   /// Update the Blueprint with the provided ID.
-  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) async {
+  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required UpdateBlueprintRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/blueprints/$blueprintId',
-      body: body,
+      body: body.toJson(),
     );
     return UpdateBlueprintResponse.fromJson(json);
   }

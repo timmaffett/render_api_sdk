@@ -52,11 +52,11 @@ class ProjectsEndpoints {
   /// Create project
   ///
   /// Create a new project.
-  Future<Project> createProject({required Map<String, Object?> body}) async {
+  Future<Project> createProject({required ProjectPostinput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/projects',
-      body: body,
+      body: body.toJson(),
     );
     return Project.fromJson(json);
   }
@@ -79,11 +79,11 @@ class ProjectsEndpoints {
   /// Update the details of a project.
   ///
   /// To update the details of a particular _environment_ in the project, instead use the [Update environment](https://api-docs.render.com/reference/update-environment) endpoint.
-  Future<Project> updateProject({required String projectId, required Map<String, Object?> body}) async {
+  Future<Project> updateProject({required String projectId, required ProjectPatchinput body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/projects/$projectId',
-      body: body,
+      body: body.toJson(),
     );
     return Project.fromJson(json);
   }

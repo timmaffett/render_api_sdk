@@ -134,6 +134,20 @@ which depends on this package for its transport. Render splits the same way:
 Workflow *services* — creating them, deploying versions, listing task
 definitions — are REST, and generated here.
 
+## Per-method reference
+
+[`doc/api/`](doc/api/README.md) documents every operation: signature,
+parameters with Render's own descriptions, the fields of what it returns, and
+a link to the matching page on api-docs.render.com. Generated alongside the
+code, so the two cannot drift.
+
+## Verified against the documentation
+
+Every reference page on api-docs.render.com embeds a scoped OpenAPI fragment
+for its endpoint — the same spec vendored here. All 225 documented operations
+were diffed against it: parameters, request bodies and response shapes agree
+throughout. The docs and this client are two renderings of one source.
+
 ## Regenerating
 
 ```bash

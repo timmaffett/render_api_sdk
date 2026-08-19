@@ -58,11 +58,11 @@ class EnvironmentsEndpoints {
   /// Create environment
   ///
   /// Create a new environment belonging to the project with the provided ID.
-  Future<Environment> createEnvironment({required Map<String, Object?> body}) async {
+  Future<Environment> createEnvironment({required EnvironmentPostinput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/environments',
-      body: body,
+      body: body.toJson(),
     );
     return Environment.fromJson(json);
   }
@@ -83,11 +83,11 @@ class EnvironmentsEndpoints {
   /// Update environment
   ///
   /// Update the details of the environment with the provided ID.
-  Future<Environment> updateEnvironment({required String environmentId, required Map<String, Object?> body}) async {
+  Future<Environment> updateEnvironment({required String environmentId, required EnvironmentPatchinput body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/environments/$environmentId',
-      body: body,
+      body: body.toJson(),
     );
     return Environment.fromJson(json);
   }
@@ -113,11 +113,11 @@ class EnvironmentsEndpoints {
   /// Add resources to environment
   ///
   /// Add resources to the environment with the provided ID.
-  Future<Environment> addResourcesToEnvironment({required String environmentId, required Map<String, Object?> body}) async {
+  Future<Environment> addResourcesToEnvironment({required String environmentId, required EnvironmentResourcesPostinput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/environments/$environmentId/resources',
-      body: body,
+      body: body.toJson(),
     );
     return Environment.fromJson(json);
   }

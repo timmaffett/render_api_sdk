@@ -46,11 +46,11 @@ class WorkflowsEndpoints {
   /// Create a workflow
   ///
   /// Create a new workflow service with the specified configuration.
-  Future<CreateWorkflowResponse> createWorkflow({required Map<String, Object?> body}) async {
+  Future<CreateWorkflowResponse> createWorkflow({required CreateWorkflowRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/workflows',
-      body: body,
+      body: body.toJson(),
     );
     return CreateWorkflowResponse.fromJson(json);
   }
@@ -71,11 +71,11 @@ class WorkflowsEndpoints {
   /// Update workflow
   ///
   /// Update the workflow service with the provided ID.
-  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required Map<String, Object?> body}) async {
+  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required UpdateWorkflowRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/workflows/$workflowId',
-      body: body,
+      body: body.toJson(),
     );
     return UpdateWorkflowResponse.fromJson(json);
   }

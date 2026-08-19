@@ -43,11 +43,11 @@ class WorkflowversionsEndpoints {
   /// Deploy a workflow version
   ///
   /// Creates and deploys a new version of a workflow.
-  Future<void> createWorkflowVersion({required Map<String, Object?> body}) async {
+  Future<void> createWorkflowVersion({required CreateWorkflowVersionRequest body}) async {
     await _client.send(
       'POST',
       '/workflowversions',
-      body: body,
+      body: body.toJson(),
     );
   }
 

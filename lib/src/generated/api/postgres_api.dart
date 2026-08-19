@@ -64,11 +64,11 @@ class PostgresEndpoints {
   /// Create Postgres instance
   ///
   /// Create a new Postgres instance.
-  Future<PostgresDetail> createPostgres({required Map<String, Object?> body}) async {
+  Future<PostgresDetail> createPostgres({required PostgresPostinput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/postgres',
-      body: body,
+      body: body.toJson(),
     );
     return PostgresDetail.fromJson(json);
   }
@@ -89,11 +89,11 @@ class PostgresEndpoints {
   /// Update Postgres instance
   ///
   /// Update a Postgres instance by ID.
-  Future<PostgresDetail> updatePostgres({required String postgresId, required Map<String, Object?> body}) async {
+  Future<PostgresDetail> updatePostgres({required String postgresId, required PostgresPatchinput body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/postgres/$postgresId',
-      body: body,
+      body: body.toJson(),
     );
     return PostgresDetail.fromJson(json);
   }
@@ -138,11 +138,11 @@ class PostgresEndpoints {
   /// Trigger point-in-time recovery
   ///
   /// Trigger [point-in-time recovery](https://render.com/docs/postgresql-backups) on the Postgres instance with the provided ID.
-  Future<PostgresDetail> recoverPostgres({required String postgresId, required Map<String, Object?> body}) async {
+  Future<PostgresDetail> recoverPostgres({required String postgresId, required RecoverPostgresRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/postgres/$postgresId/recovery',
-      body: body,
+      body: body.toJson(),
     );
     return PostgresDetail.fromJson(json);
   }
@@ -230,11 +230,11 @@ class PostgresEndpoints {
   /// Create PostgreSQL User
   ///
   /// Create a new PostgreSQL user for the Render Postgres instance with the provided ID. This becomes the database's new "default" user.
-  Future<void> createPostgresUser({required String postgresId, required Map<String, Object?> body}) async {
+  Future<void> createPostgresUser({required String postgresId, required CreatePostgresUserRequest body}) async {
     await _client.send(
       'POST',
       '/postgres/$postgresId/credentials',
-      body: body,
+      body: body.toJson(),
     );
   }
 

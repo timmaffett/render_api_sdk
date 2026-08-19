@@ -70,11 +70,11 @@ class ServicesEndpoints {
   /// Create service
   ///
   /// Creates a new Render service in the specified workspace with the specified configuration.
-  Future<ServiceAndDeploy> createService({required Map<String, Object?> body}) async {
+  Future<ServiceAndDeploy> createService({required ServicePost body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services',
-      body: body,
+      body: body.toJson(),
     );
     return ServiceAndDeploy.fromJson(json);
   }
@@ -95,11 +95,11 @@ class ServicesEndpoints {
   /// Update service
   ///
   /// Update the service with the provided ID.
-  Future<Service> updateService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<Service> updateService({required String serviceId, required ServicePatch body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/services/$serviceId',
-      body: body,
+      body: body.toJson(),
     );
     return Service.fromJson(json);
   }
@@ -171,11 +171,11 @@ class ServicesEndpoints {
   /// Trigger deploy
   ///
   /// Trigger a deploy for the service with the provided ID.
-  Future<Deploy> createDeploy({required String serviceId, required Map<String, Object?> body}) async {
+  Future<Deploy> createDeploy({required String serviceId, required CreateDeployRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/deploys',
-      body: body,
+      body: body.toJson(),
     );
     return Deploy.fromJson(json);
   }
@@ -214,11 +214,11 @@ class ServicesEndpoints {
   /// Triggering a rollback with this endpoint does not disable autodeploys for the service. This means an autodeploy might restore changes you had intentionally rolled back.
   ///
   /// You can toggle autodeploys for your service with the [Update service](https://api-docs.render.com/reference/update-service) endpoint or in the Render Dashboard.
-  Future<Deploy> rollbackDeploy({required String serviceId, required Map<String, Object?> body}) async {
+  Future<Deploy> rollbackDeploy({required String serviceId, required RollbackDeployRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/rollback',
-      body: body,
+      body: body.toJson(),
     );
     return Deploy.fromJson(json);
   }
@@ -247,7 +247,7 @@ class ServicesEndpoints {
   /// Update environment variables
   ///
   /// Replace all environment variables for a service with the provided list of environment variables.
-  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<Map<String, Object?>> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/env-vars',
@@ -326,11 +326,11 @@ class ServicesEndpoints {
   /// **Any of the service's existing secret files not included in this request will be deleted.**
   ///
   /// This only applies to secret files set directly on the service, not to secret files in a linked environment group.
-  Future<List<SecretFileWithCursor>> updateSecretFilesForService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<List<SecretFileWithCursor>> updateSecretFilesForService({required String serviceId, required List<UpdateSecretFilesForServiceRequestItem> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/secret-files',
-      body: body,
+      body: body.map((e) => e.toJson()).toList(),
     );
     return json.whereType<Map<String, Object?>>().map(SecretFileWithCursor.fromJson).toList();
   }
@@ -355,11 +355,11 @@ class ServicesEndpoints {
   /// Add or update a particular secret file for a particular service.
   ///
   /// This only applies to secret files set directly on the service, not to secret files in a linked environment group.
-  Future<SecretFile> addOrUpdateSecretFile({required String serviceId, required String envVarKey, required Map<String, Object?> body}) async {
+  Future<SecretFile> addOrUpdateSecretFile({required String serviceId, required String envVarKey, required AddOrUpdateSecretFileRequest body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/secret-files/$envVarKey',
-      body: body,
+      body: body.toJson(),
     );
     return SecretFile.fromJson(json);
   }
@@ -439,11 +439,11 @@ class ServicesEndpoints {
   /// Add header rule
   ///
   /// Add a response header rule to the service with the provided ID.
-  Future<AddHeadersResponse> addHeaders({required String serviceId, required Map<String, Object?> body}) async {
+  Future<AddHeadersResponse> addHeaders({required String serviceId, required HeaderInput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/headers',
-      body: body,
+      body: body.toJson(),
     );
     return AddHeadersResponse.fromJson(json);
   }
@@ -454,11 +454,11 @@ class ServicesEndpoints {
   /// Replace all header rules for a particular service with the provided list.
   ///
   /// **This deletes all existing header rules for the service that aren't included in the request.**
-  Future<List<Header>> updateHeaders({required String serviceId, required Map<String, Object?> body}) async {
+  Future<List<Header>> updateHeaders({required String serviceId, required List<HeaderInput> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/headers',
-      body: body,
+      body: body.map((e) => e.toJson()).toList(),
     );
     return json.whereType<Map<String, Object?>>().map(Header.fromJson).toList();
   }
@@ -507,11 +507,11 @@ class ServicesEndpoints {
   /// Add redirect/rewrite rules
   ///
   /// Add redirect/rewrite rules to the service with the provided ID.
-  Future<Route> addRoute({required String serviceId, required Map<String, Object?> body}) async {
+  Future<Route> addRoute({required String serviceId, required RoutePost body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/routes',
-      body: body,
+      body: body.toJson(),
     );
     return Route.fromJson(json);
   }
@@ -524,11 +524,11 @@ class ServicesEndpoints {
   /// **This deletes all existing redirect/rewrite rules for the service that aren't included in the request.**
   ///
   /// Rule priority is assigned according to list order (the first rule in the list has the highest priority).
-  Future<List<Route>> putRoutes({required String serviceId, required Map<String, Object?> body}) async {
+  Future<List<Route>> putRoutes({required String serviceId, required List<RoutePut> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/routes',
-      body: body,
+      body: body.map((e) => e.toJson()).toList(),
     );
     return json.whereType<Map<String, Object?>>().map(Route.fromJson).toList();
   }
@@ -541,11 +541,11 @@ class ServicesEndpoints {
   /// To apply redirect/rewrite rules to an incoming request, Render starts from the rule with priority `0` and applies the first encountered rule that matches the request's path (if any).
   ///
   /// Render increments the priority of other rules by `1` as necessary to make space for the updated rule.
-  Future<PatchRouteResponse> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) async {
+  Future<PatchRouteResponse> patchRoute({required String serviceId, required String routeId, required RoutePatch body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/services/$serviceId/routes/$routeId',
-      body: body,
+      body: body.toJson(),
     );
     return PatchRouteResponse.fromJson(json);
   }
@@ -600,11 +600,11 @@ class ServicesEndpoints {
   /// Add custom domain
   ///
   /// Add a custom domain to the service with the provided ID.
-  Future<List<CustomDomain>> createCustomDomain({required String serviceId, required Map<String, Object?> body}) async {
+  Future<List<CustomDomain>> createCustomDomain({required String serviceId, required CreateCustomDomainRequest body}) async {
     final json = await _client.sendList(
       'POST',
       '/services/$serviceId/custom-domains',
-      body: body,
+      body: body.toJson(),
     );
     return json.whereType<Map<String, Object?>>().map(CustomDomain.fromJson).toList();
   }
@@ -684,11 +684,11 @@ class ServicesEndpoints {
   /// [Scale](https://render.com/docs/scaling#manual-scaling) the service with the provided ID to a fixed number of instances.
   ///
   /// Render ignores this value as long as autoscaling is enabled for the service.
-  Future<void> scaleService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<void> scaleService({required String serviceId, required ScaleServiceRequest body}) async {
     await _client.send(
       'POST',
       '/services/$serviceId/scale',
-      body: body,
+      body: body.toJson(),
     );
   }
 
@@ -696,11 +696,11 @@ class ServicesEndpoints {
   /// Update autoscaling config
   ///
   /// Update the [autoscaling](https://render.com/docs/scaling#autoscaling) config for the service with the provided ID.
-  Future<AutoscaleServiceResponse> autoscaleService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<AutoscaleServiceResponse> autoscaleService({required String serviceId, required AutoscaleServiceRequest body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/autoscaling',
-      body: body,
+      body: body.toJson(),
     );
     return AutoscaleServiceResponse.fromJson(json);
   }
@@ -724,11 +724,11 @@ class ServicesEndpoints {
   /// View all active previews from your service's Previews tab in the Render Dashboard.
   ///
   /// Note that you can't create previews for Git-backed services using the Render API.
-  Future<ServiceAndDeploy> previewService({required String serviceId, required Map<String, Object?> body}) async {
+  Future<ServiceAndDeploy> previewService({required String serviceId, required PreviewInput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/preview',
-      body: body,
+      body: body.toJson(),
     );
     return ServiceAndDeploy.fromJson(json);
   }
@@ -778,11 +778,11 @@ class ServicesEndpoints {
   /// Create job
   ///
   /// Create a one-off job using the provided service. For details, see [One-Off Jobs](https://render.com/docs/one-off-jobs).
-  Future<PostJobResponse> postJob({required String serviceId, required Map<String, Object?> body}) async {
+  Future<PostJobResponse> postJob({required String serviceId, required PostJobRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/services/$serviceId/jobs',
-      body: body,
+      body: body.toJson(),
     );
     return PostJobResponse.fromJson(json);
   }

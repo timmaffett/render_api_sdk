@@ -50,7 +50,7 @@ class AddUpdateEnvVarInput {
 /// The type of event that occurred
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum AuditLogEvent {
+enum Event {
   acceptOrgInviteEvent('AcceptOrgInviteEvent'),
   acceptTeamInviteEvent('AcceptTeamInviteEvent'),
   addOrgMemberEvent('AddOrgMemberEvent'),
@@ -134,12 +134,12 @@ enum AuditLogEvent {
   /// A value this package does not know about.
   unknown('');
 
-  const AuditLogEvent(this.wireValue);
+  const Event(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static AuditLogEvent fromWire(Object? value) => values.firstWhere(
+  static Event fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -148,18 +148,18 @@ enum AuditLogEvent {
 /// The status of the event
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum AuditLogStatus {
+enum Status {
   success('success'),
   error('error'),
   /// A value this package does not know about.
   unknown('');
 
-  const AuditLogStatus(this.wireValue);
+  const Status(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static AuditLogStatus fromWire(Object? value) => values.firstWhere(
+  static Status fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -168,19 +168,19 @@ enum AuditLogStatus {
 /// The type of actor that performed the action
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum AuditLogActorType {
+enum Type {
   user('user'),
   restApi('rest_api'),
   system('system'),
   /// A value this package does not know about.
   unknown('');
 
-  const AuditLogActorType(this.wireValue);
+  const Type(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static AuditLogActorType fromWire(Object? value) => values.firstWhere(
+  static Type fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -194,13 +194,13 @@ class AuditLogActor {
   });
 
   factory AuditLogActor.fromJson(Map<String, Object?> json) => AuditLogActor(
-        type: AuditLogActorType.fromWire(json['type']),
+        type: Type.fromWire(json['type']),
         email: json['email'] as String?,
         id: json['id'] as String?,
       );
 
   /// The type of actor that performed the action
-  final AuditLogActorType type;
+  final Type type;
   /// Email address of the actor (if applicable)
   final String? email;
   /// Unique identifier of the actor (if applicable)
@@ -226,8 +226,8 @@ class AuditLog {
   factory AuditLog.fromJson(Map<String, Object?> json) => AuditLog(
         id: json['id'] as String? ?? '',
         timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        event: AuditLogEvent.fromWire(json['event']),
-        status: AuditLogStatus.fromWire(json['status']),
+        event: Event.fromWire(json['event']),
+        status: Status.fromWire(json['status']),
         actor: AuditLogActor.fromJson((json['actor'] as Map<String, Object?>?) ?? const {}),
         metadata: (json['metadata'] as Map<String, Object?>?) ?? const {},
       );
@@ -237,9 +237,9 @@ class AuditLog {
   /// When the event occurred (ISO 8601 format)
   final DateTime timestamp;
   /// The type of event that occurred
-  final AuditLogEvent event;
+  final Event event;
   /// The status of the event
-  final AuditLogStatus status;
+  final Status status;
   final AuditLogActor actor;
   /// Additional context information about the event
   final Map<String, Object?> metadata;
@@ -519,19 +519,19 @@ enum PullRequestPreviewsEnabled {
 /// Defaults to "off"
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum PreviewsGeneration {
+enum Generation {
   off('off'),
   manual('manual'),
   automatic('automatic'),
   /// A value this package does not know about.
   unknown('');
 
-  const PreviewsGeneration(this.wireValue);
+  const Generation(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PreviewsGeneration fromWire(Object? value) => values.firstWhere(
+  static Generation fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -543,11 +543,11 @@ class Previews {
   });
 
   factory Previews.fromJson(Map<String, Object?> json) => Previews(
-        generation: PreviewsGeneration.fromWire(json['generation']),
+        generation: Generation.fromWire(json['generation']),
       );
 
   /// Defaults to "off"
-  final PreviewsGeneration? generation;
+  final Generation? generation;
 
   Map<String, Object?> toJson() => {
         if (generation != null) 'generation': generation!.wireValue,
@@ -955,7 +955,7 @@ class BackgroundWorkerDetailsPost {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum BlueprintWithCursorBlueprintStatus {
+enum RetrieveBlueprintStatus {
   created('created'),
   paused('paused'),
   inSync('in_sync'),
@@ -964,12 +964,12 @@ enum BlueprintWithCursorBlueprintStatus {
   /// A value this package does not know about.
   unknown('');
 
-  const BlueprintWithCursorBlueprintStatus(this.wireValue);
+  const RetrieveBlueprintStatus(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static BlueprintWithCursorBlueprintStatus fromWire(Object? value) => values.firstWhere(
+  static RetrieveBlueprintStatus fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -990,7 +990,7 @@ class BlueprintWithCursorBlueprint {
   factory BlueprintWithCursorBlueprint.fromJson(Map<String, Object?> json) => BlueprintWithCursorBlueprint(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        status: BlueprintWithCursorBlueprintStatus.fromWire(json['status']),
+        status: RetrieveBlueprintStatus.fromWire(json['status']),
         autoSync: json['autoSync'] as bool? ?? false,
         repo: json['repo'] as String? ?? '',
         branch: json['branch'] as String? ?? '',
@@ -1000,7 +1000,7 @@ class BlueprintWithCursorBlueprint {
 
   final String id;
   final String name;
-  final BlueprintWithCursorBlueprintStatus status;
+  final RetrieveBlueprintStatus status;
   /// Automatically sync changes to render.yaml
   final bool autoSync;
   final String repo;
@@ -1067,19 +1067,19 @@ class BuildFilter {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum CacheProfile {
+enum Profile {
   noCache('no-cache'),
   originControlled('origin-controlled'),
   originControlledAll('origin-controlled-all'),
   /// A value this package does not know about.
   unknown('');
 
-  const CacheProfile(this.wireValue);
+  const Profile(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static CacheProfile fromWire(Object? value) => values.firstWhere(
+  static Profile fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -1091,10 +1091,10 @@ class Cache {
   });
 
   factory Cache.fromJson(Map<String, Object?> json) => Cache(
-        profile: CacheProfile.fromWire(json['profile']),
+        profile: Profile.fromWire(json['profile']),
       );
 
-  final CacheProfile profile;
+  final Profile profile;
 
   Map<String, Object?> toJson() => {
         'profile': profile.wireValue,
@@ -1310,18 +1310,18 @@ class CronJobRun {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum CustomDomainDomainType {
+enum DomainType {
   apex('apex'),
   subdomain('subdomain'),
   /// A value this package does not know about.
   unknown('');
 
-  const CustomDomainDomainType(this.wireValue);
+  const DomainType(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static CustomDomainDomainType fromWire(Object? value) => values.firstWhere(
+  static DomainType fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -1329,18 +1329,18 @@ enum CustomDomainDomainType {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum CustomDomainVerificationStatus {
+enum VerificationStatus {
   verified('verified'),
   unverified('unverified'),
   /// A value this package does not know about.
   unknown('');
 
-  const CustomDomainVerificationStatus(this.wireValue);
+  const VerificationStatus(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static CustomDomainVerificationStatus fromWire(Object? value) => values.firstWhere(
+  static VerificationStatus fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -1381,20 +1381,20 @@ class CustomDomain {
   factory CustomDomain.fromJson(Map<String, Object?> json) => CustomDomain(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        domainType: CustomDomainDomainType.fromWire(json['domainType']),
+        domainType: DomainType.fromWire(json['domainType']),
         publicSuffix: json['publicSuffix'] as String? ?? '',
         redirectForName: json['redirectForName'] as String? ?? '',
-        verificationStatus: CustomDomainVerificationStatus.fromWire(json['verificationStatus']),
+        verificationStatus: VerificationStatus.fromWire(json['verificationStatus']),
         createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         server: json['server'] == null ? null : CustomDomainServer.fromJson(json['server']! as Map<String, Object?>),
       );
 
   final String id;
   final String name;
-  final CustomDomainDomainType domainType;
+  final DomainType domainType;
   final String publicSuffix;
   final String redirectForName;
-  final CustomDomainVerificationStatus verificationStatus;
+  final VerificationStatus verificationStatus;
   final DateTime createdAt;
   final CustomDomainServer? server;
 
@@ -1717,7 +1717,7 @@ enum DeployStatus {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum DeployTrigger {
+enum Trigger {
   api('api'),
   blueprintSync('blueprint_sync'),
   deployHook('deploy_hook'),
@@ -1731,12 +1731,12 @@ enum DeployTrigger {
   /// A value this package does not know about.
   unknown('');
 
-  const DeployTrigger(this.wireValue);
+  const Trigger(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DeployTrigger fromWire(Object? value) => values.firstWhere(
+  static Trigger fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -1760,7 +1760,7 @@ class Deploy {
         commit: json['commit'] == null ? null : DeployCommit.fromJson(json['commit']! as Map<String, Object?>),
         image: json['image'] == null ? null : DeployImage.fromJson(json['image']! as Map<String, Object?>),
         status: DeployStatus.fromWire(json['status']),
-        trigger: DeployTrigger.fromWire(json['trigger']),
+        trigger: Trigger.fromWire(json['trigger']),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
         createdAt: parseDate(json['createdAt']),
@@ -1772,7 +1772,7 @@ class Deploy {
   /// Image information used when creating the deploy. Not present for Git-backed deploys
   final DeployImage? image;
   final DeployStatus? status;
-  final DeployTrigger? trigger;
+  final Trigger? trigger;
   final DateTime? startedAt;
   final DateTime? finishedAt;
   final DateTime? createdAt;
@@ -3379,19 +3379,19 @@ class NativeEnvironmentDetailsPost {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum NotificationOverrideWithCursorOverridePreviewNotificationsEnabled {
+enum PreviewNotificationsEnabled {
   default_('default'),
   false_('false'),
   true_('true'),
   /// A value this package does not know about.
   unknown('');
 
-  const NotificationOverrideWithCursorOverridePreviewNotificationsEnabled(this.wireValue);
+  const PreviewNotificationsEnabled(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static NotificationOverrideWithCursorOverridePreviewNotificationsEnabled fromWire(Object? value) => values.firstWhere(
+  static PreviewNotificationsEnabled fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -3399,7 +3399,7 @@ enum NotificationOverrideWithCursorOverridePreviewNotificationsEnabled {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum NotificationOverrideWithCursorOverrideNotificationsToSend {
+enum PatchServiceNotificationOverridesNotificationsToSend {
   default_('default'),
   none('none'),
   failure('failure'),
@@ -3407,12 +3407,12 @@ enum NotificationOverrideWithCursorOverrideNotificationsToSend {
   /// A value this package does not know about.
   unknown('');
 
-  const NotificationOverrideWithCursorOverrideNotificationsToSend(this.wireValue);
+  const PatchServiceNotificationOverridesNotificationsToSend(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static NotificationOverrideWithCursorOverrideNotificationsToSend fromWire(Object? value) => values.firstWhere(
+  static PatchServiceNotificationOverridesNotificationsToSend fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -3427,13 +3427,13 @@ class NotificationOverrideWithCursorOverride {
 
   factory NotificationOverrideWithCursorOverride.fromJson(Map<String, Object?> json) => NotificationOverrideWithCursorOverride(
         serviceId: json['serviceId'] as String? ?? '',
-        previewNotificationsEnabled: NotificationOverrideWithCursorOverridePreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: NotificationOverrideWithCursorOverrideNotificationsToSend.fromWire(json['notificationsToSend']),
+        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
+        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
       );
 
   final String serviceId;
-  final NotificationOverrideWithCursorOverridePreviewNotificationsEnabled previewNotificationsEnabled;
-  final NotificationOverrideWithCursorOverrideNotificationsToSend notificationsToSend;
+  final PreviewNotificationsEnabled previewNotificationsEnabled;
+  final PatchServiceNotificationOverridesNotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
         'serviceId': serviceId,
@@ -3559,7 +3559,7 @@ class OwnerWithCursor {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum PostgresPlan {
+enum PostgresPostinputPlan {
   free('free'),
   starter('starter'),
   standard('standard'),
@@ -3591,12 +3591,12 @@ enum PostgresPlan {
   /// A value this package does not know about.
   unknown('');
 
-  const PostgresPlan(this.wireValue);
+  const PostgresPostinputPlan(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PostgresPlan fromWire(Object? value) => values.firstWhere(
+  static PostgresPostinputPlan fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -3656,18 +3656,18 @@ enum PostgresVersion {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum PostgresSuspended {
+enum Suspended {
   suspended('suspended'),
   notSuspended('not_suspended'),
   /// A value this package does not know about.
   unknown('');
 
-  const PostgresSuspended(this.wireValue);
+  const Suspended(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PostgresSuspended fromWire(Object? value) => values.firstWhere(
+  static Suspended fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -3737,7 +3737,7 @@ class Postgres {
         highAvailabilityEnabled: json['highAvailabilityEnabled'] as bool? ?? false,
         name: json['name'] as String? ?? '',
         owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        plan: PostgresPlan.fromWire(json['plan']),
+        plan: PostgresPostinputPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         primaryPostgresId: json['primaryPostgresID'] as String?,
         region: Region.fromWire(json['region']),
@@ -3745,7 +3745,7 @@ class Postgres {
         role: DatabaseRole.fromWire(json['role']),
         status: DatabaseStatus.fromWire(json['status']),
         version: PostgresVersion.fromWire(json['version']),
-        suspended: PostgresSuspended.fromWire(json['suspended']),
+        suspended: Suspended.fromWire(json['suspended']),
         suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
         dashboardUrl: json['dashboardUrl'] as String? ?? '',
         diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
@@ -3764,7 +3764,7 @@ class Postgres {
   final bool highAvailabilityEnabled;
   final String name;
   final Owner owner;
-  final PostgresPlan plan;
+  final PostgresPostinputPlan plan;
   final int? diskSizeGb;
   final String? primaryPostgresId;
   /// Defaults to "oregon"
@@ -3774,7 +3774,7 @@ class Postgres {
   final DatabaseStatus status;
   /// The PostgreSQL version
   final PostgresVersion version;
-  final PostgresSuspended suspended;
+  final Suspended suspended;
   final List<SuspenderType> suspenders;
   /// The URL to view the Postgres instance in the Render Dashboard
   final String dashboardUrl;
@@ -3925,7 +3925,7 @@ class PostgresDetail {
         maintenance: json['maintenance'] == null ? null : PostgresDetailMaintenance.fromJson(json['maintenance']! as Map<String, Object?>),
         name: json['name'] as String? ?? '',
         owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        plan: PostgresPlan.fromWire(json['plan']),
+        plan: PostgresPostinputPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
         primaryPostgresId: json['primaryPostgresID'] as String?,
@@ -3934,7 +3934,7 @@ class PostgresDetail {
         role: DatabaseRole.fromWire(json['role']),
         status: DatabaseStatus.fromWire(json['status']),
         version: PostgresVersion.fromWire(json['version']),
-        suspended: PostgresSuspended.fromWire(json['suspended']),
+        suspended: Suspended.fromWire(json['suspended']),
         suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
         diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
         connectionPool: json['connectionPool'] as String? ?? '',
@@ -3955,7 +3955,7 @@ class PostgresDetail {
   final PostgresDetailMaintenance? maintenance;
   final String name;
   final Owner owner;
-  final PostgresPlan plan;
+  final PostgresPostinputPlan plan;
   final int? diskSizeGb;
   final Map<String, Object?>? parameterOverrides;
   final String? primaryPostgresId;
@@ -3966,7 +3966,7 @@ class PostgresDetail {
   final DatabaseStatus status;
   /// The PostgreSQL version
   final PostgresVersion version;
-  final PostgresSuspended suspended;
+  final Suspended suspended;
   final List<SuspenderType> suspenders;
   final bool diskAutoscalingEnabled;
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
@@ -4041,7 +4041,7 @@ class PostgresPatchinput {
 
   factory PostgresPatchinput.fromJson(Map<String, Object?> json) => PostgresPatchinput(
         name: json['name'] as String?,
-        plan: PostgresPlan.fromWire(json['plan']),
+        plan: PostgresPostinputPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         enableDiskAutoscaling: json['enableDiskAutoscaling'] as bool?,
         connectionPool: json['connectionPool'] as String?,
@@ -4054,7 +4054,7 @@ class PostgresPatchinput {
       );
 
   final String? name;
-  final PostgresPlan? plan;
+  final PostgresPostinputPlan? plan;
   /// The number of gigabytes of disk space to allocate for the database
   final int? diskSizeGb;
   final bool? enableDiskAutoscaling;
@@ -4116,7 +4116,7 @@ class PostgresPostinput {
         enableHighAvailability: json['enableHighAvailability'] as bool?,
         environmentId: json['environmentId'] as String?,
         ownerId: json['ownerId'] as String? ?? '',
-        plan: PostgresPlan.fromWire(json['plan']),
+        plan: PostgresPostinputPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
         enableDiskAutoscaling: json['enableDiskAutoscaling'] as bool?,
         connectionPool: json['connectionPool'] as String?,
@@ -4139,7 +4139,7 @@ class PostgresPostinput {
   final String? environmentId;
   /// The ID of the workspace to create the database for
   final String ownerId;
-  final PostgresPlan plan;
+  final PostgresPostinputPlan plan;
   /// The number of gigabytes of disk space to allocate for the database
   final int? diskSizeGb;
   final bool? enableDiskAutoscaling;
@@ -4362,18 +4362,18 @@ class PrivateServiceDetailsDisk {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum ServerPortProtocol {
+enum Protocol {
   tcp('TCP'),
   udp('UDP'),
   /// A value this package does not know about.
   unknown('');
 
-  const ServerPortProtocol(this.wireValue);
+  const Protocol(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ServerPortProtocol fromWire(Object? value) => values.firstWhere(
+  static Protocol fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -4387,11 +4387,11 @@ class ServerPort {
 
   factory ServerPort.fromJson(Map<String, Object?> json) => ServerPort(
         port: (json['port'] as num?)?.toInt() ?? 0,
-        protocol: ServerPortProtocol.fromWire(json['protocol']),
+        protocol: Protocol.fromWire(json['protocol']),
       );
 
   final int port;
-  final ServerPortProtocol protocol;
+  final Protocol protocol;
 
   Map<String, Object?> toJson() => {
         'port': port,
@@ -5484,7 +5484,7 @@ class Service {
         repo: json['repo'] as String?,
         rootDir: json['rootDir'] as String? ?? '',
         slug: json['slug'] as String? ?? '',
-        suspended: PostgresSuspended.fromWire(json['suspended']),
+        suspended: Suspended.fromWire(json['suspended']),
         suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
         type: ServiceType.fromWire(json['type']),
         updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
@@ -5507,7 +5507,7 @@ class Service {
   final String? repo;
   final String rootDir;
   final String slug;
-  final PostgresSuspended suspended;
+  final Suspended suspended;
   final List<SuspenderType> suspenders;
   final ServiceType type;
   final DateTime updatedAt;
@@ -6030,7 +6030,7 @@ class SyncWithCursorSyncCommit {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum SyncWithCursorSyncState {
+enum State {
   created('created'),
   pending('pending'),
   running('running'),
@@ -6039,12 +6039,12 @@ enum SyncWithCursorSyncState {
   /// A value this package does not know about.
   unknown('');
 
-  const SyncWithCursorSyncState(this.wireValue);
+  const State(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static SyncWithCursorSyncState fromWire(Object? value) => values.firstWhere(
+  static State fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -6064,14 +6064,14 @@ class SyncWithCursorSync {
         commit: SyncWithCursorSyncCommit.fromJson((json['commit'] as Map<String, Object?>?) ?? const {}),
         startedAt: parseDate(json['startedAt']),
         completedAt: parseDate(json['completedAt']),
-        state: SyncWithCursorSyncState.fromWire(json['state']),
+        state: State.fromWire(json['state']),
       );
 
   final String id;
   final SyncWithCursorSyncCommit commit;
   final DateTime? startedAt;
   final DateTime? completedAt;
-  final SyncWithCursorSyncState state;
+  final State state;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -6106,7 +6106,7 @@ class SyncWithCursor {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum TaskRunWithCursorTaskRunStatus {
+enum GetTaskRunStatus {
   pending('pending'),
   running('running'),
   completed('completed'),
@@ -6117,12 +6117,12 @@ enum TaskRunWithCursorTaskRunStatus {
   /// A value this package does not know about.
   unknown('');
 
-  const TaskRunWithCursorTaskRunStatus(this.wireValue);
+  const GetTaskRunStatus(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static TaskRunWithCursorTaskRunStatus fromWire(Object? value) => values.firstWhere(
+  static GetTaskRunStatus fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -6141,7 +6141,7 @@ class TaskRunWithCursorTaskRunAttemptsItem {
   factory TaskRunWithCursorTaskRunAttemptsItem.fromJson(Map<String, Object?> json) => TaskRunWithCursorTaskRunAttemptsItem(
         taskRunId: json['taskRunId'] as String?,
         attempt: (json['attempt'] as num?)?.toInt() ?? 0,
-        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        status: GetTaskRunStatus.fromWire(json['status']),
         enqueuedAt: parseDate(json['enqueuedAt']),
         startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
@@ -6151,7 +6151,7 @@ class TaskRunWithCursorTaskRunAttemptsItem {
   final String? taskRunId;
   /// The 0-indexed attempt number.
   final int attempt;
-  final TaskRunWithCursorTaskRunStatus status;
+  final GetTaskRunStatus status;
   final DateTime? enqueuedAt;
   final DateTime startedAt;
   final DateTime? completedAt;
@@ -6183,7 +6183,7 @@ class TaskRunWithCursorTaskRun {
   factory TaskRunWithCursorTaskRun.fromJson(Map<String, Object?> json) => TaskRunWithCursorTaskRun(
         id: json['id'] as String? ?? '',
         taskId: json['taskId'] as String? ?? '',
-        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        status: GetTaskRunStatus.fromWire(json['status']),
         startedAt: parseDate(json['startedAt']),
         completedAt: parseDate(json['completedAt']),
         parentTaskRunId: json['parentTaskRunId'] as String? ?? '',
@@ -6195,7 +6195,7 @@ class TaskRunWithCursorTaskRun {
 
   final String id;
   final String taskId;
-  final TaskRunWithCursorTaskRunStatus status;
+  final GetTaskRunStatus status;
   final DateTime? startedAt;
   final DateTime? completedAt;
   final String parentTaskRunId;
@@ -6867,7 +6867,7 @@ class WebServiceDetailsPost {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum WebhookEventWithCursorWebhookEventEventType {
+enum RetrieveEventType {
   artifactFetchFailed('artifact_fetch_failed'),
   artifactSourceChanged('artifact_source_changed'),
   autoscalingConfigChanged('autoscaling_config_changed'),
@@ -6938,12 +6938,12 @@ enum WebhookEventWithCursorWebhookEventEventType {
   /// A value this package does not know about.
   unknown('');
 
-  const WebhookEventWithCursorWebhookEventEventType(this.wireValue);
+  const RetrieveEventType(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static WebhookEventWithCursorWebhookEventEventType fromWire(Object? value) => values.firstWhere(
+  static RetrieveEventType fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -6963,7 +6963,7 @@ class WebhookEventWithCursorWebhookEvent {
   factory WebhookEventWithCursorWebhookEvent.fromJson(Map<String, Object?> json) => WebhookEventWithCursorWebhookEvent(
         id: json['id'] as String? ?? '',
         eventId: json['eventId'] as String? ?? '',
-        eventType: WebhookEventWithCursorWebhookEventEventType.fromWire(json['eventType']),
+        eventType: RetrieveEventType.fromWire(json['eventType']),
         sentAt: parseDate(json['sentAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         statusCode: (json['statusCode'] as num?)?.toInt(),
         responseBody: json['responseBody'] as String?,
@@ -6974,7 +6974,7 @@ class WebhookEventWithCursorWebhookEvent {
   final String id;
   /// the id of the event that triggered the webhook
   final String eventId;
-  final WebhookEventWithCursorWebhookEventEventType eventType;
+  final RetrieveEventType eventType;
   final DateTime sentAt;
   final int? statusCode;
   final String? responseBody;
@@ -7029,7 +7029,7 @@ class WebhookWithCursorWebhook {
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
       );
 
   final String id;
@@ -7038,7 +7038,7 @@ class WebhookWithCursorWebhook {
   final String secret;
   final bool enabled;
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
-  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+  final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -7073,7 +7073,7 @@ class WebhookWithCursor {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum WorkflowVersionWithCursorWorkflowVersionStatus {
+enum GetWorkflowVersionStatus {
   created('created'),
   building('building'),
   registering('registering'),
@@ -7083,12 +7083,12 @@ enum WorkflowVersionWithCursorWorkflowVersionStatus {
   /// A value this package does not know about.
   unknown('');
 
-  const WorkflowVersionWithCursorWorkflowVersionStatus(this.wireValue);
+  const GetWorkflowVersionStatus(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static WorkflowVersionWithCursorWorkflowVersionStatus fromWire(Object? value) => values.firstWhere(
+  static GetWorkflowVersionStatus fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -7108,14 +7108,14 @@ class WorkflowVersionWithCursorWorkflowVersion {
         workflowId: json['workflowId'] as String? ?? '',
         name: json['name'] as String? ?? '',
         createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: WorkflowVersionWithCursorWorkflowVersionStatus.fromWire(json['status']),
+        status: GetWorkflowVersionStatus.fromWire(json['status']),
       );
 
   final String id;
   final String workflowId;
   final String name;
   final DateTime createdAt;
-  final WorkflowVersionWithCursorWorkflowVersionStatus status;
+  final GetWorkflowVersionStatus status;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -7150,7 +7150,7 @@ class WorkflowVersionWithCursor {
 /// The runtime environment for the workflow (e.g., node, python, etc.).
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum WorkflowWithCursorWorkflowBuildConfigRuntime {
+enum Runtime {
   elixir('elixir'),
   go('go'),
   node('node'),
@@ -7159,12 +7159,12 @@ enum WorkflowWithCursorWorkflowBuildConfigRuntime {
   /// A value this package does not know about.
   unknown('');
 
-  const WorkflowWithCursorWorkflowBuildConfigRuntime(this.wireValue);
+  const Runtime(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static WorkflowWithCursorWorkflowBuildConfigRuntime fromWire(Object? value) => values.firstWhere(
+  static Runtime fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -7184,7 +7184,7 @@ class WorkflowWithCursorWorkflowBuildConfig {
         buildCommand: json['buildCommand'] as String? ?? '',
         repo: json['repo'] as String? ?? '',
         rootDir: json['rootDir'] as String?,
-        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+        runtime: Runtime.fromWire(json['runtime']),
       );
 
   /// The branch to use for the build, if applicable.
@@ -7196,7 +7196,7 @@ class WorkflowWithCursorWorkflowBuildConfig {
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
   /// The runtime environment for the workflow (e.g., node, python, etc.).
-  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+  final Runtime runtime;
 
   Map<String, Object?> toJson() => {
         if (branch != null) 'branch': branch,
@@ -7210,19 +7210,19 @@ class WorkflowWithCursorWorkflowBuildConfig {
 /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum WorkflowWithCursorWorkflowAutoDeployTrigger {
+enum NewTrigger {
   commit('commit'),
   off('off'),
   checksPass('checksPass'),
   /// A value this package does not know about.
   unknown('');
 
-  const WorkflowWithCursorWorkflowAutoDeployTrigger(this.wireValue);
+  const NewTrigger(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static WorkflowWithCursorWorkflowAutoDeployTrigger fromWire(Object? value) => values.firstWhere(
+  static NewTrigger fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -7254,7 +7254,7 @@ class WorkflowWithCursorWorkflow {
         region: Region.fromWire(json['region']),
         environmentId: json['environmentId'] as String?,
         slug: json['slug'] as String?,
-        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
       );
 
   final String id;
@@ -7270,7 +7270,7 @@ class WorkflowWithCursorWorkflow {
   final String? environmentId;
   final String? slug;
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
-  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+  final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -7413,7 +7413,7 @@ class ValidateBlueprintResponse {
 /// type of the resource (ex. web_service or postgres)
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum RetrieveBlueprintResponseResourcesItemType {
+enum RetrieveBlueprintType {
   staticSite('static_site'),
   webService('web_service'),
   privateService('private_service'),
@@ -7427,12 +7427,12 @@ enum RetrieveBlueprintResponseResourcesItemType {
   /// A value this package does not know about.
   unknown('');
 
-  const RetrieveBlueprintResponseResourcesItemType(this.wireValue);
+  const RetrieveBlueprintType(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RetrieveBlueprintResponseResourcesItemType fromWire(Object? value) => values.firstWhere(
+  static RetrieveBlueprintType fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -7448,13 +7448,13 @@ class RetrieveBlueprintResponseResourcesItem {
   factory RetrieveBlueprintResponseResourcesItem.fromJson(Map<String, Object?> json) => RetrieveBlueprintResponseResourcesItem(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        type: RetrieveBlueprintResponseResourcesItemType.fromWire(json['type']),
+        type: RetrieveBlueprintType.fromWire(json['type']),
       );
 
   final String id;
   final String name;
   /// type of the resource (ex. web_service or postgres)
-  final RetrieveBlueprintResponseResourcesItemType type;
+  final RetrieveBlueprintType type;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -7479,7 +7479,7 @@ class RetrieveBlueprintResponse {
   factory RetrieveBlueprintResponse.fromJson(Map<String, Object?> json) => RetrieveBlueprintResponse(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        status: BlueprintWithCursorBlueprintStatus.fromWire(json['status']),
+        status: RetrieveBlueprintStatus.fromWire(json['status']),
         autoSync: json['autoSync'] as bool? ?? false,
         repo: json['repo'] as String? ?? '',
         branch: json['branch'] as String? ?? '',
@@ -7490,7 +7490,7 @@ class RetrieveBlueprintResponse {
 
   final String id;
   final String name;
-  final BlueprintWithCursorBlueprintStatus status;
+  final RetrieveBlueprintStatus status;
   /// Automatically sync changes to render.yaml
   final bool autoSync;
   final String repo;
@@ -7513,6 +7513,32 @@ class RetrieveBlueprintResponse {
       };
 }
 
+class UpdateBlueprintRequest {
+  const UpdateBlueprintRequest({
+    this.name,
+    this.autoSync,
+    this.path,
+  });
+
+  factory UpdateBlueprintRequest.fromJson(Map<String, Object?> json) => UpdateBlueprintRequest(
+        name: json['name'] as String?,
+        autoSync: json['autoSync'] as bool?,
+        path: json['path'] as String?,
+      );
+
+  final String? name;
+  /// Automatically sync changes to render.yaml
+  final bool? autoSync;
+  /// Path to the Blueprint file in the repository
+  final String? path;
+
+  Map<String, Object?> toJson() => {
+        if (name != null) 'name': name,
+        if (autoSync != null) 'autoSync': autoSync,
+        if (path != null) 'path': path,
+      };
+}
+
 class UpdateBlueprintResponse {
   const UpdateBlueprintResponse({
     required this.id,
@@ -7528,7 +7554,7 @@ class UpdateBlueprintResponse {
   factory UpdateBlueprintResponse.fromJson(Map<String, Object?> json) => UpdateBlueprintResponse(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        status: BlueprintWithCursorBlueprintStatus.fromWire(json['status']),
+        status: RetrieveBlueprintStatus.fromWire(json['status']),
         autoSync: json['autoSync'] as bool? ?? false,
         repo: json['repo'] as String? ?? '',
         branch: json['branch'] as String? ?? '',
@@ -7538,7 +7564,7 @@ class UpdateBlueprintResponse {
 
   final String id;
   final String name;
-  final BlueprintWithCursorBlueprintStatus status;
+  final RetrieveBlueprintStatus status;
   /// Automatically sync changes to render.yaml
   final bool autoSync;
   final String repo;
@@ -7556,6 +7582,34 @@ class UpdateBlueprintResponse {
         'branch': branch,
         'path': path,
         if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
+      };
+}
+
+class AddDiskRequest {
+  const AddDiskRequest({
+    required this.name,
+    required this.sizeGb,
+    required this.mountPath,
+    required this.serviceId,
+  });
+
+  factory AddDiskRequest.fromJson(Map<String, Object?> json) => AddDiskRequest(
+        name: json['name'] as String? ?? '',
+        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+        mountPath: json['mountPath'] as String? ?? '',
+        serviceId: json['serviceId'] as String? ?? '',
+      );
+
+  final String name;
+  final int sizeGb;
+  final String mountPath;
+  final String serviceId;
+
+  Map<String, Object?> toJson() => {
+        'name': name,
+        'sizeGB': sizeGb,
+        'mountPath': mountPath,
+        'serviceId': serviceId,
       };
 }
 
@@ -7639,6 +7693,30 @@ class RetrieveDiskResponse {
       };
 }
 
+class UpdateDiskRequest {
+  const UpdateDiskRequest({
+    this.name,
+    this.sizeGb,
+    this.mountPath,
+  });
+
+  factory UpdateDiskRequest.fromJson(Map<String, Object?> json) => UpdateDiskRequest(
+        name: json['name'] as String?,
+        sizeGb: (json['sizeGB'] as num?)?.toInt(),
+        mountPath: json['mountPath'] as String?,
+      );
+
+  final String? name;
+  final int? sizeGb;
+  final String? mountPath;
+
+  Map<String, Object?> toJson() => {
+        if (name != null) 'name': name,
+        if (sizeGb != null) 'sizeGB': sizeGb,
+        if (mountPath != null) 'mountPath': mountPath,
+      };
+}
+
 class UpdateDiskResponse {
   const UpdateDiskResponse({
     required this.id,
@@ -7719,6 +7797,22 @@ class RestoreSnapshotResponse {
       };
 }
 
+class UpdateEnvGroupSecretFileRequest {
+  const UpdateEnvGroupSecretFileRequest({
+    this.content,
+  });
+
+  factory UpdateEnvGroupSecretFileRequest.fromJson(Map<String, Object?> json) => UpdateEnvGroupSecretFileRequest(
+        content: json['content'] as String?,
+      );
+
+  final String? content;
+
+  Map<String, Object?> toJson() => {
+        if (content != null) 'content': content,
+      };
+}
+
 class RetrieveEventResponse {
   const RetrieveEventResponse({
     required this.id,
@@ -7732,14 +7826,14 @@ class RetrieveEventResponse {
         id: json['id'] as String? ?? '',
         timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         serviceId: json['serviceId'] as String? ?? '',
-        type: WebhookEventWithCursorWebhookEventEventType.fromWire(json['type']),
+        type: RetrieveEventType.fromWire(json['type']),
         details: json['details'],
       );
 
   final String id;
   final DateTime timestamp;
   final String serviceId;
-  final WebhookEventWithCursorWebhookEventEventType type;
+  final RetrieveEventType type;
   final Object? details;
 
   Map<String, Object?> toJson() => {
@@ -7754,7 +7848,7 @@ class RetrieveEventResponse {
 /// The name of the log label
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum ListLogsResponseLogsItemLabelsItemName {
+enum Name {
   resource('resource'),
   instance('instance'),
   host('host'),
@@ -7773,12 +7867,12 @@ enum ListLogsResponseLogsItemLabelsItemName {
   /// A value this package does not know about.
   unknown('');
 
-  const ListLogsResponseLogsItemLabelsItemName(this.wireValue);
+  const Name(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ListLogsResponseLogsItemLabelsItemName fromWire(Object? value) => values.firstWhere(
+  static Name fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -7792,12 +7886,12 @@ class ListLogsResponseLogsItemLabelsItem {
   });
 
   factory ListLogsResponseLogsItemLabelsItem.fromJson(Map<String, Object?> json) => ListLogsResponseLogsItemLabelsItem(
-        name: ListLogsResponseLogsItemLabelsItemName.fromWire(json['name']),
+        name: Name.fromWire(json['name']),
         value: json['value'] as String? ?? '',
       );
 
   /// The name of the log label
-  final ListLogsResponseLogsItemLabelsItemName name;
+  final Name name;
   /// The value of the log label
   final String value;
 
@@ -7874,18 +7968,18 @@ class ListLogsResponse {
 /// Whether to send logs or drop them.
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum GetOwnerLogStreamResponsePreview {
+enum Preview {
   send('send'),
   drop('drop'),
   /// A value this package does not know about.
   unknown('');
 
-  const GetOwnerLogStreamResponsePreview(this.wireValue);
+  const Preview(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static GetOwnerLogStreamResponsePreview fromWire(Object? value) => values.firstWhere(
+  static Preview fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -7902,7 +7996,7 @@ class GetOwnerLogStreamResponse {
   factory GetOwnerLogStreamResponse.fromJson(Map<String, Object?> json) => GetOwnerLogStreamResponse(
         ownerId: json['ownerId'] as String?,
         endpoint: json['endpoint'] as String?,
-        preview: GetOwnerLogStreamResponsePreview.fromWire(json['preview']),
+        preview: Preview.fromWire(json['preview']),
       );
 
   /// The ID of the owner.
@@ -7910,12 +8004,39 @@ class GetOwnerLogStreamResponse {
   /// The endpoint to stream logs to.
   final String? endpoint;
   /// Whether to send logs or drop them.
-  final GetOwnerLogStreamResponsePreview? preview;
+  final Preview? preview;
 
   Map<String, Object?> toJson() => {
         if (ownerId != null) 'ownerId': ownerId,
         if (endpoint != null) 'endpoint': endpoint,
         if (preview != null) 'preview': preview!.wireValue,
+      };
+}
+
+class UpdateOwnerLogStreamRequest {
+  const UpdateOwnerLogStreamRequest({
+    this.endpoint,
+    this.token,
+    required this.preview,
+  });
+
+  factory UpdateOwnerLogStreamRequest.fromJson(Map<String, Object?> json) => UpdateOwnerLogStreamRequest(
+        endpoint: json['endpoint'] as String?,
+        token: json['token'] as String?,
+        preview: Preview.fromWire(json['preview']),
+      );
+
+  /// The endpoint to stream logs to.
+  final String? endpoint;
+  /// The optional token to authenticate the log stream.
+  final String? token;
+  /// Whether to send logs or drop them.
+  final Preview preview;
+
+  Map<String, Object?> toJson() => {
+        if (endpoint != null) 'endpoint': endpoint,
+        if (token != null) 'token': token,
+        'preview': preview.wireValue,
       };
 }
 
@@ -7930,7 +8051,7 @@ class UpdateOwnerLogStreamResponse {
   factory UpdateOwnerLogStreamResponse.fromJson(Map<String, Object?> json) => UpdateOwnerLogStreamResponse(
         ownerId: json['ownerId'] as String?,
         endpoint: json['endpoint'] as String?,
-        preview: GetOwnerLogStreamResponsePreview.fromWire(json['preview']),
+        preview: Preview.fromWire(json['preview']),
       );
 
   /// The ID of the owner.
@@ -7938,7 +8059,7 @@ class UpdateOwnerLogStreamResponse {
   /// The endpoint to stream logs to.
   final String? endpoint;
   /// Whether to send logs or drop them.
-  final GetOwnerLogStreamResponsePreview? preview;
+  final Preview? preview;
 
   Map<String, Object?> toJson() => {
         if (ownerId != null) 'ownerId': ownerId,
@@ -7958,7 +8079,7 @@ class ListResourceLogStreamsResponse {
   factory ListResourceLogStreamsResponse.fromJson(Map<String, Object?> json) => ListResourceLogStreamsResponse(
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
-        setting: GetOwnerLogStreamResponsePreview.fromWire(json['setting']),
+        setting: Preview.fromWire(json['setting']),
       );
 
   /// The ID of the resource.
@@ -7966,7 +8087,7 @@ class ListResourceLogStreamsResponse {
   /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
   final String? endpoint;
   /// Whether to send logs or drop them.
-  final GetOwnerLogStreamResponsePreview? setting;
+  final Preview? setting;
 
   Map<String, Object?> toJson() => {
         if (resourceId != null) 'resourceId': resourceId,
@@ -7986,7 +8107,7 @@ class GetResourceLogStreamResponse {
   factory GetResourceLogStreamResponse.fromJson(Map<String, Object?> json) => GetResourceLogStreamResponse(
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
-        setting: GetOwnerLogStreamResponsePreview.fromWire(json['setting']),
+        setting: Preview.fromWire(json['setting']),
       );
 
   /// The ID of the resource.
@@ -7994,12 +8115,39 @@ class GetResourceLogStreamResponse {
   /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
   final String? endpoint;
   /// Whether to send logs or drop them.
-  final GetOwnerLogStreamResponsePreview? setting;
+  final Preview? setting;
 
   Map<String, Object?> toJson() => {
         if (resourceId != null) 'resourceId': resourceId,
         if (endpoint != null) 'endpoint': endpoint,
         if (setting != null) 'setting': setting!.wireValue,
+      };
+}
+
+class UpdateResourceLogStreamRequest {
+  const UpdateResourceLogStreamRequest({
+    this.endpoint,
+    this.token,
+    required this.setting,
+  });
+
+  factory UpdateResourceLogStreamRequest.fromJson(Map<String, Object?> json) => UpdateResourceLogStreamRequest(
+        endpoint: json['endpoint'] as String?,
+        token: json['token'] as String?,
+        setting: Preview.fromWire(json['setting']),
+      );
+
+  /// The endpoint to stream logs to.
+  final String? endpoint;
+  /// The optional token to authenticate the log stream.
+  final String? token;
+  /// Whether to send logs or drop them.
+  final Preview setting;
+
+  Map<String, Object?> toJson() => {
+        if (endpoint != null) 'endpoint': endpoint,
+        if (token != null) 'token': token,
+        'setting': setting.wireValue,
       };
 }
 
@@ -8014,7 +8162,7 @@ class UpdateResourceLogStreamResponse {
   factory UpdateResourceLogStreamResponse.fromJson(Map<String, Object?> json) => UpdateResourceLogStreamResponse(
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
-        setting: GetOwnerLogStreamResponsePreview.fromWire(json['setting']),
+        setting: Preview.fromWire(json['setting']),
       );
 
   /// The ID of the resource.
@@ -8022,7 +8170,7 @@ class UpdateResourceLogStreamResponse {
   /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
   final String? endpoint;
   /// Whether to send logs or drop them.
-  final GetOwnerLogStreamResponsePreview? setting;
+  final Preview? setting;
 
   Map<String, Object?> toJson() => {
         if (resourceId != null) 'resourceId': resourceId,
@@ -8104,6 +8252,23 @@ class RetrieveMaintenanceResponse {
         if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
         'state': state.wireValue,
         'resourceId': resourceId,
+      };
+}
+
+class UpdateMaintenanceRequest {
+  const UpdateMaintenanceRequest({
+    this.scheduledAt,
+  });
+
+  factory UpdateMaintenanceRequest.fromJson(Map<String, Object?> json) => UpdateMaintenanceRequest(
+        scheduledAt: parseDate(json['scheduledAt']),
+      );
+
+  /// The date-time at which the maintenance is scheduled to start. This must be before the pendingMaintenanceBy date-time.
+  final DateTime? scheduledAt;
+
+  Map<String, Object?> toJson() => {
+        if (scheduledAt != null) 'scheduledAt': scheduledAt!.toIso8601String(),
       };
 }
 
@@ -8730,7 +8895,7 @@ class GetBandwidthResponse {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum GetBandwidthSourcesResponseDataItemLabelsTrafficSource {
+enum TrafficSource {
   total('total'),
   http('http'),
   websocket('websocket'),
@@ -8739,12 +8904,12 @@ enum GetBandwidthSourcesResponseDataItemLabelsTrafficSource {
   /// A value this package does not know about.
   unknown('');
 
-  const GetBandwidthSourcesResponseDataItemLabelsTrafficSource(this.wireValue);
+  const TrafficSource(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static GetBandwidthSourcesResponseDataItemLabelsTrafficSource fromWire(Object? value) => values.firstWhere(
+  static TrafficSource fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -8758,11 +8923,11 @@ class GetBandwidthSourcesResponseDataItemLabels {
 
   factory GetBandwidthSourcesResponseDataItemLabels.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItemLabels(
         resource: json['resource'] as String?,
-        trafficSource: GetBandwidthSourcesResponseDataItemLabelsTrafficSource.fromWire(json['trafficSource']),
+        trafficSource: TrafficSource.fromWire(json['trafficSource']),
       );
 
   final String? resource;
-  final GetBandwidthSourcesResponseDataItemLabelsTrafficSource? trafficSource;
+  final TrafficSource? trafficSource;
 
   Map<String, Object?> toJson() => {
         if (resource != null) 'resource': resource,
@@ -9173,17 +9338,17 @@ class GetReplicationLagResponse {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum ListApplicationFilterValuesResponseFilter {
+enum Filter {
   instance('instance'),
   /// A value this package does not know about.
   unknown('');
 
-  const ListApplicationFilterValuesResponseFilter(this.wireValue);
+  const Filter(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ListApplicationFilterValuesResponseFilter fromWire(Object? value) => values.firstWhere(
+  static Filter fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -9196,11 +9361,11 @@ class ListApplicationFilterValuesResponse {
   });
 
   factory ListApplicationFilterValuesResponse.fromJson(Map<String, Object?> json) => ListApplicationFilterValuesResponse(
-        filter: ListApplicationFilterValuesResponseFilter.fromWire(json['filter']),
+        filter: Filter.fromWire(json['filter']),
         values: (json['values'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
       );
 
-  final ListApplicationFilterValuesResponseFilter? filter;
+  final Filter? filter;
   final List<String>? values;
 
   Map<String, Object?> toJson() => {
@@ -9211,18 +9376,18 @@ class ListApplicationFilterValuesResponse {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum ListHttpFilterValuesResponseFilter {
+enum ListHttpFilterValuesFilter {
   host('host'),
   statusCode('statusCode'),
   /// A value this package does not know about.
   unknown('');
 
-  const ListHttpFilterValuesResponseFilter(this.wireValue);
+  const ListHttpFilterValuesFilter(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ListHttpFilterValuesResponseFilter fromWire(Object? value) => values.firstWhere(
+  static ListHttpFilterValuesFilter fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -9235,11 +9400,11 @@ class ListHttpFilterValuesResponse {
   });
 
   factory ListHttpFilterValuesResponse.fromJson(Map<String, Object?> json) => ListHttpFilterValuesResponse(
-        filter: ListHttpFilterValuesResponseFilter.fromWire(json['filter']),
+        filter: ListHttpFilterValuesFilter.fromWire(json['filter']),
         values: (json['values'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
       );
 
-  final ListHttpFilterValuesResponseFilter? filter;
+  final ListHttpFilterValuesFilter? filter;
   final List<String>? values;
 
   Map<String, Object?> toJson() => {
@@ -9389,7 +9554,7 @@ class GetTaskRunsCompletedResponse {
 /// Provider to send metrics to
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum GetOwnerMetricsStreamResponseProvider {
+enum Provider {
   betterStack('BETTER_STACK'),
   grafana('GRAFANA'),
   datadog('DATADOG'),
@@ -9402,12 +9567,12 @@ enum GetOwnerMetricsStreamResponseProvider {
   /// A value this package does not know about.
   unknown('');
 
-  const GetOwnerMetricsStreamResponseProvider(this.wireValue);
+  const Provider(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static GetOwnerMetricsStreamResponseProvider fromWire(Object? value) => values.firstWhere(
+  static Provider fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -9422,14 +9587,14 @@ class GetOwnerMetricsStreamResponse {
 
   factory GetOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) => GetOwnerMetricsStreamResponse(
         ownerId: json['ownerId'] as String? ?? '',
-        provider: GetOwnerMetricsStreamResponseProvider.fromWire(json['provider']),
+        provider: Provider.fromWire(json['provider']),
         url: json['url'] as String? ?? '',
       );
 
   /// The ID of the owner
   final String ownerId;
   /// Provider to send metrics to
-  final GetOwnerMetricsStreamResponseProvider provider;
+  final Provider provider;
   /// The endpoint URL to stream metrics to
   final String url;
 
@@ -9437,6 +9602,34 @@ class GetOwnerMetricsStreamResponse {
         'ownerId': ownerId,
         'provider': provider.wireValue,
         'url': url,
+      };
+}
+
+/// Input for creating or updating a metrics stream
+class UpsertOwnerMetricsStreamRequest {
+  const UpsertOwnerMetricsStreamRequest({
+    this.provider,
+    this.url,
+    this.token,
+  });
+
+  factory UpsertOwnerMetricsStreamRequest.fromJson(Map<String, Object?> json) => UpsertOwnerMetricsStreamRequest(
+        provider: Provider.fromWire(json['provider']),
+        url: json['url'] as String?,
+        token: json['token'] as String?,
+      );
+
+  /// Provider to send metrics to
+  final Provider? provider;
+  /// The endpoint URL to stream metrics to
+  final String? url;
+  /// Authentication token for the metrics stream
+  final String? token;
+
+  Map<String, Object?> toJson() => {
+        if (provider != null) 'provider': provider!.wireValue,
+        if (url != null) 'url': url,
+        if (token != null) 'token': token,
       };
 }
 
@@ -9449,14 +9642,14 @@ class UpsertOwnerMetricsStreamResponse {
 
   factory UpsertOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) => UpsertOwnerMetricsStreamResponse(
         ownerId: json['ownerId'] as String? ?? '',
-        provider: GetOwnerMetricsStreamResponseProvider.fromWire(json['provider']),
+        provider: Provider.fromWire(json['provider']),
         url: json['url'] as String? ?? '',
       );
 
   /// The ID of the owner
   final String ownerId;
   /// Provider to send metrics to
-  final GetOwnerMetricsStreamResponseProvider provider;
+  final Provider provider;
   /// The endpoint URL to stream metrics to
   final String url;
 
@@ -9469,19 +9662,19 @@ class UpsertOwnerMetricsStreamResponse {
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum RetrieveOwnerNotificationSettingsResponseNotificationsToSend {
+enum NotificationsToSend {
   none('none'),
   failure('failure'),
   all('all'),
   /// A value this package does not know about.
   unknown('');
 
-  const RetrieveOwnerNotificationSettingsResponseNotificationsToSend(this.wireValue);
+  const NotificationsToSend(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RetrieveOwnerNotificationSettingsResponseNotificationsToSend fromWire(Object? value) => values.firstWhere(
+  static NotificationsToSend fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -9501,14 +9694,14 @@ class RetrieveOwnerNotificationSettingsResponse {
         slackEnabled: json['slackEnabled'] as bool? ?? false,
         emailEnabled: json['emailEnabled'] as bool? ?? false,
         previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool? ?? false,
-        notificationsToSend: RetrieveOwnerNotificationSettingsResponseNotificationsToSend.fromWire(json['notificationsToSend']),
+        notificationsToSend: NotificationsToSend.fromWire(json['notificationsToSend']),
       );
 
   final String ownerId;
   final bool slackEnabled;
   final bool emailEnabled;
   final bool previewNotificationsEnabled;
-  final RetrieveOwnerNotificationSettingsResponseNotificationsToSend notificationsToSend;
+  final NotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
         'ownerId': ownerId,
@@ -9516,6 +9709,30 @@ class RetrieveOwnerNotificationSettingsResponse {
         'emailEnabled': emailEnabled,
         'previewNotificationsEnabled': previewNotificationsEnabled,
         'notificationsToSend': notificationsToSend.wireValue,
+      };
+}
+
+class PatchOwnerNotificationSettingsRequest {
+  const PatchOwnerNotificationSettingsRequest({
+    this.emailEnabled,
+    this.previewNotificationsEnabled,
+    this.notificationsToSend,
+  });
+
+  factory PatchOwnerNotificationSettingsRequest.fromJson(Map<String, Object?> json) => PatchOwnerNotificationSettingsRequest(
+        emailEnabled: json['emailEnabled'] as bool?,
+        previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool?,
+        notificationsToSend: NotificationsToSend.fromWire(json['notificationsToSend']),
+      );
+
+  final bool? emailEnabled;
+  final bool? previewNotificationsEnabled;
+  final NotificationsToSend? notificationsToSend;
+
+  Map<String, Object?> toJson() => {
+        if (emailEnabled != null) 'emailEnabled': emailEnabled,
+        if (previewNotificationsEnabled != null) 'previewNotificationsEnabled': previewNotificationsEnabled,
+        if (notificationsToSend != null) 'notificationsToSend': notificationsToSend!.wireValue,
       };
 }
 
@@ -9533,14 +9750,14 @@ class PatchOwnerNotificationSettingsResponse {
         slackEnabled: json['slackEnabled'] as bool? ?? false,
         emailEnabled: json['emailEnabled'] as bool? ?? false,
         previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool? ?? false,
-        notificationsToSend: RetrieveOwnerNotificationSettingsResponseNotificationsToSend.fromWire(json['notificationsToSend']),
+        notificationsToSend: NotificationsToSend.fromWire(json['notificationsToSend']),
       );
 
   final String ownerId;
   final bool slackEnabled;
   final bool emailEnabled;
   final bool previewNotificationsEnabled;
-  final RetrieveOwnerNotificationSettingsResponseNotificationsToSend notificationsToSend;
+  final NotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
         'ownerId': ownerId,
@@ -9560,18 +9777,38 @@ class RetrieveServiceNotificationOverridesResponse {
 
   factory RetrieveServiceNotificationOverridesResponse.fromJson(Map<String, Object?> json) => RetrieveServiceNotificationOverridesResponse(
         serviceId: json['serviceId'] as String? ?? '',
-        previewNotificationsEnabled: NotificationOverrideWithCursorOverridePreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: NotificationOverrideWithCursorOverrideNotificationsToSend.fromWire(json['notificationsToSend']),
+        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
+        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
       );
 
   final String serviceId;
-  final NotificationOverrideWithCursorOverridePreviewNotificationsEnabled previewNotificationsEnabled;
-  final NotificationOverrideWithCursorOverrideNotificationsToSend notificationsToSend;
+  final PreviewNotificationsEnabled previewNotificationsEnabled;
+  final PatchServiceNotificationOverridesNotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
         'serviceId': serviceId,
         'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
         'notificationsToSend': notificationsToSend.wireValue,
+      };
+}
+
+class PatchServiceNotificationOverridesRequest {
+  const PatchServiceNotificationOverridesRequest({
+    this.previewNotificationsEnabled,
+    this.notificationsToSend,
+  });
+
+  factory PatchServiceNotificationOverridesRequest.fromJson(Map<String, Object?> json) => PatchServiceNotificationOverridesRequest(
+        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
+        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
+      );
+
+  final PreviewNotificationsEnabled? previewNotificationsEnabled;
+  final PatchServiceNotificationOverridesNotificationsToSend? notificationsToSend;
+
+  Map<String, Object?> toJson() => {
+        if (previewNotificationsEnabled != null) 'previewNotificationsEnabled': previewNotificationsEnabled!.wireValue,
+        if (notificationsToSend != null) 'notificationsToSend': notificationsToSend!.wireValue,
       };
 }
 
@@ -9584,13 +9821,13 @@ class PatchServiceNotificationOverridesResponse {
 
   factory PatchServiceNotificationOverridesResponse.fromJson(Map<String, Object?> json) => PatchServiceNotificationOverridesResponse(
         serviceId: json['serviceId'] as String? ?? '',
-        previewNotificationsEnabled: NotificationOverrideWithCursorOverridePreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: NotificationOverrideWithCursorOverrideNotificationsToSend.fromWire(json['notificationsToSend']),
+        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
+        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
       );
 
   final String serviceId;
-  final NotificationOverrideWithCursorOverridePreviewNotificationsEnabled previewNotificationsEnabled;
-  final NotificationOverrideWithCursorOverrideNotificationsToSend notificationsToSend;
+  final PreviewNotificationsEnabled previewNotificationsEnabled;
+  final PatchServiceNotificationOverridesNotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
         'serviceId': serviceId,
@@ -9599,22 +9836,39 @@ class PatchServiceNotificationOverridesResponse {
       };
 }
 
+class UpdateWorkspaceMemberRequest {
+  const UpdateWorkspaceMemberRequest({
+    required this.role,
+  });
+
+  factory UpdateWorkspaceMemberRequest.fromJson(Map<String, Object?> json) => UpdateWorkspaceMemberRequest(
+        role: TeamMemberRole.fromWire(json['role']),
+      );
+
+  /// The member's workspace role. Values are always returned in uppercase.
+  final TeamMemberRole role;
+
+  Map<String, Object?> toJson() => {
+        'role': role.wireValue,
+      };
+}
+
 /// Availability of point-in-time recovery.
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
-enum RetrievePostgresRecoveryInfoResponseRecoveryStatus {
+enum RecoveryStatus {
   available('AVAILABLE'),
   backupNotReady('BACKUP_NOT_READY'),
   notAvailable('NOT_AVAILABLE'),
   /// A value this package does not know about.
   unknown('');
 
-  const RetrievePostgresRecoveryInfoResponseRecoveryStatus(this.wireValue);
+  const RecoveryStatus(this.wireValue);
 
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RetrievePostgresRecoveryInfoResponseRecoveryStatus fromWire(Object? value) => values.firstWhere(
+  static RecoveryStatus fromWire(Object? value) => values.firstWhere(
         (e) => e.wireValue == value,
         orElse: () => unknown,
       );
@@ -9627,17 +9881,59 @@ class RetrievePostgresRecoveryInfoResponse {
   });
 
   factory RetrievePostgresRecoveryInfoResponse.fromJson(Map<String, Object?> json) => RetrievePostgresRecoveryInfoResponse(
-        recoveryStatus: RetrievePostgresRecoveryInfoResponseRecoveryStatus.fromWire(json['recoveryStatus']),
+        recoveryStatus: RecoveryStatus.fromWire(json['recoveryStatus']),
         startsAt: parseDate(json['startsAt']),
       );
 
   /// Availability of point-in-time recovery.
-  final RetrievePostgresRecoveryInfoResponseRecoveryStatus recoveryStatus;
+  final RecoveryStatus recoveryStatus;
   final DateTime? startsAt;
 
   Map<String, Object?> toJson() => {
         'recoveryStatus': recoveryStatus.wireValue,
         if (startsAt != null) 'startsAt': startsAt!.toIso8601String(),
+      };
+}
+
+class RecoverPostgresRequest {
+  const RecoverPostgresRequest({
+    this.restoreName,
+    required this.restoreTime,
+    this.datadogApiKey,
+    this.datadogSite,
+    this.plan,
+    this.environmentId,
+  });
+
+  factory RecoverPostgresRequest.fromJson(Map<String, Object?> json) => RecoverPostgresRequest(
+        restoreName: json['restoreName'] as String?,
+        restoreTime: parseDate(json['restoreTime']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        datadogApiKey: json['datadogApiKey'] as String?,
+        datadogSite: json['datadogSite'] as String?,
+        plan: json['plan'] as String?,
+        environmentId: json['environmentId'] as String?,
+      );
+
+  /// Name of the new database.
+  final String? restoreName;
+  /// The point in time to restore the database to. See `/recovery-info` for restore availability
+  final DateTime restoreTime;
+  /// Datadog API key to use for monitoring the new database. Defaults to the API key of the original database. Use an empty string to prevent copying of the API key to the new database.
+  final String? datadogApiKey;
+  /// Datadog region code to use for monitoring the new database. Defaults to the region code of the original database. Use an empty string to prevent copying of the region code to the new database.
+  final String? datadogSite;
+  /// The plan to use for the new database. Defaults to the same plan as the original database. Cannot be a lower tier plan than the original database.
+  final String? plan;
+  /// The environment to create the new database in. Defaults to the environment of the original database.
+  final String? environmentId;
+
+  Map<String, Object?> toJson() => {
+        if (restoreName != null) 'restoreName': restoreName,
+        'restoreTime': restoreTime.toIso8601String(),
+        if (datadogApiKey != null) 'datadogApiKey': datadogApiKey,
+        if (datadogSite != null) 'datadogSite': datadogSite,
+        if (plan != null) 'plan': plan,
+        if (environmentId != null) 'environmentId': environmentId,
       };
 }
 
@@ -9691,6 +9987,23 @@ class ListPostgresUsersResponse {
         if (default_ != null) 'default': default_,
         if (createdAt != null) 'createdAt': createdAt,
         if (openConnections != null) 'openConnections': openConnections,
+      };
+}
+
+class CreatePostgresUserRequest {
+  const CreatePostgresUserRequest({
+    required this.username,
+  });
+
+  factory CreatePostgresUserRequest.fromJson(Map<String, Object?> json) => CreatePostgresUserRequest(
+        username: json['username'] as String? ?? '',
+      );
+
+  /// Name of the new user.
+  final String username;
+
+  Map<String, Object?> toJson() => {
+        'username': username,
       };
 }
 
@@ -9976,6 +10289,187 @@ class ListPostgresTableScansResponse {
       };
 }
 
+class CreateRegistryCredentialRequest {
+  const CreateRegistryCredentialRequest({
+    required this.registry,
+    required this.name,
+    required this.username,
+    required this.authToken,
+    required this.ownerId,
+  });
+
+  factory CreateRegistryCredentialRequest.fromJson(Map<String, Object?> json) => CreateRegistryCredentialRequest(
+        registry: RegistryCredentialRegistry.fromWire(json['registry']),
+        name: json['name'] as String? ?? '',
+        username: json['username'] as String? ?? '',
+        authToken: json['authToken'] as String? ?? '',
+        ownerId: json['ownerId'] as String? ?? '',
+      );
+
+  /// The registry to use this credential with
+  final RegistryCredentialRegistry registry;
+  final String name;
+  final String username;
+  final String authToken;
+  final String ownerId;
+
+  Map<String, Object?> toJson() => {
+        'registry': registry.wireValue,
+        'name': name,
+        'username': username,
+        'authToken': authToken,
+        'ownerId': ownerId,
+      };
+}
+
+class UpdateRegistryCredentialRequest {
+  const UpdateRegistryCredentialRequest({
+    required this.registry,
+    required this.name,
+    required this.username,
+    required this.authToken,
+  });
+
+  factory UpdateRegistryCredentialRequest.fromJson(Map<String, Object?> json) => UpdateRegistryCredentialRequest(
+        registry: RegistryCredentialRegistry.fromWire(json['registry']),
+        name: json['name'] as String? ?? '',
+        username: json['username'] as String? ?? '',
+        authToken: json['authToken'] as String? ?? '',
+      );
+
+  /// The registry to use this credential with
+  final RegistryCredentialRegistry registry;
+  final String name;
+  final String username;
+  final String authToken;
+
+  Map<String, Object?> toJson() => {
+        'registry': registry.wireValue,
+        'name': name,
+        'username': username,
+        'authToken': authToken,
+      };
+}
+
+/// If `clear`, Render clears the service's build cache before deploying. This can be useful if you're experiencing issues with your build.
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum ClearCache {
+  clear('clear'),
+  doNotClear('do_not_clear'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const ClearCache(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static ClearCache fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class CreateDeployRequest {
+  const CreateDeployRequest({
+    this.clearCache,
+    this.commitId,
+    this.imageUrl,
+    this.deployMode,
+  });
+
+  factory CreateDeployRequest.fromJson(Map<String, Object?> json) => CreateDeployRequest(
+        clearCache: ClearCache.fromWire(json['clearCache']),
+        commitId: json['commitId'] as String?,
+        imageUrl: json['imageUrl'] as String?,
+        deployMode: DeployMode.fromWire(json['deployMode']),
+      );
+
+  /// If `clear`, Render clears the service's build cache before deploying. This can be useful if you're experiencing issues with your build.
+  final ClearCache? clearCache;
+  /// The SHA of a specific Git commit to deploy for a service. Defaults to the latest commit on the service's connected branch.
+  ///
+  /// Note that deploying a specific commit with this endpoint does not disable autodeploys for the service.
+  ///
+  /// You can toggle autodeploys for your service with the [Update service](https://api-docs.render.com/reference/update-service) endpoint or in the Render Dashboard.
+  ///
+  /// Not supported for cron jobs.
+  final String? commitId;
+  /// The URL of the image to deploy for an image-backed service.
+  ///
+  /// The host, repository, and image name all must match the currently configured image for the service.
+  final String? imageUrl;
+  /// Controls deployment behavior when triggering a deploy.
+  ///
+  /// - `deploy_only`: Deploy the last successful build without rebuilding (minimizes downtime)
+  /// - `build_and_deploy`: Build new code and deploy it (default behavior when not specified)
+  ///
+  /// **Note:** `deploy_only` cannot be combined with `commitId`, `imageUrl` or `clearCache` parameters,
+  /// as those are build related fields.
+  final DeployMode? deployMode;
+
+  Map<String, Object?> toJson() => {
+        if (clearCache != null) 'clearCache': clearCache!.wireValue,
+        if (commitId != null) 'commitId': commitId,
+        if (imageUrl != null) 'imageUrl': imageUrl,
+        if (deployMode != null) 'deployMode': deployMode!.wireValue,
+      };
+}
+
+class RollbackDeployRequest {
+  const RollbackDeployRequest({
+    required this.deployId,
+  });
+
+  factory RollbackDeployRequest.fromJson(Map<String, Object?> json) => RollbackDeployRequest(
+        deployId: json['deployId'] as String? ?? '',
+      );
+
+  /// The ID of the deploy to roll back to
+  final String deployId;
+
+  Map<String, Object?> toJson() => {
+        'deployId': deployId,
+      };
+}
+
+class UpdateSecretFilesForServiceRequestItem {
+  const UpdateSecretFilesForServiceRequestItem({
+    required this.name,
+    required this.content,
+  });
+
+  factory UpdateSecretFilesForServiceRequestItem.fromJson(Map<String, Object?> json) => UpdateSecretFilesForServiceRequestItem(
+        name: json['name'] as String? ?? '',
+        content: json['content'] as String? ?? '',
+      );
+
+  final String name;
+  final String content;
+
+  Map<String, Object?> toJson() => {
+        'name': name,
+        'content': content,
+      };
+}
+
+class AddOrUpdateSecretFileRequest {
+  const AddOrUpdateSecretFileRequest({
+    this.content,
+  });
+
+  factory AddOrUpdateSecretFileRequest.fromJson(Map<String, Object?> json) => AddOrUpdateSecretFileRequest(
+        content: json['content'] as String?,
+      );
+
+  final String? content;
+
+  Map<String, Object?> toJson() => {
+        if (content != null) 'content': content,
+      };
+}
+
 class AddHeadersResponse {
   const AddHeadersResponse({
     this.headers,
@@ -10005,6 +10499,130 @@ class PatchRouteResponse {
 
   Map<String, Object?> toJson() => {
         if (headers != null) 'headers': headers!.toJson(),
+      };
+}
+
+class CreateCustomDomainRequest {
+  const CreateCustomDomainRequest({
+    required this.name,
+  });
+
+  factory CreateCustomDomainRequest.fromJson(Map<String, Object?> json) => CreateCustomDomainRequest(
+        name: json['name'] as String? ?? '',
+      );
+
+  final String name;
+
+  Map<String, Object?> toJson() => {
+        'name': name,
+      };
+}
+
+class ScaleServiceRequest {
+  const ScaleServiceRequest({
+    required this.numInstances,
+  });
+
+  factory ScaleServiceRequest.fromJson(Map<String, Object?> json) => ScaleServiceRequest(
+        numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
+      );
+
+  final int numInstances;
+
+  Map<String, Object?> toJson() => {
+        'numInstances': numInstances,
+      };
+}
+
+class AutoscaleServiceRequestCriteriaCpu {
+  const AutoscaleServiceRequestCriteriaCpu({
+    required this.enabled,
+    required this.percentage,
+  });
+
+  factory AutoscaleServiceRequestCriteriaCpu.fromJson(Map<String, Object?> json) => AutoscaleServiceRequestCriteriaCpu(
+        enabled: json['enabled'] as bool? ?? false,
+        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+      );
+
+  final bool enabled;
+  /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
+  final int percentage;
+
+  Map<String, Object?> toJson() => {
+        'enabled': enabled,
+        'percentage': percentage,
+      };
+}
+
+class AutoscaleServiceRequestCriteriaMemory {
+  const AutoscaleServiceRequestCriteriaMemory({
+    required this.enabled,
+    required this.percentage,
+  });
+
+  factory AutoscaleServiceRequestCriteriaMemory.fromJson(Map<String, Object?> json) => AutoscaleServiceRequestCriteriaMemory(
+        enabled: json['enabled'] as bool? ?? false,
+        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+      );
+
+  final bool enabled;
+  /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
+  final int percentage;
+
+  Map<String, Object?> toJson() => {
+        'enabled': enabled,
+        'percentage': percentage,
+      };
+}
+
+class AutoscaleServiceRequestCriteria {
+  const AutoscaleServiceRequestCriteria({
+    required this.cpu,
+    required this.memory,
+  });
+
+  factory AutoscaleServiceRequestCriteria.fromJson(Map<String, Object?> json) => AutoscaleServiceRequestCriteria(
+        cpu: AutoscaleServiceRequestCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
+        memory: AutoscaleServiceRequestCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
+      );
+
+  final AutoscaleServiceRequestCriteriaCpu cpu;
+  final AutoscaleServiceRequestCriteriaMemory memory;
+
+  Map<String, Object?> toJson() => {
+        'cpu': cpu.toJson(),
+        'memory': memory.toJson(),
+      };
+}
+
+class AutoscaleServiceRequest {
+  const AutoscaleServiceRequest({
+    required this.enabled,
+    required this.min,
+    required this.max,
+    required this.criteria,
+  });
+
+  factory AutoscaleServiceRequest.fromJson(Map<String, Object?> json) => AutoscaleServiceRequest(
+        enabled: json['enabled'] as bool? ?? false,
+        min: (json['min'] as num?)?.toInt() ?? 0,
+        max: (json['max'] as num?)?.toInt() ?? 0,
+        criteria: AutoscaleServiceRequestCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
+      );
+
+  final bool enabled;
+  /// The minimum number of instances for the service
+  final int min;
+  /// The maximum number of instances for the service
+  final int max;
+  final AutoscaleServiceRequestCriteria criteria;
+
+  Map<String, Object?> toJson() => {
+        'enabled': enabled,
+        'min': min,
+        'max': max,
+        'criteria': criteria.toJson(),
       };
 }
 
@@ -10097,6 +10715,26 @@ class AutoscaleServiceResponse {
         'min': min,
         'max': max,
         'criteria': criteria.toJson(),
+      };
+}
+
+class PostJobRequest {
+  const PostJobRequest({
+    required this.startCommand,
+    this.planId,
+  });
+
+  factory PostJobRequest.fromJson(Map<String, Object?> json) => PostJobRequest(
+        startCommand: json['startCommand'] as String? ?? '',
+        planId: json['planId'] as String?,
+      );
+
+  final String startCommand;
+  final String? planId;
+
+  Map<String, Object?> toJson() => {
+        'startCommand': startCommand,
+        if (planId != null) 'planId': planId,
       };
 }
 
@@ -10232,6 +10870,28 @@ class CancelJobResponse {
       };
 }
 
+class CreateTaskRequest {
+  const CreateTaskRequest({
+    required this.task,
+    required this.input,
+  });
+
+  factory CreateTaskRequest.fromJson(Map<String, Object?> json) => CreateTaskRequest(
+        task: json['task'] as String? ?? '',
+        input: json['input'],
+      );
+
+  /// A task slug in the format workflow-slug/task-name. An optional version can be appended (workflow-slug/task-name:version). If no version is provided, the latest version is used.
+  final String task;
+  /// Input data for a task. Can be either an array (for positional arguments) or an object (for named parameters).
+  final Object? input;
+
+  Map<String, Object?> toJson() => {
+        'task': task,
+        'input': input,
+      };
+}
+
 class CreateTaskResponseAttemptsItem {
   const CreateTaskResponseAttemptsItem({
     this.taskRunId,
@@ -10245,7 +10905,7 @@ class CreateTaskResponseAttemptsItem {
   factory CreateTaskResponseAttemptsItem.fromJson(Map<String, Object?> json) => CreateTaskResponseAttemptsItem(
         taskRunId: json['taskRunId'] as String?,
         attempt: (json['attempt'] as num?)?.toInt() ?? 0,
-        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        status: GetTaskRunStatus.fromWire(json['status']),
         enqueuedAt: parseDate(json['enqueuedAt']),
         startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
@@ -10255,7 +10915,7 @@ class CreateTaskResponseAttemptsItem {
   final String? taskRunId;
   /// The 0-indexed attempt number.
   final int attempt;
-  final TaskRunWithCursorTaskRunStatus status;
+  final GetTaskRunStatus status;
   final DateTime? enqueuedAt;
   final DateTime startedAt;
   final DateTime? completedAt;
@@ -10287,7 +10947,7 @@ class CreateTaskResponse {
   factory CreateTaskResponse.fromJson(Map<String, Object?> json) => CreateTaskResponse(
         id: json['id'] as String? ?? '',
         taskId: json['taskId'] as String? ?? '',
-        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        status: GetTaskRunStatus.fromWire(json['status']),
         startedAt: parseDate(json['startedAt']),
         completedAt: parseDate(json['completedAt']),
         parentTaskRunId: json['parentTaskRunId'] as String? ?? '',
@@ -10299,7 +10959,7 @@ class CreateTaskResponse {
 
   final String id;
   final String taskId;
-  final TaskRunWithCursorTaskRunStatus status;
+  final GetTaskRunStatus status;
   final DateTime? startedAt;
   final DateTime? completedAt;
   final String parentTaskRunId;
@@ -10338,7 +10998,7 @@ class GetTaskRunResponseAttemptsItem {
   factory GetTaskRunResponseAttemptsItem.fromJson(Map<String, Object?> json) => GetTaskRunResponseAttemptsItem(
         taskRunId: json['taskRunId'] as String?,
         attempt: (json['attempt'] as num?)?.toInt() ?? 0,
-        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        status: GetTaskRunStatus.fromWire(json['status']),
         enqueuedAt: parseDate(json['enqueuedAt']),
         startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
@@ -10350,7 +11010,7 @@ class GetTaskRunResponseAttemptsItem {
   final String? taskRunId;
   /// The 0-indexed attempt number.
   final int attempt;
-  final TaskRunWithCursorTaskRunStatus status;
+  final GetTaskRunStatus status;
   final DateTime? enqueuedAt;
   final DateTime startedAt;
   final DateTime? completedAt;
@@ -10390,7 +11050,7 @@ class GetTaskRunResponse {
   factory GetTaskRunResponse.fromJson(Map<String, Object?> json) => GetTaskRunResponse(
         id: json['id'] as String? ?? '',
         taskId: json['taskId'] as String? ?? '',
-        status: TaskRunWithCursorTaskRunStatus.fromWire(json['status']),
+        status: GetTaskRunStatus.fromWire(json['status']),
         results: ((json['results'] as List<Object?>?) ?? const []).map((e) => e).toList(),
         error: json['error'] as String?,
         startedAt: parseDate(json['startedAt']),
@@ -10405,7 +11065,7 @@ class GetTaskRunResponse {
 
   final String id;
   final String taskId;
-  final TaskRunWithCursorTaskRunStatus status;
+  final GetTaskRunStatus status;
   final List<Object?> results;
   /// Error message if the task run failed.
   final String? error;
@@ -10469,6 +11129,40 @@ class GetTaskResponse {
       };
 }
 
+class CreateWebhookRequest {
+  const CreateWebhookRequest({
+    required this.ownerId,
+    required this.url,
+    required this.name,
+    required this.enabled,
+    required this.eventFilter,
+  });
+
+  factory CreateWebhookRequest.fromJson(Map<String, Object?> json) => CreateWebhookRequest(
+        ownerId: json['ownerId'] as String? ?? '',
+        url: json['url'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        enabled: json['enabled'] as bool? ?? false,
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
+      );
+
+  /// The ID of the owner (team or personal user) whose resources should be returned
+  final String ownerId;
+  final String url;
+  final String name;
+  final bool enabled;
+  /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
+  final List<RetrieveEventType> eventFilter;
+
+  Map<String, Object?> toJson() => {
+        'ownerId': ownerId,
+        'url': url,
+        'name': name,
+        'enabled': enabled,
+        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+      };
+}
+
 class CreateWebhookResponse {
   const CreateWebhookResponse({
     required this.id,
@@ -10485,7 +11179,7 @@ class CreateWebhookResponse {
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
       );
 
   final String id;
@@ -10494,7 +11188,7 @@ class CreateWebhookResponse {
   final String secret;
   final bool enabled;
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
-  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+  final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -10522,7 +11216,7 @@ class RetrieveWebhookResponse {
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
       );
 
   final String id;
@@ -10531,7 +11225,7 @@ class RetrieveWebhookResponse {
   final String secret;
   final bool enabled;
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
-  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+  final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -10540,6 +11234,35 @@ class RetrieveWebhookResponse {
         'secret': secret,
         'enabled': enabled,
         'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+      };
+}
+
+class UpdateWebhookRequest {
+  const UpdateWebhookRequest({
+    this.name,
+    this.url,
+    this.enabled,
+    this.eventFilter,
+  });
+
+  factory UpdateWebhookRequest.fromJson(Map<String, Object?> json) => UpdateWebhookRequest(
+        name: json['name'] as String?,
+        url: json['url'] as String?,
+        enabled: json['enabled'] as bool?,
+        eventFilter: (json['eventFilter'] as List<Object?>?)?.map((e) => RetrieveEventType.fromWire(e)).toList(),
+      );
+
+  final String? name;
+  final String? url;
+  final bool? enabled;
+  /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
+  final List<RetrieveEventType>? eventFilter;
+
+  Map<String, Object?> toJson() => {
+        if (name != null) 'name': name,
+        if (url != null) 'url': url,
+        if (enabled != null) 'enabled': enabled,
+        if (eventFilter != null) 'eventFilter': eventFilter!.map((e) => e.wireValue).toList(),
       };
 }
 
@@ -10559,7 +11282,7 @@ class UpdateWebhookResponse {
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => WebhookEventWithCursorWebhookEventEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
       );
 
   final String id;
@@ -10568,7 +11291,7 @@ class UpdateWebhookResponse {
   final String secret;
   final bool enabled;
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
-  final List<WebhookEventWithCursorWebhookEventEventType> eventFilter;
+  final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -10577,6 +11300,86 @@ class UpdateWebhookResponse {
         'secret': secret,
         'enabled': enabled,
         'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+      };
+}
+
+class CreateWorkflowRequestBuildConfig {
+  const CreateWorkflowRequestBuildConfig({
+    this.branch,
+    required this.buildCommand,
+    required this.repo,
+    this.rootDir,
+    required this.runtime,
+  });
+
+  factory CreateWorkflowRequestBuildConfig.fromJson(Map<String, Object?> json) => CreateWorkflowRequestBuildConfig(
+        branch: json['branch'] as String?,
+        buildCommand: json['buildCommand'] as String? ?? '',
+        repo: json['repo'] as String? ?? '',
+        rootDir: json['rootDir'] as String?,
+        runtime: Runtime.fromWire(json['runtime']),
+      );
+
+  /// The branch to use for the build, if applicable.
+  final String? branch;
+  /// The command to run to build the workflow.
+  final String buildCommand;
+  /// The repository URL to use for the build.
+  final String repo;
+  /// The root directory of the repository to use for the build, if applicable.
+  final String? rootDir;
+  /// The runtime environment for the workflow (e.g., node, python, etc.).
+  final Runtime runtime;
+
+  Map<String, Object?> toJson() => {
+        if (branch != null) 'branch': branch,
+        'buildCommand': buildCommand,
+        'repo': repo,
+        if (rootDir != null) 'rootDir': rootDir,
+        'runtime': runtime.wireValue,
+      };
+}
+
+class CreateWorkflowRequest {
+  const CreateWorkflowRequest({
+    required this.name,
+    required this.ownerId,
+    required this.buildConfig,
+    required this.runCommand,
+    required this.region,
+    this.autoDeployTrigger,
+    this.envVars,
+  });
+
+  factory CreateWorkflowRequest.fromJson(Map<String, Object?> json) => CreateWorkflowRequest(
+        name: json['name'] as String? ?? '',
+        ownerId: json['ownerId'] as String? ?? '',
+        buildConfig: CreateWorkflowRequestBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
+        runCommand: json['runCommand'] as String? ?? '',
+        region: Region.fromWire(json['region']),
+        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+        envVars: (json['envVars'] as List<Object?>?)?.map((e) => (e as Map<String, Object?>?) ?? const {}).toList(),
+      );
+
+  final String name;
+  final String ownerId;
+  final CreateWorkflowRequestBuildConfig buildConfig;
+  /// The command to run the workflow
+  final String runCommand;
+  /// Defaults to "oregon"
+  final Region region;
+  /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
+  final NewTrigger? autoDeployTrigger;
+  final List<Map<String, Object?>>? envVars;
+
+  Map<String, Object?> toJson() => {
+        'name': name,
+        'ownerId': ownerId,
+        'buildConfig': buildConfig.toJson(),
+        'runCommand': runCommand,
+        'region': region.wireValue,
+        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
+        if (envVars != null) 'envVars': envVars!.map((e) => e).toList(),
       };
 }
 
@@ -10594,7 +11397,7 @@ class CreateWorkflowResponseBuildConfig {
         buildCommand: json['buildCommand'] as String? ?? '',
         repo: json['repo'] as String? ?? '',
         rootDir: json['rootDir'] as String?,
-        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+        runtime: Runtime.fromWire(json['runtime']),
       );
 
   /// The branch to use for the build, if applicable.
@@ -10606,7 +11409,7 @@ class CreateWorkflowResponseBuildConfig {
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
   /// The runtime environment for the workflow (e.g., node, python, etc.).
-  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+  final Runtime runtime;
 
   Map<String, Object?> toJson() => {
         if (branch != null) 'branch': branch,
@@ -10643,7 +11446,7 @@ class CreateWorkflowResponse {
         region: Region.fromWire(json['region']),
         environmentId: json['environmentId'] as String?,
         slug: json['slug'] as String?,
-        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
       );
 
   final String id;
@@ -10659,7 +11462,7 @@ class CreateWorkflowResponse {
   final String? environmentId;
   final String? slug;
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
-  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+  final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -10690,7 +11493,7 @@ class GetWorkflowResponseBuildConfig {
         buildCommand: json['buildCommand'] as String? ?? '',
         repo: json['repo'] as String? ?? '',
         rootDir: json['rootDir'] as String?,
-        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+        runtime: Runtime.fromWire(json['runtime']),
       );
 
   /// The branch to use for the build, if applicable.
@@ -10702,7 +11505,7 @@ class GetWorkflowResponseBuildConfig {
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
   /// The runtime environment for the workflow (e.g., node, python, etc.).
-  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+  final Runtime runtime;
 
   Map<String, Object?> toJson() => {
         if (branch != null) 'branch': branch,
@@ -10739,7 +11542,7 @@ class GetWorkflowResponse {
         region: Region.fromWire(json['region']),
         environmentId: json['environmentId'] as String?,
         slug: json['slug'] as String?,
-        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
       );
 
   final String id;
@@ -10755,7 +11558,7 @@ class GetWorkflowResponse {
   final String? environmentId;
   final String? slug;
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
-  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+  final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -10768,6 +11571,73 @@ class GetWorkflowResponse {
         'region': region.wireValue,
         if (environmentId != null) 'environmentId': environmentId,
         if (slug != null) 'slug': slug,
+        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
+      };
+}
+
+class UpdateWorkflowRequestBuildConfig {
+  const UpdateWorkflowRequestBuildConfig({
+    this.branch,
+    required this.buildCommand,
+    required this.repo,
+    this.rootDir,
+    required this.runtime,
+  });
+
+  factory UpdateWorkflowRequestBuildConfig.fromJson(Map<String, Object?> json) => UpdateWorkflowRequestBuildConfig(
+        branch: json['branch'] as String?,
+        buildCommand: json['buildCommand'] as String? ?? '',
+        repo: json['repo'] as String? ?? '',
+        rootDir: json['rootDir'] as String?,
+        runtime: Runtime.fromWire(json['runtime']),
+      );
+
+  /// The branch to use for the build, if applicable.
+  final String? branch;
+  /// The command to run to build the workflow.
+  final String buildCommand;
+  /// The repository URL to use for the build.
+  final String repo;
+  /// The root directory of the repository to use for the build, if applicable.
+  final String? rootDir;
+  /// The runtime environment for the workflow (e.g., node, python, etc.).
+  final Runtime runtime;
+
+  Map<String, Object?> toJson() => {
+        if (branch != null) 'branch': branch,
+        'buildCommand': buildCommand,
+        'repo': repo,
+        if (rootDir != null) 'rootDir': rootDir,
+        'runtime': runtime.wireValue,
+      };
+}
+
+class UpdateWorkflowRequest {
+  const UpdateWorkflowRequest({
+    this.name,
+    this.buildConfig,
+    this.runCommand,
+    this.autoDeployTrigger,
+  });
+
+  factory UpdateWorkflowRequest.fromJson(Map<String, Object?> json) => UpdateWorkflowRequest(
+        name: json['name'] as String?,
+        buildConfig: json['buildConfig'] == null ? null : UpdateWorkflowRequestBuildConfig.fromJson(json['buildConfig']! as Map<String, Object?>),
+        runCommand: json['runCommand'] as String?,
+        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+      );
+
+  final String? name;
+  final UpdateWorkflowRequestBuildConfig? buildConfig;
+  /// The command to run the workflow
+  final String? runCommand;
+  /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
+  final NewTrigger? autoDeployTrigger;
+
+  Map<String, Object?> toJson() => {
+        if (name != null) 'name': name,
+        if (buildConfig != null) 'buildConfig': buildConfig!.toJson(),
+        if (runCommand != null) 'runCommand': runCommand,
         if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
       };
 }
@@ -10786,7 +11656,7 @@ class UpdateWorkflowResponseBuildConfig {
         buildCommand: json['buildCommand'] as String? ?? '',
         repo: json['repo'] as String? ?? '',
         rootDir: json['rootDir'] as String?,
-        runtime: WorkflowWithCursorWorkflowBuildConfigRuntime.fromWire(json['runtime']),
+        runtime: Runtime.fromWire(json['runtime']),
       );
 
   /// The branch to use for the build, if applicable.
@@ -10798,7 +11668,7 @@ class UpdateWorkflowResponseBuildConfig {
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
   /// The runtime environment for the workflow (e.g., node, python, etc.).
-  final WorkflowWithCursorWorkflowBuildConfigRuntime runtime;
+  final Runtime runtime;
 
   Map<String, Object?> toJson() => {
         if (branch != null) 'branch': branch,
@@ -10835,7 +11705,7 @@ class UpdateWorkflowResponse {
         region: Region.fromWire(json['region']),
         environmentId: json['environmentId'] as String?,
         slug: json['slug'] as String?,
-        autoDeployTrigger: WorkflowWithCursorWorkflowAutoDeployTrigger.fromWire(json['autoDeployTrigger']),
+        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
       );
 
   final String id;
@@ -10851,7 +11721,7 @@ class UpdateWorkflowResponse {
   final String? environmentId;
   final String? slug;
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
-  final WorkflowWithCursorWorkflowAutoDeployTrigger? autoDeployTrigger;
+  final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
         'id': id,
@@ -10865,6 +11735,26 @@ class UpdateWorkflowResponse {
         if (environmentId != null) 'environmentId': environmentId,
         if (slug != null) 'slug': slug,
         if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
+      };
+}
+
+class CreateWorkflowVersionRequest {
+  const CreateWorkflowVersionRequest({
+    required this.workflowId,
+    this.commit,
+  });
+
+  factory CreateWorkflowVersionRequest.fromJson(Map<String, Object?> json) => CreateWorkflowVersionRequest(
+        workflowId: json['workflowId'] as String? ?? '',
+        commit: json['commit'] as String?,
+      );
+
+  final String workflowId;
+  final String? commit;
+
+  Map<String, Object?> toJson() => {
+        'workflowId': workflowId,
+        if (commit != null) 'commit': commit,
       };
 }
 
@@ -10882,14 +11772,14 @@ class GetWorkflowVersionResponse {
         workflowId: json['workflowId'] as String? ?? '',
         name: json['name'] as String? ?? '',
         createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: WorkflowVersionWithCursorWorkflowVersionStatus.fromWire(json['status']),
+        status: GetWorkflowVersionStatus.fromWire(json['status']),
       );
 
   final String id;
   final String workflowId;
   final String name;
   final DateTime createdAt;
-  final WorkflowVersionWithCursorWorkflowVersionStatus status;
+  final GetWorkflowVersionStatus status;
 
   Map<String, Object?> toJson() => {
         'id': id,

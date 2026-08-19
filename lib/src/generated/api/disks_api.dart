@@ -60,11 +60,11 @@ class DisksEndpoints {
   /// Attach a persistent disk to a web service, private service, or background worker.
   ///
   /// The service must be redeployed for the disk to be attached.
-  Future<AddDiskResponse> addDisk({required Map<String, Object?> body}) async {
+  Future<AddDiskResponse> addDisk({required AddDiskRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/disks',
-      body: body,
+      body: body.toJson(),
     );
     return AddDiskResponse.fromJson(json);
   }
@@ -89,11 +89,11 @@ class DisksEndpoints {
   /// The disk's associated service must be deployed and active for updates to take effect.
   ///
   /// When resizing a disk, the new size must be greater than the current size.
-  Future<UpdateDiskResponse> updateDisk({required String diskId, required Map<String, Object?> body}) async {
+  Future<UpdateDiskResponse> updateDisk({required String diskId, required UpdateDiskRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/disks/$diskId',
-      body: body,
+      body: body.toJson(),
     );
     return UpdateDiskResponse.fromJson(json);
   }
@@ -131,11 +131,11 @@ class DisksEndpoints {
   /// **This operation is irreversible.** It will overwrite the current disk data. It might also trigger a service deploy.
   ///
   /// Snapshot keys returned from the [List snapshots](https://api-docs.render.com/reference/list-snapshots) endpoint expire after 24 hours. If a snapshot key has expired, query the endpoint again for a new key.
-  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required Map<String, Object?> body}) async {
+  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required SnapshotRestorePost body}) async {
     final json = await _client.sendObject(
       'POST',
       '/disks/$diskId/snapshots/restore',
-      body: body,
+      body: body.toJson(),
     );
     return RestoreSnapshotResponse.fromJson(json);
   }

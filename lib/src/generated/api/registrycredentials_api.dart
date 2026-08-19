@@ -58,11 +58,11 @@ class RegistrycredentialsEndpoints {
   /// Create registry credential
   ///
   /// Create a new registry credential.
-  Future<RegistryCredential> createRegistryCredential({required Map<String, Object?> body}) async {
+  Future<RegistryCredential> createRegistryCredential({required CreateRegistryCredentialRequest body}) async {
     final json = await _client.sendObject(
       'POST',
       '/registrycredentials',
-      body: body,
+      body: body.toJson(),
     );
     return RegistryCredential.fromJson(json);
   }
@@ -83,11 +83,11 @@ class RegistrycredentialsEndpoints {
   /// Update registry credential
   ///
   /// Update the registry credential with the provided ID. Services that use this credential must be redeployed to use updated values.
-  Future<RegistryCredential> updateRegistryCredential({required String registryCredentialId, required Map<String, Object?> body}) async {
+  Future<RegistryCredential> updateRegistryCredential({required String registryCredentialId, required UpdateRegistryCredentialRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/registrycredentials/$registryCredentialId',
-      body: body,
+      body: body.toJson(),
     );
     return RegistryCredential.fromJson(json);
   }

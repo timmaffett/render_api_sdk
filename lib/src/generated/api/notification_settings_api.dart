@@ -28,11 +28,11 @@ class NotificationSettingsEndpoints {
   /// Update notification settings
   ///
   /// Update notification settings for the owner with the provided ID.
-  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required Map<String, Object?> body}) async {
+  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required PatchOwnerNotificationSettingsRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/notification-settings/owners/$ownerId',
-      body: body,
+      body: body.toJson(),
     );
     return PatchOwnerNotificationSettingsResponse.fromJson(json);
   }
@@ -81,11 +81,11 @@ class NotificationSettingsEndpoints {
   /// Update notification override
   ///
   /// Update the notification override for the service with the provided ID.
-  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required Map<String, Object?> body}) async {
+  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required PatchServiceNotificationOverridesRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/notification-settings/overrides/services/$serviceId',
-      body: body,
+      body: body.toJson(),
     );
     return PatchServiceNotificationOverridesResponse.fromJson(json);
   }

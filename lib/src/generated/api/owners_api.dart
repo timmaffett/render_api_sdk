@@ -14,11 +14,11 @@ class OwnersEndpoints {
   /// Update workspace member role
   ///
   /// Update the role of an existing workspace member.
-  Future<TeamMember> updateWorkspaceMember({required String ownerId, required String userId, required Map<String, Object?> body}) async {
+  Future<TeamMember> updateWorkspaceMember({required String ownerId, required String userId, required UpdateWorkspaceMemberRequest body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/owners/$ownerId/members/$userId',
-      body: body,
+      body: body.toJson(),
     );
     return TeamMember.fromJson(json);
   }

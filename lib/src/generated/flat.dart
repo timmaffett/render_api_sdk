@@ -13,27 +13,27 @@ import '../../render_api.dart';
 /// which is the same call by a different route.
 extension RenderRestApi on RenderApi {
   /// Add disk
-  Future<AddDiskResponse> addDisk({required Map<String, Object?> body}) =>
+  Future<AddDiskResponse> addDisk({required AddDiskRequest body}) =>
       raw.disks.addDisk(body: body);
 
   /// Add header rule
-  Future<AddHeadersResponse> addHeaders({required String serviceId, required Map<String, Object?> body}) =>
+  Future<AddHeadersResponse> addHeaders({required String serviceId, required HeaderInput body}) =>
       raw.services.addHeaders(serviceId: serviceId, body: body);
 
   /// Add or update secret file
-  Future<SecretFile> addOrUpdateSecretFile({required String serviceId, required String envVarKey, required Map<String, Object?> body}) =>
+  Future<SecretFile> addOrUpdateSecretFile({required String serviceId, required String envVarKey, required AddOrUpdateSecretFileRequest body}) =>
       raw.services.addOrUpdateSecretFile(serviceId: serviceId, envVarKey: envVarKey, body: body);
 
   /// Add resources to environment
-  Future<Environment> addResourcesToEnvironment({required String environmentId, required Map<String, Object?> body}) =>
+  Future<Environment> addResourcesToEnvironment({required String environmentId, required EnvironmentResourcesPostinput body}) =>
       raw.environments.addResourcesToEnvironment(environmentId: environmentId, body: body);
 
   /// Add redirect/rewrite rules
-  Future<Route> addRoute({required String serviceId, required Map<String, Object?> body}) =>
+  Future<Route> addRoute({required String serviceId, required RoutePost body}) =>
       raw.services.addRoute(serviceId: serviceId, body: body);
 
   /// Update autoscaling config
-  Future<AutoscaleServiceResponse> autoscaleService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<AutoscaleServiceResponse> autoscaleService({required String serviceId, required AutoscaleServiceRequest body}) =>
       raw.services.autoscaleService(serviceId: serviceId, body: body);
 
   /// Cancel running cron job
@@ -53,31 +53,31 @@ extension RenderRestApi on RenderApi {
       raw.taskRuns.cancelTaskRun(taskRunId: taskRunId);
 
   /// Add custom domain
-  Future<List<CustomDomain>> createCustomDomain({required String serviceId, required Map<String, Object?> body}) =>
+  Future<List<CustomDomain>> createCustomDomain({required String serviceId, required CreateCustomDomainRequest body}) =>
       raw.services.createCustomDomain(serviceId: serviceId, body: body);
 
   /// Create dedicated IP set
-  Future<DedicatedIp> createDedicatedIp({required Map<String, Object?> body}) =>
+  Future<DedicatedIp> createDedicatedIp({required DedicatedIppost body}) =>
       raw.dedicatedIps.createDedicatedIp(body: body);
 
   /// Trigger deploy
-  Future<Deploy> createDeploy({required String serviceId, required Map<String, Object?> body}) =>
+  Future<Deploy> createDeploy({required String serviceId, required CreateDeployRequest body}) =>
       raw.services.createDeploy(serviceId: serviceId, body: body);
 
   /// Create environment group
-  Future<EnvGroup> createEnvGroup({required Map<String, Object?> body}) =>
+  Future<EnvGroup> createEnvGroup({required EnvGroupPostinput body}) =>
       raw.envGroups.createEnvGroup(body: body);
 
   /// Create environment
-  Future<Environment> createEnvironment({required Map<String, Object?> body}) =>
+  Future<Environment> createEnvironment({required EnvironmentPostinput body}) =>
       raw.environments.createEnvironment(body: body);
 
   /// Create Key Value instance
-  Future<KeyValueDetail> createKeyValue({required Map<String, Object?> body}) =>
+  Future<KeyValueDetail> createKeyValue({required KeyValuePostinput body}) =>
       raw.keyValue.createKeyValue(body: body);
 
   /// Create Postgres instance
-  Future<PostgresDetail> createPostgres({required Map<String, Object?> body}) =>
+  Future<PostgresDetail> createPostgres({required PostgresPostinput body}) =>
       raw.postgres.createPostgres(body: body);
 
   /// Create Postgres export
@@ -85,39 +85,39 @@ extension RenderRestApi on RenderApi {
       raw.postgres.createPostgresExport(postgresId: postgresId);
 
   /// Create PostgreSQL User
-  Future<void> createPostgresUser({required String postgresId, required Map<String, Object?> body}) =>
+  Future<void> createPostgresUser({required String postgresId, required CreatePostgresUserRequest body}) =>
       raw.postgres.createPostgresUser(postgresId: postgresId, body: body);
 
   /// Create project
-  Future<Project> createProject({required Map<String, Object?> body}) =>
+  Future<Project> createProject({required ProjectPostinput body}) =>
       raw.projects.createProject(body: body);
 
   /// Create Redis instance
-  Future<RedisDetail> createRedis({required Map<String, Object?> body}) =>
+  Future<RedisDetail> createRedis({required RedisPostinput body}) =>
       raw.redis.createRedis(body: body);
 
   /// Create registry credential
-  Future<RegistryCredential> createRegistryCredential({required Map<String, Object?> body}) =>
+  Future<RegistryCredential> createRegistryCredential({required CreateRegistryCredentialRequest body}) =>
       raw.registrycredentials.createRegistryCredential(body: body);
 
   /// Create service
-  Future<ServiceAndDeploy> createService({required Map<String, Object?> body}) =>
+  Future<ServiceAndDeploy> createService({required ServicePost body}) =>
       raw.services.createService(body: body);
 
   /// Run task
-  Future<CreateTaskResponse> createTask({required Map<String, Object?> body}) =>
+  Future<CreateTaskResponse> createTask({required CreateTaskRequest body}) =>
       raw.taskRuns.createTask(body: body);
 
   /// Create a webhook
-  Future<CreateWebhookResponse> createWebhook({required Map<String, Object?> body}) =>
+  Future<CreateWebhookResponse> createWebhook({required CreateWebhookRequest body}) =>
       raw.webhooks.createWebhook(body: body);
 
   /// Create a workflow
-  Future<CreateWorkflowResponse> createWorkflow({required Map<String, Object?> body}) =>
+  Future<CreateWorkflowResponse> createWorkflow({required CreateWorkflowRequest body}) =>
       raw.workflows.createWorkflow(body: body);
 
   /// Deploy a workflow version
-  Future<void> createWorkflowVersion({required Map<String, Object?> body}) =>
+  Future<void> createWorkflowVersion({required CreateWorkflowVersionRequest body}) =>
       raw.workflowversions.createWorkflowVersion(body: body);
 
   /// Delete autoscaling config
@@ -509,23 +509,23 @@ extension RenderRestApi on RenderApi {
       raw.workflows.listWorkflows(name: name, ownerId: ownerId, workflowId: workflowId, environmentId: environmentId, cursor: cursor, limit: limit);
 
   /// Update notification settings
-  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required Map<String, Object?> body}) =>
+  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required PatchOwnerNotificationSettingsRequest body}) =>
       raw.notificationSettings.patchOwnerNotificationSettings(ownerId: ownerId, body: body);
 
   /// Update redirect/rewrite rule priority
-  Future<PatchRouteResponse> patchRoute({required String serviceId, required String routeId, required Map<String, Object?> body}) =>
+  Future<PatchRouteResponse> patchRoute({required String serviceId, required String routeId, required RoutePatch body}) =>
       raw.services.patchRoute(serviceId: serviceId, routeId: routeId, body: body);
 
   /// Update notification override
-  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required Map<String, Object?> body}) =>
+  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required PatchServiceNotificationOverridesRequest body}) =>
       raw.notificationSettings.patchServiceNotificationOverrides(serviceId: serviceId, body: body);
 
   /// Create job
-  Future<PostJobResponse> postJob({required String serviceId, required Map<String, Object?> body}) =>
+  Future<PostJobResponse> postJob({required String serviceId, required PostJobRequest body}) =>
       raw.services.postJob(serviceId: serviceId, body: body);
 
   /// Create service preview (image-backed)
-  Future<ServiceAndDeploy> previewService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<ServiceAndDeploy> previewService({required String serviceId, required PreviewInput body}) =>
       raw.services.previewService(serviceId: serviceId, body: body);
 
   /// Purge Web Service Cache
@@ -533,11 +533,11 @@ extension RenderRestApi on RenderApi {
       raw.services.purgeCache(serviceId: serviceId);
 
   /// Update redirect/rewrite rules
-  Future<List<Route>> putRoutes({required String serviceId, required Map<String, Object?> body}) =>
+  Future<List<Route>> putRoutes({required String serviceId, required List<RoutePut> body}) =>
       raw.services.putRoutes(serviceId: serviceId, body: body);
 
   /// Trigger point-in-time recovery
-  Future<PostgresDetail> recoverPostgres({required String postgresId, required Map<String, Object?> body}) =>
+  Future<PostgresDetail> recoverPostgres({required String postgresId, required RecoverPostgresRequest body}) =>
       raw.postgres.recoverPostgres(postgresId: postgresId, body: body);
 
   /// Verify DNS configuration
@@ -561,7 +561,7 @@ extension RenderRestApi on RenderApi {
       raw.services.restartService(serviceId: serviceId);
 
   /// Restore snapshot
-  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required Map<String, Object?> body}) =>
+  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required SnapshotRestorePost body}) =>
       raw.disks.restoreSnapshot(diskId: diskId, body: body);
 
   /// Resume Key Value instance
@@ -701,7 +701,7 @@ extension RenderRestApi on RenderApi {
       raw.webhooks.retrieveWebhook(webhookId: webhookId);
 
   /// Roll back deploy
-  Future<Deploy> rollbackDeploy({required String serviceId, required Map<String, Object?> body}) =>
+  Future<Deploy> rollbackDeploy({required String serviceId, required RollbackDeployRequest body}) =>
       raw.services.rollbackDeploy(serviceId: serviceId, body: body);
 
   /// Trigger cron job run
@@ -709,7 +709,7 @@ extension RenderRestApi on RenderApi {
       raw.cronJobs.runCronJob(cronJobId: cronJobId);
 
   /// Scale instance count
-  Future<void> scaleService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<void> scaleService({required String serviceId, required ScaleServiceRequest body}) =>
       raw.services.scaleService(serviceId: serviceId, body: body);
 
   /// Stream realtime events (SSE)
@@ -745,19 +745,19 @@ extension RenderRestApi on RenderApi {
       raw.envGroups.unlinkServiceFromEnvGroup(envGroupId: envGroupId, serviceId: serviceId);
 
   /// Update Blueprint
-  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required Map<String, Object?> body}) =>
+  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required UpdateBlueprintRequest body}) =>
       raw.blueprints.updateBlueprint(blueprintId: blueprintId, body: body);
 
   /// Update dedicated IP set
-  Future<DedicatedIp> updateDedicatedIp({required String dedicatedIpId, required Map<String, Object?> body}) =>
+  Future<DedicatedIp> updateDedicatedIp({required String dedicatedIpId, required DedicatedIppatch body}) =>
       raw.dedicatedIps.updateDedicatedIp(dedicatedIpId: dedicatedIpId, body: body);
 
   /// Update disk
-  Future<UpdateDiskResponse> updateDisk({required String diskId, required Map<String, Object?> body}) =>
+  Future<UpdateDiskResponse> updateDisk({required String diskId, required UpdateDiskRequest body}) =>
       raw.disks.updateDisk(diskId: diskId, body: body);
 
   /// Update environment group
-  Future<EnvGroup> updateEnvGroup({required String envGroupId, required Map<String, Object?> body}) =>
+  Future<EnvGroup> updateEnvGroup({required String envGroupId, required EnvGroupPatchinput body}) =>
       raw.envGroups.updateEnvGroup(envGroupId: envGroupId, body: body);
 
   /// Add or update environment variable
@@ -765,7 +765,7 @@ extension RenderRestApi on RenderApi {
       raw.envGroups.updateEnvGroupEnvVar(envGroupId: envGroupId, envVarKey: envVarKey, body: body);
 
   /// Add or update secret file
-  Future<EnvGroup> updateEnvGroupSecretFile({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) =>
+  Future<EnvGroup> updateEnvGroupSecretFile({required String envGroupId, required String envVarKey, required UpdateEnvGroupSecretFileRequest body}) =>
       raw.envGroups.updateEnvGroupSecretFile(envGroupId: envGroupId, envVarKey: envVarKey, body: body);
 
   /// Add or update environment variable
@@ -773,71 +773,71 @@ extension RenderRestApi on RenderApi {
       raw.services.updateEnvVar(serviceId: serviceId, envVarKey: envVarKey, body: body);
 
   /// Update environment variables
-  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<Map<String, Object?>> body}) =>
       raw.services.updateEnvVarsForService(serviceId: serviceId, body: body);
 
   /// Update environment
-  Future<Environment> updateEnvironment({required String environmentId, required Map<String, Object?> body}) =>
+  Future<Environment> updateEnvironment({required String environmentId, required EnvironmentPatchinput body}) =>
       raw.environments.updateEnvironment(environmentId: environmentId, body: body);
 
   /// Replace header rules
-  Future<List<Header>> updateHeaders({required String serviceId, required Map<String, Object?> body}) =>
+  Future<List<Header>> updateHeaders({required String serviceId, required List<HeaderInput> body}) =>
       raw.services.updateHeaders(serviceId: serviceId, body: body);
 
   /// Update Key Value instance
-  Future<KeyValueDetail> updateKeyValue({required String redisId, required Map<String, Object?> body}) =>
+  Future<KeyValueDetail> updateKeyValue({required String redisId, required KeyValuePatchinput body}) =>
       raw.keyValue.updateKeyValue(redisId: redisId, body: body);
 
   /// Update maintenance run
-  Future<void> updateMaintenance({required String maintenanceRunId, required Map<String, Object?> body}) =>
+  Future<void> updateMaintenance({required String maintenanceRunId, required UpdateMaintenanceRequest body}) =>
       raw.maintenance.updateMaintenance(maintenanceRunId: maintenanceRunId, body: body);
 
   /// Update log stream
-  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({required String ownerId, required Map<String, Object?> body}) =>
+  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({required String ownerId, required UpdateOwnerLogStreamRequest body}) =>
       raw.logs.updateOwnerLogStream(ownerId: ownerId, body: body);
 
   /// Update Postgres instance
-  Future<PostgresDetail> updatePostgres({required String postgresId, required Map<String, Object?> body}) =>
+  Future<PostgresDetail> updatePostgres({required String postgresId, required PostgresPatchinput body}) =>
       raw.postgres.updatePostgres(postgresId: postgresId, body: body);
 
   /// Update project
-  Future<Project> updateProject({required String projectId, required Map<String, Object?> body}) =>
+  Future<Project> updateProject({required String projectId, required ProjectPatchinput body}) =>
       raw.projects.updateProject(projectId: projectId, body: body);
 
   /// Update Redis instance
-  Future<RedisDetail> updateRedis({required String redisId, required Map<String, Object?> body}) =>
+  Future<RedisDetail> updateRedis({required String redisId, required RedisPatchinput body}) =>
       raw.redis.updateRedis(redisId: redisId, body: body);
 
   /// Update registry credential
-  Future<RegistryCredential> updateRegistryCredential({required String registryCredentialId, required Map<String, Object?> body}) =>
+  Future<RegistryCredential> updateRegistryCredential({required String registryCredentialId, required UpdateRegistryCredentialRequest body}) =>
       raw.registrycredentials.updateRegistryCredential(registryCredentialId: registryCredentialId, body: body);
 
   /// Update log stream override
-  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({required String resourceId, required Map<String, Object?> body}) =>
+  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({required String resourceId, required UpdateResourceLogStreamRequest body}) =>
       raw.logs.updateResourceLogStream(resourceId: resourceId, body: body);
 
   /// Update secret files
-  Future<List<SecretFileWithCursor>> updateSecretFilesForService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<List<SecretFileWithCursor>> updateSecretFilesForService({required String serviceId, required List<UpdateSecretFilesForServiceRequestItem> body}) =>
       raw.services.updateSecretFilesForService(serviceId: serviceId, body: body);
 
   /// Update service
-  Future<Service> updateService({required String serviceId, required Map<String, Object?> body}) =>
+  Future<Service> updateService({required String serviceId, required ServicePatch body}) =>
       raw.services.updateService(serviceId: serviceId, body: body);
 
   /// Update a webhook
-  Future<UpdateWebhookResponse> updateWebhook({required String webhookId, required Map<String, Object?> body}) =>
+  Future<UpdateWebhookResponse> updateWebhook({required String webhookId, required UpdateWebhookRequest body}) =>
       raw.webhooks.updateWebhook(webhookId: webhookId, body: body);
 
   /// Update workflow
-  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required Map<String, Object?> body}) =>
+  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required UpdateWorkflowRequest body}) =>
       raw.workflows.updateWorkflow(workflowId: workflowId, body: body);
 
   /// Update workspace member role
-  Future<TeamMember> updateWorkspaceMember({required String ownerId, required String userId, required Map<String, Object?> body}) =>
+  Future<TeamMember> updateWorkspaceMember({required String ownerId, required String userId, required UpdateWorkspaceMemberRequest body}) =>
       raw.owners.updateWorkspaceMember(ownerId: ownerId, userId: userId, body: body);
 
   /// Create or update metrics stream
-  Future<UpsertOwnerMetricsStreamResponse> upsertOwnerMetricsStream({required String ownerId, required Map<String, Object?> body}) =>
+  Future<UpsertOwnerMetricsStreamResponse> upsertOwnerMetricsStream({required String ownerId, required UpsertOwnerMetricsStreamRequest body}) =>
       raw.metricsStream.upsertOwnerMetricsStream(ownerId: ownerId, body: body);
 
   /// Validate Blueprint

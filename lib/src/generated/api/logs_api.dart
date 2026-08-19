@@ -232,11 +232,11 @@ class LogsEndpoints {
   /// Update log stream
   ///
   /// Updates log stream information for the specified workspace. All logs for resources owned by this workspace will be sent to this log stream unless overridden by individual resources.
-  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({required String ownerId, required Map<String, Object?> body}) async {
+  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({required String ownerId, required UpdateOwnerLogStreamRequest body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/logs/streams/owner/$ownerId',
-      body: body,
+      body: body.toJson(),
     );
     return UpdateOwnerLogStreamResponse.fromJson(json);
   }
@@ -300,11 +300,11 @@ class LogsEndpoints {
   /// Update log stream override
   ///
   /// Updates log stream override information for the specified resource. A log stream override takes precedence over a workspace's default log stream.
-  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({required String resourceId, required Map<String, Object?> body}) async {
+  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({required String resourceId, required UpdateResourceLogStreamRequest body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/logs/streams/resource/$resourceId',
-      body: body,
+      body: body.toJson(),
     );
     return UpdateResourceLogStreamResponse.fromJson(json);
   }

@@ -58,11 +58,11 @@ class KeyValueEndpoints {
   /// Create Key Value instance
   ///
   /// Create a new Key Value instance.
-  Future<KeyValueDetail> createKeyValue({required Map<String, Object?> body}) async {
+  Future<KeyValueDetail> createKeyValue({required KeyValuePostinput body}) async {
     final json = await _client.sendObject(
       'POST',
       '/key-value',
-      body: body,
+      body: body.toJson(),
     );
     return KeyValueDetail.fromJson(json);
   }
@@ -83,11 +83,11 @@ class KeyValueEndpoints {
   /// Update Key Value instance
   ///
   /// Update a Key Value instance by ID. Note that changing your plan, max memory policy, or persistence mode will restart your Key Value instance.
-  Future<KeyValueDetail> updateKeyValue({required String redisId, required Map<String, Object?> body}) async {
+  Future<KeyValueDetail> updateKeyValue({required String redisId, required KeyValuePatchinput body}) async {
     final json = await _client.sendObject(
       'PATCH',
       '/key-value/$redisId',
-      body: body,
+      body: body.toJson(),
     );
     return KeyValueDetail.fromJson(json);
   }
