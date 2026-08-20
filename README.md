@@ -1,18 +1,23 @@
 # render_api
 
-> **This is an unofficial, independent, community-built package.**
+> **This is an _unofficial_, independent, community-built package.**
 > Not affiliated with, endorsed by, or supported by
 > [Render](https://render.com).
 >
 > Render's own SDKs and documentation are at
 > [render.com/docs](https://render.com/docs).
 
-[![Render](https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logo.png)](https://render.com)
+[![Render](https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logo.png)](https://render.com) [\*](#note)
 
-[\*note](#note)
+A typed Dart client for the **whole** [Render](https://render.com) REST API —
+services, Postgres, key-value, disks, cron jobs, blueprints, environment
+groups, metrics, logs, webhooks, owners and more. 208 operations across 26
+resource groups, with 164 typed models, generated from Render's OpenAPI spec.
 
-A typed Dart client for the [Render](https://render.com) REST API, covering the
-workflows surface: workflow services, versions, task definitions and task runs.
+Workflows are three of those groups. Actually *running* workflow tasks —
+starting, watching, cancelling — lives in
+[`package:render_workflows`](https://pub.dev/packages/render_workflows), which
+builds on this one.
 
 Works on Dart and Flutter, including Web. Depends only on `package:http`.
 

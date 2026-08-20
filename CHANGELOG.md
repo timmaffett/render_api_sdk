@@ -1,3 +1,15 @@
+## 0.1.2
+
+- Clean up README
+- **Corrected what this package is.** Both the description and the README's
+  opening said it covered "workflows, tasks and task runs" — the description
+  duplicated `render_workflows`, and neither conveyed that this is the *whole*
+  REST API: 208 operations across 26 resource groups, of which workflows are
+  three. Services, Postgres, cron jobs, disks, env groups, metrics, logs and
+  the rest were invisible to anyone reading either.
+- The opening now points at `render_workflows` for actually running tasks, so
+  the two packages read as complementary rather than overlapping.
+
 ## 0.1.1
 
 Documentation and packaging; no API changes.
