@@ -206,6 +206,8 @@ void main() {
     });
   });
 
+  _unionTests();
+
   group('flat and grouped forms', () {
     test('are the same call by different routes', () async {
       final seen = <String>[];
@@ -219,6 +221,75 @@ void main() {
 
       expect(seen, hasLength(2));
       expect(seen.first, seen.last);
+    });
+  });
+}
+
+/// A `oneOf` with no discriminator is dispatched on which fields are present.
+/// Getting that wrong would silently decode into the wrong variant, so each
+/// direction is pinned.
+void _unionTests() {
+  group('discriminated unions', () {
+    test('env var input picks the variant from the field present', () {
+      final literal = AddUpdateEnvVarInput.fromJson({'value': 'secret'});
+      expect(literal, isA<AddUpdateEnvVarInputValue>());
+      expect((literal as AddUpdateEnvVarInputValue).value, 'secret');
+
+      final generated =
+          AddUpdateEnvVarInput.fromJson({'generateValue': true});
+      expect(generated, isA<AddUpdateEnvVarInputGenerateValue>());
+    });
+
+    test('env var input round-trips', () {
+      const input = AddUpdateEnvVarInputValue(value: 'secret');
+      expect(AddUpdateEnvVarInput.fromJson(input.toJson()),
+          isA<AddUpdateEnvVarInputValue>());
+    });
+
+    test('env-specific details tell docker from a native build', () {
+      final docker = EnvSpecificDetails.fromJson({
+        'dockerCommand': 'run',
+        'dockerContext': '.',
+        'dockerfilePath': './Dockerfile',
+      });
+      expect(docker, isA<EnvSpecificDetailsDocker>());
+
+      final native = EnvSpecificDetails.fromJson({
+        'buildCommand': 'npm install',
+        'startCommand': 'npm start',
+      });
+      expect(native, isA<EnvSpecificDetailsBuild>());
+      expect((native as EnvSpecificDetailsBuild).startCommand, 'npm start');
+    });
+
+    test('the union is sealed, so a switch is exhaustive', () {
+      // Sealed means adding a variant becomes a compile error at every switch
+      // rather than a silent fallthrough at runtime.
+      String describe(AddUpdateEnvVarInput input) => switch (input) {
+            AddUpdateEnvVarInputValue() => 'literal',
+            AddUpdateEnvVarInputGenerateValue() => 'generated',
+          };
+
+      expect(describe(const AddUpdateEnvVarInputValue(value: 'x')), 'literal');
+    });
+
+    test('a body typed as a union serialises to the variant it holds',
+        () async {
+      late http.Request seen;
+      final api = apiWith((req) async {
+        seen = req;
+        return json({'key': 'K', 'value': 'V'});
+      });
+
+      await api.updateEnvVar(
+        serviceId: 'srv-1',
+        envVarKey: 'K',
+        body: const AddUpdateEnvVarInputValue(value: 'V'),
+      );
+
+      final body = jsonDecode(seen.body) as Map<String, Object?>;
+      expect(body, {'value': 'V'});
+      expect(body.containsKey('generateValue'), isFalse);
     });
   });
 }

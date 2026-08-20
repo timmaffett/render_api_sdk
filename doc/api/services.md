@@ -1343,7 +1343,7 @@ This only applies to environment variables set directly on the service, not to e
 
 
 ```dart
-Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required Map<String, Object?> body})
+Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required AddUpdateEnvVarInput body})
 ```
 
 `PUT /services/{serviceId}/env-vars/{envVarKey}`
@@ -1352,7 +1352,7 @@ Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKe
 | --- | --- | --- | --- | --- |
 | `serviceId` | `String` | path | yes |  |
 | `envVarKey` | `String` | path | yes |  |
-| `body` | `Map<String, Object?>` | body | yes |  |
+| `body` | `AddUpdateEnvVarInput` | body | yes |  |
 
 Returns `EnvVar`.
 
@@ -1370,7 +1370,7 @@ Returns `EnvVar`.
 Replace all environment variables for a service with the provided list of environment variables.
 
 ```dart
-Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<Map<String, Object?>> body})
+Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<UpdateEnvVarsForServiceRequestItem> body})
 ```
 
 `PUT /services/{serviceId}/env-vars`
@@ -1378,7 +1378,7 @@ Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceI
 | Parameter | Type | In | Required | |
 | --- | --- | --- | --- | --- |
 | `serviceId` | `String` | path | yes |  |
-| `body` | `List<Map<String, Object?>>` | body | yes |  |
+| `body` | `List<UpdateEnvVarsForServiceRequestItem>` | body | yes |  |
 
 Returns `List<EnvVarWithCursor>` — each element carries:
 

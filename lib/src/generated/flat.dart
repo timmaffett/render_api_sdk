@@ -761,7 +761,7 @@ extension RenderRestApi on RenderApi {
       raw.envGroups.updateEnvGroup(envGroupId: envGroupId, body: body);
 
   /// Add or update environment variable
-  Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) =>
+  Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required AddUpdateEnvVarInput body}) =>
       raw.envGroups.updateEnvGroupEnvVar(envGroupId: envGroupId, envVarKey: envVarKey, body: body);
 
   /// Add or update secret file
@@ -769,11 +769,11 @@ extension RenderRestApi on RenderApi {
       raw.envGroups.updateEnvGroupSecretFile(envGroupId: envGroupId, envVarKey: envVarKey, body: body);
 
   /// Add or update environment variable
-  Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required Map<String, Object?> body}) =>
+  Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required AddUpdateEnvVarInput body}) =>
       raw.services.updateEnvVar(serviceId: serviceId, envVarKey: envVarKey, body: body);
 
   /// Update environment variables
-  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<Map<String, Object?>> body}) =>
+  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<UpdateEnvVarsForServiceRequestItem> body}) =>
       raw.services.updateEnvVarsForService(serviceId: serviceId, body: body);
 
   /// Update environment

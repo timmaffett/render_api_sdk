@@ -31,6 +31,23 @@ Roughly a third of responses describe their shape inline rather than by
 reference. Each of those gets a class named after its operation, so
 `getWorkflow` returns a `GetWorkflowResponse`, not a `Map`.
 
+A handful describe a value as `oneOf` several shapes with no discriminator.
+Where the variants can be told apart by which fields are present, they become
+a sealed class — so a `switch` over them is exhaustive, and adding a variant
+is a compile error rather than a silent fallthrough:
+
+```dart
+final details = EnvSpecificDetails.fromJson(json);
+final summary = switch (details) {
+  EnvSpecificDetailsDocker() => 'built from a Dockerfile',
+  EnvSpecificDetailsBuild()  => 'built with a native runtime',
+};
+```
+
+Two unions stay raw JSON, honestly: `events.details` has sixty-eight variants
+with no distinguishing field, and `service.serviceDetails` is discriminated by
+a sibling `type` the schema cannot see from inside the property.
+
 Another handful compose their response with `allOf` — the env-group endpoints
 all do. Since the spec uses it only to combine plain objects, those are merged
 into one class: `EnvGroup` carries the fields of both members.

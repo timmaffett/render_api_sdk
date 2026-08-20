@@ -394,6 +394,86 @@ String? _refName(Map<String, dynamic> node) {
 // Type emission
 // ---------------------------------------------------------------------------
 
+/// The members of a `oneOf` that can be told apart by the fields present.
+///
+/// Returns null when they cannot be — `events.details` has sixty-eight
+/// variants with no distinguishing key, and `service.serviceDetails` is
+/// discriminated by a sibling field this cannot see. Those stay raw JSON,
+/// which is the honest type for them.
+List<_UnionMember>? _discriminableUnion(Map<String, dynamic> schema) {
+  final oneOf = schema['oneOf'];
+  if (oneOf is! List || oneOf.length < 2) return null;
+
+  final members = oneOf
+      .map((m) => _resolve((m as Map).cast<String, dynamic>()))
+      .toList();
+  if (members.any((m) => m['properties'] is! Map)) return null;
+
+  final propertySets = [
+    for (final m in members)
+      ((m['properties'] as Map<String, dynamic>).keys.toSet()),
+  ];
+
+  final result = <_UnionMember>[];
+  for (var i = 0; i < members.length; i++) {
+    final others = <String>{
+      for (var j = 0; j < members.length; j++)
+        if (j != i) ...propertySets[j],
+    };
+    final unique = propertySets[i].difference(others).toList()..sort();
+    if (unique.isEmpty) return null;
+    result.add(_UnionMember(members[i], unique));
+  }
+  return result;
+}
+
+class _UnionMember {
+  _UnionMember(this.schema, this.uniqueProperties);
+  final Map<String, dynamic> schema;
+  final List<String> uniqueProperties;
+
+  /// A single distinguishing field names the variant outright; several share a
+  /// prefix worth using instead — dockerCommand, dockerContext -> Docker.
+  String get label => uniqueProperties.length == 1
+      ? _pascal(uniqueProperties.first)
+      : _pascal(_words(uniqueProperties.first).first);
+}
+
+/// Emits a sealed base plus one class per variant.
+String _emitSealedUnion(String name, List<_UnionMember> members) {
+  final buf = StringBuffer();
+  final nested = StringBuffer();
+
+  buf.writeln('/// One of ${members.length} shapes. Which one is decided by');
+  buf.writeln('/// the fields present — the spec gives no discriminator, but');
+  buf.writeln('/// each variant has fields the others do not.');
+  buf.writeln('sealed class $name {');
+  buf.writeln('  const $name();');
+  buf.writeln();
+  buf.writeln('  factory $name.fromJson(Map<String, Object?> json) {');
+  for (var i = 0; i < members.length - 1; i++) {
+    final m = members[i];
+    final test = m.uniqueProperties
+        .map((p) => "json.containsKey('$p')")
+        .join(' || ');
+    buf.writeln('    if ($test) {');
+    buf.writeln('      return $name${m.label}.fromJson(json);');
+    buf.writeln('    }');
+  }
+  buf.writeln('    return $name${members.last.label}.fromJson(json);');
+  buf.writeln('  }');
+  buf.writeln();
+  buf.writeln('  Map<String, Object?> toJson();');
+  buf.writeln('}');
+  buf.writeln();
+
+  for (final m in members) {
+    nested.write(_emitClass('$name${m.label}', m.schema, extendsName: name));
+  }
+
+  return buf.toString() + nested.toString();
+}
+
 /// Emits a class or enum for [schema], plus any nested types it needs.
 String _emitType(String name, Map<String, dynamic> schema) {
   if (emittedModels.containsKey(name)) return '';
@@ -403,6 +483,10 @@ String _emitType(String name, Map<String, dynamic> schema) {
 
   if (resolved['enum'] is List) {
     return _emitEnum(name, resolved);
+  }
+  final union = _discriminableUnion(resolved);
+  if (union != null) {
+    return _emitSealedUnion(name, union);
   }
   if (resolved['properties'] is Map || resolved['type'] == 'object') {
     return _emitClass(name, resolved);
@@ -447,7 +531,7 @@ String _emitEnum(String name, Map<String, dynamic> schema) {
   return buf.toString();
 }
 
-String _emitClass(String name, Map<String, dynamic> schema) {
+String _emitClass(String name, Map<String, dynamic> schema, {String? extendsName}) {
   final props = (schema['properties'] as Map<String, dynamic>?) ?? const {};
   final required = ((schema['required'] as List?) ?? const []).cast<String>();
 
@@ -489,7 +573,9 @@ String _emitClass(String name, Map<String, dynamic> schema) {
     return nested.toString() + buf.toString();
   }
 
-  buf.writeln('class $name {');
+  buf.writeln(extendsName == null
+      ? 'class $name {'
+      : 'final class $name extends $extendsName {');
   buf.writeln('  const $name({');
   for (final f in fields) {
     buf.writeln('    ${f.nullable ? '' : 'required '}this.${f.dartName},');
@@ -514,7 +600,9 @@ String _emitClass(String name, Map<String, dynamic> schema) {
   buf.writeln();
 
   // toJson — omits nulls so PATCH bodies only carry what was set.
-  buf.writeln('  Map<String, Object?> toJson() => {');
+  buf.writeln(extendsName == null
+      ? '  Map<String, Object?> toJson() => {'
+      : '  @override\n  Map<String, Object?> toJson() => {');
   for (final f in fields) {
     if (f.nullable) {
       buf.writeln("        if (${f.dartName} != null) '${f.wireName}': ${f.encode},");
@@ -654,8 +742,23 @@ _TypeRef _dartType(String owner, String hint, Map<String, dynamic> schema,
   }
 
   if (s['oneOf'] != null || s['anyOf'] != null) {
-    // Only a handful of these, none discriminated. Left as raw JSON rather
-    // than inventing a union type the spec does not actually describe.
+    final refName = _refName(schema);
+    final union = _discriminableUnion(s);
+    if (union != null) {
+      final unionName = refName ?? _className('$owner${_pascal(hint)}');
+      if (!emittedModels.containsKey(unionName)) {
+        emittedModels[unionName] = '';
+        nested.write(_emitSealedUnion(unionName, union));
+      }
+      return _TypeRef(
+        unionName,
+        (a, n) => n
+            ? '$a == null ? null : $unionName.fromJson($a! as Map<String, Object?>)'
+            : '$unionName.fromJson(($a as Map<String, Object?>?) ?? const {})',
+        (v, n) => n ? '$v!.toJson()' : '$v.toJson()',
+      );
+    }
+    // No distinguishing field: raw JSON is the honest type.
     return _TypeRef('Object?', (a, n) => a, (v, n) => v);
   }
 
@@ -899,6 +1002,18 @@ _Body _bodyType(_Op op, Map<String, dynamic> schema) {
   final refName = _refName(schema);
   final resolved = _resolve(schema);
 
+  // A body that is itself a union — PUT env-var takes {value} or
+  // {generateValue}, and nothing else distinguishes them.
+  final union = _discriminableUnion(resolved);
+  if (union != null) {
+    final name = refName ?? '${_className(op.id)}Request';
+    if (!emittedModels.containsKey(name)) {
+      emittedModels[name] = '';
+      extraModels.write(_emitSealedUnion(name, union));
+    }
+    return _Body(name, 'body.toJson()');
+  }
+
   if (refName != null && resolved['properties'] is Map) {
     if (!emittedModels.containsKey(refName)) {
       extraModels.write(_emitType(refName, resolved));
@@ -921,7 +1036,16 @@ _Body _bodyType(_Op op, Map<String, dynamic> schema) {
       extraModels.write(_emitType(name, itemResolved));
       return _Body('List<$name>', 'body.map((e) => e.toJson()).toList()');
     }
-    // Items are a union with no discriminator; raw JSON is the honest type.
+    final union = _discriminableUnion(itemResolved);
+    if (union != null) {
+      final name = itemRef ?? '${_className(op.id)}RequestItem';
+      if (!emittedModels.containsKey(name)) {
+        emittedModels[name] = '';
+        extraModels.write(_emitSealedUnion(name, union));
+      }
+      return _Body('List<$name>', 'body.map((e) => e.toJson()).toList()');
+    }
+    // Items are a union with no distinguishing field; raw JSON is honest.
     return _Body('List<Map<String, Object?>>', 'body');
   }
 

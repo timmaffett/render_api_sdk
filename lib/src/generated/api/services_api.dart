@@ -247,11 +247,11 @@ class ServicesEndpoints {
   /// Update environment variables
   ///
   /// Replace all environment variables for a service with the provided list of environment variables.
-  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<Map<String, Object?>> body}) async {
+  Future<List<EnvVarWithCursor>> updateEnvVarsForService({required String serviceId, required List<UpdateEnvVarsForServiceRequestItem> body}) async {
     final json = await _client.sendList(
       'PUT',
       '/services/$serviceId/env-vars',
-      body: body,
+      body: body.map((e) => e.toJson()).toList(),
     );
     return json.whereType<Map<String, Object?>>().map(EnvVarWithCursor.fromJson).toList();
   }
@@ -276,11 +276,11 @@ class ServicesEndpoints {
   /// Add or update a particular environment variable for a particular service.
   ///
   /// This only applies to environment variables set directly on the service, not to environment variables in a linked environment group.
-  Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required Map<String, Object?> body}) async {
+  Future<EnvVar> updateEnvVar({required String serviceId, required String envVarKey, required AddUpdateEnvVarInput body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/services/$serviceId/env-vars/$envVarKey',
-      body: body,
+      body: body.toJson(),
     );
     return EnvVar.fromJson(json);
   }

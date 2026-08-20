@@ -143,11 +143,11 @@ class EnvGroupsEndpoints {
   /// Add or update environment variable
   ///
   /// Add or update a particular environment variable in a particular environment group.
-  Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body}) async {
+  Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required AddUpdateEnvVarInput body}) async {
     final json = await _client.sendObject(
       'PUT',
       '/env-groups/$envGroupId/env-vars/$envVarKey',
-      body: body,
+      body: body.toJson(),
     );
     return EnvGroup.fromJson(json);
   }

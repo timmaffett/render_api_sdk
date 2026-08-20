@@ -344,7 +344,7 @@ Add or update a particular environment variable in a particular environment grou
 
 
 ```dart
-Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required Map<String, Object?> body})
+Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required String envVarKey, required AddUpdateEnvVarInput body})
 ```
 
 `PUT /env-groups/{envGroupId}/env-vars/{envVarKey}`
@@ -353,7 +353,7 @@ Future<EnvGroup> updateEnvGroupEnvVar({required String envGroupId, required Stri
 | --- | --- | --- | --- | --- |
 | `envGroupId` | `String` | path | yes |  |
 | `envVarKey` | `String` | path | yes |  |
-| `body` | `Map<String, Object?>` | body | yes |  |
+| `body` | `AddUpdateEnvVarInput` | body | yes |  |
 
 Returns `EnvGroup`.
 

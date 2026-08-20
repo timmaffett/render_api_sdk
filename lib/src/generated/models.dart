@@ -33,17 +33,54 @@ enum DeployMode {
 }
 
 
-class AddUpdateEnvVarInput {
-  const AddUpdateEnvVarInput(this.json);
+/// One of 2 shapes. Which one is decided by
+/// the fields present — the spec gives no discriminator, but
+/// each variant has fields the others do not.
+sealed class AddUpdateEnvVarInput {
+  const AddUpdateEnvVarInput();
 
-  factory AddUpdateEnvVarInput.fromJson(Map<String, Object?> json) =>
-      AddUpdateEnvVarInput(json);
+  factory AddUpdateEnvVarInput.fromJson(Map<String, Object?> json) {
+    if (json.containsKey('value')) {
+      return AddUpdateEnvVarInputValue.fromJson(json);
+    }
+    return AddUpdateEnvVarInputGenerateValue.fromJson(json);
+  }
 
-  /// The spec declares no fixed properties for this type, so
-  /// the payload is preserved verbatim.
-  final Map<String, Object?> json;
+  Map<String, Object?> toJson();
+}
 
-  Map<String, Object?> toJson() => json;
+final class AddUpdateEnvVarInputValue extends AddUpdateEnvVarInput {
+  const AddUpdateEnvVarInputValue({
+    required this.value,
+  });
+
+  factory AddUpdateEnvVarInputValue.fromJson(Map<String, Object?> json) => AddUpdateEnvVarInputValue(
+        value: json['value'] as String? ?? '',
+      );
+
+  final String value;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'value': value,
+      };
+}
+
+final class AddUpdateEnvVarInputGenerateValue extends AddUpdateEnvVarInput {
+  const AddUpdateEnvVarInputGenerateValue({
+    required this.generateValue,
+  });
+
+  factory AddUpdateEnvVarInputGenerateValue.fromJson(Map<String, Object?> json) => AddUpdateEnvVarInputGenerateValue(
+        generateValue: json['generateValue'] as bool? ?? false,
+      );
+
+  final bool generateValue;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'generateValue': generateValue,
+      };
 }
 
 
@@ -443,6 +480,140 @@ enum ServiceEnv {
       );
 }
 
+/// One of 2 shapes. Which one is decided by
+/// the fields present — the spec gives no discriminator, but
+/// each variant has fields the others do not.
+sealed class EnvSpecificDetails {
+  const EnvSpecificDetails();
+
+  factory EnvSpecificDetails.fromJson(Map<String, Object?> json) {
+    if (json.containsKey('dockerCommand') || json.containsKey('dockerContext') || json.containsKey('dockerfilePath') || json.containsKey('registryCredential')) {
+      return EnvSpecificDetailsDocker.fromJson(json);
+    }
+    return EnvSpecificDetailsBuild.fromJson(json);
+  }
+
+  Map<String, Object?> toJson();
+}
+
+/// The registry to use this credential with
+/// Decodes unrecognised values to [unknown] rather than
+/// throwing: Render ships new values without warning.
+enum RegistryCredentialRegistry {
+  github('GITHUB'),
+  gitlab('GITLAB'),
+  docker('DOCKER'),
+  googleArtifact('GOOGLE_ARTIFACT'),
+  awsEcr('AWS_ECR'),
+  /// A value this package does not know about.
+  unknown('');
+
+  const RegistryCredentialRegistry(this.wireValue);
+
+  /// The value exactly as Render sends it.
+  final String wireValue;
+
+  static RegistryCredentialRegistry fromWire(Object? value) => values.firstWhere(
+        (e) => e.wireValue == value,
+        orElse: () => unknown,
+      );
+}
+
+class RegistryCredential {
+  const RegistryCredential({
+    required this.id,
+    required this.name,
+    required this.registry,
+    required this.username,
+    required this.updatedAt,
+  });
+
+  factory RegistryCredential.fromJson(Map<String, Object?> json) => RegistryCredential(
+        id: json['id'] as String? ?? '',
+        name: json['name'] as String? ?? '',
+        registry: RegistryCredentialRegistry.fromWire(json['registry']),
+        username: json['username'] as String? ?? '',
+        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+      );
+
+  /// Unique identifier for this credential
+  final String id;
+  /// Descriptive name for this credential
+  final String name;
+  /// The registry to use this credential with
+  final RegistryCredentialRegistry registry;
+  /// The username associated with the credential
+  final String username;
+  /// Last updated time for the credential
+  final DateTime updatedAt;
+
+  Map<String, Object?> toJson() => {
+        'id': id,
+        'name': name,
+        'registry': registry.wireValue,
+        'username': username,
+        'updatedAt': updatedAt.toIso8601String(),
+      };
+}
+
+final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
+  const EnvSpecificDetailsDocker({
+    required this.dockerCommand,
+    required this.dockerContext,
+    required this.dockerfilePath,
+    this.preDeployCommand,
+    this.registryCredential,
+  });
+
+  factory EnvSpecificDetailsDocker.fromJson(Map<String, Object?> json) => EnvSpecificDetailsDocker(
+        dockerCommand: json['dockerCommand'] as String? ?? '',
+        dockerContext: json['dockerContext'] as String? ?? '',
+        dockerfilePath: json['dockerfilePath'] as String? ?? '',
+        preDeployCommand: json['preDeployCommand'] as String?,
+        registryCredential: json['registryCredential'] == null ? null : RegistryCredential.fromJson(json['registryCredential']! as Map<String, Object?>),
+      );
+
+  final String dockerCommand;
+  final String dockerContext;
+  final String dockerfilePath;
+  final String? preDeployCommand;
+  final RegistryCredential? registryCredential;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'dockerCommand': dockerCommand,
+        'dockerContext': dockerContext,
+        'dockerfilePath': dockerfilePath,
+        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+        if (registryCredential != null) 'registryCredential': registryCredential!.toJson(),
+      };
+}
+
+final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
+  const EnvSpecificDetailsBuild({
+    required this.buildCommand,
+    required this.startCommand,
+    this.preDeployCommand,
+  });
+
+  factory EnvSpecificDetailsBuild.fromJson(Map<String, Object?> json) => EnvSpecificDetailsBuild(
+        buildCommand: json['buildCommand'] as String? ?? '',
+        startCommand: json['startCommand'] as String? ?? '',
+        preDeployCommand: json['preDeployCommand'] as String?,
+      );
+
+  final String buildCommand;
+  final String startCommand;
+  final String? preDeployCommand;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'buildCommand': buildCommand,
+        'startCommand': startCommand,
+        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+      };
+}
+
 class Resource {
   const Resource({
     required this.id,
@@ -644,7 +815,7 @@ class BackgroundWorkerDetails {
         autoscaling: json['autoscaling'] == null ? null : BackgroundWorkerDetailsAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
         disk: json['disk'] == null ? null : BackgroundWorkerDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
         numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
         parentServer: json['parentServer'] == null ? null : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
         plan: Plan.fromWire(json['plan']),
@@ -661,7 +832,7 @@ class BackgroundWorkerDetails {
   final BackgroundWorkerDetailsDisk? disk;
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetails envSpecificDetails;
   /// For a *manually* scaled service, this is the number of instances the service is scaled to. DOES NOT indicate the number of running instances for an *autoscaled* service.
   final int numInstances;
   final Resource? parentServer;
@@ -684,7 +855,7 @@ class BackgroundWorkerDetails {
         if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
         if (disk != null) 'disk': disk!.toJson(),
         'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails,
+        'envSpecificDetails': envSpecificDetails.toJson(),
         'numInstances': numInstances,
         if (parentServer != null) 'parentServer': parentServer!.toJson(),
         'plan': plan.wireValue,
@@ -698,6 +869,72 @@ class BackgroundWorkerDetails {
       };
 }
 
+
+/// One of 2 shapes. Which one is decided by
+/// the fields present — the spec gives no discriminator, but
+/// each variant has fields the others do not.
+sealed class EnvSpecificDetailsPatch {
+  const EnvSpecificDetailsPatch();
+
+  factory EnvSpecificDetailsPatch.fromJson(Map<String, Object?> json) {
+    if (json.containsKey('dockerCommand') || json.containsKey('dockerContext') || json.containsKey('dockerfilePath') || json.containsKey('registryCredentialId')) {
+      return EnvSpecificDetailsPatchDocker.fromJson(json);
+    }
+    return EnvSpecificDetailsPatchBuild.fromJson(json);
+  }
+
+  Map<String, Object?> toJson();
+}
+
+final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
+  const EnvSpecificDetailsPatchDocker({
+    this.dockerCommand,
+    this.dockerContext,
+    this.dockerfilePath,
+    this.registryCredentialId,
+  });
+
+  factory EnvSpecificDetailsPatchDocker.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPatchDocker(
+        dockerCommand: json['dockerCommand'] as String?,
+        dockerContext: json['dockerContext'] as String?,
+        dockerfilePath: json['dockerfilePath'] as String?,
+        registryCredentialId: json['registryCredentialId'] as String?,
+      );
+
+  final String? dockerCommand;
+  final String? dockerContext;
+  final String? dockerfilePath;
+  final String? registryCredentialId;
+
+  @override
+  Map<String, Object?> toJson() => {
+        if (dockerCommand != null) 'dockerCommand': dockerCommand,
+        if (dockerContext != null) 'dockerContext': dockerContext,
+        if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
+        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
+      };
+}
+
+final class EnvSpecificDetailsPatchBuild extends EnvSpecificDetailsPatch {
+  const EnvSpecificDetailsPatchBuild({
+    this.buildCommand,
+    this.startCommand,
+  });
+
+  factory EnvSpecificDetailsPatchBuild.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPatchBuild(
+        buildCommand: json['buildCommand'] as String?,
+        startCommand: json['startCommand'] as String?,
+      );
+
+  final String? buildCommand;
+  final String? startCommand;
+
+  @override
+  Map<String, Object?> toJson() => {
+        if (buildCommand != null) 'buildCommand': buildCommand,
+        if (startCommand != null) 'startCommand': startCommand,
+      };
+}
 
 /// Defaults to `starter` when creating a new database.
 /// Decodes unrecognised values to [unknown] rather than
@@ -735,7 +972,7 @@ class BackgroundWorkerDetailsPatch {
   });
 
   factory BackgroundWorkerDetailsPatch.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
         pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
@@ -744,7 +981,7 @@ class BackgroundWorkerDetailsPatch {
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
       );
 
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPatch? envSpecificDetails;
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? preDeployCommand;
@@ -757,7 +994,7 @@ class BackgroundWorkerDetailsPatch {
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (plan != null) 'plan': plan!.wireValue,
         if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
         if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
@@ -885,6 +1122,74 @@ class ServiceDisk {
       };
 }
 
+/// One of 2 shapes. Which one is decided by
+/// the fields present — the spec gives no discriminator, but
+/// each variant has fields the others do not.
+sealed class EnvSpecificDetailsPost {
+  const EnvSpecificDetailsPost();
+
+  factory EnvSpecificDetailsPost.fromJson(Map<String, Object?> json) {
+    if (json.containsKey('dockerCommand') || json.containsKey('dockerContext') || json.containsKey('dockerfilePath') || json.containsKey('registryCredentialId')) {
+      return EnvSpecificDetailsPostDocker.fromJson(json);
+    }
+    return EnvSpecificDetailsPostBuild.fromJson(json);
+  }
+
+  Map<String, Object?> toJson();
+}
+
+final class EnvSpecificDetailsPostDocker extends EnvSpecificDetailsPost {
+  const EnvSpecificDetailsPostDocker({
+    this.dockerCommand,
+    this.dockerContext,
+    this.dockerfilePath,
+    this.registryCredentialId,
+  });
+
+  factory EnvSpecificDetailsPostDocker.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPostDocker(
+        dockerCommand: json['dockerCommand'] as String?,
+        dockerContext: json['dockerContext'] as String?,
+        dockerfilePath: json['dockerfilePath'] as String?,
+        registryCredentialId: json['registryCredentialId'] as String?,
+      );
+
+  final String? dockerCommand;
+  final String? dockerContext;
+  /// Defaults to "./Dockerfile"
+  final String? dockerfilePath;
+  final String? registryCredentialId;
+
+  @override
+  Map<String, Object?> toJson() => {
+        if (dockerCommand != null) 'dockerCommand': dockerCommand,
+        if (dockerContext != null) 'dockerContext': dockerContext,
+        if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
+        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
+      };
+}
+
+/// Fields for native environment (runtime) services
+final class EnvSpecificDetailsPostBuild extends EnvSpecificDetailsPost {
+  const EnvSpecificDetailsPostBuild({
+    required this.buildCommand,
+    required this.startCommand,
+  });
+
+  factory EnvSpecificDetailsPostBuild.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPostBuild(
+        buildCommand: json['buildCommand'] as String? ?? '',
+        startCommand: json['startCommand'] as String? ?? '',
+      );
+
+  final String buildCommand;
+  final String startCommand;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'buildCommand': buildCommand,
+        'startCommand': startCommand,
+      };
+}
+
 class BackgroundWorkerDetailsPost {
   const BackgroundWorkerDetailsPost({
     this.autoscaling,
@@ -906,7 +1211,7 @@ class BackgroundWorkerDetailsPost {
         disk: json['disk'] == null ? null : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPost.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         numInstances: (json['numInstances'] as num?)?.toInt(),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
@@ -922,7 +1227,7 @@ class BackgroundWorkerDetailsPost {
   final ServiceEnv? env;
   /// Runtime
   final ServiceRuntime runtime;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPost? envSpecificDetails;
   /// Defaults to 1
   final int? numInstances;
   /// Defaults to `starter` when creating a new database.
@@ -941,7 +1246,7 @@ class BackgroundWorkerDetailsPost {
         if (disk != null) 'disk': disk!.toJson(),
         if (env != null) 'env': env!.wireValue,
         'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (numInstances != null) 'numInstances': numInstances,
         if (plan != null) 'plan': plan!.wireValue,
         if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
@@ -1138,7 +1443,7 @@ class CronJobDetails {
 
   factory CronJobDetails.fromJson(Map<String, Object?> json) => CronJobDetails(
         env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
         lastSuccessfulRunAt: parseDate(json['lastSuccessfulRunAt']),
         plan: Plan.fromWire(json['plan']),
         region: Region.fromWire(json['region']),
@@ -1149,7 +1454,7 @@ class CronJobDetails {
 
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetails envSpecificDetails;
   final DateTime? lastSuccessfulRunAt;
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan plan;
@@ -1162,7 +1467,7 @@ class CronJobDetails {
 
   Map<String, Object?> toJson() => {
         'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails,
+        'envSpecificDetails': envSpecificDetails.toJson(),
         if (lastSuccessfulRunAt != null) 'lastSuccessfulRunAt': lastSuccessfulRunAt!.toIso8601String(),
         'plan': plan.wireValue,
         'region': region.wireValue,
@@ -1182,13 +1487,13 @@ class CronJobDetailsPatch {
   });
 
   factory CronJobDetailsPatch.fromJson(Map<String, Object?> json) => CronJobDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         plan: PaidPlan.fromWire(json['plan']),
         schedule: json['schedule'] as String?,
         runtime: ServiceRuntime.fromWire(json['runtime']),
       );
 
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPatch? envSpecificDetails;
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? schedule;
@@ -1196,7 +1501,7 @@ class CronJobDetailsPatch {
   final ServiceRuntime? runtime;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (plan != null) 'plan': plan!.wireValue,
         if (schedule != null) 'schedule': schedule,
         if (runtime != null) 'runtime': runtime!.wireValue,
@@ -1217,7 +1522,7 @@ class CronJobDetailsPost {
   factory CronJobDetailsPost.fromJson(Map<String, Object?> json) => CronJobDetailsPost(
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetails.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         plan: PaidPlan.fromWire(json['plan']),
         region: Region.fromWire(json['region']),
         schedule: json['schedule'] as String? ?? '',
@@ -1227,7 +1532,7 @@ class CronJobDetailsPost {
   final ServiceEnv? env;
   /// Runtime
   final ServiceRuntime runtime;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetails? envSpecificDetails;
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   /// Defaults to "oregon"
@@ -1237,7 +1542,7 @@ class CronJobDetailsPost {
   Map<String, Object?> toJson() => {
         if (env != null) 'env': env!.wireValue,
         'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (plan != null) 'plan': plan!.wireValue,
         if (region != null) 'region': region!.wireValue,
         'schedule': schedule,
@@ -1901,66 +2206,6 @@ class DiskWithCursor {
       };
 }
 
-
-/// The registry to use this credential with
-/// Decodes unrecognised values to [unknown] rather than
-/// throwing: Render ships new values without warning.
-enum RegistryCredentialRegistry {
-  github('GITHUB'),
-  gitlab('GITLAB'),
-  docker('DOCKER'),
-  googleArtifact('GOOGLE_ARTIFACT'),
-  awsEcr('AWS_ECR'),
-  /// A value this package does not know about.
-  unknown('');
-
-  const RegistryCredentialRegistry(this.wireValue);
-
-  /// The value exactly as Render sends it.
-  final String wireValue;
-
-  static RegistryCredentialRegistry fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
-}
-
-class RegistryCredential {
-  const RegistryCredential({
-    required this.id,
-    required this.name,
-    required this.registry,
-    required this.username,
-    required this.updatedAt,
-  });
-
-  factory RegistryCredential.fromJson(Map<String, Object?> json) => RegistryCredential(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        registry: RegistryCredentialRegistry.fromWire(json['registry']),
-        username: json['username'] as String? ?? '',
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      );
-
-  /// Unique identifier for this credential
-  final String id;
-  /// Descriptive name for this credential
-  final String name;
-  /// The registry to use this credential with
-  final RegistryCredentialRegistry registry;
-  /// The username associated with the credential
-  final String username;
-  /// Last updated time for the credential
-  final DateTime updatedAt;
-
-  Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'registry': registry.wireValue,
-        'username': username,
-        'updatedAt': updatedAt.toIso8601String(),
-      };
-}
 
 class DockerDetails {
   const DockerDetails({
@@ -4423,7 +4668,7 @@ class PrivateServiceDetails {
         autoscaling: json['autoscaling'] == null ? null : PrivateServiceDetailsAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
         disk: json['disk'] == null ? null : PrivateServiceDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
         numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
         openPorts: ((json['openPorts'] as List<Object?>?) ?? const []).map((e) => ServerPort.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
         parentServer: json['parentServer'] == null ? null : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
@@ -4442,7 +4687,7 @@ class PrivateServiceDetails {
   final PrivateServiceDetailsDisk? disk;
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetails envSpecificDetails;
   /// For a *manually* scaled service, this is the number of instances the service is scaled to. DOES NOT indicate the number of running instances for an *autoscaled* service.
   final int numInstances;
   final List<ServerPort> openPorts;
@@ -4467,7 +4712,7 @@ class PrivateServiceDetails {
         if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
         if (disk != null) 'disk': disk!.toJson(),
         'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails,
+        'envSpecificDetails': envSpecificDetails.toJson(),
         'numInstances': numInstances,
         'openPorts': openPorts.map((e) => e.toJson()).toList(),
         if (parentServer != null) 'parentServer': parentServer!.toJson(),
@@ -4496,7 +4741,7 @@ class PrivateServiceDetailsPatch {
   });
 
   factory PrivateServiceDetailsPatch.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
         pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
@@ -4505,7 +4750,7 @@ class PrivateServiceDetailsPatch {
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
       );
 
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPatch? envSpecificDetails;
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? preDeployCommand;
@@ -4518,7 +4763,7 @@ class PrivateServiceDetailsPatch {
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (plan != null) 'plan': plan!.wireValue,
         if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
         if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
@@ -4642,7 +4887,7 @@ class PrivateServiceDetailsPost {
         disk: json['disk'] == null ? null : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPost.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         numInstances: (json['numInstances'] as num?)?.toInt(),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
@@ -4658,7 +4903,7 @@ class PrivateServiceDetailsPost {
   final ServiceEnv? env;
   /// Runtime
   final ServiceRuntime runtime;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPost? envSpecificDetails;
   /// Defaults to 1
   final int? numInstances;
   /// Defaults to `starter` when creating a new database.
@@ -4677,7 +4922,7 @@ class PrivateServiceDetailsPost {
         if (disk != null) 'disk': disk!.toJson(),
         if (env != null) 'env': env!.wireValue,
         'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (numInstances != null) 'numInstances': numInstances,
         if (plan != null) 'plan': plan!.wireValue,
         if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
@@ -6546,7 +6791,7 @@ class WebServiceDetails {
         cache: json['cache'] == null ? null : Cache.fromJson(json['cache']! as Map<String, Object?>),
         disk: json['disk'] == null ? null : WebServiceDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
         healthCheckPath: json['healthCheckPath'] as String? ?? '',
         ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
         maintenanceMode: json['maintenanceMode'] == null ? null : MaintenanceMode.fromJson(json['maintenanceMode']! as Map<String, Object?>),
@@ -6570,7 +6815,7 @@ class WebServiceDetails {
   final WebServiceDetailsDisk? disk;
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetails envSpecificDetails;
   final String healthCheckPath;
   final List<CidrBlockAndDescription>? ipAllowList;
   final MaintenanceMode? maintenanceMode;
@@ -6601,7 +6846,7 @@ class WebServiceDetails {
         if (cache != null) 'cache': cache!.toJson(),
         if (disk != null) 'disk': disk!.toJson(),
         'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails,
+        'envSpecificDetails': envSpecificDetails.toJson(),
         'healthCheckPath': healthCheckPath,
         if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
         if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
@@ -6639,7 +6884,7 @@ class WebServiceDetailsPatch {
   });
 
   factory WebServiceDetailsPatch.fromJson(Map<String, Object?> json) => WebServiceDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         healthCheckPath: json['healthCheckPath'] as String?,
         maintenanceMode: json['maintenanceMode'] == null ? null : MaintenanceMode.fromJson(json['maintenanceMode']! as Map<String, Object?>),
         plan: Plan.fromWire(json['plan']),
@@ -6653,7 +6898,7 @@ class WebServiceDetailsPatch {
         cache: json['cache'] == null ? null : Cache.fromJson(json['cache']! as Map<String, Object?>),
       );
 
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPatch? envSpecificDetails;
   final String? healthCheckPath;
   final MaintenanceMode? maintenanceMode;
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
@@ -6672,7 +6917,7 @@ class WebServiceDetailsPatch {
   final Cache? cache;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
         if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
         if (plan != null) 'plan': plan!.wireValue,
@@ -6805,7 +7050,7 @@ class WebServiceDetailsPost {
         disk: json['disk'] == null ? null : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'],
+        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPost.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
         healthCheckPath: json['healthCheckPath'] as String?,
         maintenanceMode: json['maintenanceMode'] == null ? null : MaintenanceMode.fromJson(json['maintenanceMode']! as Map<String, Object?>),
         numInstances: (json['numInstances'] as num?)?.toInt(),
@@ -6825,7 +7070,7 @@ class WebServiceDetailsPost {
   final ServiceEnv? env;
   /// Runtime
   final ServiceRuntime runtime;
-  final Object? envSpecificDetails;
+  final EnvSpecificDetailsPost? envSpecificDetails;
   final String? healthCheckPath;
   final MaintenanceMode? maintenanceMode;
   /// Defaults to 1
@@ -6849,7 +7094,7 @@ class WebServiceDetailsPost {
         if (disk != null) 'disk': disk!.toJson(),
         if (env != null) 'env': env!.wireValue,
         'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails,
+        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
         if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
         if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
         if (numInstances != null) 'numInstances': numInstances,
@@ -10431,6 +10676,65 @@ class RollbackDeployRequest {
 
   Map<String, Object?> toJson() => {
         'deployId': deployId,
+      };
+}
+
+/// One of 2 shapes. Which one is decided by
+/// the fields present — the spec gives no discriminator, but
+/// each variant has fields the others do not.
+sealed class UpdateEnvVarsForServiceRequestItem {
+  const UpdateEnvVarsForServiceRequestItem();
+
+  factory UpdateEnvVarsForServiceRequestItem.fromJson(Map<String, Object?> json) {
+    if (json.containsKey('value')) {
+      return UpdateEnvVarsForServiceRequestItemValue.fromJson(json);
+    }
+    return UpdateEnvVarsForServiceRequestItemGenerateValue.fromJson(json);
+  }
+
+  Map<String, Object?> toJson();
+}
+
+final class UpdateEnvVarsForServiceRequestItemValue extends UpdateEnvVarsForServiceRequestItem {
+  const UpdateEnvVarsForServiceRequestItemValue({
+    required this.key,
+    required this.value,
+  });
+
+  factory UpdateEnvVarsForServiceRequestItemValue.fromJson(Map<String, Object?> json) => UpdateEnvVarsForServiceRequestItemValue(
+        key: json['key'] as String? ?? '',
+        value: json['value'] as String? ?? '',
+      );
+
+  final String key;
+  final String value;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'key': key,
+        'value': value,
+      };
+}
+
+final class UpdateEnvVarsForServiceRequestItemGenerateValue extends UpdateEnvVarsForServiceRequestItem {
+  const UpdateEnvVarsForServiceRequestItemGenerateValue({
+    required this.key,
+    required this.generateValue,
+  });
+
+  factory UpdateEnvVarsForServiceRequestItemGenerateValue.fromJson(Map<String, Object?> json) => UpdateEnvVarsForServiceRequestItemGenerateValue(
+        key: json['key'] as String? ?? '',
+        generateValue: json['generateValue'] as bool? ?? false,
+      );
+
+  final String key;
+  /// If true, Render generates a strong random value for this environment variable on creation. Cannot be combined with `value`.
+  final bool generateValue;
+
+  @override
+  Map<String, Object?> toJson() => {
+        'key': key,
+        'generateValue': generateValue,
       };
 }
 
