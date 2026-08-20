@@ -1,5 +1,7 @@
 name: render_api
-description: A typed Dart client for the Render REST API, covering workflows, tasks, and task runs.
+description: >-
+  Unofficial Dart client for the Render REST API, covering workflows, tasks and
+  task runs. Not affiliated with or endorsed by Render.
 version: 0.1.0
 repository: https://github.com/timmaffett/render_api_sdk
 issue_tracker: https://github.com/timmaffett/render_api_sdk/issues

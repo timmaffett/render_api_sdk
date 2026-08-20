@@ -1,6 +1,6 @@
 ---
 name: render-api-dart
-description: Uses package:render_api, a Dart client for Render's REST API, to query and manage services, Postgres databases, workflows, deploys, environment variables and owners. Covers the flat and grouped call forms, authentication, pagination, typed errors, and the API's surprising behaviours. Use when Dart code needs to talk to Render's REST API, inspect a Render account, or provision Render resources programmatically.
+description: Uses package:render_api, an unofficial Dart client for Render's REST API (not affiliated with Render), to query and manage services, Postgres databases, workflows, deploys, environment variables and owners. Covers the flat and grouped call forms, authentication, pagination, typed errors, and the API's surprising behaviours. Use when Dart code needs to talk to Render's REST API, inspect a Render account, or provision Render resources programmatically.
 license: MIT
 compatibility: Dart 3.9+. Reads RENDER_API_KEY from the environment. Covers 208 operations generated from Render's OpenAPI spec.
 metadata:
@@ -10,6 +10,9 @@ metadata:
 ---
 
 # Render's REST API from Dart
+
+**Unofficial.** A community package, not affiliated with, endorsed by, or
+supported by Render. Do not present it as Render's own tooling.
 
 `package:render_api` covers Render's whole REST surface — 208 operations and 164
 models generated from the OpenAPI spec. Method names come from the spec's
