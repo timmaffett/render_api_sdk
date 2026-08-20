@@ -202,14 +202,16 @@ class MetricSeries {
     List<Object?>? values,
     String? unit,
   ) {
-    // Labels are {field, value} pairs; the interesting one is whatever
-    // distinguishes this series from its siblings.
+    // Labels are {field, value} pairs. Render commonly repeats the same
+    // resource id across several fields — service, resource and instance all
+    // carry it — so joining them raw gives "srv-abc · srv-abc · srv-abc".
+    // Deduplicating leaves the part that actually distinguishes one series
+    // from its siblings, which for a multi-instance service is the instance.
     final label = labels == null || labels.isEmpty
         ? 'value'
-        : labels
-              .map((l) => (l as dynamic).value?.toString() ?? '')
-              .where((v) => v.isNotEmpty)
-              .join(' · ');
+        : {
+            for (final l in labels) (l as dynamic).value?.toString() ?? '',
+          }.where((v) => v.isNotEmpty).join(' · ');
 
     return MetricSeries(
       label: label.isEmpty ? 'value' : label,
