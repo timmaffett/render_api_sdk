@@ -10,7 +10,6 @@ Documentation and packaging; no API changes.
   things costing pub.dev points; the score is now 160/160.
 - `tool/generate.dart` runs `dart format` as its last step, so regenerating
   cannot undo the formatting.
-
 - The README now points at the two companion packages:
   [`render_workflows`](https://pub.dev/packages/render_workflows) for running
   tasks, and [`render-dart`](https://www.npmjs.com/package/render-dart) on npm
