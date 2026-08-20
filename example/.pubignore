@@ -1,0 +1,6 @@
+# Kept in git so `flutter run` works straight from a clone, but excluded from
+# the published archive: they are ~800 kB of generated scaffolding that says
+# nothing about how to use render_api, and `flutter create .` regenerates them.
+ios/
+macos/
+android/

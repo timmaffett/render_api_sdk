@@ -1,0 +1,42 @@
+name: render_dashboard
+description: >-
+  A read-only Flutter dashboard for a Render account, built on package:render_api.
+  The example for that package.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # The package this example exists to demonstrate. A path dependency, so the
+  # app always exercises the checkout it sits in rather than a published
+  # version that may be older.
+  render_api:
+    path: ../
+
+  # The look. AurisTheme is driven entirely by three values, which is what
+  # makes a live settings page worth having.
+  auris: ^0.2.0
+
+  # The API token, in the keychain rather than in a preferences file.
+  flutter_secure_storage: ^11.0.0
+
+  # Theme settings, which are not secret.
+  shared_preferences: ^2.5.5
+
+  # The metrics pages. Sparklines are painted by hand — see
+  # lib/src/widgets/sparkline.dart — but axes, tooltips and stacked bars are
+  # not worth reimplementing.
+  fl_chart: ^1.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
