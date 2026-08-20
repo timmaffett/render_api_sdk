@@ -8,6 +8,12 @@
 > Render's own SDKs and documentation are at
 > [render.com/docs](https://render.com/docs).
 
+<a href="https://render.com"><img src="https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logomark.svg" alt="Render" height="20" /></a>&nbsp;&nbsp;Built for **[Render](https://render.com)**.
+
+<sub>The Render name and logo are trademarks of Render Services, Inc. The mark
+is reproduced unaltered from Render's brand kit, referentially, to identify the
+service these packages work with — not to suggest any endorsement.</sub>
+
 A typed Dart client for the [Render](https://render.com) REST API, covering the
 workflows surface: workflow services, versions, task definitions and task runs.
 
