@@ -155,15 +155,27 @@ await render.raw.services.listHeaders(serviceId: 'srv-x', limit: 20);
 Query parameters are typed from the spec rather than passed as strings, so
 `limit` is an `int` and repeated filters are a `List<String>`.
 
-## Running workflow tasks
+## Running workflow tasks, and writing them in Dart
 
 Starting and watching task runs lives in
-[`package:render_workflows`](https://github.com/timmaffett/render_workflows_sdk),
-which depends on this package for its transport. Render splits the same way:
+[`package:render_workflows`](https://pub.dev/packages/render_workflows), which
+depends on this package for its transport. Render splits the same way:
 `@renderinc/sdk` runs tasks, `@api/render-api` covers REST.
 
 Workflow *services* — creating them, deploying versions, listing task
 definitions — are REST, and generated here.
+
+The task bodies can be Dart as well, with
+[**`render-dart`**](https://www.npmjs.com/package/render-dart) (npm). Render's
+own SDK covers TypeScript and Python only; `render-dart` compiles Dart task
+bodies to JavaScript and registers them through it, and compiles anything
+needing `dart:io`, `dart:ffi` or isolates to a native executable.
+
+| | |
+| --- | --- |
+| [`render-dart`](https://www.npmjs.com/package/render-dart) (npm) | **Writing** tasks in Dart |
+| [`render_workflows`](https://pub.dev/packages/render_workflows) | **Running** them |
+| `render_api` (this) | Managing the services |
 
 ## Per-method reference
 
