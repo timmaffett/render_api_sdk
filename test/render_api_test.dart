@@ -101,6 +101,29 @@ void main() {
       );
     });
 
+    test('400 on a metric explains the plan gate', () async {
+      // Verified live: HTTP request and latency metrics answer 400 on the free
+      // plan, which Render calls "Hobby" in the message. Nothing in the status
+      // code says the request was fine and the plan was not.
+      final api = apiWith(
+        (_) async => http.Response(
+          '{"message":"query is not allowed for plan: Hobby"}',
+          400,
+        ),
+      );
+
+      await expectLater(
+        api.getHttpLatency(resource: 'srv-abc', quantile: 0.99),
+        throwsA(
+          isA<RenderClientException>().having(
+            (e) => e.hint,
+            'hint',
+            contains('instance plan'),
+          ),
+        ),
+      );
+    });
+
     test('404 is typed', () async {
       final api = apiWith((_) async => http.Response('', 404));
 

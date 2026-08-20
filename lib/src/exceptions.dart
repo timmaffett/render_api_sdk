@@ -160,7 +160,12 @@ RenderApiException exceptionFor({
   String? body,
   Duration? retryAfter,
 }) {
-  final hint = hintFor(statusCode: statusCode, method: method, path: path);
+  final hint = hintFor(
+    statusCode: statusCode,
+    method: method,
+    path: path,
+    body: body,
+  );
   final detail = (body == null || body.isEmpty)
       ? 'Render returned no detail.'
       : body;
@@ -224,6 +229,7 @@ String? hintFor({
   required int statusCode,
   required String method,
   required String path,
+  String? body,
 }) {
   final creatingWorkflow = method == 'POST' && path.startsWith('/workflows');
 
@@ -249,6 +255,15 @@ String? hintFor({
   if (statusCode == 404 && path.startsWith('/workflows')) {
     return 'Workflows are workspace-scoped. Confirm the API key belongs to the '
         'workspace that owns this resource.';
+  }
+
+  if (statusCode == 400 &&
+      body != null &&
+      body.contains('not allowed for plan')) {
+    return 'This metric is gated by the resource\'s instance plan — Render '
+        'names the plan in the message, and calls the free tier "Hobby". HTTP '
+        'request and latency metrics are the ones that bite; CPU, memory and '
+        'bandwidth are returned on every plan.';
   }
 
   if (statusCode == 401 || statusCode == 403) {

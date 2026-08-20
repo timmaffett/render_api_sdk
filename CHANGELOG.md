@@ -1,3 +1,15 @@
+## 0.1.4
+
+- **A 400 on a metric now says why.** HTTP request and latency metrics are gated
+  by the resource's instance plan: on the free tier Render answers
+  `400 {"message":"query is not allowed for plan: Hobby"}`, which reads like a
+  malformed request and is not. CPU, memory and bandwidth are returned on every
+  plan. Found against a live free service, not inferred from the spec — the
+  parameter is optional there and nothing marks the endpoint as paid-only.
+- `hintFor` now receives the response body, so a hint can key on what Render
+  actually said rather than on the status code alone. Internal; no public API
+  change.
+
 ## 0.1.3
 
 - The `RenderApi()` example said `// reads RENDER_API_KEY` without saying from
