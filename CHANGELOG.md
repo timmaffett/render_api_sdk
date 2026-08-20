@@ -9,6 +9,16 @@
 - `hintFor` now receives the response body, so a hint can key on what Render
   actually said rather than on the status code alone. Internal; no public API
   change.
+- **The library doc comment still described the package 0.1.0 was.** It opened
+  with "Covers the workflows surface", showed
+  `render.taskRuns.run('my-workflow/sumSquares', …)` — a facade removed before
+  0.1.0 shipped, so the snippet did not compile — and `raw` pointed at
+  `[workflows]`, `[tasks]` and `[taskRuns]` as though they existed. 0.1.1 fixed
+  exactly this in the README and 0.1.2 fixed the description; the library
+  comment pub.dev renders on the API page was missed both times.
+
+  It now says what the package covers, and both snippets compile. Verified the
+  way the last one should have been: by compiling them.
 
 ## 0.1.3
 

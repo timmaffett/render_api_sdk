@@ -1,14 +1,29 @@
 /// A typed Dart client for the Render REST API.
 ///
-/// Covers the workflows surface — workflow services, versions, task
-/// definitions and task runs — over `https://api.render.com/v1`.
+/// The whole API over `https://api.render.com/v1` — services, Postgres, key
+/// value stores, cron jobs, disks, environment groups, projects, metrics,
+/// logs, notifications and workflows: 208 operations across 26 resource
+/// groups, generated from Render's OpenAPI specification.
 ///
 /// ```dart
-/// final render = RenderApi();   // token from the RENDER_API_KEY env var
-/// final run = await render.taskRuns.run('my-workflow/sumSquares', [[2, 3, 4]]);
-/// print(run.result);                     // 29
+/// final render = RenderApi(); // token from the RENDER_API_KEY env var
+/// for (final entry in await render.listServices(limit: 20)) {
+///   print('${entry.service.name}  ${entry.service.type.wireValue}');
+/// }
 /// render.close();
 /// ```
+///
+/// Every operation has two spellings. The flat form above mirrors Render's own
+/// Node examples; the grouped form says where it came from, and the two are
+/// the same call:
+///
+/// ```dart
+/// await render.raw.services.listServices(limit: 20);
+/// ```
+///
+/// To *run* workflow tasks rather than administer them, see
+/// [`package:render_workflows`](https://pub.dev/packages/render_workflows),
+/// which adds run polling, SSE streaming and a typed result.
 library;
 
 import 'package:http/http.dart' as http;
@@ -65,12 +80,11 @@ class RenderApi {
   /// model yet.
   final RenderApiClient client;
 
-  /// Every endpoint in the Render API, generated from the spec — services,
-  /// databases, deploys, metrics, environments and the rest.
+  /// Every endpoint in the Render API, grouped by resource.
   ///
-  /// Complete but literal. Where a hand-written facade exists above
-  /// ([workflows], [tasks], [taskRuns]), prefer it: those add pagination as a
-  /// `Stream`, local validation, and errors that explain themselves.
+  /// The same operations the flat form exposes, reached by the group they
+  /// belong to — useful when reading unfamiliar code, since the group names
+  /// the part of Render being touched.
   ///
   /// ```dart
   /// final services = await render.raw.services.listServices();
