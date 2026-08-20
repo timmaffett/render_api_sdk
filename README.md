@@ -1,5 +1,8 @@
 # render_api
 
+> **Unofficial.** An independent project, not affiliated with, endorsed by, or
+> supported by [Render](https://render.com).
+
 A typed Dart client for the [Render](https://render.com) REST API, covering the
 workflows surface: workflow services, versions, task definitions and task runs.
 
