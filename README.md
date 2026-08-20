@@ -10,10 +10,7 @@
 
 [![Render](https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logo.png)](https://render.com)
 
-<sub>The Render name and logo are trademarks of Render Services, Inc.
-The mark itself is unmodified, shown on white with the clear space
-Render's brand kit specifies, referentially — to identify the service
-these packages work with, not to suggest any endorsement.</sub>
+[\*note](#note)
 
 A typed Dart client for the [Render](https://render.com) REST API, covering the
 workflows surface: workflow services, versions, task definitions and task runs.
@@ -234,3 +231,10 @@ The spec is vendored at `tool/render-openapi.json` with a checksum beside it.
 Render notes that the spec is unversioned and names may change, so regenerate
 deliberately: `test/parity_test.dart` fails if the generated surface stops
 matching the spec's operation set.
+
+## Note
+
+\* The Render name and logo are trademarks of Render Services, Inc. The mark
+itself is unmodified, shown on white with the clear space Render's brand kit
+specifies, referentially — to identify the service these packages work with,
+not to suggest any endorsement.
