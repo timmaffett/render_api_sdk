@@ -2,7 +2,7 @@ name: render_api
 description: >-
   Unofficial Dart client for the whole Render REST API: services, Postgres,
   cron jobs, disks, env groups, metrics and more. 208 typed operations.
-version: 0.1.2
+version: 0.1.3
 
 repository: https://github.com/timmaffett/render_api_sdk
 issue_tracker: https://github.com/timmaffett/render_api_sdk/issues
