@@ -19,6 +19,14 @@
 
   It now says what the package covers, and both snippets compile. Verified the
   way the last one should have been: by compiling them.
+- **`example/` is now a Flutter app** — a read-only dashboard over the workspace
+  hierarchy, services, databases, workflows and metrics. The three command-line
+  scripts moved to `dart_examples/` unchanged; if you referenced
+  `example/raw_smoke.dart`, it is `dart_examples/raw_smoke.dart` now.
+
+  Documents three things every caller meets: the `<Thing>WithCursor` wrappers,
+  the hints on typed errors, and that `State`, `Route` and `Image` collide with
+  Flutter's own names and have to be hidden on import.
 
 ## 0.1.3
 

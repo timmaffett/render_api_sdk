@@ -57,7 +57,28 @@ new regions and statuses without warning, and Workflows is beta. Do not
 "tighten" this into a throw.
 
 **List endpoints return `<Thing>WithCursor`,** not the thing. Reach through
-`.workflow`, `.postgres` and so on.
+`.workflow`, `.postgres` and so on. Some of those inner types are named
+`<Wrapper><Field>` — `WorkflowWithCursorWorkflow`, `TaskRunWithCursorTaskRun`,
+`ServiceEventWithCursorEvent` — because Render declares them inline in the list
+response instead of as named schemas. Ugly, and faithful. Do not rename them.
+
+**Metrics are gated by plan, and only one of them says so.** On a free instance
+`getHttpLatency` answers `400 {"message":"query is not allowed for plan:
+Hobby"}` — there is a hint for it — while `getHttpRequests` answers `200` with
+zero series, so an empty chart means "not on this plan" rather than "no
+traffic". `getCpu`, `getMemory` and `getBandwidth` work everywhere. Nothing in
+the spec marks any of this. `render_probes/bin/service_metrics.dart` asks.
+
+**Three schema names collide with Flutter:** `State`, `Route` and `Image`.
+Importing this package and `package:flutter/material.dart` unprefixed is an
+`ambiguous_import` error. The fix is on the consumer's side — hide them once in
+a re-export, as `example/lib/src/data/api.dart` does — not a rename here, which
+would break the spec correspondence above.
+
+**Verify a doc snippet by compiling it.** The README shipped a non-compiling
+example in 0.1.0 and the library doc comment shipped a different one through
+0.1.3, both referring to a facade removed before release. Reading them found
+neither.
 
 ## Before writing a query
 
