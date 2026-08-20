@@ -24,7 +24,7 @@ for one, and Render's own documentation carries over.
 ```dart
 import 'package:render_api/render_api.dart';
 
-final render = RenderApi();                  // reads RENDER_API_KEY
+final render = RenderApi();      // token from the RENDER_API_KEY env var
 try {
   final workflows = await render.listWorkflows(limit: 20);
   for (final entry in workflows) {

@@ -24,7 +24,7 @@ Works on Dart and Flutter, including Web. Depends only on `package:http`.
 ## Usage
 
 ```dart
-final render = RenderApi();               // reads RENDER_API_KEY
+final render = RenderApi();      // token from the RENDER_API_KEY env var
 
 // Flat form — spelled the way Render's own documentation spells it.
 for (final entry in await render.listWorkflows(limit: 10)) {

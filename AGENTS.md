@@ -25,7 +25,7 @@ better breaks that correspondence — do not.
 ## Using it
 
 ```dart
-final render = RenderApi();               // reads RENDER_API_KEY
+final render = RenderApi();      // token from the RENDER_API_KEY env var
 final workflows = await render.listWorkflows(limit: 20);
 render.close();                           // always
 ```

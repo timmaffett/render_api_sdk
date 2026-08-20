@@ -4,7 +4,7 @@
 /// definitions and task runs — over `https://api.render.com/v1`.
 ///
 /// ```dart
-/// final render = RenderApi();            // reads RENDER_API_KEY
+/// final render = RenderApi();   // token from the RENDER_API_KEY env var
 /// final run = await render.taskRuns.run('my-workflow/sumSquares', [[2, 3, 4]]);
 /// print(run.result);                     // 29
 /// render.close();
