@@ -1,0 +1,243 @@
+import 'package:render_api/render_api.dart';
+
+/// One [RenderApi] for the whole app, plus a loader per view.
+///
+/// Two things about the package shape are worth seeing here, because every
+/// caller meets them:
+///
+/// * **List endpoints return `<Thing>WithCursor`**, not `<Thing>` — the cursor
+///   rides along for pagination. These loaders unwrap to the thing, since the
+///   dashboard's page sizes are well under one page.
+/// * **Errors are typed.** [RenderAuthException] means the token is wrong or
+///   revoked and the app should sign out; [RenderApiException] may carry a
+///   [RenderApiException.hint], which is worth showing verbatim — Render
+///   answers 500 for cases that are not server faults, and 400 for metrics
+///   that a plan simply does not include.
+class RenderClient {
+  RenderClient(String token) : _api = RenderApi(token: token);
+
+  /// Wraps an API built elsewhere.
+  ///
+  /// `RenderApi.fromClient` takes any `http.Client`, which is how the widget
+  /// tests drive these pages against canned responses without a token or a
+  /// network — see `test/dashboard_test.dart`.
+  RenderClient.fromApi(this._api);
+
+  final RenderApi _api;
+
+  void close() => _api.close();
+
+  // --- The hierarchy: workspace -> project -> environment -> resource -------
+
+  Future<List<Owner>> owners() async {
+    final page = await _api.listOwners(limit: 50);
+    return [
+      for (final entry in page)
+        if (entry.owner != null) entry.owner!,
+    ];
+  }
+
+  Future<List<Project>> projects({String? ownerId}) async {
+    final page = await _api.listProjects(
+      ownerId: ownerId == null ? null : [ownerId],
+      limit: 50,
+    );
+    return [for (final entry in page) entry.project];
+  }
+
+  Future<List<Environment>> environments(String projectId) async {
+    final page = await _api.listEnvironments(projectId: [projectId], limit: 50);
+    return [for (final entry in page) entry.environment];
+  }
+
+  // --- Services ------------------------------------------------------------
+
+  /// Every service in the workspace.
+  ///
+  /// Note this does **not** include workflow services: `GET /services` and
+  /// `GET /workflows` are disjoint sets, which looks like a missing service
+  /// until you know it. See [workflows].
+  Future<List<Service>> services({String? environmentId}) async {
+    final page = await _api.listServices(
+      environmentId: environmentId == null ? null : [environmentId],
+      limit: 100,
+    );
+    return [for (final entry in page) entry.service];
+  }
+
+  Future<Service> service(String id) => _api.retrieveService(serviceId: id);
+
+  Future<List<Deploy>> deploys(String serviceId) async {
+    final page = await _api.listDeploys(serviceId: serviceId, limit: 20);
+    return [
+      for (final entry in page)
+        if (entry.deploy != null) entry.deploy!,
+    ];
+  }
+
+  Future<List<ServiceEventWithCursorEvent>> events(String serviceId) async {
+    final page = await _api.listEvents(serviceId: serviceId, limit: 30);
+    return [for (final entry in page) entry.event];
+  }
+
+  Future<List<EnvVar>> envVars(String serviceId) async {
+    final page = await _api.getEnvVarsForService(
+      serviceId: serviceId,
+      limit: 50,
+    );
+    return [for (final entry in page) entry.envVar];
+  }
+
+  // --- Databases -----------------------------------------------------------
+
+  Future<List<Postgres>> postgres() async {
+    final page = await _api.listPostgres(limit: 50);
+    return [for (final entry in page) entry.postgres];
+  }
+
+  Future<List<KeyValue>> keyValue() async {
+    final page = await _api.listKeyValue(limit: 50);
+    return [for (final entry in page) entry.keyValue];
+  }
+
+  // --- Workflows -----------------------------------------------------------
+  //
+  // The item types here are named <Wrapper><Field> — WorkflowWithCursorWorkflow
+  // and friends — because Render's spec declares them inline inside the list
+  // response rather than as named schemas, and the generator takes its names
+  // from the spec. Ugly, and faithful: renaming them would break the one
+  // property this package promises, that every name matches the spec.
+
+  Future<List<WorkflowWithCursorWorkflow>> workflows() async {
+    final page = await _api.listWorkflows(limit: 50);
+    return [for (final entry in page) entry.workflow];
+  }
+
+  Future<List<TaskWithCursorTask>> tasks(String workflowId) async {
+    final page = await _api.listTasks(workflowId: [workflowId], limit: 100);
+    return [for (final entry in page) entry.task];
+  }
+
+  Future<List<TaskRunWithCursorTaskRun>> taskRuns({
+    String? workflowId,
+    int limit = 100,
+  }) async {
+    final page = await _api.listTaskRuns(
+      workflowId: workflowId == null ? null : [workflowId],
+      limit: limit,
+    );
+    return [for (final entry in page) entry.taskRun];
+  }
+
+  // --- Metrics -------------------------------------------------------------
+
+  /// A metric, reduced to what a chart needs.
+  ///
+  /// Every metrics operation returns the same shape by a different name, so
+  /// the pages take [MetricSeries] and do not care which call produced it.
+  Future<List<MetricSeries>> cpu(
+    String resourceId, {
+    Duration window = _day,
+  }) async {
+    final raw = await _api.getCpu(
+      resource: resourceId,
+      startTime: _since(window),
+    );
+    return [for (final s in raw) MetricSeries.from(s.labels, s.values, s.unit)];
+  }
+
+  Future<List<MetricSeries>> memory(
+    String resourceId, {
+    Duration window = _day,
+  }) async {
+    final raw = await _api.getMemory(
+      resource: resourceId,
+      startTime: _since(window),
+    );
+    return [for (final s in raw) MetricSeries.from(s.labels, s.values, s.unit)];
+  }
+
+  Future<List<MetricSeries>> bandwidth(
+    String resourceId, {
+    Duration window = _day,
+  }) async {
+    final raw = await _api.getBandwidth(
+      resource: resourceId,
+      startTime: _since(window),
+    );
+    return [for (final s in raw) MetricSeries.from(s.labels, s.values, s.unit)];
+  }
+
+  /// HTTP request counts — **empty on the free plan**.
+  ///
+  /// Render returns 200 with no series rather than an error, so an empty chart
+  /// here means "your plan does not include this", not "no traffic". Its
+  /// sibling `getHttpLatency` is more honest and answers 400.
+  Future<List<MetricSeries>> httpRequests(
+    String resourceId, {
+    Duration window = _day,
+  }) async {
+    final raw = await _api.getHttpRequests(
+      resource: resourceId,
+      startTime: _since(window),
+    );
+    return [for (final s in raw) MetricSeries.from(s.labels, s.values, s.unit)];
+  }
+
+  static const _day = Duration(hours: 24);
+
+  static String _since(Duration window) =>
+      DateTime.now().toUtc().subtract(window).toIso8601String();
+}
+
+/// One line on a chart.
+class MetricSeries {
+  const MetricSeries({required this.label, required this.points, this.unit});
+
+  factory MetricSeries.from(
+    List<Object?>? labels,
+    List<Object?>? values,
+    String? unit,
+  ) {
+    // Labels are {field, value} pairs; the interesting one is whatever
+    // distinguishes this series from its siblings.
+    final label = labels == null || labels.isEmpty
+        ? 'value'
+        : labels
+              .map((l) => (l as dynamic).value?.toString() ?? '')
+              .where((v) => v.isNotEmpty)
+              .join(' · ');
+
+    return MetricSeries(
+      label: label.isEmpty ? 'value' : label,
+      unit: unit,
+      points: [
+        for (final v in values ?? const [])
+          if ((v as dynamic).timestamp != null)
+            MetricPoint(
+              (v as dynamic).timestamp as DateTime,
+              ((v as dynamic).value as num?)?.toDouble() ?? 0,
+            ),
+      ],
+    );
+  }
+
+  final String label;
+  final String? unit;
+  final List<MetricPoint> points;
+
+  bool get isEmpty => points.isEmpty;
+
+  double get max => points.isEmpty
+      ? 0
+      : points.map((p) => p.value).reduce((a, b) => a > b ? a : b);
+
+  double get latest => points.isEmpty ? 0 : points.last.value;
+}
+
+class MetricPoint {
+  const MetricPoint(this.at, this.value);
+
+  final DateTime at;
+  final double value;
+}

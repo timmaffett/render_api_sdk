@@ -43,7 +43,7 @@ List endpoints return a `<Thing>WithCursor`, so reach through it —
 On the web there is no environment, so pass the token explicitly:
 `RenderApi(token: ...)`.
 
-A runnable version is in [`example/example.dart`](example/example.dart).
+A runnable version is in [`dart_examples/example.dart`](dart_examples/example.dart).
 
 ## Typed responses
 
@@ -156,11 +156,25 @@ poll.
 ## Testing
 
 ```bash
-dart test                            # 22 tests, offline, no credentials
-dart run example/example.dart        # live, needs RENDER_API_KEY
-dart run example/raw_smoke.dart      # live, both call forms
-dart run example/flat_smoke.dart     # live, mirrors Render's Node examples
+dart test                                  # 23 tests, offline, no credentials
+dart run dart_examples/example.dart        # live, needs RENDER_API_KEY
+dart run dart_examples/raw_smoke.dart      # live, both call forms
+dart run dart_examples/flat_smoke.dart     # live, mirrors Render's Node examples
 ```
+
+## Examples
+
+Two directories, because they answer different questions.
+
+| | |
+| --- | --- |
+| [`dart_examples/`](dart_examples/) | Three short scripts. The shortest thing that works, and both call forms side by side |
+| [`example/`](example/) | A Flutter app that recreates part of the Render dashboard — the workspace hierarchy, services, databases, workflows and metrics charts, read-only |
+
+The Flutter app is the one that shows the *shape* of this package: how list
+endpoints wrap their results, which errors carry a hint worth showing, and the
+three schema names that collide with Flutter's own. It is macOS, iOS and
+Android — Render's API sends no CORS headers, so there is no useful web build.
 
 ## Coverage
 

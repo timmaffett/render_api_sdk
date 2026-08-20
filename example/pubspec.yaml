@@ -38,5 +38,9 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
 
+  # MockClient, for driving the pages against canned responses. render_api
+  # takes any http.Client, so the tests need no token and no network.
+  http: ^1.2.0
+
 flutter:
   uses-material-design: true

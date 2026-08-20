@@ -1,122 +1,150 @@
+// A read-only Flutter dashboard for a Render account, and the example for
+// package:render_api.
+//
+//   flutter run -d macos
+//
+// There is no web build. Render's API sends no CORS headers, so a browser
+// blocks every response — see README.md. Desktop and mobile are unaffected.
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'src/auth/sign_in_page.dart';
+import 'src/auth/token_store.dart';
+import 'src/data/render_client.dart';
+import 'src/pages/databases_page.dart';
+import 'src/pages/services_page.dart';
+import 'src/pages/workflows_page.dart';
+import 'src/pages/workspace_page.dart';
+import 'src/theme/settings_page.dart';
+import 'src/theme/theme_settings.dart';
+import 'src/widgets/responsive_scaffold.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+  final tokens = TokenStore(const FlutterSecureStorage())..load();
+
+  runApp(RenderDashboardApp(settings: ThemeSettings(prefs), tokens: tokens));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class RenderDashboardApp extends StatelessWidget {
+  const RenderDashboardApp({
+    super.key,
+    required this.settings,
+    required this.tokens,
+  });
 
-  // This widget is the root of your application.
+  final ThemeSettings settings;
+  final TokenStore tokens;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    // Two listenables, no state-management package: the theme rebuilds the
+    // MaterialApp, the token decides which screen is under it.
+    return ListenableBuilder(
+      listenable: settings,
+      builder: (context, _) => MaterialApp(
+        title: 'Render Dashboard',
+        debugShowCheckedModeBanner: false,
+        theme: settings.theme,
+        home: ListenableBuilder(
+          listenable: tokens,
+          builder: (context, _) {
+            if (!tokens.loaded) {
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
+            }
+            final token = tokens.token;
+            if (token == null) {
+              return SignInPage(onSubmit: tokens.signIn);
+            }
+            return _Home(
+              // Keyed on the token so signing in with a different one builds a
+              // fresh RenderClient rather than reusing the old HTTP client.
+              key: ValueKey(token),
+              token: token,
+              settings: settings,
+              onSignOut: tokens.signOut,
+            );
+          },
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class _Home extends StatefulWidget {
+  const _Home({
+    super.key,
+    required this.token,
+    required this.settings,
+    required this.onSignOut,
+  });
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  final String token;
+  final ThemeSettings settings;
+  final Future<void> Function() onSignOut;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<_Home> createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _HomeState extends State<_Home> {
+  late final RenderClient _client = RenderClient(widget.token);
+  int _index = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  @override
+  void dispose() {
+    // RenderApi owns an HTTP client, so it has to be released.
+    _client.close();
+    super.dispose();
   }
+
+  void _signOut() => widget.onSignOut();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    final destinations = [
+      Destination(
+        label: 'Workspace',
+        icon: Icons.account_tree_outlined,
+        builder: (context) =>
+            WorkspacePage(client: _client, onUnauthorized: _signOut),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+      Destination(
+        label: 'Services',
+        icon: Icons.dns_outlined,
+        builder: (context) =>
+            ServicesPage(client: _client, onUnauthorized: _signOut),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      Destination(
+        label: 'Databases',
+        icon: Icons.storage_outlined,
+        builder: (context) =>
+            DatabasesPage(client: _client, onUnauthorized: _signOut),
       ),
+      Destination(
+        label: 'Workflows',
+        icon: Icons.bolt_outlined,
+        builder: (context) =>
+            WorkflowsPage(client: _client, onUnauthorized: _signOut),
+      ),
+      Destination(
+        label: 'Settings',
+        icon: Icons.tune_outlined,
+        builder: (context) =>
+            SettingsPage(settings: widget.settings, onSignOut: _signOut),
+      ),
+    ];
+
+    return ResponsiveScaffold(
+      title: 'Render',
+      destinations: destinations,
+      selectedIndex: _index,
+      onSelect: (index) => setState(() => _index = index),
     );
   }
 }

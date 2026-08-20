@@ -5,3 +5,9 @@ build/
 .DS_Store
 *.log
 .env
+
+# Flutter example build output.
+example/build/
+example/.flutter-plugins-dependencies
+example/macos/Flutter/ephemeral/
+example/ios/Flutter/ephemeral/
