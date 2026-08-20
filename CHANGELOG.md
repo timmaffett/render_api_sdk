@@ -1,3 +1,13 @@
+## 0.1.1
+
+Documentation only; no code changes.
+
+- The README now points at the two companion packages:
+  [`render_workflows`](https://pub.dev/packages/render_workflows) for running
+  tasks, and [`render-dart`](https://www.npmjs.com/package/render-dart) on npm
+  for writing the task bodies in Dart. pub.dev serves the README from the
+  published archive, so this needed a release to become visible.
+
 ## 0.1.0
 
 Initial release.
