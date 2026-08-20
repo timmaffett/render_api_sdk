@@ -1,6 +1,6 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
-import '../data/api.dart';
+import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
@@ -18,7 +18,7 @@ class ServiceDetailPage extends StatelessWidget {
   });
 
   final RenderClient client;
-  final Service service;
+  final render.Service service;
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +55,11 @@ class _Deploys extends StatelessWidget {
   const _Deploys({required this.client, required this.service});
 
   final RenderClient client;
-  final Service service;
+  final render.Service service;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<Deploy>>(
+    return AsyncView<List<render.Deploy>>(
       future: client.deploys(service.id),
       emptyMessage: 'No deploys yet.',
       builder: (context, deploys) => ListView.builder(
@@ -93,11 +93,11 @@ class _Events extends StatelessWidget {
   const _Events({required this.client, required this.service});
 
   final RenderClient client;
-  final Service service;
+  final render.Service service;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<ServiceEventWithCursorEvent>>(
+    return AsyncView<List<render.ServiceEventWithCursorEvent>>(
       future: client.events(service.id),
       emptyMessage: 'No events.',
       builder: (context, events) => ListView.builder(
@@ -116,11 +116,11 @@ class _EnvVars extends StatelessWidget {
   const _EnvVars({required this.client, required this.service});
 
   final RenderClient client;
-  final Service service;
+  final render.Service service;
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<EnvVar>>(
+    return AsyncView<List<render.EnvVar>>(
       future: client.envVars(service.id),
       emptyMessage: 'No environment variables set on this service.',
       builder: (context, vars) => ListView.builder(
@@ -140,7 +140,7 @@ class _Metrics extends StatelessWidget {
   const _Metrics({required this.client, required this.service});
 
   final RenderClient client;
-  final Service service;
+  final render.Service service;
 
   @override
   Widget build(BuildContext context) {

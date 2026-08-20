@@ -1,7 +1,7 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:render_api/render_api.dart' as render;
 
-import '../data/api.dart';
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
 
@@ -19,7 +19,7 @@ class WorkspacePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<Owner>>(
+    return AsyncView<List<render.Owner>>(
       future: client.owners(),
       onUnauthorized: onUnauthorized,
       emptyMessage: 'No workspaces for this token.',
@@ -56,7 +56,7 @@ class _Projects extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<Project>>(
+    return AsyncView<List<render.Project>>(
       future: client.projects(ownerId: ownerId),
       emptyMessage: 'No projects — services can live outside one.',
       builder: (context, projects) => Column(
@@ -81,7 +81,7 @@ class _Environments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<Environment>>(
+    return AsyncView<List<render.Environment>>(
       future: client.environments(projectId),
       emptyMessage: 'No environments.',
       builder: (context, environments) => Column(

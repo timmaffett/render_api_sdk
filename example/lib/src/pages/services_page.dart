@@ -1,6 +1,6 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
-import '../data/api.dart';
+import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
@@ -26,7 +26,7 @@ class ServicesPage extends StatefulWidget {
 }
 
 class _ServicesPageState extends State<ServicesPage> {
-  late Future<List<Service>> _future = widget.client.services();
+  late Future<List<render.Service>> _future = widget.client.services();
 
   void _reload() => setState(() => _future = widget.client.services());
 
@@ -34,7 +34,7 @@ class _ServicesPageState extends State<ServicesPage> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async => _reload(),
-      child: AsyncView<List<Service>>(
+      child: AsyncView<List<render.Service>>(
         future: _future,
         onUnauthorized: widget.onUnauthorized,
         emptyMessage:
@@ -55,7 +55,7 @@ class _ServicesPageState extends State<ServicesPage> {
 class _ServiceCard extends StatelessWidget {
   const _ServiceCard({required this.service, required this.client});
 
-  final Service service;
+  final render.Service service;
   final RenderClient client;
 
   @override

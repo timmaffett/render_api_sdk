@@ -41,11 +41,25 @@ plan does not include. `RenderApiException.hint` explains those, and
 `lib/src/widgets/async_view.dart` shows it verbatim rather than paraphrasing.
 `RenderAuthException` is handled separately — it signs the app out.
 
-**Three names collide with Flutter.** The spec has schemas called `State`,
-`Route` and `Image`, and the generator takes its names from the spec — that
-correspondence is the package's whole promise, so it cannot rename them.
-`lib/src/data/api.dart` re-exports the package with those three hidden, once,
-for everything else to import.
+**Three names collide with Flutter**, and the fix is a prefix. The spec has
+schemas called `State`, `Route` and `Image`; the generator takes its names from
+the spec, and that correspondence is the package's whole promise, so it cannot
+rename them. Every file here that mixes the two imports it as:
+
+```dart
+import 'package:render_api/render_api.dart' as render;
+```
+
+and spells the types `render.Service`, `render.Deploy`, `render.State`. It
+costs six characters, it never needs revisiting when Render adds a schema, and
+in a file full of widgets it says which types came from the API — which is
+worth having on its own.
+
+`hide State, Route, Image` also compiles, and is the wrong habit: those three
+become unreachable rather than qualified, and the list has to be maintained.
+`lib/src/data/render_client.dart` imports the package unprefixed because it
+pulls in no Flutter, so nothing collides there — the prefix is for files where
+both are in scope.
 
 ## No web build
 

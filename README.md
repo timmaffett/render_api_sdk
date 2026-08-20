@@ -176,6 +176,29 @@ endpoints wrap their results, which errors carry a hint worth showing, and the
 three schema names that collide with Flutter's own. It is macOS, iOS and
 Android — Render's API sends no CORS headers, so there is no useful web build.
 
+### Using it with Flutter
+
+Render's spec has schemas called `State`, `Route` and `Image`, and this package
+takes its names from the spec. Flutter defines all three. Naming one while
+`package:flutter/material.dart` is in scope is an `ambiguous_import` error — the
+import itself is fine until then.
+
+Import with a prefix:
+
+```dart
+import 'package:render_api/render_api.dart' as render;
+
+final api = render.RenderApi(token: token);
+for (final entry in await api.listServices(limit: 20)) {
+  final render.Service service = entry.service;
+  print(service.name);
+}
+```
+
+`hide State, Route, Image` compiles too, but it makes those three unreachable
+rather than qualified, and the list has to grow every time Render adds a
+colliding schema. A prefix costs six characters and never needs revisiting.
+
 ## Coverage
 
 All 208 operations across 26 resource groups, generated from the vendored

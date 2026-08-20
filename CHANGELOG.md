@@ -26,7 +26,12 @@
 
   Documents three things every caller meets: the `<Thing>WithCursor` wrappers,
   the hints on typed errors, and that `State`, `Route` and `Image` collide with
-  Flutter's own names and have to be hidden on import.
+  Flutter's own names.
+- **The README now says how to use this package from Flutter.** Import it with
+  a prefix — `as render`, then `render.Service` — rather than hiding the
+  colliding names: a prefix never needs revisiting when Render adds a schema,
+  and it keeps `render.State` reachable instead of throwing it away. The
+  snippet compiles; it was checked by compiling it.
 
 ## 0.1.3
 

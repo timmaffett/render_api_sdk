@@ -1,12 +1,12 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:render_api/render_api.dart' as render;
 
-import '../data/api.dart';
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
 import '../widgets/sparkline.dart';
 
-/// Postgres and key value stores.
+/// render.Postgres and key value stores.
 ///
 /// Worth a page of its own because databases are where metrics actually work
 /// on a free workspace: `getCpu` against a `dpg-` id returns real points, while
@@ -19,10 +19,10 @@ class DatabasesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<Postgres>>(
+    return AsyncView<List<render.Postgres>>(
       future: client.postgres(),
       onUnauthorized: onUnauthorized,
-      emptyMessage: 'No Postgres instances.',
+      emptyMessage: 'No render.Postgres instances.',
       builder: (context, databases) => ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: databases.length,

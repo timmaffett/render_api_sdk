@@ -1,8 +1,8 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:render_api/render_api.dart' as render;
 
-import '../data/api.dart';
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
 
@@ -23,7 +23,7 @@ class WorkflowsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<WorkflowWithCursorWorkflow>>(
+    return AsyncView<List<render.WorkflowWithCursorWorkflow>>(
       future: client.workflows(),
       onUnauthorized: onUnauthorized,
       emptyMessage: 'No workflow services.',
@@ -67,7 +67,7 @@ class _RunOutcomes extends StatelessWidget {
     final theme = Theme.of(context);
     final scheme = theme.extension<AurisScheme>()!;
 
-    return AsyncView<List<TaskRunWithCursorTaskRun>>(
+    return AsyncView<List<render.TaskRunWithCursorTaskRun>>(
       future: client.taskRuns(workflowId: workflowId),
       emptyMessage: 'No runs yet.',
       builder: (context, runs) {

@@ -1,6 +1,6 @@
 import 'package:auris/auris.dart';
 import 'package:flutter/material.dart';
-import 'package:render_api/render_api.dart';
+import 'package:render_api/render_api.dart' as render;
 
 /// The one place loading, error and empty states are rendered.
 ///
@@ -44,7 +44,7 @@ class AsyncView<T> extends StatelessWidget {
 
         final error = snapshot.error;
         if (error != null) {
-          if (error is RenderAuthException) {
+          if (error is render.RenderAuthException) {
             // Fires after this frame: signing out rebuilds the tree, and doing
             // that during a build is an error.
             final callback = onUnauthorized;
@@ -76,8 +76,8 @@ class _ErrorPanel extends StatelessWidget {
     final text = Theme.of(context).textTheme;
 
     final (message, hint) = switch (error) {
-      RenderApiException e => (e.message, e.hint),
-      RenderException e => (e.message, e.hint),
+      render.RenderApiException e => (e.message, e.hint),
+      render.RenderException e => (e.message, e.hint),
       _ => (error.toString(), null),
     };
 

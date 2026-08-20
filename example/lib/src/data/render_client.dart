@@ -1,3 +1,6 @@
+// Unprefixed here, and prefixed everywhere Flutter is also in scope. This
+// file imports no Flutter, so nothing collides; see the note on `api` in the
+// README for why the pages spell it `render.Service` instead.
 import 'package:render_api/render_api.dart';
 
 /// One [RenderApi] for the whole app, plus a loader per view.

@@ -70,10 +70,28 @@ traffic". `getCpu`, `getMemory` and `getBandwidth` work everywhere. Nothing in
 the spec marks any of this. `render_probes/bin/service_metrics.dart` asks.
 
 **Three schema names collide with Flutter:** `State`, `Route` and `Image`.
-Importing this package and `package:flutter/material.dart` unprefixed is an
-`ambiguous_import` error. The fix is on the consumer's side — hide them once in
-a re-export, as `example/lib/src/data/api.dart` does — not a rename here, which
-would break the spec correspondence above.
+*Naming* one while `package:flutter/material.dart` is also in scope is an
+`ambiguous_import` error — the import itself is fine until then.
+
+The fix is on the consumer's side, not a rename here, which would break the
+spec correspondence above. **Prefer a prefixed import:**
+
+```dart
+import 'package:render_api/render_api.dart' as render;
+
+final List<render.Service> services = …;
+if (run.state == render.State.success) { … }
+```
+
+It costs six characters, it never has to be revisited when Render adds a
+schema, and in mixed Flutter code it says which types came from the API. That
+is what `example/` does throughout.
+
+`hide State, Route, Image` also compiles, but it is worse in two ways: those
+three names become unreachable rather than qualified, and the list is a
+maintenance liability — a new colliding schema breaks the build somewhere else
+entirely. Reach for `hide` only in a narrow file where you know you want
+Flutter's meaning of every shared name.
 
 **Verify a doc snippet by compiling it.** The README shipped a non-compiling
 example in 0.1.0 and the library doc comment shipped a different one through
