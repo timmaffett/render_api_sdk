@@ -38,32 +38,32 @@ import 'api/workflowversions_api.dart';
 /// validation, and errors that explain themselves.
 class RenderEndpoints {
   RenderEndpoints(RenderApiClient client)
-      : blueprints = BlueprintsEndpoints(client),
-        cronJobs = CronJobsEndpoints(client),
-        dedicatedIps = DedicatedIpsEndpoints(client),
-        disks = DisksEndpoints(client),
-        envGroups = EnvGroupsEndpoints(client),
-        environments = EnvironmentsEndpoints(client),
-        events = EventsEndpoints(client),
-        keyValue = KeyValueEndpoints(client),
-        logs = LogsEndpoints(client),
-        maintenance = MaintenanceEndpoints(client),
-        metrics = MetricsEndpoints(client),
-        metricsStream = MetricsStreamEndpoints(client),
-        notificationSettings = NotificationSettingsEndpoints(client),
-        organizations = OrganizationsEndpoints(client),
-        owners = OwnersEndpoints(client),
-        postgres = PostgresEndpoints(client),
-        projects = ProjectsEndpoints(client),
-        redis = RedisEndpoints(client),
-        registrycredentials = RegistrycredentialsEndpoints(client),
-        services = ServicesEndpoints(client),
-        taskRuns = TaskRunsEndpoints(client),
-        tasks = TasksEndpoints(client),
-        users = UsersEndpoints(client),
-        webhooks = WebhooksEndpoints(client),
-        workflows = WorkflowsEndpoints(client),
-        workflowversions = WorkflowversionsEndpoints(client);
+    : blueprints = BlueprintsEndpoints(client),
+      cronJobs = CronJobsEndpoints(client),
+      dedicatedIps = DedicatedIpsEndpoints(client),
+      disks = DisksEndpoints(client),
+      envGroups = EnvGroupsEndpoints(client),
+      environments = EnvironmentsEndpoints(client),
+      events = EventsEndpoints(client),
+      keyValue = KeyValueEndpoints(client),
+      logs = LogsEndpoints(client),
+      maintenance = MaintenanceEndpoints(client),
+      metrics = MetricsEndpoints(client),
+      metricsStream = MetricsStreamEndpoints(client),
+      notificationSettings = NotificationSettingsEndpoints(client),
+      organizations = OrganizationsEndpoints(client),
+      owners = OwnersEndpoints(client),
+      postgres = PostgresEndpoints(client),
+      projects = ProjectsEndpoints(client),
+      redis = RedisEndpoints(client),
+      registrycredentials = RegistrycredentialsEndpoints(client),
+      services = ServicesEndpoints(client),
+      taskRuns = TaskRunsEndpoints(client),
+      tasks = TasksEndpoints(client),
+      users = UsersEndpoints(client),
+      webhooks = WebhooksEndpoints(client),
+      workflows = WorkflowsEndpoints(client),
+      workflowversions = WorkflowversionsEndpoints(client);
 
   /// `/blueprints` endpoints.
   final BlueprintsEndpoints blueprints;
@@ -142,5 +142,4 @@ class RenderEndpoints {
 
   /// `/workflowversions` endpoints.
   final WorkflowversionsEndpoints workflowversions;
-
 }

@@ -39,14 +39,14 @@ class RenderApi {
     int maxRetries = 3,
     Duration timeout = const Duration(seconds: 30),
   }) : this.fromClient(
-          RenderApiClient(
-            token: token,
-            baseUrl: baseUrl,
-            httpClient: httpClient,
-            maxRetries: maxRetries,
-            timeout: timeout,
-          ),
-        );
+         RenderApiClient(
+           token: token,
+           baseUrl: baseUrl,
+           httpClient: httpClient,
+           maxRetries: maxRetries,
+           timeout: timeout,
+         ),
+       );
 
   /// Wraps an existing [RenderApiClient] — useful for tests, or for pointing
   /// at a different transport.

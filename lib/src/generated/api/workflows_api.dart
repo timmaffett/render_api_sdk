@@ -26,7 +26,14 @@ class WorkflowsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<WorkflowWithCursor>> listWorkflows({List<String>? name, List<String>? ownerId, List<String>? workflowId, List<String>? environmentId, String? cursor, int? limit}) async {
+  Future<List<WorkflowWithCursor>> listWorkflows({
+    List<String>? name,
+    List<String>? ownerId,
+    List<String>? workflowId,
+    List<String>? environmentId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/workflows',
@@ -39,14 +46,18 @@ class WorkflowsEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(WorkflowWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(WorkflowWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create a workflow
   ///
   /// Create a new workflow service with the specified configuration.
-  Future<CreateWorkflowResponse> createWorkflow({required CreateWorkflowRequest body}) async {
+  Future<CreateWorkflowResponse> createWorkflow({
+    required CreateWorkflowRequest body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/workflows',
@@ -55,23 +66,21 @@ class WorkflowsEndpoints {
     return CreateWorkflowResponse.fromJson(json);
   }
 
-
   /// Retrieve workflow
   ///
   /// Retrieve the workflow service with the provided ID.
   Future<GetWorkflowResponse> getWorkflow({required String workflowId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/workflows/$workflowId',
-    );
+    final json = await _client.sendObject('GET', '/workflows/$workflowId');
     return GetWorkflowResponse.fromJson(json);
   }
-
 
   /// Update workflow
   ///
   /// Update the workflow service with the provided ID.
-  Future<UpdateWorkflowResponse> updateWorkflow({required String workflowId, required UpdateWorkflowRequest body}) async {
+  Future<UpdateWorkflowResponse> updateWorkflow({
+    required String workflowId,
+    required UpdateWorkflowRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/workflows/$workflowId',
@@ -80,16 +89,10 @@ class WorkflowsEndpoints {
     return UpdateWorkflowResponse.fromJson(json);
   }
 
-
   /// Delete workflow
   ///
   /// Delete the workflow service with the provided ID.
   Future<void> deleteWorkflow({required String workflowId}) async {
-    await _client.send(
-      'DELETE',
-      '/workflows/$workflowId',
-    );
+    await _client.send('DELETE', '/workflows/$workflowId');
   }
-
-
 }

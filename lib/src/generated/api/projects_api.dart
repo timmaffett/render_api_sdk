@@ -30,7 +30,16 @@ class ProjectsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<ProjectWithCursor>> listProjects({List<String>? name, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, String? cursor, int? limit}) async {
+  Future<List<ProjectWithCursor>> listProjects({
+    List<String>? name,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? ownerId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/projects',
@@ -45,9 +54,11 @@ class ProjectsEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(ProjectWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(ProjectWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create project
   ///
@@ -61,25 +72,23 @@ class ProjectsEndpoints {
     return Project.fromJson(json);
   }
 
-
   /// Retrieve Project
   ///
   /// Retrieve the project with the provided ID.
   Future<Project> retrieveProject({required String projectId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/projects/$projectId',
-    );
+    final json = await _client.sendObject('GET', '/projects/$projectId');
     return Project.fromJson(json);
   }
-
 
   /// Update project
   ///
   /// Update the details of a project.
   ///
   /// To update the details of a particular _environment_ in the project, instead use the [Update environment](https://api-docs.render.com/reference/update-environment) endpoint.
-  Future<Project> updateProject({required String projectId, required ProjectPatchinput body}) async {
+  Future<Project> updateProject({
+    required String projectId,
+    required ProjectPatchinput body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/projects/$projectId',
@@ -87,7 +96,6 @@ class ProjectsEndpoints {
     );
     return Project.fromJson(json);
   }
-
 
   /// Delete project
   ///
@@ -99,11 +107,6 @@ class ProjectsEndpoints {
   /// - First move or delete all contained services and other resources.
   /// - Delete the project in the [Render Dashboard](https://dashboard.render.com).
   Future<void> deleteProject({required String projectId}) async {
-    await _client.send(
-      'DELETE',
-      '/projects/$projectId',
-    );
+    await _client.send('DELETE', '/projects/$projectId');
   }
-
-
 }

@@ -8,7 +8,12 @@
 > Render's own SDKs and documentation are at
 > [render.com/docs](https://render.com/docs).
 
-<a href="https://render.com"><img src="https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logomark.svg" alt="Render" height="20" /></a>&nbsp;&nbsp;Built for **[Render](https://render.com)**.
+<a href="https://render.com">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logo-dark.png">
+    <img src="https://raw.githubusercontent.com/timmaffett/render_api_sdk/main/doc/render-logo.png" alt="Render" height="144">
+  </picture>
+</a>
 
 <sub>The Render name and logo are trademarks of Render Services, Inc. The mark
 is reproduced unaltered from Render's brand kit, referentially, to identify the
@@ -24,17 +29,24 @@ Works on Dart and Flutter, including Web. Depends only on `package:http`.
 ```dart
 final render = RenderApi();               // reads RENDER_API_KEY
 
-final run = await render.taskRuns.run(
-  'my-workflow/sumSquares',
-  [[2, 3, 4]],
-);
-print(run.result);                        // 29
+// Flat form — spelled the way Render's own documentation spells it.
+for (final entry in await render.listWorkflows(limit: 10)) {
+  print('${entry.workflow.name}  ${entry.workflow.id}');
+}
+
+// Grouped form — the same call, organised by resource.
+final owners = await render.raw.owners.listOwners(limit: 5);
 
 render.close();
 ```
 
+List endpoints return a `<Thing>WithCursor`, so reach through it —
+`entry.workflow`, `entry.postgres`, `entry.service`.
+
 On the web there is no environment, so pass the token explicitly:
 `RenderApi(token: ...)`.
+
+A runnable version is in [`example/example.dart`](example/example.dart).
 
 ## Typed responses
 
@@ -103,29 +115,54 @@ may still have taken effect, and retrying it could create duplicates.
 
 ## Pagination
 
-List endpoints return a `Stream`, and walk cursors for you:
+List endpoints take a `cursor` and a `limit`, and each result carries the
+cursor for the next page:
 
 ```dart
-await for (final w in render.workflows.list()) { ... }
-
-final recent = await render.taskRuns.list(max: 50).toList();
+String? cursor;
+do {
+  final page = await render.listTaskRuns(limit: 50, cursor: cursor);
+  for (final entry in page) {
+    print(entry.taskRun.id);
+  }
+  cursor = page.isEmpty ? null : page.last.cursor;
+} while (cursor != null && cursor.isNotEmpty);
 ```
 
-Use the `*Page` variants if you want to hold cursors yourself.
+`package:render_workflows` wraps this for task runs, if that is what you are
+paging.
 
-## Watching runs
+## Running task runs
 
-`waitFor` and `run` poll, and work on every platform including Flutter Web.
+`createTask` starts one — Render's `operationId` for `POST /task-runs` is
+`createTask`, though the operation is "run task":
 
-`events` streams server-sent events instead, but **will not work on Flutter Web
-with the default HTTP client** — `package:http`'s `BrowserClient` buffers whole
-responses. Inject a streaming client (`package:fetch_client`) there, or poll.
+```dart
+final started = await render.createTask(
+  body: CreateTaskRequest(task: 'my-workflow/sumSquares', input: [[2, 3, 4]]),
+);
+final run = await render.getTaskRun(taskRunId: started.id);
+```
+
+Poll a run's **own** `status` to know when it is finished — a run has attempts,
+and an attempt reaches a terminal state before the run does. Both `completed`
+and `succeeded` are terminal.
+
+[`package:render_workflows`](https://pub.dev/packages/render_workflows) has
+`waitFor`, which does this properly; prefer it over hand-rolling the loop.
+
+`streamTaskRunsEvents` uses server-sent events, which **will not work on Flutter
+Web with the default HTTP client** — `package:http`'s `BrowserClient` buffers
+whole responses. Inject a streaming client (`package:fetch_client`) there, or
+poll.
 
 ## Testing
 
 ```bash
-dart test                          # offline, no credentials needed
-dart run example/smoke.dart        # live, needs RENDER_API_KEY
+dart test                            # 22 tests, offline, no credentials
+dart run example/example.dart        # live, needs RENDER_API_KEY
+dart run example/raw_smoke.dart      # live, both call forms
+dart run example/flat_smoke.dart     # live, mirrors Render's Node examples
 ```
 
 ## Coverage

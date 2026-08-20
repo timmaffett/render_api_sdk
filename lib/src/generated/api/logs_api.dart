@@ -53,7 +53,25 @@ class LogsEndpoints {
   /// [path] Filter request logs by their path. [Wildcards and regex](https://render.com/docs/logging#wildcards-and-regular-expressions) are supported.
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<ListLogsResponse> listLogs({required String ownerId, String? startTime, String? endTime, String? direction, required List<String> resource, List<String>? instance, List<String>? host, List<String>? statusCode, List<String>? method, List<String>? task, List<String>? taskRun, List<String>? sandbox, List<String>? level, List<String>? type, List<String>? text, List<String>? path, int? limit}) async {
+  Future<ListLogsResponse> listLogs({
+    required String ownerId,
+    String? startTime,
+    String? endTime,
+    String? direction,
+    required List<String> resource,
+    List<String>? instance,
+    List<String>? host,
+    List<String>? statusCode,
+    List<String>? method,
+    List<String>? task,
+    List<String>? taskRun,
+    List<String>? sandbox,
+    List<String>? level,
+    List<String>? type,
+    List<String>? text,
+    List<String>? path,
+    int? limit,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/logs',
@@ -79,7 +97,6 @@ class LogsEndpoints {
     );
     return ListLogsResponse.fromJson(json);
   }
-
 
   /// Subscribe to new logs
   ///
@@ -121,7 +138,25 @@ class LogsEndpoints {
   /// [path] Filter request logs by their path. [Wildcards and regex](https://render.com/docs/logging#wildcards-and-regular-expressions) are supported.
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<void> subscribeLogs({required String ownerId, String? startTime, String? endTime, String? direction, required List<String> resource, List<String>? instance, List<String>? host, List<String>? statusCode, List<String>? method, List<String>? task, List<String>? taskRun, List<String>? sandbox, List<String>? level, List<String>? type, List<String>? text, List<String>? path, int? limit}) async {
+  Future<void> subscribeLogs({
+    required String ownerId,
+    String? startTime,
+    String? endTime,
+    String? direction,
+    required List<String> resource,
+    List<String>? instance,
+    List<String>? host,
+    List<String>? statusCode,
+    List<String>? method,
+    List<String>? task,
+    List<String>? taskRun,
+    List<String>? sandbox,
+    List<String>? level,
+    List<String>? type,
+    List<String>? text,
+    List<String>? path,
+    int? limit,
+  }) async {
     await _client.send(
       'GET',
       '/logs/subscribe',
@@ -146,7 +181,6 @@ class LogsEndpoints {
       },
     );
   }
-
 
   /// List log label values
   ///
@@ -188,7 +222,26 @@ class LogsEndpoints {
   /// [path] Filter request logs by their path. [Wildcards and regex](https://render.com/docs/logging#wildcards-and-regular-expressions) are supported.
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<Object?>> listLogsValues({required String ownerId, required String label, String? startTime, String? endTime, String? direction, required List<String> resource, List<String>? instance, List<String>? host, List<String>? statusCode, List<String>? method, List<String>? task, List<String>? taskRun, List<String>? sandbox, List<String>? level, List<String>? type, List<String>? text, List<String>? path, int? limit}) async {
+  Future<List<Object?>> listLogsValues({
+    required String ownerId,
+    required String label,
+    String? startTime,
+    String? endTime,
+    String? direction,
+    required List<String> resource,
+    List<String>? instance,
+    List<String>? host,
+    List<String>? statusCode,
+    List<String>? method,
+    List<String>? task,
+    List<String>? taskRun,
+    List<String>? sandbox,
+    List<String>? level,
+    List<String>? type,
+    List<String>? text,
+    List<String>? path,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/logs/values',
@@ -216,11 +269,12 @@ class LogsEndpoints {
     return json;
   }
 
-
   /// Retrieve log stream
   ///
   /// Returns log stream information for the specified workspace.
-  Future<GetOwnerLogStreamResponse> getOwnerLogStream({required String ownerId}) async {
+  Future<GetOwnerLogStreamResponse> getOwnerLogStream({
+    required String ownerId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/logs/streams/owner/$ownerId',
@@ -228,11 +282,13 @@ class LogsEndpoints {
     return GetOwnerLogStreamResponse.fromJson(json);
   }
 
-
   /// Update log stream
   ///
   /// Updates log stream information for the specified workspace. All logs for resources owned by this workspace will be sent to this log stream unless overridden by individual resources.
-  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({required String ownerId, required UpdateOwnerLogStreamRequest body}) async {
+  Future<UpdateOwnerLogStreamResponse> updateOwnerLogStream({
+    required String ownerId,
+    required UpdateOwnerLogStreamRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PUT',
       '/logs/streams/owner/$ownerId',
@@ -241,17 +297,12 @@ class LogsEndpoints {
     return UpdateOwnerLogStreamResponse.fromJson(json);
   }
 
-
   /// Delete log stream
   ///
   /// Removes the log stream for the specified workspace.
   Future<void> deleteOwnerLogStream({required String ownerId}) async {
-    await _client.send(
-      'DELETE',
-      '/logs/streams/owner/$ownerId',
-    );
+    await _client.send('DELETE', '/logs/streams/owner/$ownerId');
   }
-
 
   /// List log stream overrides
   ///
@@ -268,7 +319,14 @@ class LogsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<ListResourceLogStreamsResponse>> listResourceLogStreams({List<String>? ownerId, List<String>? logStreamId, List<String>? resourceId, List<String>? setting, String? cursor, int? limit}) async {
+  Future<List<ListResourceLogStreamsResponse>> listResourceLogStreams({
+    List<String>? ownerId,
+    List<String>? logStreamId,
+    List<String>? resourceId,
+    List<String>? setting,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/logs/streams/resource',
@@ -281,14 +339,18 @@ class LogsEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(ListResourceLogStreamsResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(ListResourceLogStreamsResponse.fromJson)
+        .toList();
   }
-
 
   /// Retrieve log stream override
   ///
   /// Returns log stream override information for the specified resource. A log stream override takes precedence over a workspace's default log stream.
-  Future<GetResourceLogStreamResponse> getResourceLogStream({required String resourceId}) async {
+  Future<GetResourceLogStreamResponse> getResourceLogStream({
+    required String resourceId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/logs/streams/resource/$resourceId',
@@ -296,11 +358,13 @@ class LogsEndpoints {
     return GetResourceLogStreamResponse.fromJson(json);
   }
 
-
   /// Update log stream override
   ///
   /// Updates log stream override information for the specified resource. A log stream override takes precedence over a workspace's default log stream.
-  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({required String resourceId, required UpdateResourceLogStreamRequest body}) async {
+  Future<UpdateResourceLogStreamResponse> updateResourceLogStream({
+    required String resourceId,
+    required UpdateResourceLogStreamRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PUT',
       '/logs/streams/resource/$resourceId',
@@ -309,16 +373,10 @@ class LogsEndpoints {
     return UpdateResourceLogStreamResponse.fromJson(json);
   }
 
-
   /// Delete log stream override
   ///
   /// Removes the log stream override for the specified resource. After deletion, the resource will use the workspace's default log stream setting.
   Future<void> deleteResourceLogStream({required String resourceId}) async {
-    await _client.send(
-      'DELETE',
-      '/logs/streams/resource/$resourceId',
-    );
+    await _client.send('DELETE', '/logs/streams/resource/$resourceId');
   }
-
-
 }

@@ -18,6 +18,7 @@ import 'dart:core';
 enum DeployMode {
   deployOnly('deploy_only'),
   buildAndDeploy('build_and_deploy'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -26,12 +27,9 @@ enum DeployMode {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DeployMode fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static DeployMode fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
-
 
 /// One of 2 shapes. Which one is decided by
 /// the fields present — the spec gives no discriminator, but
@@ -50,39 +48,31 @@ sealed class AddUpdateEnvVarInput {
 }
 
 final class AddUpdateEnvVarInputValue extends AddUpdateEnvVarInput {
-  const AddUpdateEnvVarInputValue({
-    required this.value,
-  });
+  const AddUpdateEnvVarInputValue({required this.value});
 
-  factory AddUpdateEnvVarInputValue.fromJson(Map<String, Object?> json) => AddUpdateEnvVarInputValue(
-        value: json['value'] as String? ?? '',
-      );
+  factory AddUpdateEnvVarInputValue.fromJson(Map<String, Object?> json) =>
+      AddUpdateEnvVarInputValue(value: json['value'] as String? ?? '');
 
   final String value;
 
   @override
-  Map<String, Object?> toJson() => {
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'value': value};
 }
 
 final class AddUpdateEnvVarInputGenerateValue extends AddUpdateEnvVarInput {
-  const AddUpdateEnvVarInputGenerateValue({
-    required this.generateValue,
-  });
+  const AddUpdateEnvVarInputGenerateValue({required this.generateValue});
 
-  factory AddUpdateEnvVarInputGenerateValue.fromJson(Map<String, Object?> json) => AddUpdateEnvVarInputGenerateValue(
-        generateValue: json['generateValue'] as bool? ?? false,
-      );
+  factory AddUpdateEnvVarInputGenerateValue.fromJson(
+    Map<String, Object?> json,
+  ) => AddUpdateEnvVarInputGenerateValue(
+    generateValue: json['generateValue'] as bool? ?? false,
+  );
 
   final bool generateValue;
 
   @override
-  Map<String, Object?> toJson() => {
-        'generateValue': generateValue,
-      };
+  Map<String, Object?> toJson() => {'generateValue': generateValue};
 }
-
 
 /// The type of event that occurred
 /// Decodes unrecognised values to [unknown] rather than
@@ -168,6 +158,7 @@ enum Event {
   viewEnvVarValuesEvent('ViewEnvVarValuesEvent'),
   grantOauthAccessEvent('GrantOAuthAccessEvent'),
   revokeOauthAccessEvent('RevokeOAuthAccessEvent'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -176,10 +167,8 @@ enum Event {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Event fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Event fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// The status of the event
@@ -188,6 +177,7 @@ enum Event {
 enum Status {
   success('success'),
   error('error'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -196,10 +186,8 @@ enum Status {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Status fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Status fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// The type of actor that performed the action
@@ -209,6 +197,7 @@ enum Type {
   user('user'),
   restApi('rest_api'),
   system('system'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -217,37 +206,33 @@ enum Type {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Type fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Type fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class AuditLogActor {
-  const AuditLogActor({
-    required this.type,
-    this.email,
-    this.id,
-  });
+  const AuditLogActor({required this.type, this.email, this.id});
 
   factory AuditLogActor.fromJson(Map<String, Object?> json) => AuditLogActor(
-        type: Type.fromWire(json['type']),
-        email: json['email'] as String?,
-        id: json['id'] as String?,
-      );
+    type: Type.fromWire(json['type']),
+    email: json['email'] as String?,
+    id: json['id'] as String?,
+  );
 
   /// The type of actor that performed the action
   final Type type;
+
   /// Email address of the actor (if applicable)
   final String? email;
+
   /// Unique identifier of the actor (if applicable)
   final String? id;
 
   Map<String, Object?> toJson() => {
-        'type': type.wireValue,
-        if (email != null) 'email': email,
-        if (id != null) 'id': id,
-      };
+    'type': type.wireValue,
+    if (email != null) 'email': email,
+    if (id != null) 'id': id,
+  };
 }
 
 class AuditLog {
@@ -261,64 +246,69 @@ class AuditLog {
   });
 
   factory AuditLog.fromJson(Map<String, Object?> json) => AuditLog(
-        id: json['id'] as String? ?? '',
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        event: Event.fromWire(json['event']),
-        status: Status.fromWire(json['status']),
-        actor: AuditLogActor.fromJson((json['actor'] as Map<String, Object?>?) ?? const {}),
-        metadata: (json['metadata'] as Map<String, Object?>?) ?? const {},
-      );
+    id: json['id'] as String? ?? '',
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    event: Event.fromWire(json['event']),
+    status: Status.fromWire(json['status']),
+    actor: AuditLogActor.fromJson(
+      (json['actor'] as Map<String, Object?>?) ?? const {},
+    ),
+    metadata: (json['metadata'] as Map<String, Object?>?) ?? const {},
+  );
 
   /// Unique identifier for the audit log entry
   final String id;
+
   /// When the event occurred (ISO 8601 format)
   final DateTime timestamp;
+
   /// The type of event that occurred
   final Event event;
+
   /// The status of the event
   final Status status;
   final AuditLogActor actor;
+
   /// Additional context information about the event
   final Map<String, Object?> metadata;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'timestamp': timestamp.toIso8601String(),
-        'event': event.wireValue,
-        'status': status.wireValue,
-        'actor': actor.toJson(),
-        'metadata': metadata,
-      };
+    'id': id,
+    'timestamp': timestamp.toIso8601String(),
+    'event': event.wireValue,
+    'status': status.wireValue,
+    'actor': actor.toJson(),
+    'metadata': metadata,
+  };
 }
 
-
-
 class AuditLogWithCursor {
-  const AuditLogWithCursor({
-    required this.cursor,
-    required this.auditLog,
-  });
+  const AuditLogWithCursor({required this.cursor, required this.auditLog});
 
-  factory AuditLogWithCursor.fromJson(Map<String, Object?> json) => AuditLogWithCursor(
+  factory AuditLogWithCursor.fromJson(Map<String, Object?> json) =>
+      AuditLogWithCursor(
         cursor: json['cursor'] as String? ?? '',
-        auditLog: AuditLog.fromJson((json['auditLog'] as Map<String, Object?>?) ?? const {}),
+        auditLog: AuditLog.fromJson(
+          (json['auditLog'] as Map<String, Object?>?) ?? const {},
+        ),
       );
 
   final String cursor;
   final AuditLog auditLog;
 
   Map<String, Object?> toJson() => {
-        'cursor': cursor,
-        'auditLog': auditLog.toJson(),
-      };
+    'cursor': cursor,
+    'auditLog': auditLog.toJson(),
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum AutoDeploy {
   yes('yes'),
   no('no'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -327,12 +317,9 @@ enum AutoDeploy {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static AutoDeploy fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static AutoDeploy fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
-
 
 class BackgroundWorkerDetailsAutoscalingCriteriaCpu {
   const BackgroundWorkerDetailsAutoscalingCriteriaCpu({
@@ -340,19 +327,22 @@ class BackgroundWorkerDetailsAutoscalingCriteriaCpu {
     required this.percentage,
   });
 
-  factory BackgroundWorkerDetailsAutoscalingCriteriaCpu.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsAutoscalingCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory BackgroundWorkerDetailsAutoscalingCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsAutoscalingCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class BackgroundWorkerDetailsAutoscalingCriteriaMemory {
@@ -361,19 +351,22 @@ class BackgroundWorkerDetailsAutoscalingCriteriaMemory {
     required this.percentage,
   });
 
-  factory BackgroundWorkerDetailsAutoscalingCriteriaMemory.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsAutoscalingCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory BackgroundWorkerDetailsAutoscalingCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsAutoscalingCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class BackgroundWorkerDetailsAutoscalingCriteria {
@@ -382,18 +375,24 @@ class BackgroundWorkerDetailsAutoscalingCriteria {
     required this.memory,
   });
 
-  factory BackgroundWorkerDetailsAutoscalingCriteria.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsAutoscalingCriteria(
-        cpu: BackgroundWorkerDetailsAutoscalingCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: BackgroundWorkerDetailsAutoscalingCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory BackgroundWorkerDetailsAutoscalingCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsAutoscalingCriteria(
+    cpu: BackgroundWorkerDetailsAutoscalingCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: BackgroundWorkerDetailsAutoscalingCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final BackgroundWorkerDetailsAutoscalingCriteriaCpu cpu;
   final BackgroundWorkerDetailsAutoscalingCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class BackgroundWorkerDetailsAutoscaling {
@@ -404,26 +403,32 @@ class BackgroundWorkerDetailsAutoscaling {
     required this.criteria,
   });
 
-  factory BackgroundWorkerDetailsAutoscaling.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsAutoscaling(
-        enabled: json['enabled'] as bool? ?? false,
-        min: (json['min'] as num?)?.toInt() ?? 0,
-        max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: BackgroundWorkerDetailsAutoscalingCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory BackgroundWorkerDetailsAutoscaling.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsAutoscaling(
+    enabled: json['enabled'] as bool? ?? false,
+    min: (json['min'] as num?)?.toInt() ?? 0,
+    max: (json['max'] as num?)?.toInt() ?? 0,
+    criteria: BackgroundWorkerDetailsAutoscalingCriteria.fromJson(
+      (json['criteria'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final BackgroundWorkerDetailsAutoscalingCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class BackgroundWorkerDetailsDisk {
@@ -434,7 +439,8 @@ class BackgroundWorkerDetailsDisk {
     required this.mountPath,
   });
 
-  factory BackgroundWorkerDetailsDisk.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsDisk(
+  factory BackgroundWorkerDetailsDisk.fromJson(Map<String, Object?> json) =>
+      BackgroundWorkerDetailsDisk(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
@@ -447,11 +453,11 @@ class BackgroundWorkerDetailsDisk {
   final String mountPath;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+  };
 }
 
 /// This field has been deprecated, runtime should be used in its place.
@@ -466,6 +472,7 @@ enum ServiceEnv {
   ruby('ruby'),
   rust('rust'),
   image('image'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -474,10 +481,8 @@ enum ServiceEnv {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ServiceEnv fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ServiceEnv fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// One of 2 shapes. Which one is decided by
@@ -487,7 +492,10 @@ sealed class EnvSpecificDetails {
   const EnvSpecificDetails();
 
   factory EnvSpecificDetails.fromJson(Map<String, Object?> json) {
-    if (json.containsKey('dockerCommand') || json.containsKey('dockerContext') || json.containsKey('dockerfilePath') || json.containsKey('registryCredential')) {
+    if (json.containsKey('dockerCommand') ||
+        json.containsKey('dockerContext') ||
+        json.containsKey('dockerfilePath') ||
+        json.containsKey('registryCredential')) {
       return EnvSpecificDetailsDocker.fromJson(json);
     }
     return EnvSpecificDetailsBuild.fromJson(json);
@@ -505,6 +513,7 @@ enum RegistryCredentialRegistry {
   docker('DOCKER'),
   googleArtifact('GOOGLE_ARTIFACT'),
   awsEcr('AWS_ECR'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -513,10 +522,8 @@ enum RegistryCredentialRegistry {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RegistryCredentialRegistry fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RegistryCredentialRegistry fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class RegistryCredential {
@@ -528,32 +535,39 @@ class RegistryCredential {
     required this.updatedAt,
   });
 
-  factory RegistryCredential.fromJson(Map<String, Object?> json) => RegistryCredential(
+  factory RegistryCredential.fromJson(Map<String, Object?> json) =>
+      RegistryCredential(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         registry: RegistryCredentialRegistry.fromWire(json['registry']),
         username: json['username'] as String? ?? '',
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        updatedAt:
+            parseDate(json['updatedAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
       );
 
   /// Unique identifier for this credential
   final String id;
+
   /// Descriptive name for this credential
   final String name;
+
   /// The registry to use this credential with
   final RegistryCredentialRegistry registry;
+
   /// The username associated with the credential
   final String username;
+
   /// Last updated time for the credential
   final DateTime updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'registry': registry.wireValue,
-        'username': username,
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'registry': registry.wireValue,
+    'username': username,
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
@@ -565,12 +579,17 @@ final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
     this.registryCredential,
   });
 
-  factory EnvSpecificDetailsDocker.fromJson(Map<String, Object?> json) => EnvSpecificDetailsDocker(
+  factory EnvSpecificDetailsDocker.fromJson(Map<String, Object?> json) =>
+      EnvSpecificDetailsDocker(
         dockerCommand: json['dockerCommand'] as String? ?? '',
         dockerContext: json['dockerContext'] as String? ?? '',
         dockerfilePath: json['dockerfilePath'] as String? ?? '',
         preDeployCommand: json['preDeployCommand'] as String?,
-        registryCredential: json['registryCredential'] == null ? null : RegistryCredential.fromJson(json['registryCredential']! as Map<String, Object?>),
+        registryCredential: json['registryCredential'] == null
+            ? null
+            : RegistryCredential.fromJson(
+                json['registryCredential']! as Map<String, Object?>,
+              ),
       );
 
   final String dockerCommand;
@@ -581,12 +600,13 @@ final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
 
   @override
   Map<String, Object?> toJson() => {
-        'dockerCommand': dockerCommand,
-        'dockerContext': dockerContext,
-        'dockerfilePath': dockerfilePath,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (registryCredential != null) 'registryCredential': registryCredential!.toJson(),
-      };
+    'dockerCommand': dockerCommand,
+    'dockerContext': dockerContext,
+    'dockerfilePath': dockerfilePath,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (registryCredential != null)
+      'registryCredential': registryCredential!.toJson(),
+  };
 }
 
 final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
@@ -596,7 +616,8 @@ final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
     this.preDeployCommand,
   });
 
-  factory EnvSpecificDetailsBuild.fromJson(Map<String, Object?> json) => EnvSpecificDetailsBuild(
+  factory EnvSpecificDetailsBuild.fromJson(Map<String, Object?> json) =>
+      EnvSpecificDetailsBuild(
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         preDeployCommand: json['preDeployCommand'] as String?,
@@ -608,30 +629,24 @@ final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
 
   @override
   Map<String, Object?> toJson() => {
-        'buildCommand': buildCommand,
-        'startCommand': startCommand,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-      };
+    'buildCommand': buildCommand,
+    'startCommand': startCommand,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+  };
 }
 
 class Resource {
-  const Resource({
-    required this.id,
-    required this.name,
-  });
+  const Resource({required this.id, required this.name});
 
   factory Resource.fromJson(Map<String, Object?> json) => Resource(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+  );
 
   final String id;
   final String name;
 
-  Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-      };
+  Map<String, Object?> toJson() => {'id': id, 'name': name};
 }
 
 /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
@@ -653,6 +668,7 @@ enum Plan {
   standardPlusLegacy('standard_plus_legacy'),
   proLegacy('pro_legacy'),
   proPlusLegacy('pro_plus_legacy'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -661,10 +677,8 @@ enum Plan {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Plan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Plan fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// This field has been deprecated. previews.generation should be used in its place.
@@ -673,6 +687,7 @@ enum Plan {
 enum PullRequestPreviewsEnabled {
   yes('yes'),
   no('no'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -681,10 +696,8 @@ enum PullRequestPreviewsEnabled {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PullRequestPreviewsEnabled fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PullRequestPreviewsEnabled fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Defaults to "off"
@@ -694,6 +707,7 @@ enum Generation {
   off('off'),
   manual('manual'),
   automatic('automatic'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -702,27 +716,22 @@ enum Generation {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Generation fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Generation fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Previews {
-  const Previews({
-    this.generation,
-  });
+  const Previews({this.generation});
 
-  factory Previews.fromJson(Map<String, Object?> json) => Previews(
-        generation: Generation.fromWire(json['generation']),
-      );
+  factory Previews.fromJson(Map<String, Object?> json) =>
+      Previews(generation: Generation.fromWire(json['generation']));
 
   /// Defaults to "off"
   final Generation? generation;
 
   Map<String, Object?> toJson() => {
-        if (generation != null) 'generation': generation!.wireValue,
-      };
+    if (generation != null) 'generation': generation!.wireValue,
+  };
 }
 
 /// Defaults to "oregon"
@@ -734,6 +743,7 @@ enum Region {
   ohio('ohio'),
   singapore('singapore'),
   virginia('virginia'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -742,10 +752,8 @@ enum Region {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Region fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Region fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Runtime
@@ -760,6 +768,7 @@ enum ServiceRuntime {
   ruby('ruby'),
   rust('rust'),
   image('image'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -768,10 +777,8 @@ enum ServiceRuntime {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ServiceRuntime fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ServiceRuntime fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -779,6 +786,7 @@ enum ServiceRuntime {
 enum BuildPlan {
   starter('starter'),
   performance('performance'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -787,10 +795,8 @@ enum BuildPlan {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static BuildPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static BuildPlan fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class BackgroundWorkerDetails {
@@ -811,64 +817,91 @@ class BackgroundWorkerDetails {
     this.maxShutdownDelaySeconds,
   });
 
-  factory BackgroundWorkerDetails.fromJson(Map<String, Object?> json) => BackgroundWorkerDetails(
-        autoscaling: json['autoscaling'] == null ? null : BackgroundWorkerDetailsAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
-        disk: json['disk'] == null ? null : BackgroundWorkerDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
+  factory BackgroundWorkerDetails.fromJson(Map<String, Object?> json) =>
+      BackgroundWorkerDetails(
+        autoscaling: json['autoscaling'] == null
+            ? null
+            : BackgroundWorkerDetailsAutoscaling.fromJson(
+                json['autoscaling']! as Map<String, Object?>,
+              ),
+        disk: json['disk'] == null
+            ? null
+            : BackgroundWorkerDetailsDisk.fromJson(
+                json['disk']! as Map<String, Object?>,
+              ),
         env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
+        envSpecificDetails: EnvSpecificDetails.fromJson(
+          (json['envSpecificDetails'] as Map<String, Object?>?) ?? const {},
+        ),
         numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
-        parentServer: json['parentServer'] == null ? null : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
+        parentServer: json['parentServer'] == null
+            ? null
+            : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
         plan: Plan.fromWire(json['plan']),
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         region: Region.fromWire(json['region']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
         sshAddress: json['sshAddress'] as String?,
         buildPlan: BuildPlan.fromWire(json['buildPlan']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
       );
 
   final BackgroundWorkerDetailsAutoscaling? autoscaling;
   final BackgroundWorkerDetailsDisk? disk;
+
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
   final EnvSpecificDetails envSpecificDetails;
+
   /// For a *manually* scaled service, this is the number of instances the service is scaled to. DOES NOT indicate the number of running instances for an *autoscaled* service.
   final int numInstances;
   final Resource? parentServer;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan plan;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Runtime
   final ServiceRuntime runtime;
+
   /// The SSH address for the service. Only present for services that have SSH enabled.
   final String? sshAddress;
   final BuildPlan buildPlan;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
-        if (disk != null) 'disk': disk!.toJson(),
-        'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails.toJson(),
-        'numInstances': numInstances,
-        if (parentServer != null) 'parentServer': parentServer!.toJson(),
-        'plan': plan.wireValue,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        'region': region.wireValue,
-        'runtime': runtime.wireValue,
-        if (sshAddress != null) 'sshAddress': sshAddress,
-        'buildPlan': buildPlan.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-      };
+    if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
+    if (disk != null) 'disk': disk!.toJson(),
+    'env': env.wireValue,
+    'envSpecificDetails': envSpecificDetails.toJson(),
+    'numInstances': numInstances,
+    if (parentServer != null) 'parentServer': parentServer!.toJson(),
+    'plan': plan.wireValue,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    'region': region.wireValue,
+    'runtime': runtime.wireValue,
+    if (sshAddress != null) 'sshAddress': sshAddress,
+    'buildPlan': buildPlan.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+  };
 }
-
 
 /// One of 2 shapes. Which one is decided by
 /// the fields present — the spec gives no discriminator, but
@@ -877,7 +910,10 @@ sealed class EnvSpecificDetailsPatch {
   const EnvSpecificDetailsPatch();
 
   factory EnvSpecificDetailsPatch.fromJson(Map<String, Object?> json) {
-    if (json.containsKey('dockerCommand') || json.containsKey('dockerContext') || json.containsKey('dockerfilePath') || json.containsKey('registryCredentialId')) {
+    if (json.containsKey('dockerCommand') ||
+        json.containsKey('dockerContext') ||
+        json.containsKey('dockerfilePath') ||
+        json.containsKey('registryCredentialId')) {
       return EnvSpecificDetailsPatchDocker.fromJson(json);
     }
     return EnvSpecificDetailsPatchBuild.fromJson(json);
@@ -894,7 +930,8 @@ final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
     this.registryCredentialId,
   });
 
-  factory EnvSpecificDetailsPatchDocker.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPatchDocker(
+  factory EnvSpecificDetailsPatchDocker.fromJson(Map<String, Object?> json) =>
+      EnvSpecificDetailsPatchDocker(
         dockerCommand: json['dockerCommand'] as String?,
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
@@ -908,20 +945,19 @@ final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
 
   @override
   Map<String, Object?> toJson() => {
-        if (dockerCommand != null) 'dockerCommand': dockerCommand,
-        if (dockerContext != null) 'dockerContext': dockerContext,
-        if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
-        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
-      };
+    if (dockerCommand != null) 'dockerCommand': dockerCommand,
+    if (dockerContext != null) 'dockerContext': dockerContext,
+    if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
+    if (registryCredentialId != null)
+      'registryCredentialId': registryCredentialId,
+  };
 }
 
 final class EnvSpecificDetailsPatchBuild extends EnvSpecificDetailsPatch {
-  const EnvSpecificDetailsPatchBuild({
-    this.buildCommand,
-    this.startCommand,
-  });
+  const EnvSpecificDetailsPatchBuild({this.buildCommand, this.startCommand});
 
-  factory EnvSpecificDetailsPatchBuild.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPatchBuild(
+  factory EnvSpecificDetailsPatchBuild.fromJson(Map<String, Object?> json) =>
+      EnvSpecificDetailsPatchBuild(
         buildCommand: json['buildCommand'] as String?,
         startCommand: json['startCommand'] as String?,
       );
@@ -931,9 +967,9 @@ final class EnvSpecificDetailsPatchBuild extends EnvSpecificDetailsPatch {
 
   @override
   Map<String, Object?> toJson() => {
-        if (buildCommand != null) 'buildCommand': buildCommand,
-        if (startCommand != null) 'startCommand': startCommand,
-      };
+    if (buildCommand != null) 'buildCommand': buildCommand,
+    if (startCommand != null) 'startCommand': startCommand,
+  };
 }
 
 /// Defaults to `starter` when creating a new database.
@@ -946,6 +982,7 @@ enum PaidPlan {
   proPlus('pro_plus'),
   proMax('pro_max'),
   proUltra('pro_ultra'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -954,10 +991,8 @@ enum PaidPlan {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PaidPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PaidPlan fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class BackgroundWorkerDetailsPatch {
@@ -971,39 +1006,55 @@ class BackgroundWorkerDetailsPatch {
     this.maxShutdownDelaySeconds,
   });
 
-  factory BackgroundWorkerDetailsPatch.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+  factory BackgroundWorkerDetailsPatch.fromJson(Map<String, Object?> json) =>
+      BackgroundWorkerDetailsPatch(
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPatch.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
+
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? preDeployCommand;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Runtime
   final ServiceRuntime? runtime;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (plan != null) 'plan': plan!.wireValue,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (runtime != null) 'runtime': runtime!.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-      };
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (plan != null) 'plan': plan!.wireValue,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (runtime != null) 'runtime': runtime!.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+  };
 }
-
 
 class BackgroundWorkerDetailsPostAutoscalingCriteriaCpu {
   const BackgroundWorkerDetailsPostAutoscalingCriteriaCpu({
@@ -1011,19 +1062,22 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaCpu {
     required this.percentage,
   });
 
-  factory BackgroundWorkerDetailsPostAutoscalingCriteriaCpu.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPostAutoscalingCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory BackgroundWorkerDetailsPostAutoscalingCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsPostAutoscalingCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class BackgroundWorkerDetailsPostAutoscalingCriteriaMemory {
@@ -1032,19 +1086,22 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaMemory {
     required this.percentage,
   });
 
-  factory BackgroundWorkerDetailsPostAutoscalingCriteriaMemory.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPostAutoscalingCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory BackgroundWorkerDetailsPostAutoscalingCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsPostAutoscalingCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class BackgroundWorkerDetailsPostAutoscalingCriteria {
@@ -1053,18 +1110,24 @@ class BackgroundWorkerDetailsPostAutoscalingCriteria {
     required this.memory,
   });
 
-  factory BackgroundWorkerDetailsPostAutoscalingCriteria.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPostAutoscalingCriteria(
-        cpu: BackgroundWorkerDetailsPostAutoscalingCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: BackgroundWorkerDetailsPostAutoscalingCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory BackgroundWorkerDetailsPostAutoscalingCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsPostAutoscalingCriteria(
+    cpu: BackgroundWorkerDetailsPostAutoscalingCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: BackgroundWorkerDetailsPostAutoscalingCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final BackgroundWorkerDetailsPostAutoscalingCriteriaCpu cpu;
   final BackgroundWorkerDetailsPostAutoscalingCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class BackgroundWorkerDetailsPostAutoscaling {
@@ -1075,51 +1138,54 @@ class BackgroundWorkerDetailsPostAutoscaling {
     required this.criteria,
   });
 
-  factory BackgroundWorkerDetailsPostAutoscaling.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPostAutoscaling(
-        enabled: json['enabled'] as bool? ?? false,
-        min: (json['min'] as num?)?.toInt() ?? 0,
-        max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: BackgroundWorkerDetailsPostAutoscalingCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory BackgroundWorkerDetailsPostAutoscaling.fromJson(
+    Map<String, Object?> json,
+  ) => BackgroundWorkerDetailsPostAutoscaling(
+    enabled: json['enabled'] as bool? ?? false,
+    min: (json['min'] as num?)?.toInt() ?? 0,
+    max: (json['max'] as num?)?.toInt() ?? 0,
+    criteria: BackgroundWorkerDetailsPostAutoscalingCriteria.fromJson(
+      (json['criteria'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final BackgroundWorkerDetailsPostAutoscalingCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class ServiceDisk {
-  const ServiceDisk({
-    required this.name,
-    required this.mountPath,
-    this.sizeGb,
-  });
+  const ServiceDisk({required this.name, required this.mountPath, this.sizeGb});
 
   factory ServiceDisk.fromJson(Map<String, Object?> json) => ServiceDisk(
-        name: json['name'] as String? ?? '',
-        mountPath: json['mountPath'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt(),
-      );
+    name: json['name'] as String? ?? '',
+    mountPath: json['mountPath'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt(),
+  );
 
   final String name;
   final String mountPath;
+
   /// Defaults to 1
   final int? sizeGb;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'mountPath': mountPath,
-        if (sizeGb != null) 'sizeGB': sizeGb,
-      };
+    'name': name,
+    'mountPath': mountPath,
+    if (sizeGb != null) 'sizeGB': sizeGb,
+  };
 }
 
 /// One of 2 shapes. Which one is decided by
@@ -1129,7 +1195,10 @@ sealed class EnvSpecificDetailsPost {
   const EnvSpecificDetailsPost();
 
   factory EnvSpecificDetailsPost.fromJson(Map<String, Object?> json) {
-    if (json.containsKey('dockerCommand') || json.containsKey('dockerContext') || json.containsKey('dockerfilePath') || json.containsKey('registryCredentialId')) {
+    if (json.containsKey('dockerCommand') ||
+        json.containsKey('dockerContext') ||
+        json.containsKey('dockerfilePath') ||
+        json.containsKey('registryCredentialId')) {
       return EnvSpecificDetailsPostDocker.fromJson(json);
     }
     return EnvSpecificDetailsPostBuild.fromJson(json);
@@ -1146,7 +1215,8 @@ final class EnvSpecificDetailsPostDocker extends EnvSpecificDetailsPost {
     this.registryCredentialId,
   });
 
-  factory EnvSpecificDetailsPostDocker.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPostDocker(
+  factory EnvSpecificDetailsPostDocker.fromJson(Map<String, Object?> json) =>
+      EnvSpecificDetailsPostDocker(
         dockerCommand: json['dockerCommand'] as String?,
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
@@ -1155,17 +1225,19 @@ final class EnvSpecificDetailsPostDocker extends EnvSpecificDetailsPost {
 
   final String? dockerCommand;
   final String? dockerContext;
+
   /// Defaults to "./Dockerfile"
   final String? dockerfilePath;
   final String? registryCredentialId;
 
   @override
   Map<String, Object?> toJson() => {
-        if (dockerCommand != null) 'dockerCommand': dockerCommand,
-        if (dockerContext != null) 'dockerContext': dockerContext,
-        if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
-        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
-      };
+    if (dockerCommand != null) 'dockerCommand': dockerCommand,
+    if (dockerContext != null) 'dockerContext': dockerContext,
+    if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
+    if (registryCredentialId != null)
+      'registryCredentialId': registryCredentialId,
+  };
 }
 
 /// Fields for native environment (runtime) services
@@ -1175,7 +1247,8 @@ final class EnvSpecificDetailsPostBuild extends EnvSpecificDetailsPost {
     required this.startCommand,
   });
 
-  factory EnvSpecificDetailsPostBuild.fromJson(Map<String, Object?> json) => EnvSpecificDetailsPostBuild(
+  factory EnvSpecificDetailsPostBuild.fromJson(Map<String, Object?> json) =>
+      EnvSpecificDetailsPostBuild(
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
       );
@@ -1185,9 +1258,9 @@ final class EnvSpecificDetailsPostBuild extends EnvSpecificDetailsPost {
 
   @override
   Map<String, Object?> toJson() => {
-        'buildCommand': buildCommand,
-        'startCommand': startCommand,
-      };
+    'buildCommand': buildCommand,
+    'startCommand': startCommand,
+  };
 }
 
 class BackgroundWorkerDetailsPost {
@@ -1206,57 +1279,82 @@ class BackgroundWorkerDetailsPost {
     this.maxShutdownDelaySeconds,
   });
 
-  factory BackgroundWorkerDetailsPost.fromJson(Map<String, Object?> json) => BackgroundWorkerDetailsPost(
-        autoscaling: json['autoscaling'] == null ? null : BackgroundWorkerDetailsPostAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
-        disk: json['disk'] == null ? null : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
+  factory BackgroundWorkerDetailsPost.fromJson(Map<String, Object?> json) =>
+      BackgroundWorkerDetailsPost(
+        autoscaling: json['autoscaling'] == null
+            ? null
+            : BackgroundWorkerDetailsPostAutoscaling.fromJson(
+                json['autoscaling']! as Map<String, Object?>,
+              ),
+        disk: json['disk'] == null
+            ? null
+            : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPost.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPost.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         numInstances: (json['numInstances'] as num?)?.toInt(),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         region: Region.fromWire(json['region']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
       );
 
   final BackgroundWorkerDetailsPostAutoscaling? autoscaling;
   final ServiceDisk? disk;
+
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv? env;
+
   /// Runtime
   final ServiceRuntime runtime;
   final EnvSpecificDetailsPost? envSpecificDetails;
+
   /// Defaults to 1
   final int? numInstances;
+
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? preDeployCommand;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Defaults to "oregon"
   final Region? region;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
-        if (disk != null) 'disk': disk!.toJson(),
-        if (env != null) 'env': env!.wireValue,
-        'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (numInstances != null) 'numInstances': numInstances,
-        if (plan != null) 'plan': plan!.wireValue,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (region != null) 'region': region!.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-      };
+    if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
+    if (disk != null) 'disk': disk!.toJson(),
+    if (env != null) 'env': env!.wireValue,
+    'runtime': runtime.wireValue,
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (numInstances != null) 'numInstances': numInstances,
+    if (plan != null) 'plan': plan!.wireValue,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (region != null) 'region': region!.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -1266,6 +1364,7 @@ enum RetrieveBlueprintStatus {
   inSync('in_sync'),
   syncing('syncing'),
   error('error'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -1274,10 +1373,8 @@ enum RetrieveBlueprintStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RetrieveBlueprintStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RetrieveBlueprintStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class BlueprintWithCursorBlueprint {
@@ -1292,7 +1389,8 @@ class BlueprintWithCursorBlueprint {
     this.lastSync,
   });
 
-  factory BlueprintWithCursorBlueprint.fromJson(Map<String, Object?> json) => BlueprintWithCursorBlueprint(
+  factory BlueprintWithCursorBlueprint.fromJson(Map<String, Object?> json) =>
+      BlueprintWithCursorBlueprint(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         status: RetrieveBlueprintStatus.fromWire(json['status']),
@@ -1306,35 +1404,37 @@ class BlueprintWithCursorBlueprint {
   final String id;
   final String name;
   final RetrieveBlueprintStatus status;
+
   /// Automatically sync changes to render.yaml
   final bool autoSync;
   final String repo;
   final String branch;
+
   /// Path to the Blueprint file in the repository
   final String path;
   final DateTime? lastSync;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'status': status.wireValue,
-        'autoSync': autoSync,
-        'repo': repo,
-        'branch': branch,
-        'path': path,
-        if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'status': status.wireValue,
+    'autoSync': autoSync,
+    'repo': repo,
+    'branch': branch,
+    'path': path,
+    if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
+  };
 }
 
 /// A Blueprint with a cursor
 class BlueprintWithCursor {
-  const BlueprintWithCursor({
-    required this.blueprint,
-    required this.cursor,
-  });
+  const BlueprintWithCursor({required this.blueprint, required this.cursor});
 
-  factory BlueprintWithCursor.fromJson(Map<String, Object?> json) => BlueprintWithCursor(
-        blueprint: BlueprintWithCursorBlueprint.fromJson((json['blueprint'] as Map<String, Object?>?) ?? const {}),
+  factory BlueprintWithCursor.fromJson(Map<String, Object?> json) =>
+      BlueprintWithCursor(
+        blueprint: BlueprintWithCursorBlueprint.fromJson(
+          (json['blueprint'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -1342,33 +1442,31 @@ class BlueprintWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'blueprint': blueprint.toJson(),
-        'cursor': cursor,
-      };
+    'blueprint': blueprint.toJson(),
+    'cursor': cursor,
+  };
 }
 
-
 class BuildFilter {
-  const BuildFilter({
-    required this.paths,
-    required this.ignoredPaths,
-  });
+  const BuildFilter({required this.paths, required this.ignoredPaths});
 
   factory BuildFilter.fromJson(Map<String, Object?> json) => BuildFilter(
-        paths: ((json['paths'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        ignoredPaths: ((json['ignoredPaths'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-      );
+    paths: ((json['paths'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    ignoredPaths: ((json['ignoredPaths'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+  );
 
   final List<String> paths;
   final List<String> ignoredPaths;
 
   Map<String, Object?> toJson() => {
-        'paths': paths.map((e) => e).toList(),
-        'ignoredPaths': ignoredPaths.map((e) => e).toList(),
-      };
+    'paths': paths.map((e) => e).toList(),
+    'ignoredPaths': ignoredPaths.map((e) => e).toList(),
+  };
 }
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -1376,6 +1474,7 @@ enum Profile {
   noCache('no-cache'),
   originControlled('origin-controlled'),
   originControlledAll('origin-controlled-all'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -1384,28 +1483,20 @@ enum Profile {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Profile fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Profile fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Cache {
-  const Cache({
-    required this.profile,
-  });
+  const Cache({required this.profile});
 
-  factory Cache.fromJson(Map<String, Object?> json) => Cache(
-        profile: Profile.fromWire(json['profile']),
-      );
+  factory Cache.fromJson(Map<String, Object?> json) =>
+      Cache(profile: Profile.fromWire(json['profile']));
 
   final Profile profile;
 
-  Map<String, Object?> toJson() => {
-        'profile': profile.wireValue,
-      };
+  Map<String, Object?> toJson() => {'profile': profile.wireValue};
 }
-
 
 class CidrBlockAndDescription {
   const CidrBlockAndDescription({
@@ -1413,21 +1504,22 @@ class CidrBlockAndDescription {
     required this.description,
   });
 
-  factory CidrBlockAndDescription.fromJson(Map<String, Object?> json) => CidrBlockAndDescription(
+  factory CidrBlockAndDescription.fromJson(Map<String, Object?> json) =>
+      CidrBlockAndDescription(
         cidrBlock: json['cidrBlock'] as String? ?? '',
         description: json['description'] as String? ?? '',
       );
 
   final String cidrBlock;
+
   /// User-provided description of the CIDR block
   final String description;
 
   Map<String, Object?> toJson() => {
-        'cidrBlock': cidrBlock,
-        'description': description,
-      };
+    'cidrBlock': cidrBlock,
+    'description': description,
+  };
 }
-
 
 class CronJobDetails {
   const CronJobDetails({
@@ -1442,41 +1534,46 @@ class CronJobDetails {
   });
 
   factory CronJobDetails.fromJson(Map<String, Object?> json) => CronJobDetails(
-        env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
-        lastSuccessfulRunAt: parseDate(json['lastSuccessfulRunAt']),
-        plan: Plan.fromWire(json['plan']),
-        region: Region.fromWire(json['region']),
-        runtime: ServiceRuntime.fromWire(json['runtime']),
-        schedule: json['schedule'] as String? ?? '',
-        buildPlan: BuildPlan.fromWire(json['buildPlan']),
-      );
+    env: ServiceEnv.fromWire(json['env']),
+    envSpecificDetails: EnvSpecificDetails.fromJson(
+      (json['envSpecificDetails'] as Map<String, Object?>?) ?? const {},
+    ),
+    lastSuccessfulRunAt: parseDate(json['lastSuccessfulRunAt']),
+    plan: Plan.fromWire(json['plan']),
+    region: Region.fromWire(json['region']),
+    runtime: ServiceRuntime.fromWire(json['runtime']),
+    schedule: json['schedule'] as String? ?? '',
+    buildPlan: BuildPlan.fromWire(json['buildPlan']),
+  );
 
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
   final EnvSpecificDetails envSpecificDetails;
   final DateTime? lastSuccessfulRunAt;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan plan;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Runtime
   final ServiceRuntime runtime;
   final String schedule;
   final BuildPlan buildPlan;
 
   Map<String, Object?> toJson() => {
-        'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails.toJson(),
-        if (lastSuccessfulRunAt != null) 'lastSuccessfulRunAt': lastSuccessfulRunAt!.toIso8601String(),
-        'plan': plan.wireValue,
-        'region': region.wireValue,
-        'runtime': runtime.wireValue,
-        'schedule': schedule,
-        'buildPlan': buildPlan.wireValue,
-      };
+    'env': env.wireValue,
+    'envSpecificDetails': envSpecificDetails.toJson(),
+    if (lastSuccessfulRunAt != null)
+      'lastSuccessfulRunAt': lastSuccessfulRunAt!.toIso8601String(),
+    'plan': plan.wireValue,
+    'region': region.wireValue,
+    'runtime': runtime.wireValue,
+    'schedule': schedule,
+    'buildPlan': buildPlan.wireValue,
+  };
 }
-
 
 class CronJobDetailsPatch {
   const CronJobDetailsPatch({
@@ -1486,28 +1583,35 @@ class CronJobDetailsPatch {
     this.runtime,
   });
 
-  factory CronJobDetailsPatch.fromJson(Map<String, Object?> json) => CronJobDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+  factory CronJobDetailsPatch.fromJson(Map<String, Object?> json) =>
+      CronJobDetailsPatch(
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPatch.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         plan: PaidPlan.fromWire(json['plan']),
         schedule: json['schedule'] as String?,
         runtime: ServiceRuntime.fromWire(json['runtime']),
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
+
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? schedule;
+
   /// Runtime
   final ServiceRuntime? runtime;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (plan != null) 'plan': plan!.wireValue,
-        if (schedule != null) 'schedule': schedule,
-        if (runtime != null) 'runtime': runtime!.wireValue,
-      };
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (plan != null) 'plan': plan!.wireValue,
+    if (schedule != null) 'schedule': schedule,
+    if (runtime != null) 'runtime': runtime!.wireValue,
+  };
 }
-
 
 class CronJobDetailsPost {
   const CronJobDetailsPost({
@@ -1519,10 +1623,15 @@ class CronJobDetailsPost {
     required this.schedule,
   });
 
-  factory CronJobDetailsPost.fromJson(Map<String, Object?> json) => CronJobDetailsPost(
+  factory CronJobDetailsPost.fromJson(Map<String, Object?> json) =>
+      CronJobDetailsPost(
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetails.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetails.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         plan: PaidPlan.fromWire(json['plan']),
         region: Region.fromWire(json['region']),
         schedule: json['schedule'] as String? ?? '',
@@ -1530,25 +1639,28 @@ class CronJobDetailsPost {
 
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv? env;
+
   /// Runtime
   final ServiceRuntime runtime;
   final EnvSpecificDetails? envSpecificDetails;
+
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
+
   /// Defaults to "oregon"
   final Region? region;
   final String schedule;
 
   Map<String, Object?> toJson() => {
-        if (env != null) 'env': env!.wireValue,
-        'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (plan != null) 'plan': plan!.wireValue,
-        if (region != null) 'region': region!.wireValue,
-        'schedule': schedule,
-      };
+    if (env != null) 'env': env!.wireValue,
+    'runtime': runtime.wireValue,
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (plan != null) 'plan': plan!.wireValue,
+    if (region != null) 'region': region!.wireValue,
+    'schedule': schedule,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -1557,6 +1669,7 @@ enum CronJobRunStatus {
   successful('successful'),
   unsuccessful('unsuccessful'),
   canceled('canceled'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -1565,10 +1678,8 @@ enum CronJobRunStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static CronJobRunStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static CronJobRunStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// A run of a cron job
@@ -1583,41 +1694,42 @@ class CronJobRun {
   });
 
   factory CronJobRun.fromJson(Map<String, Object?> json) => CronJobRun(
-        id: json['id'] as String? ?? '',
-        status: CronJobRunStatus.fromWire(json['status']),
-        startedAt: parseDate(json['startedAt']),
-        finishedAt: parseDate(json['finishedAt']),
-        triggeredBy: json['triggeredBy'] as String?,
-        canceledBy: json['canceledBy'] as String?,
-      );
+    id: json['id'] as String? ?? '',
+    status: CronJobRunStatus.fromWire(json['status']),
+    startedAt: parseDate(json['startedAt']),
+    finishedAt: parseDate(json['finishedAt']),
+    triggeredBy: json['triggeredBy'] as String?,
+    canceledBy: json['canceledBy'] as String?,
+  );
 
   /// The ID of the run
   final String id;
   final CronJobRunStatus status;
   final DateTime? startedAt;
   final DateTime? finishedAt;
+
   /// user who triggered the cron job run
   final String? triggeredBy;
+
   /// user who cancelled the cron job run
   final String? canceledBy;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'status': status.wireValue,
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
-        if (triggeredBy != null) 'triggeredBy': triggeredBy,
-        if (canceledBy != null) 'canceledBy': canceledBy,
-      };
+    'id': id,
+    'status': status.wireValue,
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+    if (triggeredBy != null) 'triggeredBy': triggeredBy,
+    if (canceledBy != null) 'canceledBy': canceledBy,
+  };
 }
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum DomainType {
   apex('apex'),
   subdomain('subdomain'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -1626,10 +1738,8 @@ enum DomainType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DomainType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static DomainType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -1637,6 +1747,7 @@ enum DomainType {
 enum VerificationStatus {
   verified('verified'),
   unverified('unverified'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -1645,19 +1756,15 @@ enum VerificationStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static VerificationStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static VerificationStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class CustomDomainServer {
-  const CustomDomainServer({
-    this.id,
-    this.name,
-  });
+  const CustomDomainServer({this.id, this.name});
 
-  factory CustomDomainServer.fromJson(Map<String, Object?> json) => CustomDomainServer(
+  factory CustomDomainServer.fromJson(Map<String, Object?> json) =>
+      CustomDomainServer(
         id: json['id'] as String?,
         name: json['name'] as String?,
       );
@@ -1666,9 +1773,9 @@ class CustomDomainServer {
   final String? name;
 
   Map<String, Object?> toJson() => {
-        if (id != null) 'id': id,
-        if (name != null) 'name': name,
-      };
+    if (id != null) 'id': id,
+    if (name != null) 'name': name,
+  };
 }
 
 class CustomDomain {
@@ -1684,15 +1791,18 @@ class CustomDomain {
   });
 
   factory CustomDomain.fromJson(Map<String, Object?> json) => CustomDomain(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        domainType: DomainType.fromWire(json['domainType']),
-        publicSuffix: json['publicSuffix'] as String? ?? '',
-        redirectForName: json['redirectForName'] as String? ?? '',
-        verificationStatus: VerificationStatus.fromWire(json['verificationStatus']),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        server: json['server'] == null ? null : CustomDomainServer.fromJson(json['server']! as Map<String, Object?>),
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    domainType: DomainType.fromWire(json['domainType']),
+    publicSuffix: json['publicSuffix'] as String? ?? '',
+    redirectForName: json['redirectForName'] as String? ?? '',
+    verificationStatus: VerificationStatus.fromWire(json['verificationStatus']),
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    server: json['server'] == null
+        ? null
+        : CustomDomainServer.fromJson(json['server']! as Map<String, Object?>),
+  );
 
   final String id;
   final String name;
@@ -1704,17 +1814,16 @@ class CustomDomain {
   final CustomDomainServer? server;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'domainType': domainType.wireValue,
-        'publicSuffix': publicSuffix,
-        'redirectForName': redirectForName,
-        'verificationStatus': verificationStatus.wireValue,
-        'createdAt': createdAt.toIso8601String(),
-        if (server != null) 'server': server!.toJson(),
-      };
+    'id': id,
+    'name': name,
+    'domainType': domainType.wireValue,
+    'publicSuffix': publicSuffix,
+    'redirectForName': redirectForName,
+    'verificationStatus': verificationStatus.wireValue,
+    'createdAt': createdAt.toIso8601String(),
+    if (server != null) 'server': server!.toJson(),
+  };
 }
-
 
 class CustomDomainWithCursor {
   const CustomDomainWithCursor({
@@ -1722,8 +1831,11 @@ class CustomDomainWithCursor {
     required this.cursor,
   });
 
-  factory CustomDomainWithCursor.fromJson(Map<String, Object?> json) => CustomDomainWithCursor(
-        customDomain: CustomDomain.fromJson((json['customDomain'] as Map<String, Object?>?) ?? const {}),
+  factory CustomDomainWithCursor.fromJson(Map<String, Object?> json) =>
+      CustomDomainWithCursor(
+        customDomain: CustomDomain.fromJson(
+          (json['customDomain'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -1731,17 +1843,17 @@ class CustomDomainWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'customDomain': customDomain.toJson(),
-        'cursor': cursor,
-      };
+    'customDomain': customDomain.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum DatabaseRole {
   primary('primary'),
   replica('replica'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -1750,12 +1862,9 @@ enum DatabaseRole {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DatabaseRole fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static DatabaseRole fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -1771,6 +1880,7 @@ enum DatabaseStatus {
   recoveryInProgress('recovery_in_progress'),
   unknown('unknown'),
   updatingInstance('updating_instance'),
+
   /// A value this package does not know about.
   unknown_('');
 
@@ -1779,12 +1889,9 @@ enum DatabaseStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DatabaseStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown_,
-      );
+  static DatabaseStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown_);
 }
-
 
 /// Current status of a dedicated IP set.
 /// Decodes unrecognised values to [unknown] rather than
@@ -1797,6 +1904,7 @@ enum DedicatedIpstatus {
   failed('FAILED'),
   deleting('DELETING'),
   deleted('DELETED'),
+
   /// A value this package does not know about.
   unknown_('');
 
@@ -1805,10 +1913,8 @@ enum DedicatedIpstatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DedicatedIpstatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown_,
-      );
+  static DedicatedIpstatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown_);
 }
 
 class DedicatedIp {
@@ -1826,66 +1932,78 @@ class DedicatedIp {
   });
 
   factory DedicatedIp.fromJson(Map<String, Object?> json) => DedicatedIp(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        description: json['description'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        region: Region.fromWire(json['region']),
-        environmentIds: ((json['environmentIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        ips: ((json['ips'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        status: DedicatedIpstatus.fromWire(json['status']),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']),
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    description: json['description'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    region: Region.fromWire(json['region']),
+    environmentIds: ((json['environmentIds'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    ips: ((json['ips'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    status: DedicatedIpstatus.fromWire(json['status']),
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt: parseDate(json['updatedAt']),
+  );
 
   /// Unique identifier for this dedicated IP set.
   final String id;
+
   /// Descriptive name for this dedicated IP set.
   final String name;
+
   /// Free-form description for this dedicated IP set.
   final String description;
+
   /// The ID of the workspace that owns this dedicated IP set.
   final String ownerId;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Environments this dedicated IP set applies to. If empty, it applies to all services in the workspace within its region.
   final List<String> environmentIds;
+
   /// The IPv4 addresses assigned to this dedicated IP set.
   final List<String> ips;
+
   /// Current status of a dedicated IP set.
   final DedicatedIpstatus status;
+
   /// Time the dedicated IP set was created.
   final DateTime createdAt;
+
   /// Time the dedicated IP set was last updated.
   final DateTime? updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'description': description,
-        'ownerId': ownerId,
-        'region': region.wireValue,
-        'environmentIds': environmentIds.map((e) => e).toList(),
-        'ips': ips.map((e) => e).toList(),
-        'status': status.wireValue,
-        'createdAt': createdAt.toIso8601String(),
-        if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'description': description,
+    'ownerId': ownerId,
+    'region': region.wireValue,
+    'environmentIds': environmentIds.map((e) => e).toList(),
+    'ips': ips.map((e) => e).toList(),
+    'status': status.wireValue,
+    'createdAt': createdAt.toIso8601String(),
+    if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
+  };
 }
-
 
 /// Input for updating a dedicated IP set. All fields are optional. Omitted fields are left unchanged. Provide `environmentIds: []` to switch from environment-scoped to workspace-scoped.
 class DedicatedIppatch {
-  const DedicatedIppatch({
-    this.name,
-    this.description,
-    this.environmentIds,
-  });
+  const DedicatedIppatch({this.name, this.description, this.environmentIds});
 
-  factory DedicatedIppatch.fromJson(Map<String, Object?> json) => DedicatedIppatch(
+  factory DedicatedIppatch.fromJson(Map<String, Object?> json) =>
+      DedicatedIppatch(
         name: json['name'] as String?,
         description: json['description'] as String?,
-        environmentIds: (json['environmentIds'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        environmentIds: (json['environmentIds'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
       );
 
   final String? name;
@@ -1893,12 +2011,12 @@ class DedicatedIppatch {
   final List<String>? environmentIds;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (description != null) 'description': description,
-        if (environmentIds != null) 'environmentIds': environmentIds!.map((e) => e).toList(),
-      };
+    if (name != null) 'name': name,
+    if (description != null) 'description': description,
+    if (environmentIds != null)
+      'environmentIds': environmentIds!.map((e) => e).toList(),
+  };
 }
-
 
 /// Input for creating a dedicated IP set.
 class DedicatedIppost {
@@ -1910,86 +2028,86 @@ class DedicatedIppost {
     this.environmentIds,
   });
 
-  factory DedicatedIppost.fromJson(Map<String, Object?> json) => DedicatedIppost(
+  factory DedicatedIppost.fromJson(Map<String, Object?> json) =>
+      DedicatedIppost(
         name: json['name'] as String? ?? '',
         description: json['description'] as String?,
         ownerId: json['ownerId'] as String? ?? '',
         region: Region.fromWire(json['region']),
-        environmentIds: (json['environmentIds'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        environmentIds: (json['environmentIds'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
       );
 
   /// Name for the dedicated IP set.
   final String name;
+
   /// Free-form description for the dedicated IP set.
   final String? description;
+
   /// The ID of the workspace that will own this dedicated IP set.
   final String ownerId;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Environments to scope the dedicated IP set to. If omitted or empty, it applies to all services in the workspace within its region.
   final List<String>? environmentIds;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        if (description != null) 'description': description,
-        'ownerId': ownerId,
-        'region': region.wireValue,
-        if (environmentIds != null) 'environmentIds': environmentIds!.map((e) => e).toList(),
-      };
+    'name': name,
+    if (description != null) 'description': description,
+    'ownerId': ownerId,
+    'region': region.wireValue,
+    if (environmentIds != null)
+      'environmentIds': environmentIds!.map((e) => e).toList(),
+  };
 }
 
-
-
 class DeployCommit {
-  const DeployCommit({
-    this.id,
-    this.message,
-    this.createdAt,
-  });
+  const DeployCommit({this.id, this.message, this.createdAt});
 
   factory DeployCommit.fromJson(Map<String, Object?> json) => DeployCommit(
-        id: json['id'] as String?,
-        message: json['message'] as String?,
-        createdAt: parseDate(json['createdAt']),
-      );
+    id: json['id'] as String?,
+    message: json['message'] as String?,
+    createdAt: parseDate(json['createdAt']),
+  );
 
   final String? id;
   final String? message;
   final DateTime? createdAt;
 
   Map<String, Object?> toJson() => {
-        if (id != null) 'id': id,
-        if (message != null) 'message': message,
-        if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
-      };
+    if (id != null) 'id': id,
+    if (message != null) 'message': message,
+    if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
+  };
 }
 
 /// Image information used when creating the deploy. Not present for Git-backed deploys
 class DeployImage {
-  const DeployImage({
-    this.ref,
-    this.sha,
-    this.registryCredential,
-  });
+  const DeployImage({this.ref, this.sha, this.registryCredential});
 
   factory DeployImage.fromJson(Map<String, Object?> json) => DeployImage(
-        ref: json['ref'] as String?,
-        sha: json['sha'] as String?,
-        registryCredential: json['registryCredential'] as String?,
-      );
+    ref: json['ref'] as String?,
+    sha: json['sha'] as String?,
+    registryCredential: json['registryCredential'] as String?,
+  );
 
   /// Image reference used when creating the deploy
   final String? ref;
+
   /// SHA that the image reference was resolved to when creating the deploy
   final String? sha;
+
   /// Name of credential used to pull the image, if provided
   final String? registryCredential;
 
   Map<String, Object?> toJson() => {
-        if (ref != null) 'ref': ref,
-        if (sha != null) 'sha': sha,
-        if (registryCredential != null) 'registryCredential': registryCredential,
-      };
+    if (ref != null) 'ref': ref,
+    if (sha != null) 'sha': sha,
+    if (registryCredential != null) 'registryCredential': registryCredential,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -2006,6 +2124,7 @@ enum DeployStatus {
   canceled('canceled'),
   preDeployInProgress('pre_deploy_in_progress'),
   preDeployFailed('pre_deploy_failed'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -2014,10 +2133,8 @@ enum DeployStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static DeployStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static DeployStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -2033,6 +2150,7 @@ enum Trigger {
   rollback('rollback'),
   serviceResumed('service_resumed'),
   serviceUpdated('service_updated'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -2041,10 +2159,8 @@ enum Trigger {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Trigger fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Trigger fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Deploy {
@@ -2061,19 +2177,24 @@ class Deploy {
   });
 
   factory Deploy.fromJson(Map<String, Object?> json) => Deploy(
-        id: json['id'] as String? ?? '',
-        commit: json['commit'] == null ? null : DeployCommit.fromJson(json['commit']! as Map<String, Object?>),
-        image: json['image'] == null ? null : DeployImage.fromJson(json['image']! as Map<String, Object?>),
-        status: DeployStatus.fromWire(json['status']),
-        trigger: Trigger.fromWire(json['trigger']),
-        startedAt: parseDate(json['startedAt']),
-        finishedAt: parseDate(json['finishedAt']),
-        createdAt: parseDate(json['createdAt']),
-        updatedAt: parseDate(json['updatedAt']),
-      );
+    id: json['id'] as String? ?? '',
+    commit: json['commit'] == null
+        ? null
+        : DeployCommit.fromJson(json['commit']! as Map<String, Object?>),
+    image: json['image'] == null
+        ? null
+        : DeployImage.fromJson(json['image']! as Map<String, Object?>),
+    status: DeployStatus.fromWire(json['status']),
+    trigger: Trigger.fromWire(json['trigger']),
+    startedAt: parseDate(json['startedAt']),
+    finishedAt: parseDate(json['finishedAt']),
+    createdAt: parseDate(json['createdAt']),
+    updatedAt: parseDate(json['updatedAt']),
+  );
 
   final String id;
   final DeployCommit? commit;
+
   /// Image information used when creating the deploy. Not present for Git-backed deploys
   final DeployImage? image;
   final DeployStatus? status;
@@ -2084,29 +2205,26 @@ class Deploy {
   final DateTime? updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        if (commit != null) 'commit': commit!.toJson(),
-        if (image != null) 'image': image!.toJson(),
-        if (status != null) 'status': status!.wireValue,
-        if (trigger != null) 'trigger': trigger!.wireValue,
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
-        if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
-        if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
-      };
+    'id': id,
+    if (commit != null) 'commit': commit!.toJson(),
+    if (image != null) 'image': image!.toJson(),
+    if (status != null) 'status': status!.wireValue,
+    if (trigger != null) 'trigger': trigger!.wireValue,
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+    if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
+    if (updatedAt != null) 'updatedAt': updatedAt!.toIso8601String(),
+  };
 }
 
-
-
-
 class DeployWithCursor {
-  const DeployWithCursor({
-    this.deploy,
-    this.cursor,
-  });
+  const DeployWithCursor({this.deploy, this.cursor});
 
-  factory DeployWithCursor.fromJson(Map<String, Object?> json) => DeployWithCursor(
-        deploy: json['deploy'] == null ? null : Deploy.fromJson(json['deploy']! as Map<String, Object?>),
+  factory DeployWithCursor.fromJson(Map<String, Object?> json) =>
+      DeployWithCursor(
+        deploy: json['deploy'] == null
+            ? null
+            : Deploy.fromJson(json['deploy']! as Map<String, Object?>),
         cursor: json['cursor'] as String?,
       );
 
@@ -2114,37 +2232,32 @@ class DeployWithCursor {
   final String? cursor;
 
   Map<String, Object?> toJson() => {
-        if (deploy != null) 'deploy': deploy!.toJson(),
-        if (cursor != null) 'cursor': cursor,
-      };
+    if (deploy != null) 'deploy': deploy!.toJson(),
+    if (cursor != null) 'cursor': cursor,
+  };
 }
 
-
 class DiskSnapshot {
-  const DiskSnapshot({
-    this.createdAt,
-    this.snapshotKey,
-    this.instanceId,
-  });
+  const DiskSnapshot({this.createdAt, this.snapshotKey, this.instanceId});
 
   factory DiskSnapshot.fromJson(Map<String, Object?> json) => DiskSnapshot(
-        createdAt: parseDate(json['createdAt']),
-        snapshotKey: json['snapshotKey'] as String?,
-        instanceId: json['instanceId'] as String?,
-      );
+    createdAt: parseDate(json['createdAt']),
+    snapshotKey: json['snapshotKey'] as String?,
+    instanceId: json['instanceId'] as String?,
+  );
 
   final DateTime? createdAt;
   final String? snapshotKey;
+
   /// When a service with a disk is scaled, the instanceId is used to identify the instance that the disk is attached to. Each instance's disks get their own snapshots, and can be restored separately.
   final String? instanceId;
 
   Map<String, Object?> toJson() => {
-        if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
-        if (snapshotKey != null) 'snapshotKey': snapshotKey,
-        if (instanceId != null) 'instanceId': instanceId,
-      };
+    if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
+    if (snapshotKey != null) 'snapshotKey': snapshotKey,
+    if (instanceId != null) 'instanceId': instanceId,
+  };
 }
-
 
 class DiskWithCursorDisk {
   const DiskWithCursorDisk({
@@ -2157,15 +2270,19 @@ class DiskWithCursorDisk {
     required this.updatedAt,
   });
 
-  factory DiskWithCursorDisk.fromJson(Map<String, Object?> json) => DiskWithCursorDisk(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
-        mountPath: json['mountPath'] as String? ?? '',
-        serviceId: json['serviceId'] as String?,
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      );
+  factory DiskWithCursorDisk.fromJson(
+    Map<String, Object?> json,
+  ) => DiskWithCursorDisk(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+    mountPath: json['mountPath'] as String? ?? '',
+    serviceId: json['serviceId'] as String?,
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  );
 
   final String id;
   final String name;
@@ -2176,36 +2293,31 @@ class DiskWithCursorDisk {
   final DateTime updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-        if (serviceId != null) 'serviceId': serviceId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+    if (serviceId != null) 'serviceId': serviceId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 class DiskWithCursor {
-  const DiskWithCursor({
-    required this.disk,
-    required this.cursor,
-  });
+  const DiskWithCursor({required this.disk, required this.cursor});
 
   factory DiskWithCursor.fromJson(Map<String, Object?> json) => DiskWithCursor(
-        disk: DiskWithCursorDisk.fromJson((json['disk'] as Map<String, Object?>?) ?? const {}),
-        cursor: json['cursor'] as String? ?? '',
-      );
+    disk: DiskWithCursorDisk.fromJson(
+      (json['disk'] as Map<String, Object?>?) ?? const {},
+    ),
+    cursor: json['cursor'] as String? ?? '',
+  );
 
   final DiskWithCursorDisk disk;
   final String cursor;
 
-  Map<String, Object?> toJson() => {
-        'disk': disk.toJson(),
-        'cursor': cursor,
-      };
+  Map<String, Object?> toJson() => {'disk': disk.toJson(), 'cursor': cursor};
 }
-
 
 class DockerDetails {
   const DockerDetails({
@@ -2217,12 +2329,16 @@ class DockerDetails {
   });
 
   factory DockerDetails.fromJson(Map<String, Object?> json) => DockerDetails(
-        dockerCommand: json['dockerCommand'] as String? ?? '',
-        dockerContext: json['dockerContext'] as String? ?? '',
-        dockerfilePath: json['dockerfilePath'] as String? ?? '',
-        preDeployCommand: json['preDeployCommand'] as String?,
-        registryCredential: json['registryCredential'] == null ? null : RegistryCredential.fromJson(json['registryCredential']! as Map<String, Object?>),
-      );
+    dockerCommand: json['dockerCommand'] as String? ?? '',
+    dockerContext: json['dockerContext'] as String? ?? '',
+    dockerfilePath: json['dockerfilePath'] as String? ?? '',
+    preDeployCommand: json['preDeployCommand'] as String?,
+    registryCredential: json['registryCredential'] == null
+        ? null
+        : RegistryCredential.fromJson(
+            json['registryCredential']! as Map<String, Object?>,
+          ),
+  );
 
   final String dockerCommand;
   final String dockerContext;
@@ -2231,14 +2347,14 @@ class DockerDetails {
   final RegistryCredential? registryCredential;
 
   Map<String, Object?> toJson() => {
-        'dockerCommand': dockerCommand,
-        'dockerContext': dockerContext,
-        'dockerfilePath': dockerfilePath,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (registryCredential != null) 'registryCredential': registryCredential!.toJson(),
-      };
+    'dockerCommand': dockerCommand,
+    'dockerContext': dockerContext,
+    'dockerfilePath': dockerfilePath,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (registryCredential != null)
+      'registryCredential': registryCredential!.toJson(),
+  };
 }
-
 
 class DockerDetailsPatch {
   const DockerDetailsPatch({
@@ -2248,7 +2364,8 @@ class DockerDetailsPatch {
     this.registryCredentialId,
   });
 
-  factory DockerDetailsPatch.fromJson(Map<String, Object?> json) => DockerDetailsPatch(
+  factory DockerDetailsPatch.fromJson(Map<String, Object?> json) =>
+      DockerDetailsPatch(
         dockerCommand: json['dockerCommand'] as String?,
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
@@ -2261,13 +2378,13 @@ class DockerDetailsPatch {
   final String? registryCredentialId;
 
   Map<String, Object?> toJson() => {
-        if (dockerCommand != null) 'dockerCommand': dockerCommand,
-        if (dockerContext != null) 'dockerContext': dockerContext,
-        if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
-        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
-      };
+    if (dockerCommand != null) 'dockerCommand': dockerCommand,
+    if (dockerContext != null) 'dockerContext': dockerContext,
+    if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
+    if (registryCredentialId != null)
+      'registryCredentialId': registryCredentialId,
+  };
 }
-
 
 class DockerDetailsPost {
   const DockerDetailsPost({
@@ -2277,7 +2394,8 @@ class DockerDetailsPost {
     this.registryCredentialId,
   });
 
-  factory DockerDetailsPost.fromJson(Map<String, Object?> json) => DockerDetailsPost(
+  factory DockerDetailsPost.fromJson(Map<String, Object?> json) =>
+      DockerDetailsPost(
         dockerCommand: json['dockerCommand'] as String?,
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
@@ -2286,18 +2404,19 @@ class DockerDetailsPost {
 
   final String? dockerCommand;
   final String? dockerContext;
+
   /// Defaults to "./Dockerfile"
   final String? dockerfilePath;
   final String? registryCredentialId;
 
   Map<String, Object?> toJson() => {
-        if (dockerCommand != null) 'dockerCommand': dockerCommand,
-        if (dockerContext != null) 'dockerContext': dockerContext,
-        if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
-        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
-      };
+    if (dockerCommand != null) 'dockerCommand': dockerCommand,
+    if (dockerContext != null) 'dockerContext': dockerContext,
+    if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
+    if (registryCredentialId != null)
+      'registryCredentialId': registryCredentialId,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -2307,6 +2426,7 @@ enum ServiceTypeShort {
   pserv('pserv'),
   worker('worker'),
   cron('cron'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -2315,10 +2435,8 @@ enum ServiceTypeShort {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ServiceTypeShort fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ServiceTypeShort fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class EnvGroupLink {
@@ -2329,60 +2447,48 @@ class EnvGroupLink {
   });
 
   factory EnvGroupLink.fromJson(Map<String, Object?> json) => EnvGroupLink(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        type: ServiceTypeShort.fromWire(json['type']),
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    type: ServiceTypeShort.fromWire(json['type']),
+  );
 
   final String id;
   final String name;
   final ServiceTypeShort type;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'type': type.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'type': type.wireValue,
+  };
 }
 
 class EnvVar {
-  const EnvVar({
-    required this.key,
-    required this.value,
-  });
+  const EnvVar({required this.key, required this.value});
 
   factory EnvVar.fromJson(Map<String, Object?> json) => EnvVar(
-        key: json['key'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+    key: json['key'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String key;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'key': key,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'key': key, 'value': value};
 }
 
 class SecretFile {
-  const SecretFile({
-    required this.name,
-    required this.content,
-  });
+  const SecretFile({required this.name, required this.content});
 
   factory SecretFile.fromJson(Map<String, Object?> json) => SecretFile(
-        name: json['name'] as String? ?? '',
-        content: json['content'] as String? ?? '',
-      );
+    name: json['name'] as String? ?? '',
+    content: json['content'] as String? ?? '',
+  );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {
-        'name': name,
-        'content': content,
-      };
+  Map<String, Object?> toJson() => {'name': name, 'content': content};
 }
 
 class EnvGroup {
@@ -2399,22 +2505,36 @@ class EnvGroup {
   });
 
   factory EnvGroup.fromJson(Map<String, Object?> json) => EnvGroup(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        serviceLinks: ((json['serviceLinks'] as List<Object?>?) ?? const []).map((e) => EnvGroupLink.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-        envVars: ((json['envVars'] as List<Object?>?) ?? const []).map((e) => EnvVar.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        secretFiles: ((json['secretFiles'] as List<Object?>?) ?? const []).map((e) => SecretFile.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    serviceLinks: ((json['serviceLinks'] as List<Object?>?) ?? const [])
+        .map(
+          (e) =>
+              EnvGroupLink.fromJson((e as Map<String, Object?>?) ?? const {}),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+    envVars: ((json['envVars'] as List<Object?>?) ?? const [])
+        .map((e) => EnvVar.fromJson((e as Map<String, Object?>?) ?? const {}))
+        .toList(),
+    secretFiles: ((json['secretFiles'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => SecretFile.fromJson((e as Map<String, Object?>?) ?? const {}),
+        )
+        .toList(),
+  );
 
   final String id;
   final String name;
   final String ownerId;
   final DateTime createdAt;
   final DateTime updatedAt;
+
   /// List of serviceIds linked to the envGroup
   final List<EnvGroupLink> serviceLinks;
   final String? environmentId;
@@ -2422,19 +2542,17 @@ class EnvGroup {
   final List<SecretFile> secretFiles;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'serviceLinks': serviceLinks.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-        'envVars': envVars.map((e) => e.toJson()).toList(),
-        'secretFiles': secretFiles.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'name': name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'serviceLinks': serviceLinks.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+    'envVars': envVars.map((e) => e.toJson()).toList(),
+    'secretFiles': secretFiles.map((e) => e.toJson()).toList(),
+  };
 }
-
-
 
 class EnvGroupMeta {
   const EnvGroupMeta({
@@ -2448,52 +2566,53 @@ class EnvGroupMeta {
   });
 
   factory EnvGroupMeta.fromJson(Map<String, Object?> json) => EnvGroupMeta(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        serviceLinks: ((json['serviceLinks'] as List<Object?>?) ?? const []).map((e) => EnvGroupLink.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    serviceLinks: ((json['serviceLinks'] as List<Object?>?) ?? const [])
+        .map(
+          (e) =>
+              EnvGroupLink.fromJson((e as Map<String, Object?>?) ?? const {}),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+  );
 
   final String id;
   final String name;
   final String ownerId;
   final DateTime createdAt;
   final DateTime updatedAt;
+
   /// List of serviceIds linked to the envGroup
   final List<EnvGroupLink> serviceLinks;
   final String? environmentId;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'serviceLinks': serviceLinks.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-      };
+    'id': id,
+    'name': name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'serviceLinks': serviceLinks.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+  };
 }
 
-
 class EnvGroupPatchinput {
-  const EnvGroupPatchinput({
-    required this.name,
-  });
+  const EnvGroupPatchinput({required this.name});
 
-  factory EnvGroupPatchinput.fromJson(Map<String, Object?> json) => EnvGroupPatchinput(
-        name: json['name'] as String? ?? '',
-      );
+  factory EnvGroupPatchinput.fromJson(Map<String, Object?> json) =>
+      EnvGroupPatchinput(name: json['name'] as String? ?? '');
 
   final String name;
 
-  Map<String, Object?> toJson() => {
-        'name': name,
-      };
+  Map<String, Object?> toJson() => {'name': name};
 }
-
 
 class EnvGroupPostinputSecretFilesItem {
   const EnvGroupPostinputSecretFilesItem({
@@ -2501,18 +2620,17 @@ class EnvGroupPostinputSecretFilesItem {
     required this.content,
   });
 
-  factory EnvGroupPostinputSecretFilesItem.fromJson(Map<String, Object?> json) => EnvGroupPostinputSecretFilesItem(
-        name: json['name'] as String? ?? '',
-        content: json['content'] as String? ?? '',
-      );
+  factory EnvGroupPostinputSecretFilesItem.fromJson(
+    Map<String, Object?> json,
+  ) => EnvGroupPostinputSecretFilesItem(
+    name: json['name'] as String? ?? '',
+    content: json['content'] as String? ?? '',
+  );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {
-        'name': name,
-        'content': content,
-      };
+  Map<String, Object?> toJson() => {'name': name, 'content': content};
 }
 
 class EnvGroupPostinput {
@@ -2525,12 +2643,23 @@ class EnvGroupPostinput {
     this.environmentId,
   });
 
-  factory EnvGroupPostinput.fromJson(Map<String, Object?> json) => EnvGroupPostinput(
+  factory EnvGroupPostinput.fromJson(Map<String, Object?> json) =>
+      EnvGroupPostinput(
         name: json['name'] as String? ?? '',
         ownerId: json['ownerId'] as String? ?? '',
-        envVars: ((json['envVars'] as List<Object?>?) ?? const []).map((e) => (e as Map<String, Object?>?) ?? const {}).toList(),
-        secretFiles: (json['secretFiles'] as List<Object?>?)?.map((e) => EnvGroupPostinputSecretFilesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        serviceIds: (json['serviceIds'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        envVars: ((json['envVars'] as List<Object?>?) ?? const [])
+            .map((e) => (e as Map<String, Object?>?) ?? const {})
+            .toList(),
+        secretFiles: (json['secretFiles'] as List<Object?>?)
+            ?.map(
+              (e) => EnvGroupPostinputSecretFilesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        serviceIds: (json['serviceIds'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
         environmentId: json['environmentId'] as String?,
       );
 
@@ -2542,62 +2671,48 @@ class EnvGroupPostinput {
   final String? environmentId;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'ownerId': ownerId,
-        'envVars': envVars.map((e) => e).toList(),
-        if (secretFiles != null) 'secretFiles': secretFiles!.map((e) => e.toJson()).toList(),
-        if (serviceIds != null) 'serviceIds': serviceIds!.map((e) => e).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-      };
+    'name': name,
+    'ownerId': ownerId,
+    'envVars': envVars.map((e) => e).toList(),
+    if (secretFiles != null)
+      'secretFiles': secretFiles!.map((e) => e.toJson()).toList(),
+    if (serviceIds != null) 'serviceIds': serviceIds!.map((e) => e).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+  };
 }
 
-
-
-
-
-
 class EnvVarGenerateValue {
-  const EnvVarGenerateValue({
-    required this.generateValue,
-  });
+  const EnvVarGenerateValue({required this.generateValue});
 
-  factory EnvVarGenerateValue.fromJson(Map<String, Object?> json) => EnvVarGenerateValue(
+  factory EnvVarGenerateValue.fromJson(Map<String, Object?> json) =>
+      EnvVarGenerateValue(
         generateValue: json['generateValue'] as bool? ?? false,
       );
 
   final bool generateValue;
 
-  Map<String, Object?> toJson() => {
-        'generateValue': generateValue,
-      };
+  Map<String, Object?> toJson() => {'generateValue': generateValue};
 }
 
-
 class EnvVarValue {
-  const EnvVarValue({
-    required this.value,
-  });
+  const EnvVarValue({required this.value});
 
-  factory EnvVarValue.fromJson(Map<String, Object?> json) => EnvVarValue(
-        value: json['value'] as String? ?? '',
-      );
+  factory EnvVarValue.fromJson(Map<String, Object?> json) =>
+      EnvVarValue(value: json['value'] as String? ?? '');
 
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'value': value};
 }
 
-
 class EnvVarWithCursor {
-  const EnvVarWithCursor({
-    required this.envVar,
-    required this.cursor,
-  });
+  const EnvVarWithCursor({required this.envVar, required this.cursor});
 
-  factory EnvVarWithCursor.fromJson(Map<String, Object?> json) => EnvVarWithCursor(
-        envVar: EnvVar.fromJson((json['envVar'] as Map<String, Object?>?) ?? const {}),
+  factory EnvVarWithCursor.fromJson(Map<String, Object?> json) =>
+      EnvVarWithCursor(
+        envVar: EnvVar.fromJson(
+          (json['envVar'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -2605,11 +2720,10 @@ class EnvVarWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'envVar': envVar.toJson(),
-        'cursor': cursor,
-      };
+    'envVar': envVar.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 /// Indicates whether an environment is `unprotected` or `protected`. Only admin users can perform destructive actions in `protected` environments.
 /// Decodes unrecognised values to [unknown] rather than
@@ -2617,6 +2731,7 @@ class EnvVarWithCursor {
 enum ProtectedStatus {
   unprotected('unprotected'),
   protected('protected'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -2625,10 +2740,8 @@ enum ProtectedStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ProtectedStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ProtectedStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Environment {
@@ -2646,17 +2759,31 @@ class Environment {
   });
 
   factory Environment.fromJson(Map<String, Object?> json) => Environment(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        projectId: json['projectId'] as String? ?? '',
-        databasesIds: ((json['databasesIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        redisIds: ((json['redisIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        serviceIds: ((json['serviceIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        envGroupIds: ((json['envGroupIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-        protectedStatus: ProtectedStatus.fromWire(json['protectedStatus']),
-        networkIsolationEnabled: json['networkIsolationEnabled'] as bool? ?? false,
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    projectId: json['projectId'] as String? ?? '',
+    databasesIds: ((json['databasesIds'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    ipAllowList: (json['ipAllowList'] as List<Object?>?)
+        ?.map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    redisIds: ((json['redisIds'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    serviceIds: ((json['serviceIds'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    envGroupIds: ((json['envGroupIds'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+    protectedStatus: ProtectedStatus.fromWire(json['protectedStatus']),
+    networkIsolationEnabled: json['networkIsolationEnabled'] as bool? ?? false,
+  );
 
   final String id;
   final String name;
@@ -2666,25 +2793,27 @@ class Environment {
   final List<String> redisIds;
   final List<String> serviceIds;
   final List<String> envGroupIds;
+
   /// Indicates whether an environment is `unprotected` or `protected`. Only admin users can perform destructive actions in `protected` environments.
   final ProtectedStatus protectedStatus;
+
   /// Indicates whether network connections across environments are allowed.
   final bool networkIsolationEnabled;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'projectId': projectId,
-        'databasesIds': databasesIds.map((e) => e).toList(),
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        'redisIds': redisIds.map((e) => e).toList(),
-        'serviceIds': serviceIds.map((e) => e).toList(),
-        'envGroupIds': envGroupIds.map((e) => e).toList(),
-        'protectedStatus': protectedStatus.wireValue,
-        'networkIsolationEnabled': networkIsolationEnabled,
-      };
+    'id': id,
+    'name': name,
+    'projectId': projectId,
+    'databasesIds': databasesIds.map((e) => e).toList(),
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    'redisIds': redisIds.map((e) => e).toList(),
+    'serviceIds': serviceIds.map((e) => e).toList(),
+    'envGroupIds': envGroupIds.map((e) => e).toList(),
+    'protectedStatus': protectedStatus.wireValue,
+    'networkIsolationEnabled': networkIsolationEnabled,
+  };
 }
-
 
 class EnvironmentPatchinput {
   const EnvironmentPatchinput({
@@ -2694,28 +2823,38 @@ class EnvironmentPatchinput {
     this.ipAllowList,
   });
 
-  factory EnvironmentPatchinput.fromJson(Map<String, Object?> json) => EnvironmentPatchinput(
+  factory EnvironmentPatchinput.fromJson(Map<String, Object?> json) =>
+      EnvironmentPatchinput(
         name: json['name'] as String?,
         networkIsolationEnabled: json['networkIsolationEnabled'] as bool?,
         protectedStatus: ProtectedStatus.fromWire(json['protectedStatus']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String? name;
+
   /// Indicates whether network connections across environments are allowed.
   final bool? networkIsolationEnabled;
+
   /// Indicates whether an environment is `unprotected` or `protected`. Only admin users can perform destructive actions in `protected` environments.
   final ProtectedStatus? protectedStatus;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (networkIsolationEnabled != null) 'networkIsolationEnabled': networkIsolationEnabled,
-        if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    if (name != null) 'name': name,
+    if (networkIsolationEnabled != null)
+      'networkIsolationEnabled': networkIsolationEnabled,
+    if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 class EnvironmentPostinput {
   const EnvironmentPostinput({
@@ -2726,48 +2865,58 @@ class EnvironmentPostinput {
     this.ipAllowList,
   });
 
-  factory EnvironmentPostinput.fromJson(Map<String, Object?> json) => EnvironmentPostinput(
+  factory EnvironmentPostinput.fromJson(Map<String, Object?> json) =>
+      EnvironmentPostinput(
         name: json['name'] as String? ?? '',
         projectId: json['projectId'] as String? ?? '',
         protectedStatus: ProtectedStatus.fromWire(json['protectedStatus']),
         networkIsolationEnabled: json['networkIsolationEnabled'] as bool?,
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String name;
   final String projectId;
+
   /// Indicates whether an environment is `unprotected` or `protected`. Only admin users can perform destructive actions in `protected` environments.
   final ProtectedStatus? protectedStatus;
+
   /// Indicates whether network connections across environments are allowed.
   final bool? networkIsolationEnabled;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'projectId': projectId,
-        if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
-        if (networkIsolationEnabled != null) 'networkIsolationEnabled': networkIsolationEnabled,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    'name': name,
+    'projectId': projectId,
+    if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
+    if (networkIsolationEnabled != null)
+      'networkIsolationEnabled': networkIsolationEnabled,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
 
-
 class EnvironmentResourcesPostinput {
-  const EnvironmentResourcesPostinput({
-    required this.resourceIds,
-  });
+  const EnvironmentResourcesPostinput({required this.resourceIds});
 
-  factory EnvironmentResourcesPostinput.fromJson(Map<String, Object?> json) => EnvironmentResourcesPostinput(
-        resourceIds: ((json['resourceIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
+  factory EnvironmentResourcesPostinput.fromJson(Map<String, Object?> json) =>
+      EnvironmentResourcesPostinput(
+        resourceIds: ((json['resourceIds'] as List<Object?>?) ?? const [])
+            .map((e) => e as String? ?? '')
+            .toList(),
       );
 
   final List<String> resourceIds;
 
   Map<String, Object?> toJson() => {
-        'resourceIds': resourceIds.map((e) => e).toList(),
-      };
+    'resourceIds': resourceIds.map((e) => e).toList(),
+  };
 }
-
 
 /// An environment with a cursor
 class EnvironmentWithCursor {
@@ -2776,8 +2925,11 @@ class EnvironmentWithCursor {
     required this.cursor,
   });
 
-  factory EnvironmentWithCursor.fromJson(Map<String, Object?> json) => EnvironmentWithCursor(
-        environment: Environment.fromJson((json['environment'] as Map<String, Object?>?) ?? const {}),
+  factory EnvironmentWithCursor.fromJson(Map<String, Object?> json) =>
+      EnvironmentWithCursor(
+        environment: Environment.fromJson(
+          (json['environment'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -2785,37 +2937,32 @@ class EnvironmentWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'environment': environment.toJson(),
-        'cursor': cursor,
-      };
+    'environment': environment.toJson(),
+    'cursor': cursor,
+  };
 }
 
-
 class Error {
-  const Error({
-    this.id,
-    this.message,
-    this.code,
-  });
+  const Error({this.id, this.message, this.code});
 
   factory Error.fromJson(Map<String, Object?> json) => Error(
-        id: json['id'] as String?,
-        message: json['message'] as String?,
-        code: json['code'] as String?,
-      );
+    id: json['id'] as String?,
+    message: json['message'] as String?,
+    code: json['code'] as String?,
+  );
 
   final String? id;
   final String? message;
+
   /// A stable, machine-readable identifier present on specific errors that clients can handle specially. Each endpoint documents the codes it can return. The errorCode schema lists the full vocabulary of codes.
   final String? code;
 
   Map<String, Object?> toJson() => {
-        if (id != null) 'id': id,
-        if (message != null) 'message': message,
-        if (code != null) 'code': code,
-      };
+    if (id != null) 'id': id,
+    if (message != null) 'message': message,
+    if (code != null) 'code': code,
+  };
 }
-
 
 /// The machine-readable codes that can appear in the error object's "code" field. The field is a plain string so new codes are not breaking changes; this vocabulary exists so generated clients get typed constants. OpenAPI cannot deprecate individual enum values, so deprecation notes live in x-enum-descriptions.
 /// Decodes unrecognised values to [unknown] rather than
@@ -2824,6 +2971,7 @@ enum ErrorCode {
   multipleRegions('multiple_regions'),
   duplicateSavedSearchName('duplicate_saved_search_name'),
   tooManyResources('too_many_resources'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -2832,12 +2980,9 @@ enum ErrorCode {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ErrorCode fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ErrorCode fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
-
 
 class Header {
   const Header({
@@ -2848,11 +2993,11 @@ class Header {
   });
 
   factory Header.fromJson(Map<String, Object?> json) => Header(
-        id: json['id'] as String? ?? '',
-        path: json['path'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? '',
+    path: json['path'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String id;
   final String path;
@@ -2860,13 +3005,12 @@ class Header {
   final String value;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'path': path,
-        'name': name,
-        'value': value,
-      };
+    'id': id,
+    'path': path,
+    'name': name,
+    'value': value,
+  };
 }
-
 
 class HeaderInput {
   const HeaderInput({
@@ -2876,34 +3020,31 @@ class HeaderInput {
   });
 
   factory HeaderInput.fromJson(Map<String, Object?> json) => HeaderInput(
-        path: json['path'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+    path: json['path'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   /// The request path to add the header to. Wildcards will cause headers to be applied to all matching paths.
   final String path;
+
   /// Header name
   final String name;
+
   /// Header value
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'path': path,
-        'name': name,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'path': path, 'name': name, 'value': value};
 }
 
-
 class HeaderWithCursor {
-  const HeaderWithCursor({
-    required this.header,
-    required this.cursor,
-  });
+  const HeaderWithCursor({required this.header, required this.cursor});
 
-  factory HeaderWithCursor.fromJson(Map<String, Object?> json) => HeaderWithCursor(
-        header: Header.fromJson((json['header'] as Map<String, Object?>?) ?? const {}),
+  factory HeaderWithCursor.fromJson(Map<String, Object?> json) =>
+      HeaderWithCursor(
+        header: Header.fromJson(
+          (json['header'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -2911,11 +3052,10 @@ class HeaderWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'header': header.toJson(),
-        'cursor': cursor,
-      };
+    'header': header.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 class Image {
   const Image({
@@ -2925,26 +3065,27 @@ class Image {
   });
 
   factory Image.fromJson(Map<String, Object?> json) => Image(
-        ownerId: json['ownerId'] as String? ?? '',
-        registryCredentialId: json['registryCredentialId'] as String?,
-        imagePath: json['imagePath'] as String? ?? '',
-      );
+    ownerId: json['ownerId'] as String? ?? '',
+    registryCredentialId: json['registryCredentialId'] as String?,
+    imagePath: json['imagePath'] as String? ?? '',
+  );
 
   /// The ID of the owner for this image. This should match the owner of the service as well as the owner of any specified registry credential.
   final String ownerId;
+
   /// Optional reference to the registry credential passed to the image repository to retrieve this image.
   final String? registryCredentialId;
+
   /// Path to the image used for this server (e.g docker.io/library/nginx:latest).
   final String imagePath;
 
   Map<String, Object?> toJson() => {
-        'ownerId': ownerId,
-        if (registryCredentialId != null) 'registryCredentialId': registryCredentialId,
-        'imagePath': imagePath,
-      };
+    'ownerId': ownerId,
+    if (registryCredentialId != null)
+      'registryCredentialId': registryCredentialId,
+    'imagePath': imagePath,
+  };
 }
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -2954,6 +3095,7 @@ enum JobWithCursorJobStatus {
   succeeded('succeeded'),
   failed('failed'),
   canceled('canceled'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -2962,10 +3104,8 @@ enum JobWithCursorJobStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static JobWithCursorJobStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static JobWithCursorJobStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class JobWithCursorJob {
@@ -2980,13 +3120,16 @@ class JobWithCursorJob {
     this.finishedAt,
   });
 
-  factory JobWithCursorJob.fromJson(Map<String, Object?> json) => JobWithCursorJob(
+  factory JobWithCursorJob.fromJson(Map<String, Object?> json) =>
+      JobWithCursorJob(
         id: json['id'] as String? ?? '',
         serviceId: json['serviceId'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         planId: json['planId'] as String? ?? '',
         status: JobWithCursorJobStatus.fromWire(json['status']),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
       );
@@ -3001,37 +3144,32 @@ class JobWithCursorJob {
   final DateTime? finishedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'serviceId': serviceId,
-        'startCommand': startCommand,
-        'planId': planId,
-        if (status != null) 'status': status!.wireValue,
-        'createdAt': createdAt.toIso8601String(),
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
-      };
+    'id': id,
+    'serviceId': serviceId,
+    'startCommand': startCommand,
+    'planId': planId,
+    if (status != null) 'status': status!.wireValue,
+    'createdAt': createdAt.toIso8601String(),
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+  };
 }
 
 class JobWithCursor {
-  const JobWithCursor({
-    required this.job,
-    required this.cursor,
-  });
+  const JobWithCursor({required this.job, required this.cursor});
 
   factory JobWithCursor.fromJson(Map<String, Object?> json) => JobWithCursor(
-        job: JobWithCursorJob.fromJson((json['job'] as Map<String, Object?>?) ?? const {}),
-        cursor: json['cursor'] as String? ?? '',
-      );
+    job: JobWithCursorJob.fromJson(
+      (json['job'] as Map<String, Object?>?) ?? const {},
+    ),
+    cursor: json['cursor'] as String? ?? '',
+  );
 
   final JobWithCursorJob job;
   final String cursor;
 
-  Map<String, Object?> toJson() => {
-        'job': job.toJson(),
-        'cursor': cursor,
-      };
+  Map<String, Object?> toJson() => {'job': job.toJson(), 'cursor': cursor};
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -3042,6 +3180,7 @@ enum KeyValuePlan {
   pro('pro'),
   proPlus('pro_plus'),
   custom('custom'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3050,10 +3189,8 @@ enum KeyValuePlan {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static KeyValuePlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static KeyValuePlan fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -3061,6 +3198,7 @@ enum KeyValuePlan {
 enum OwnerType {
   user('user'),
   team('team'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3069,10 +3207,8 @@ enum OwnerType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static OwnerType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static OwnerType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Owner {
@@ -3086,30 +3222,39 @@ class Owner {
   });
 
   factory Owner.fromJson(Map<String, Object?> json) => Owner(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        email: json['email'] as String? ?? '',
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        twoFactorAuthEnabled: json['twoFactorAuthEnabled'] as bool?,
-        type: OwnerType.fromWire(json['type']),
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    ipAllowList: (json['ipAllowList'] as List<Object?>?)
+        ?.map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    twoFactorAuthEnabled: json['twoFactorAuthEnabled'] as bool?,
+    type: OwnerType.fromWire(json['type']),
+  );
 
   final String id;
   final String name;
   final String email;
   final List<CidrBlockAndDescription>? ipAllowList;
+
   /// Whether two-factor authentication is enabled for the owner. Only present if `type` is `user`.
   final bool? twoFactorAuthEnabled;
   final OwnerType type;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'email': email,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        if (twoFactorAuthEnabled != null) 'twoFactorAuthEnabled': twoFactorAuthEnabled,
-        'type': type.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'email': email,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    if (twoFactorAuthEnabled != null)
+      'twoFactorAuthEnabled': twoFactorAuthEnabled,
+    'type': type.wireValue,
+  };
 }
 
 /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
@@ -3119,6 +3264,7 @@ enum PersistenceMode {
   journalSnapshot('journal_snapshot'),
   snapshot('snapshot'),
   off('off'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3127,32 +3273,29 @@ enum PersistenceMode {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PersistenceMode fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PersistenceMode fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Options for a Key Value instance
 class KeyValueOptions {
-  const KeyValueOptions({
-    this.maxmemoryPolicy,
-    this.persistenceMode,
-  });
+  const KeyValueOptions({this.maxmemoryPolicy, this.persistenceMode});
 
-  factory KeyValueOptions.fromJson(Map<String, Object?> json) => KeyValueOptions(
+  factory KeyValueOptions.fromJson(Map<String, Object?> json) =>
+      KeyValueOptions(
         maxmemoryPolicy: json['maxmemoryPolicy'] as String?,
         persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
       );
 
   final String? maxmemoryPolicy;
+
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
 
   Map<String, Object?> toJson() => {
-        if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy,
-        if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
-      };
+    if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy,
+    if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
+  };
 }
 
 /// A Key Value instance
@@ -3174,62 +3317,80 @@ class KeyValue {
   });
 
   factory KeyValue.fromJson(Map<String, Object?> json) => KeyValue(
-        id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: DatabaseStatus.fromWire(json['status']),
-        region: Region.fromWire(json['region']),
-        plan: KeyValuePlan.fromWire(json['plan']),
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        options: KeyValueOptions.fromJson((json['options'] as Map<String, Object?>?) ?? const {}),
-        ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const []).map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-        version: json['version'] as String? ?? '',
-        dashboardUrl: json['dashboardUrl'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    status: DatabaseStatus.fromWire(json['status']),
+    region: Region.fromWire(json['region']),
+    plan: KeyValuePlan.fromWire(json['plan']),
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    options: KeyValueOptions.fromJson(
+      (json['options'] as Map<String, Object?>?) ?? const {},
+    ),
+    ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+    version: json['version'] as String? ?? '',
+    dashboardUrl: json['dashboardUrl'] as String? ?? '',
+  );
 
   /// The ID of the Key Value instance
   final String id;
+
   /// The creation time of the Key Value instance
   final DateTime createdAt;
+
   /// The last updated time of the Key Value instance
   final DateTime updatedAt;
   final DatabaseStatus status;
+
   /// Defaults to "oregon"
   final Region region;
   final KeyValuePlan plan;
+
   /// The name of the Key Value instance
   final String name;
   final Owner owner;
+
   /// Options for a Key Value instance
   final KeyValueOptions options;
+
   /// The IP allow list for the Key Value instance
   final List<CidrBlockAndDescription> ipAllowList;
+
   /// The ID of the environment the Key Value instance is associated with
   final String? environmentId;
+
   /// The version of Key Value
   final String version;
+
   /// The URL to view the Key Value instance in the Render Dashboard
   final String dashboardUrl;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'status': status.wireValue,
-        'region': region.wireValue,
-        'plan': plan.wireValue,
-        'name': name,
-        'owner': owner.toJson(),
-        'options': options.toJson(),
-        'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-        'version': version,
-        'dashboardUrl': dashboardUrl,
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'status': status.wireValue,
+    'region': region.wireValue,
+    'plan': plan.wireValue,
+    'name': name,
+    'owner': owner.toJson(),
+    'options': options.toJson(),
+    'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+    'version': version,
+    'dashboardUrl': dashboardUrl,
+  };
 }
-
 
 /// A Key Value instance
 class KeyValueConnectionInfo {
@@ -3239,26 +3400,29 @@ class KeyValueConnectionInfo {
     required this.cliCommand,
   });
 
-  factory KeyValueConnectionInfo.fromJson(Map<String, Object?> json) => KeyValueConnectionInfo(
-        internalConnectionString: json['internalConnectionString'] as String? ?? '',
-        externalConnectionString: json['externalConnectionString'] as String? ?? '',
-        cliCommand: json['cliCommand'] as String? ?? '',
-      );
+  factory KeyValueConnectionInfo.fromJson(
+    Map<String, Object?> json,
+  ) => KeyValueConnectionInfo(
+    internalConnectionString: json['internalConnectionString'] as String? ?? '',
+    externalConnectionString: json['externalConnectionString'] as String? ?? '',
+    cliCommand: json['cliCommand'] as String? ?? '',
+  );
 
   /// The connection string to use from within Render
   final String internalConnectionString;
+
   /// The connection string to use from outside Render
   final String externalConnectionString;
+
   /// The CLI (redis-cli or valkey-cli) command to connect to the Key Value instance
   final String cliCommand;
 
   Map<String, Object?> toJson() => {
-        'internalConnectionString': internalConnectionString,
-        'externalConnectionString': externalConnectionString,
-        'cliCommand': cliCommand,
-      };
+    'internalConnectionString': internalConnectionString,
+    'externalConnectionString': externalConnectionString,
+    'cliCommand': cliCommand,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -3269,6 +3433,7 @@ enum KeyValueDetailMaintenanceState {
   cancelled('cancelled'),
   succeeded('succeeded'),
   failed('failed'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3277,10 +3442,8 @@ enum KeyValueDetailMaintenanceState {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static KeyValueDetailMaintenanceState fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static KeyValueDetailMaintenanceState fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class KeyValueDetailMaintenance {
@@ -3292,10 +3455,13 @@ class KeyValueDetailMaintenance {
     required this.state,
   });
 
-  factory KeyValueDetailMaintenance.fromJson(Map<String, Object?> json) => KeyValueDetailMaintenance(
+  factory KeyValueDetailMaintenance.fromJson(Map<String, Object?> json) =>
+      KeyValueDetailMaintenance(
         id: json['id'] as String? ?? '',
         type: json['type'] as String? ?? '',
-        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        scheduledAt:
+            parseDate(json['scheduledAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
       );
@@ -3303,17 +3469,19 @@ class KeyValueDetailMaintenance {
   final String id;
   final String type;
   final DateTime scheduledAt;
+
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'type': type,
-        'scheduledAt': scheduledAt.toIso8601String(),
-        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
-        'state': state.wireValue,
-      };
+    'id': id,
+    'type': type,
+    'scheduledAt': scheduledAt.toIso8601String(),
+    if (pendingMaintenanceBy != null)
+      'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+    'state': state.wireValue,
+  };
 }
 
 /// A Key Value instance
@@ -3335,62 +3503,82 @@ class KeyValueDetail {
   });
 
   factory KeyValueDetail.fromJson(Map<String, Object?> json) => KeyValueDetail(
-        id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: DatabaseStatus.fromWire(json['status']),
-        region: Region.fromWire(json['region']),
-        plan: KeyValuePlan.fromWire(json['plan']),
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        options: KeyValueOptions.fromJson((json['options'] as Map<String, Object?>?) ?? const {}),
-        ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const []).map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-        version: json['version'] as String? ?? '',
-        maintenance: json['maintenance'] == null ? null : KeyValueDetailMaintenance.fromJson(json['maintenance']! as Map<String, Object?>),
-      );
+    id: json['id'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    status: DatabaseStatus.fromWire(json['status']),
+    region: Region.fromWire(json['region']),
+    plan: KeyValuePlan.fromWire(json['plan']),
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    options: KeyValueOptions.fromJson(
+      (json['options'] as Map<String, Object?>?) ?? const {},
+    ),
+    ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+    version: json['version'] as String? ?? '',
+    maintenance: json['maintenance'] == null
+        ? null
+        : KeyValueDetailMaintenance.fromJson(
+            json['maintenance']! as Map<String, Object?>,
+          ),
+  );
 
   /// The ID of the Key Value instance
   final String id;
+
   /// The creation time of the Key Value instance
   final DateTime createdAt;
+
   /// The last updated time of the Key Value instance
   final DateTime updatedAt;
   final DatabaseStatus status;
+
   /// Defaults to "oregon"
   final Region region;
   final KeyValuePlan plan;
+
   /// The name of the Key Value instance
   final String name;
   final Owner owner;
+
   /// Options for a Key Value instance
   final KeyValueOptions options;
+
   /// The IP allow list for the Key Value instance
   final List<CidrBlockAndDescription> ipAllowList;
+
   /// The ID of the environment the Key Value instance is associated with
   final String? environmentId;
+
   /// The version of Key Value
   final String version;
   final KeyValueDetailMaintenance? maintenance;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'status': status.wireValue,
-        'region': region.wireValue,
-        'plan': plan.wireValue,
-        'name': name,
-        'owner': owner.toJson(),
-        'options': options.toJson(),
-        'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-        'version': version,
-        if (maintenance != null) 'maintenance': maintenance!.toJson(),
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'status': status.wireValue,
+    'region': region.wireValue,
+    'plan': plan.wireValue,
+    'name': name,
+    'owner': owner.toJson(),
+    'options': options.toJson(),
+    'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+    'version': version,
+    if (maintenance != null) 'maintenance': maintenance!.toJson(),
+  };
 }
-
-
 
 /// The eviction policy for the Key Value instance
 /// Decodes unrecognised values to [unknown] rather than
@@ -3404,6 +3592,7 @@ enum MaxmemoryPolicy {
   volatileLru('volatile_lru'),
   volatileRandom('volatile_random'),
   volatileTtl('volatile_ttl'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3412,10 +3601,8 @@ enum MaxmemoryPolicy {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static MaxmemoryPolicy fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static MaxmemoryPolicy fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Input type for updating a Key Value instance
@@ -3428,32 +3615,41 @@ class KeyValuePatchinput {
     this.ipAllowList,
   });
 
-  factory KeyValuePatchinput.fromJson(Map<String, Object?> json) => KeyValuePatchinput(
+  factory KeyValuePatchinput.fromJson(Map<String, Object?> json) =>
+      KeyValuePatchinput(
         name: json['name'] as String?,
         plan: KeyValuePlan.fromWire(json['plan']),
         maxmemoryPolicy: MaxmemoryPolicy.fromWire(json['maxmemoryPolicy']),
         persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   /// The name of the Key Value instance
   final String? name;
   final KeyValuePlan? plan;
+
   /// The eviction policy for the Key Value instance
   final MaxmemoryPolicy? maxmemoryPolicy;
+
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (plan != null) 'plan': plan!.wireValue,
-        if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
-        if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    if (name != null) 'name': name,
+    if (plan != null) 'plan': plan!.wireValue,
+    if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
+    if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 /// Input type for creating a Key Value instance
 class KeyValuePostinput {
@@ -3468,7 +3664,8 @@ class KeyValuePostinput {
     this.ipAllowList,
   });
 
-  factory KeyValuePostinput.fromJson(Map<String, Object?> json) => KeyValuePostinput(
+  factory KeyValuePostinput.fromJson(Map<String, Object?> json) =>
+      KeyValuePostinput(
         name: json['name'] as String? ?? '',
         ownerId: json['ownerId'] as String? ?? '',
         plan: KeyValuePlan.fromWire(json['plan']),
@@ -3476,45 +3673,54 @@ class KeyValuePostinput {
         environmentId: json['environmentId'] as String?,
         maxmemoryPolicy: MaxmemoryPolicy.fromWire(json['maxmemoryPolicy']),
         persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   /// The name of the Key Value instance
   final String name;
+
   /// The ID of the owner of the Key Value instance
   final String ownerId;
   final KeyValuePlan plan;
+
   /// Defaults to "oregon"
   final Region? region;
   final String? environmentId;
+
   /// The eviction policy for the Key Value instance
   final MaxmemoryPolicy? maxmemoryPolicy;
+
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'ownerId': ownerId,
-        'plan': plan.wireValue,
-        if (region != null) 'region': region!.wireValue,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
-        if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    'name': name,
+    'ownerId': ownerId,
+    'plan': plan.wireValue,
+    if (region != null) 'region': region!.wireValue,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
+    if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
 
-
-
 class KeyValueWithCursor {
-  const KeyValueWithCursor({
-    required this.keyValue,
-    required this.cursor,
-  });
+  const KeyValueWithCursor({required this.keyValue, required this.cursor});
 
-  factory KeyValueWithCursor.fromJson(Map<String, Object?> json) => KeyValueWithCursor(
-        keyValue: KeyValue.fromJson((json['keyValue'] as Map<String, Object?>?) ?? const {}),
+  factory KeyValueWithCursor.fromJson(Map<String, Object?> json) =>
+      KeyValueWithCursor(
+        keyValue: KeyValue.fromJson(
+          (json['keyValue'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -3523,35 +3729,27 @@ class KeyValueWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'keyValue': keyValue.toJson(),
-        'cursor': cursor,
-      };
+    'keyValue': keyValue.toJson(),
+    'cursor': cursor,
+  };
 }
 
-
 class MaintenanceMode {
-  const MaintenanceMode({
-    required this.enabled,
-    required this.uri,
-  });
+  const MaintenanceMode({required this.enabled, required this.uri});
 
-  factory MaintenanceMode.fromJson(Map<String, Object?> json) => MaintenanceMode(
+  factory MaintenanceMode.fromJson(Map<String, Object?> json) =>
+      MaintenanceMode(
         enabled: json['enabled'] as bool? ?? false,
         uri: json['uri'] as String? ?? '',
       );
 
   final bool enabled;
+
   /// The page to be served when [maintenance mode](https://render.com/docs/maintenance-mode) is enabled. When empty, the default maintenance mode page is served.
   final String uri;
 
-  Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'uri': uri,
-      };
+  Map<String, Object?> toJson() => {'enabled': enabled, 'uri': uri};
 }
-
-
-
 
 class NativeEnvironmentDetails {
   const NativeEnvironmentDetails({
@@ -3560,7 +3758,8 @@ class NativeEnvironmentDetails {
     this.preDeployCommand,
   });
 
-  factory NativeEnvironmentDetails.fromJson(Map<String, Object?> json) => NativeEnvironmentDetails(
+  factory NativeEnvironmentDetails.fromJson(Map<String, Object?> json) =>
+      NativeEnvironmentDetails(
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         preDeployCommand: json['preDeployCommand'] as String?,
@@ -3571,20 +3770,17 @@ class NativeEnvironmentDetails {
   final String? preDeployCommand;
 
   Map<String, Object?> toJson() => {
-        'buildCommand': buildCommand,
-        'startCommand': startCommand,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-      };
+    'buildCommand': buildCommand,
+    'startCommand': startCommand,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+  };
 }
 
-
 class NativeEnvironmentDetailsPatch {
-  const NativeEnvironmentDetailsPatch({
-    this.buildCommand,
-    this.startCommand,
-  });
+  const NativeEnvironmentDetailsPatch({this.buildCommand, this.startCommand});
 
-  factory NativeEnvironmentDetailsPatch.fromJson(Map<String, Object?> json) => NativeEnvironmentDetailsPatch(
+  factory NativeEnvironmentDetailsPatch.fromJson(Map<String, Object?> json) =>
+      NativeEnvironmentDetailsPatch(
         buildCommand: json['buildCommand'] as String?,
         startCommand: json['startCommand'] as String?,
       );
@@ -3593,11 +3789,10 @@ class NativeEnvironmentDetailsPatch {
   final String? startCommand;
 
   Map<String, Object?> toJson() => {
-        if (buildCommand != null) 'buildCommand': buildCommand,
-        if (startCommand != null) 'startCommand': startCommand,
-      };
+    if (buildCommand != null) 'buildCommand': buildCommand,
+    if (startCommand != null) 'startCommand': startCommand,
+  };
 }
-
 
 /// Fields for native environment (runtime) services
 class NativeEnvironmentDetailsPost {
@@ -3606,7 +3801,8 @@ class NativeEnvironmentDetailsPost {
     required this.startCommand,
   });
 
-  factory NativeEnvironmentDetailsPost.fromJson(Map<String, Object?> json) => NativeEnvironmentDetailsPost(
+  factory NativeEnvironmentDetailsPost.fromJson(Map<String, Object?> json) =>
+      NativeEnvironmentDetailsPost(
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
       );
@@ -3615,12 +3811,10 @@ class NativeEnvironmentDetailsPost {
   final String startCommand;
 
   Map<String, Object?> toJson() => {
-        'buildCommand': buildCommand,
-        'startCommand': startCommand,
-      };
+    'buildCommand': buildCommand,
+    'startCommand': startCommand,
+  };
 }
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -3628,6 +3822,7 @@ enum PreviewNotificationsEnabled {
   default_('default'),
   false_('false'),
   true_('true'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3636,10 +3831,8 @@ enum PreviewNotificationsEnabled {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PreviewNotificationsEnabled fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PreviewNotificationsEnabled fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -3649,6 +3842,7 @@ enum PatchServiceNotificationOverridesNotificationsToSend {
   none('none'),
   failure('failure'),
   all('all'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3657,10 +3851,9 @@ enum PatchServiceNotificationOverridesNotificationsToSend {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PatchServiceNotificationOverridesNotificationsToSend fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PatchServiceNotificationOverridesNotificationsToSend fromWire(
+    Object? value,
+  ) => values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class NotificationOverrideWithCursorOverride {
@@ -3670,21 +3863,29 @@ class NotificationOverrideWithCursorOverride {
     required this.notificationsToSend,
   });
 
-  factory NotificationOverrideWithCursorOverride.fromJson(Map<String, Object?> json) => NotificationOverrideWithCursorOverride(
-        serviceId: json['serviceId'] as String? ?? '',
-        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory NotificationOverrideWithCursorOverride.fromJson(
+    Map<String, Object?> json,
+  ) => NotificationOverrideWithCursorOverride(
+    serviceId: json['serviceId'] as String? ?? '',
+    previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(
+      json['previewNotificationsEnabled'],
+    ),
+    notificationsToSend:
+        PatchServiceNotificationOverridesNotificationsToSend.fromWire(
+          json['notificationsToSend'],
+        ),
+  );
 
   final String serviceId;
   final PreviewNotificationsEnabled previewNotificationsEnabled;
-  final PatchServiceNotificationOverridesNotificationsToSend notificationsToSend;
+  final PatchServiceNotificationOverridesNotificationsToSend
+  notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        'serviceId': serviceId,
-        'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
-        'notificationsToSend': notificationsToSend.wireValue,
-      };
+    'serviceId': serviceId,
+    'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
+    'notificationsToSend': notificationsToSend.wireValue,
+  };
 }
 
 class NotificationOverrideWithCursor {
@@ -3693,8 +3894,11 @@ class NotificationOverrideWithCursor {
     required this.cursor,
   });
 
-  factory NotificationOverrideWithCursor.fromJson(Map<String, Object?> json) => NotificationOverrideWithCursor(
-        override: NotificationOverrideWithCursorOverride.fromJson((json['override'] as Map<String, Object?>?) ?? const {}),
+  factory NotificationOverrideWithCursor.fromJson(Map<String, Object?> json) =>
+      NotificationOverrideWithCursor(
+        override: NotificationOverrideWithCursorOverride.fromJson(
+          (json['override'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -3702,11 +3906,10 @@ class NotificationOverrideWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'override': override.toJson(),
-        'cursor': cursor,
-      };
+    'override': override.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -3714,6 +3917,7 @@ enum NotifySetting {
   default_('default'),
   notify('notify'),
   ignore('ignore'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3722,12 +3926,9 @@ enum NotifySetting {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static NotifySetting fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static NotifySetting fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
-
 
 /// `dedicated` if a dedicated IP set applies to the resource, `shared` if its traffic originates from the shared Render IPs for its region.
 /// Decodes unrecognised values to [unknown] rather than
@@ -3735,6 +3936,7 @@ enum NotifySetting {
 enum OutboundIpsType {
   shared('shared'),
   dedicated('dedicated'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3743,10 +3945,8 @@ enum OutboundIpsType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static OutboundIpsType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static OutboundIpsType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class OutboundIps {
@@ -3757,35 +3957,37 @@ class OutboundIps {
   });
 
   factory OutboundIps.fromJson(Map<String, Object?> json) => OutboundIps(
-        type: OutboundIpsType.fromWire(json['type']),
-        dedicatedIpId: json['dedicatedIpId'] as String?,
-        ips: ((json['ips'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-      );
+    type: OutboundIpsType.fromWire(json['type']),
+    dedicatedIpId: json['dedicatedIpId'] as String?,
+    ips: ((json['ips'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+  );
 
   /// `dedicated` if a dedicated IP set applies to the resource, `shared` if its traffic originates from the shared Render IPs for its region.
   final OutboundIpsType type;
+
   /// The dedicated IP set the traffic originates from. Only present when `type` is `dedicated`.
   final String? dedicatedIpId;
+
   /// The IP addresses the resource's outbound traffic originates from.
   final List<String> ips;
 
   Map<String, Object?> toJson() => {
-        'type': type.wireValue,
-        if (dedicatedIpId != null) 'dedicatedIpId': dedicatedIpId,
-        'ips': ips.map((e) => e).toList(),
-      };
+    'type': type.wireValue,
+    if (dedicatedIpId != null) 'dedicatedIpId': dedicatedIpId,
+    'ips': ips.map((e) => e).toList(),
+  };
 }
 
-
-
 class OwnerWithCursor {
-  const OwnerWithCursor({
-    this.owner,
-    this.cursor,
-  });
+  const OwnerWithCursor({this.owner, this.cursor});
 
-  factory OwnerWithCursor.fromJson(Map<String, Object?> json) => OwnerWithCursor(
-        owner: json['owner'] == null ? null : Owner.fromJson(json['owner']! as Map<String, Object?>),
+  factory OwnerWithCursor.fromJson(Map<String, Object?> json) =>
+      OwnerWithCursor(
+        owner: json['owner'] == null
+            ? null
+            : Owner.fromJson(json['owner']! as Map<String, Object?>),
         cursor: json['cursor'] as String?,
       );
 
@@ -3793,14 +3995,10 @@ class OwnerWithCursor {
   final String? cursor;
 
   Map<String, Object?> toJson() => {
-        if (owner != null) 'owner': owner!.toJson(),
-        if (cursor != null) 'cursor': cursor,
-      };
+    if (owner != null) 'owner': owner!.toJson(),
+    if (cursor != null) 'cursor': cursor,
+  };
 }
-
-
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -3833,6 +4031,7 @@ enum PostgresPostinputPlan {
   accelerated512gb('accelerated_512gb'),
   accelerated768gb('accelerated_768gb'),
   accelerated1024gb('accelerated_1024gb'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3841,10 +4040,8 @@ enum PostgresPostinputPlan {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PostgresPostinputPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PostgresPostinputPlan fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class ReadReplica {
@@ -3855,22 +4052,23 @@ class ReadReplica {
   });
 
   factory ReadReplica.fromJson(Map<String, Object?> json) => ReadReplica(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
-      );
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
+  );
 
   /// The replica instance identifier.
   final String id;
+
   /// The display name of the replica instance.
   final String name;
   final Map<String, Object?>? parameterOverrides;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
-      };
+    'id': id,
+    'name': name,
+    if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
+  };
 }
 
 /// The PostgreSQL version
@@ -3885,6 +4083,7 @@ enum PostgresVersion {
   v16('16'),
   v17('17'),
   v18('18'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3893,10 +4092,8 @@ enum PostgresVersion {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static PostgresVersion fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static PostgresVersion fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -3904,6 +4101,7 @@ enum PostgresVersion {
 enum Suspended {
   suspended('suspended'),
   notSuspended('not_suspended'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -3912,10 +4110,8 @@ enum Suspended {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Suspended fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Suspended fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -3928,6 +4124,7 @@ enum SuspenderType {
   stuckCrashlooping('stuck_crashlooping'),
   hipaaEnablement('hipaa_enablement'),
   unknown('unknown'),
+
   /// A value this package does not know about.
   unknown_('');
 
@@ -3936,10 +4133,8 @@ enum SuspenderType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static SuspenderType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown_,
-      );
+  static SuspenderType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown_);
 }
 
 class Postgres {
@@ -3971,36 +4166,51 @@ class Postgres {
   });
 
   factory Postgres.fromJson(Map<String, Object?> json) => Postgres(
-        id: json['id'] as String? ?? '',
-        ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const []).map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        expiresAt: parseDate(json['expiresAt']),
-        databaseName: json['databaseName'] as String? ?? '',
-        databaseUser: json['databaseUser'] as String? ?? '',
-        environmentId: json['environmentId'] as String?,
-        highAvailabilityEnabled: json['highAvailabilityEnabled'] as bool? ?? false,
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        plan: PostgresPostinputPlan.fromWire(json['plan']),
-        diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
-        primaryPostgresId: json['primaryPostgresID'] as String?,
-        region: Region.fromWire(json['region']),
-        readReplicas: ((json['readReplicas'] as List<Object?>?) ?? const []).map((e) => ReadReplica.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        role: DatabaseRole.fromWire(json['role']),
-        status: DatabaseStatus.fromWire(json['status']),
-        version: PostgresVersion.fromWire(json['version']),
-        suspended: Suspended.fromWire(json['suspended']),
-        suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
-        dashboardUrl: json['dashboardUrl'] as String? ?? '',
-        diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
-        connectionPool: json['connectionPool'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? '',
+    ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    expiresAt: parseDate(json['expiresAt']),
+    databaseName: json['databaseName'] as String? ?? '',
+    databaseUser: json['databaseUser'] as String? ?? '',
+    environmentId: json['environmentId'] as String?,
+    highAvailabilityEnabled: json['highAvailabilityEnabled'] as bool? ?? false,
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    plan: PostgresPostinputPlan.fromWire(json['plan']),
+    diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
+    primaryPostgresId: json['primaryPostgresID'] as String?,
+    region: Region.fromWire(json['region']),
+    readReplicas: ((json['readReplicas'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => ReadReplica.fromJson((e as Map<String, Object?>?) ?? const {}),
+        )
+        .toList(),
+    role: DatabaseRole.fromWire(json['role']),
+    status: DatabaseStatus.fromWire(json['status']),
+    version: PostgresVersion.fromWire(json['version']),
+    suspended: Suspended.fromWire(json['suspended']),
+    suspenders: ((json['suspenders'] as List<Object?>?) ?? const [])
+        .map((e) => SuspenderType.fromWire(e))
+        .toList(),
+    dashboardUrl: json['dashboardUrl'] as String? ?? '',
+    diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
+    connectionPool: json['connectionPool'] as String? ?? '',
+  );
 
   final String id;
   final List<CidrBlockAndDescription> ipAllowList;
   final DateTime createdAt;
   final DateTime updatedAt;
+
   /// The time at which the database will be expire. Applies to free tier databases only.
   final DateTime? expiresAt;
   final String databaseName;
@@ -4012,49 +4222,52 @@ class Postgres {
   final PostgresPostinputPlan plan;
   final int? diskSizeGb;
   final String? primaryPostgresId;
+
   /// Defaults to "oregon"
   final Region region;
   final List<ReadReplica> readReplicas;
   final DatabaseRole role;
   final DatabaseStatus status;
+
   /// The PostgreSQL version
   final PostgresVersion version;
   final Suspended suspended;
   final List<SuspenderType> suspenders;
+
   /// The URL to view the Postgres instance in the Render Dashboard
   final String dashboardUrl;
   final bool diskAutoscalingEnabled;
+
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
   final String connectionPool;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        if (expiresAt != null) 'expiresAt': expiresAt!.toIso8601String(),
-        'databaseName': databaseName,
-        'databaseUser': databaseUser,
-        if (environmentId != null) 'environmentId': environmentId,
-        'highAvailabilityEnabled': highAvailabilityEnabled,
-        'name': name,
-        'owner': owner.toJson(),
-        'plan': plan.wireValue,
-        if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
-        if (primaryPostgresId != null) 'primaryPostgresID': primaryPostgresId,
-        'region': region.wireValue,
-        'readReplicas': readReplicas.map((e) => e.toJson()).toList(),
-        'role': role.wireValue,
-        'status': status.wireValue,
-        'version': version.wireValue,
-        'suspended': suspended.wireValue,
-        'suspenders': suspenders.map((e) => e.wireValue).toList(),
-        'dashboardUrl': dashboardUrl,
-        'diskAutoscalingEnabled': diskAutoscalingEnabled,
-        'connectionPool': connectionPool,
-      };
+    'id': id,
+    'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    if (expiresAt != null) 'expiresAt': expiresAt!.toIso8601String(),
+    'databaseName': databaseName,
+    'databaseUser': databaseUser,
+    if (environmentId != null) 'environmentId': environmentId,
+    'highAvailabilityEnabled': highAvailabilityEnabled,
+    'name': name,
+    'owner': owner.toJson(),
+    'plan': plan.wireValue,
+    if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
+    if (primaryPostgresId != null) 'primaryPostgresID': primaryPostgresId,
+    'region': region.wireValue,
+    'readReplicas': readReplicas.map((e) => e.toJson()).toList(),
+    'role': role.wireValue,
+    'status': status.wireValue,
+    'version': version.wireValue,
+    'suspended': suspended.wireValue,
+    'suspenders': suspenders.map((e) => e.wireValue).toList(),
+    'dashboardUrl': dashboardUrl,
+    'diskAutoscalingEnabled': diskAutoscalingEnabled,
+    'connectionPool': connectionPool,
+  };
 }
-
 
 class PostgresConnectionInfo {
   const PostgresConnectionInfo({
@@ -4066,14 +4279,18 @@ class PostgresConnectionInfo {
     required this.psqlCommand,
   });
 
-  factory PostgresConnectionInfo.fromJson(Map<String, Object?> json) => PostgresConnectionInfo(
-        password: json['password'] as String? ?? '',
-        internalConnectionString: json['internalConnectionString'] as String? ?? '',
-        externalConnectionString: json['externalConnectionString'] as String? ?? '',
-        internalConnectionPoolString: json['internalConnectionPoolString'] as String?,
-        externalConnectionPoolString: json['externalConnectionPoolString'] as String?,
-        psqlCommand: json['psqlCommand'] as String? ?? '',
-      );
+  factory PostgresConnectionInfo.fromJson(
+    Map<String, Object?> json,
+  ) => PostgresConnectionInfo(
+    password: json['password'] as String? ?? '',
+    internalConnectionString: json['internalConnectionString'] as String? ?? '',
+    externalConnectionString: json['externalConnectionString'] as String? ?? '',
+    internalConnectionPoolString:
+        json['internalConnectionPoolString'] as String?,
+    externalConnectionPoolString:
+        json['externalConnectionPoolString'] as String?,
+    psqlCommand: json['psqlCommand'] as String? ?? '',
+  );
 
   final String password;
   final String internalConnectionString;
@@ -4083,15 +4300,16 @@ class PostgresConnectionInfo {
   final String psqlCommand;
 
   Map<String, Object?> toJson() => {
-        'password': password,
-        'internalConnectionString': internalConnectionString,
-        'externalConnectionString': externalConnectionString,
-        if (internalConnectionPoolString != null) 'internalConnectionPoolString': internalConnectionPoolString,
-        if (externalConnectionPoolString != null) 'externalConnectionPoolString': externalConnectionPoolString,
-        'psqlCommand': psqlCommand,
-      };
+    'password': password,
+    'internalConnectionString': internalConnectionString,
+    'externalConnectionString': externalConnectionString,
+    if (internalConnectionPoolString != null)
+      'internalConnectionPoolString': internalConnectionPoolString,
+    if (externalConnectionPoolString != null)
+      'externalConnectionPoolString': externalConnectionPoolString,
+    'psqlCommand': psqlCommand,
+  };
 }
-
 
 class PostgresDetailMaintenance {
   const PostgresDetailMaintenance({
@@ -4102,10 +4320,13 @@ class PostgresDetailMaintenance {
     required this.state,
   });
 
-  factory PostgresDetailMaintenance.fromJson(Map<String, Object?> json) => PostgresDetailMaintenance(
+  factory PostgresDetailMaintenance.fromJson(Map<String, Object?> json) =>
+      PostgresDetailMaintenance(
         id: json['id'] as String? ?? '',
         type: json['type'] as String? ?? '',
-        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        scheduledAt:
+            parseDate(json['scheduledAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
       );
@@ -4113,17 +4334,19 @@ class PostgresDetailMaintenance {
   final String id;
   final String type;
   final DateTime scheduledAt;
+
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'type': type,
-        'scheduledAt': scheduledAt.toIso8601String(),
-        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
-        'state': state.wireValue,
-      };
+    'id': id,
+    'type': type,
+    'scheduledAt': scheduledAt.toIso8601String(),
+    if (pendingMaintenanceBy != null)
+      'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+    'state': state.wireValue,
+  };
 }
 
 class PostgresDetail {
@@ -4157,40 +4380,60 @@ class PostgresDetail {
   });
 
   factory PostgresDetail.fromJson(Map<String, Object?> json) => PostgresDetail(
-        id: json['id'] as String? ?? '',
-        ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const []).map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        expiresAt: parseDate(json['expiresAt']),
-        dashboardUrl: json['dashboardUrl'] as String? ?? '',
-        databaseName: json['databaseName'] as String? ?? '',
-        databaseUser: json['databaseUser'] as String? ?? '',
-        environmentId: json['environmentId'] as String?,
-        highAvailabilityEnabled: json['highAvailabilityEnabled'] as bool? ?? false,
-        maintenance: json['maintenance'] == null ? null : PostgresDetailMaintenance.fromJson(json['maintenance']! as Map<String, Object?>),
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        plan: PostgresPostinputPlan.fromWire(json['plan']),
-        diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
-        parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
-        primaryPostgresId: json['primaryPostgresID'] as String?,
-        region: Region.fromWire(json['region']),
-        readReplicas: ((json['readReplicas'] as List<Object?>?) ?? const []).map((e) => ReadReplica.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        role: DatabaseRole.fromWire(json['role']),
-        status: DatabaseStatus.fromWire(json['status']),
-        version: PostgresVersion.fromWire(json['version']),
-        suspended: Suspended.fromWire(json['suspended']),
-        suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
-        diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
-        connectionPool: json['connectionPool'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? '',
+    ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    expiresAt: parseDate(json['expiresAt']),
+    dashboardUrl: json['dashboardUrl'] as String? ?? '',
+    databaseName: json['databaseName'] as String? ?? '',
+    databaseUser: json['databaseUser'] as String? ?? '',
+    environmentId: json['environmentId'] as String?,
+    highAvailabilityEnabled: json['highAvailabilityEnabled'] as bool? ?? false,
+    maintenance: json['maintenance'] == null
+        ? null
+        : PostgresDetailMaintenance.fromJson(
+            json['maintenance']! as Map<String, Object?>,
+          ),
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    plan: PostgresPostinputPlan.fromWire(json['plan']),
+    diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
+    parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
+    primaryPostgresId: json['primaryPostgresID'] as String?,
+    region: Region.fromWire(json['region']),
+    readReplicas: ((json['readReplicas'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => ReadReplica.fromJson((e as Map<String, Object?>?) ?? const {}),
+        )
+        .toList(),
+    role: DatabaseRole.fromWire(json['role']),
+    status: DatabaseStatus.fromWire(json['status']),
+    version: PostgresVersion.fromWire(json['version']),
+    suspended: Suspended.fromWire(json['suspended']),
+    suspenders: ((json['suspenders'] as List<Object?>?) ?? const [])
+        .map((e) => SuspenderType.fromWire(e))
+        .toList(),
+    diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
+    connectionPool: json['connectionPool'] as String? ?? '',
+  );
 
   final String id;
   final List<CidrBlockAndDescription> ipAllowList;
   final DateTime createdAt;
   final DateTime updatedAt;
+
   /// The time at which the database will be expire. Applies to free tier databases only.
   final DateTime? expiresAt;
+
   /// The URL to view the Postgres instance in the Render Dashboard
   final String dashboardUrl;
   final String databaseName;
@@ -4204,57 +4447,57 @@ class PostgresDetail {
   final int? diskSizeGb;
   final Map<String, Object?>? parameterOverrides;
   final String? primaryPostgresId;
+
   /// Defaults to "oregon"
   final Region region;
   final List<ReadReplica> readReplicas;
   final DatabaseRole role;
   final DatabaseStatus status;
+
   /// The PostgreSQL version
   final PostgresVersion version;
   final Suspended suspended;
   final List<SuspenderType> suspenders;
   final bool diskAutoscalingEnabled;
+
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
   final String connectionPool;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        if (expiresAt != null) 'expiresAt': expiresAt!.toIso8601String(),
-        'dashboardUrl': dashboardUrl,
-        'databaseName': databaseName,
-        'databaseUser': databaseUser,
-        if (environmentId != null) 'environmentId': environmentId,
-        'highAvailabilityEnabled': highAvailabilityEnabled,
-        if (maintenance != null) 'maintenance': maintenance!.toJson(),
-        'name': name,
-        'owner': owner.toJson(),
-        'plan': plan.wireValue,
-        if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
-        if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
-        if (primaryPostgresId != null) 'primaryPostgresID': primaryPostgresId,
-        'region': region.wireValue,
-        'readReplicas': readReplicas.map((e) => e.toJson()).toList(),
-        'role': role.wireValue,
-        'status': status.wireValue,
-        'version': version.wireValue,
-        'suspended': suspended.wireValue,
-        'suspenders': suspenders.map((e) => e.wireValue).toList(),
-        'diskAutoscalingEnabled': diskAutoscalingEnabled,
-        'connectionPool': connectionPool,
-      };
+    'id': id,
+    'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    if (expiresAt != null) 'expiresAt': expiresAt!.toIso8601String(),
+    'dashboardUrl': dashboardUrl,
+    'databaseName': databaseName,
+    'databaseUser': databaseUser,
+    if (environmentId != null) 'environmentId': environmentId,
+    'highAvailabilityEnabled': highAvailabilityEnabled,
+    if (maintenance != null) 'maintenance': maintenance!.toJson(),
+    'name': name,
+    'owner': owner.toJson(),
+    'plan': plan.wireValue,
+    if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
+    if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
+    if (primaryPostgresId != null) 'primaryPostgresID': primaryPostgresId,
+    'region': region.wireValue,
+    'readReplicas': readReplicas.map((e) => e.toJson()).toList(),
+    'role': role.wireValue,
+    'status': status.wireValue,
+    'version': version.wireValue,
+    'suspended': suspended.wireValue,
+    'suspenders': suspenders.map((e) => e.wireValue).toList(),
+    'diskAutoscalingEnabled': diskAutoscalingEnabled,
+    'connectionPool': connectionPool,
+  };
 }
 
-
 class ReadReplicaInput {
-  const ReadReplicaInput({
-    required this.name,
-    this.parameterOverrides,
-  });
+  const ReadReplicaInput({required this.name, this.parameterOverrides});
 
-  factory ReadReplicaInput.fromJson(Map<String, Object?> json) => ReadReplicaInput(
+  factory ReadReplicaInput.fromJson(Map<String, Object?> json) =>
+      ReadReplicaInput(
         name: json['name'] as String? ?? '',
         parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
       );
@@ -4264,9 +4507,9 @@ class ReadReplicaInput {
   final Map<String, Object?>? parameterOverrides;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
-      };
+    'name': name,
+    if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
+  };
 }
 
 class PostgresPatchinput {
@@ -4284,7 +4527,8 @@ class PostgresPatchinput {
     this.readReplicas,
   });
 
-  factory PostgresPatchinput.fromJson(Map<String, Object?> json) => PostgresPatchinput(
+  factory PostgresPatchinput.fromJson(Map<String, Object?> json) =>
+      PostgresPatchinput(
         name: json['name'] as String?,
         plan: PostgresPostinputPlan.fromWire(json['plan']),
         diskSizeGb: (json['diskSizeGB'] as num?)?.toInt(),
@@ -4293,21 +4537,37 @@ class PostgresPatchinput {
         enableHighAvailability: json['enableHighAvailability'] as bool?,
         datadogApikey: json['datadogAPIKey'] as String?,
         datadogSite: json['datadogSite'] as String?,
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
-        readReplicas: (json['readReplicas'] as List<Object?>?)?.map((e) => ReadReplicaInput.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        readReplicas: (json['readReplicas'] as List<Object?>?)
+            ?.map(
+              (e) => ReadReplicaInput.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String? name;
   final PostgresPostinputPlan? plan;
+
   /// The number of gigabytes of disk space to allocate for the database
   final int? diskSizeGb;
   final bool? enableDiskAutoscaling;
+
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
   final String? connectionPool;
   final bool? enableHighAvailability;
+
   /// The Datadog API key for the Datadog agent to monitor the database. Pass empty string to remove. Restarts Postgres on change.
   final String? datadogApikey;
+
   /// Datadog region to use for monitoring the new database. Defaults to 'US1'.
   final String? datadogSite;
   final List<CidrBlockAndDescription>? ipAllowList;
@@ -4315,20 +4575,23 @@ class PostgresPatchinput {
   final List<ReadReplicaInput>? readReplicas;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (plan != null) 'plan': plan!.wireValue,
-        if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
-        if (enableDiskAutoscaling != null) 'enableDiskAutoscaling': enableDiskAutoscaling,
-        if (connectionPool != null) 'connectionPool': connectionPool,
-        if (enableHighAvailability != null) 'enableHighAvailability': enableHighAvailability,
-        if (datadogApikey != null) 'datadogAPIKey': datadogApikey,
-        if (datadogSite != null) 'datadogSite': datadogSite,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
-        if (readReplicas != null) 'readReplicas': readReplicas!.map((e) => e.toJson()).toList(),
-      };
+    if (name != null) 'name': name,
+    if (plan != null) 'plan': plan!.wireValue,
+    if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
+    if (enableDiskAutoscaling != null)
+      'enableDiskAutoscaling': enableDiskAutoscaling,
+    if (connectionPool != null) 'connectionPool': connectionPool,
+    if (enableHighAvailability != null)
+      'enableHighAvailability': enableHighAvailability,
+    if (datadogApikey != null) 'datadogAPIKey': datadogApikey,
+    if (datadogSite != null) 'datadogSite': datadogSite,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
+    if (readReplicas != null)
+      'readReplicas': readReplicas!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 /// Input for creating a database
 class PostgresPostinput {
@@ -4352,7 +4615,8 @@ class PostgresPostinput {
     required this.version,
   });
 
-  factory PostgresPostinput.fromJson(Map<String, Object?> json) => PostgresPostinput(
+  factory PostgresPostinput.fromJson(Map<String, Object?> json) =>
+      PostgresPostinput(
         databaseName: json['databaseName'] as String?,
         databaseUser: json['databaseUser'] as String?,
         datadogApikey: json['datadogAPIKey'] as String?,
@@ -4366,59 +4630,82 @@ class PostgresPostinput {
         enableDiskAutoscaling: json['enableDiskAutoscaling'] as bool?,
         connectionPool: json['connectionPool'] as String?,
         region: Region.fromWire(json['region']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
-        readReplicas: (json['readReplicas'] as List<Object?>?)?.map((e) => ReadReplicaInput.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        readReplicas: (json['readReplicas'] as List<Object?>?)
+            ?.map(
+              (e) => ReadReplicaInput.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         version: PostgresVersion.fromWire(json['version']),
       );
 
   final String? databaseName;
   final String? databaseUser;
+
   /// The Datadog API key for the Datadog agent to monitor the new database.
   final String? datadogApikey;
+
   /// Datadog region to use for monitoring the new database. Defaults to 'US1'.
   final String? datadogSite;
+
   /// The name of the database as it will appear in the Render Dashboard
   final String name;
   final bool? enableHighAvailability;
   final String? environmentId;
+
   /// The ID of the workspace to create the database for
   final String ownerId;
   final PostgresPostinputPlan plan;
+
   /// The number of gigabytes of disk space to allocate for the database
   final int? diskSizeGb;
   final bool? enableDiskAutoscaling;
+
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
   final String? connectionPool;
+
   /// Defaults to "oregon"
   final Region? region;
   final List<CidrBlockAndDescription>? ipAllowList;
   final Map<String, Object?>? parameterOverrides;
   final List<ReadReplicaInput>? readReplicas;
+
   /// The PostgreSQL version
   final PostgresVersion version;
 
   Map<String, Object?> toJson() => {
-        if (databaseName != null) 'databaseName': databaseName,
-        if (databaseUser != null) 'databaseUser': databaseUser,
-        if (datadogApikey != null) 'datadogAPIKey': datadogApikey,
-        if (datadogSite != null) 'datadogSite': datadogSite,
-        'name': name,
-        if (enableHighAvailability != null) 'enableHighAvailability': enableHighAvailability,
-        if (environmentId != null) 'environmentId': environmentId,
-        'ownerId': ownerId,
-        'plan': plan.wireValue,
-        if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
-        if (enableDiskAutoscaling != null) 'enableDiskAutoscaling': enableDiskAutoscaling,
-        if (connectionPool != null) 'connectionPool': connectionPool,
-        if (region != null) 'region': region!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
-        if (readReplicas != null) 'readReplicas': readReplicas!.map((e) => e.toJson()).toList(),
-        'version': version.wireValue,
-      };
+    if (databaseName != null) 'databaseName': databaseName,
+    if (databaseUser != null) 'databaseUser': databaseUser,
+    if (datadogApikey != null) 'datadogAPIKey': datadogApikey,
+    if (datadogSite != null) 'datadogSite': datadogSite,
+    'name': name,
+    if (enableHighAvailability != null)
+      'enableHighAvailability': enableHighAvailability,
+    if (environmentId != null) 'environmentId': environmentId,
+    'ownerId': ownerId,
+    'plan': plan.wireValue,
+    if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
+    if (enableDiskAutoscaling != null)
+      'enableDiskAutoscaling': enableDiskAutoscaling,
+    if (connectionPool != null) 'connectionPool': connectionPool,
+    if (region != null) 'region': region!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
+    if (readReplicas != null)
+      'readReplicas': readReplicas!.map((e) => e.toJson()).toList(),
+    'version': version.wireValue,
+  };
 }
-
 
 class PostgresParameterOverrides {
   const PostgresParameterOverrides(this.json);
@@ -4433,16 +4720,14 @@ class PostgresParameterOverrides {
   Map<String, Object?> toJson() => json;
 }
 
-
-
 class PostgresWithCursor {
-  const PostgresWithCursor({
-    required this.postgres,
-    required this.cursor,
-  });
+  const PostgresWithCursor({required this.postgres, required this.cursor});
 
-  factory PostgresWithCursor.fromJson(Map<String, Object?> json) => PostgresWithCursor(
-        postgres: Postgres.fromJson((json['postgres'] as Map<String, Object?>?) ?? const {}),
+  factory PostgresWithCursor.fromJson(Map<String, Object?> json) =>
+      PostgresWithCursor(
+        postgres: Postgres.fromJson(
+          (json['postgres'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -4450,40 +4735,35 @@ class PostgresWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'postgres': postgres.toJson(),
-        'cursor': cursor,
-      };
+    'postgres': postgres.toJson(),
+    'cursor': cursor,
+  };
 }
 
-
 class PreviewInput {
-  const PreviewInput({
-    required this.imagePath,
-    this.name,
-    this.plan,
-  });
+  const PreviewInput({required this.imagePath, this.name, this.plan});
 
   factory PreviewInput.fromJson(Map<String, Object?> json) => PreviewInput(
-        imagePath: json['imagePath'] as String? ?? '',
-        name: json['name'] as String?,
-        plan: Plan.fromWire(json['plan']),
-      );
+    imagePath: json['imagePath'] as String? ?? '',
+    name: json['name'] as String?,
+    plan: Plan.fromWire(json['plan']),
+  );
 
   /// Must be either a full URL or the relative path to an image. If a relative path, Render uses the base service's image URL as its root. For example, if the base service's image URL is `docker.io/library/nginx:latest`, then valid values are: `docker.io/library/nginx:<any tag or SHA>`, `library/nginx:<any tag or SHA>`, or `nginx:<any tag or SHA>`. Note that the path must match (only the tag or SHA can vary).
   final String imagePath;
+
   /// A name for the service preview instance. If not specified, Render generates the name using the base service's name and the specified tag or SHA.
   final String? name;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan? plan;
 
   Map<String, Object?> toJson() => {
-        'imagePath': imagePath,
-        if (name != null) 'name': name,
-        if (plan != null) 'plan': plan!.wireValue,
-      };
+    'imagePath': imagePath,
+    if (name != null) 'name': name,
+    if (plan != null) 'plan': plan!.wireValue,
+  };
 }
-
-
 
 class PrivateServiceDetailsAutoscalingCriteriaCpu {
   const PrivateServiceDetailsAutoscalingCriteriaCpu({
@@ -4491,19 +4771,22 @@ class PrivateServiceDetailsAutoscalingCriteriaCpu {
     required this.percentage,
   });
 
-  factory PrivateServiceDetailsAutoscalingCriteriaCpu.fromJson(Map<String, Object?> json) => PrivateServiceDetailsAutoscalingCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory PrivateServiceDetailsAutoscalingCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsAutoscalingCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class PrivateServiceDetailsAutoscalingCriteriaMemory {
@@ -4512,19 +4795,22 @@ class PrivateServiceDetailsAutoscalingCriteriaMemory {
     required this.percentage,
   });
 
-  factory PrivateServiceDetailsAutoscalingCriteriaMemory.fromJson(Map<String, Object?> json) => PrivateServiceDetailsAutoscalingCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory PrivateServiceDetailsAutoscalingCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsAutoscalingCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class PrivateServiceDetailsAutoscalingCriteria {
@@ -4533,18 +4819,24 @@ class PrivateServiceDetailsAutoscalingCriteria {
     required this.memory,
   });
 
-  factory PrivateServiceDetailsAutoscalingCriteria.fromJson(Map<String, Object?> json) => PrivateServiceDetailsAutoscalingCriteria(
-        cpu: PrivateServiceDetailsAutoscalingCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: PrivateServiceDetailsAutoscalingCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory PrivateServiceDetailsAutoscalingCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsAutoscalingCriteria(
+    cpu: PrivateServiceDetailsAutoscalingCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: PrivateServiceDetailsAutoscalingCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final PrivateServiceDetailsAutoscalingCriteriaCpu cpu;
   final PrivateServiceDetailsAutoscalingCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class PrivateServiceDetailsAutoscaling {
@@ -4555,26 +4847,32 @@ class PrivateServiceDetailsAutoscaling {
     required this.criteria,
   });
 
-  factory PrivateServiceDetailsAutoscaling.fromJson(Map<String, Object?> json) => PrivateServiceDetailsAutoscaling(
-        enabled: json['enabled'] as bool? ?? false,
-        min: (json['min'] as num?)?.toInt() ?? 0,
-        max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: PrivateServiceDetailsAutoscalingCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory PrivateServiceDetailsAutoscaling.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsAutoscaling(
+    enabled: json['enabled'] as bool? ?? false,
+    min: (json['min'] as num?)?.toInt() ?? 0,
+    max: (json['max'] as num?)?.toInt() ?? 0,
+    criteria: PrivateServiceDetailsAutoscalingCriteria.fromJson(
+      (json['criteria'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final PrivateServiceDetailsAutoscalingCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class PrivateServiceDetailsDisk {
@@ -4585,7 +4883,8 @@ class PrivateServiceDetailsDisk {
     required this.mountPath,
   });
 
-  factory PrivateServiceDetailsDisk.fromJson(Map<String, Object?> json) => PrivateServiceDetailsDisk(
+  factory PrivateServiceDetailsDisk.fromJson(Map<String, Object?> json) =>
+      PrivateServiceDetailsDisk(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
@@ -4598,11 +4897,11 @@ class PrivateServiceDetailsDisk {
   final String mountPath;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -4610,6 +4909,7 @@ class PrivateServiceDetailsDisk {
 enum Protocol {
   tcp('TCP'),
   udp('UDP'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -4618,30 +4918,25 @@ enum Protocol {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Protocol fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Protocol fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class ServerPort {
-  const ServerPort({
-    required this.port,
-    required this.protocol,
-  });
+  const ServerPort({required this.port, required this.protocol});
 
   factory ServerPort.fromJson(Map<String, Object?> json) => ServerPort(
-        port: (json['port'] as num?)?.toInt() ?? 0,
-        protocol: Protocol.fromWire(json['protocol']),
-      );
+    port: (json['port'] as num?)?.toInt() ?? 0,
+    protocol: Protocol.fromWire(json['protocol']),
+  );
 
   final int port;
   final Protocol protocol;
 
   Map<String, Object?> toJson() => {
-        'port': port,
-        'protocol': protocol.wireValue,
-      };
+    'port': port,
+    'protocol': protocol.wireValue,
+  };
 }
 
 class PrivateServiceDetails {
@@ -4664,70 +4959,102 @@ class PrivateServiceDetails {
     this.maxShutdownDelaySeconds,
   });
 
-  factory PrivateServiceDetails.fromJson(Map<String, Object?> json) => PrivateServiceDetails(
-        autoscaling: json['autoscaling'] == null ? null : PrivateServiceDetailsAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
-        disk: json['disk'] == null ? null : PrivateServiceDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
+  factory PrivateServiceDetails.fromJson(Map<String, Object?> json) =>
+      PrivateServiceDetails(
+        autoscaling: json['autoscaling'] == null
+            ? null
+            : PrivateServiceDetailsAutoscaling.fromJson(
+                json['autoscaling']! as Map<String, Object?>,
+              ),
+        disk: json['disk'] == null
+            ? null
+            : PrivateServiceDetailsDisk.fromJson(
+                json['disk']! as Map<String, Object?>,
+              ),
         env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
+        envSpecificDetails: EnvSpecificDetails.fromJson(
+          (json['envSpecificDetails'] as Map<String, Object?>?) ?? const {},
+        ),
         numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
-        openPorts: ((json['openPorts'] as List<Object?>?) ?? const []).map((e) => ServerPort.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        parentServer: json['parentServer'] == null ? null : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
+        openPorts: ((json['openPorts'] as List<Object?>?) ?? const [])
+            .map(
+              (e) =>
+                  ServerPort.fromJson((e as Map<String, Object?>?) ?? const {}),
+            )
+            .toList(),
+        parentServer: json['parentServer'] == null
+            ? null
+            : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
         plan: Plan.fromWire(json['plan']),
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         region: Region.fromWire(json['region']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
         sshAddress: json['sshAddress'] as String?,
         url: json['url'] as String? ?? '',
         buildPlan: BuildPlan.fromWire(json['buildPlan']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
       );
 
   final PrivateServiceDetailsAutoscaling? autoscaling;
   final PrivateServiceDetailsDisk? disk;
+
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
   final EnvSpecificDetails envSpecificDetails;
+
   /// For a *manually* scaled service, this is the number of instances the service is scaled to. DOES NOT indicate the number of running instances for an *autoscaled* service.
   final int numInstances;
   final List<ServerPort> openPorts;
   final Resource? parentServer;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan plan;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Runtime
   final ServiceRuntime runtime;
+
   /// The SSH address for the service. Only present for services that have SSH enabled.
   final String? sshAddress;
   final String url;
   final BuildPlan buildPlan;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
-        if (disk != null) 'disk': disk!.toJson(),
-        'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails.toJson(),
-        'numInstances': numInstances,
-        'openPorts': openPorts.map((e) => e.toJson()).toList(),
-        if (parentServer != null) 'parentServer': parentServer!.toJson(),
-        'plan': plan.wireValue,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        'region': region.wireValue,
-        'runtime': runtime.wireValue,
-        if (sshAddress != null) 'sshAddress': sshAddress,
-        'url': url,
-        'buildPlan': buildPlan.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-      };
+    if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
+    if (disk != null) 'disk': disk!.toJson(),
+    'env': env.wireValue,
+    'envSpecificDetails': envSpecificDetails.toJson(),
+    'numInstances': numInstances,
+    'openPorts': openPorts.map((e) => e.toJson()).toList(),
+    if (parentServer != null) 'parentServer': parentServer!.toJson(),
+    'plan': plan.wireValue,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    'region': region.wireValue,
+    'runtime': runtime.wireValue,
+    if (sshAddress != null) 'sshAddress': sshAddress,
+    'url': url,
+    'buildPlan': buildPlan.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+  };
 }
-
 
 class PrivateServiceDetailsPatch {
   const PrivateServiceDetailsPatch({
@@ -4740,39 +5067,55 @@ class PrivateServiceDetailsPatch {
     this.maxShutdownDelaySeconds,
   });
 
-  factory PrivateServiceDetailsPatch.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+  factory PrivateServiceDetailsPatch.fromJson(Map<String, Object?> json) =>
+      PrivateServiceDetailsPatch(
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPatch.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
+
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? preDeployCommand;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Runtime
   final ServiceRuntime? runtime;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (plan != null) 'plan': plan!.wireValue,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (runtime != null) 'runtime': runtime!.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-      };
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (plan != null) 'plan': plan!.wireValue,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (runtime != null) 'runtime': runtime!.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+  };
 }
-
 
 class PrivateServiceDetailsPostAutoscalingCriteriaCpu {
   const PrivateServiceDetailsPostAutoscalingCriteriaCpu({
@@ -4780,19 +5123,22 @@ class PrivateServiceDetailsPostAutoscalingCriteriaCpu {
     required this.percentage,
   });
 
-  factory PrivateServiceDetailsPostAutoscalingCriteriaCpu.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPostAutoscalingCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory PrivateServiceDetailsPostAutoscalingCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsPostAutoscalingCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class PrivateServiceDetailsPostAutoscalingCriteriaMemory {
@@ -4801,19 +5147,22 @@ class PrivateServiceDetailsPostAutoscalingCriteriaMemory {
     required this.percentage,
   });
 
-  factory PrivateServiceDetailsPostAutoscalingCriteriaMemory.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPostAutoscalingCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory PrivateServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsPostAutoscalingCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class PrivateServiceDetailsPostAutoscalingCriteria {
@@ -4822,18 +5171,24 @@ class PrivateServiceDetailsPostAutoscalingCriteria {
     required this.memory,
   });
 
-  factory PrivateServiceDetailsPostAutoscalingCriteria.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPostAutoscalingCriteria(
-        cpu: PrivateServiceDetailsPostAutoscalingCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: PrivateServiceDetailsPostAutoscalingCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory PrivateServiceDetailsPostAutoscalingCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsPostAutoscalingCriteria(
+    cpu: PrivateServiceDetailsPostAutoscalingCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: PrivateServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final PrivateServiceDetailsPostAutoscalingCriteriaCpu cpu;
   final PrivateServiceDetailsPostAutoscalingCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class PrivateServiceDetailsPostAutoscaling {
@@ -4844,26 +5199,32 @@ class PrivateServiceDetailsPostAutoscaling {
     required this.criteria,
   });
 
-  factory PrivateServiceDetailsPostAutoscaling.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPostAutoscaling(
-        enabled: json['enabled'] as bool? ?? false,
-        min: (json['min'] as num?)?.toInt() ?? 0,
-        max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: PrivateServiceDetailsPostAutoscalingCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory PrivateServiceDetailsPostAutoscaling.fromJson(
+    Map<String, Object?> json,
+  ) => PrivateServiceDetailsPostAutoscaling(
+    enabled: json['enabled'] as bool? ?? false,
+    min: (json['min'] as num?)?.toInt() ?? 0,
+    max: (json['max'] as num?)?.toInt() ?? 0,
+    criteria: PrivateServiceDetailsPostAutoscalingCriteria.fromJson(
+      (json['criteria'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final PrivateServiceDetailsPostAutoscalingCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class PrivateServiceDetailsPost {
@@ -4882,57 +5243,82 @@ class PrivateServiceDetailsPost {
     this.maxShutdownDelaySeconds,
   });
 
-  factory PrivateServiceDetailsPost.fromJson(Map<String, Object?> json) => PrivateServiceDetailsPost(
-        autoscaling: json['autoscaling'] == null ? null : PrivateServiceDetailsPostAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
-        disk: json['disk'] == null ? null : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
+  factory PrivateServiceDetailsPost.fromJson(Map<String, Object?> json) =>
+      PrivateServiceDetailsPost(
+        autoscaling: json['autoscaling'] == null
+            ? null
+            : PrivateServiceDetailsPostAutoscaling.fromJson(
+                json['autoscaling']! as Map<String, Object?>,
+              ),
+        disk: json['disk'] == null
+            ? null
+            : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPost.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPost.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         numInstances: (json['numInstances'] as num?)?.toInt(),
         plan: PaidPlan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         region: Region.fromWire(json['region']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
       );
 
   final PrivateServiceDetailsPostAutoscaling? autoscaling;
   final ServiceDisk? disk;
+
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv? env;
+
   /// Runtime
   final ServiceRuntime runtime;
   final EnvSpecificDetailsPost? envSpecificDetails;
+
   /// Defaults to 1
   final int? numInstances;
+
   /// Defaults to `starter` when creating a new database.
   final PaidPlan? plan;
   final String? preDeployCommand;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Defaults to "oregon"
   final Region? region;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
   Map<String, Object?> toJson() => {
-        if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
-        if (disk != null) 'disk': disk!.toJson(),
-        if (env != null) 'env': env!.wireValue,
-        'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (numInstances != null) 'numInstances': numInstances,
-        if (plan != null) 'plan': plan!.wireValue,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (region != null) 'region': region!.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-      };
+    if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
+    if (disk != null) 'disk': disk!.toJson(),
+    if (env != null) 'env': env!.wireValue,
+    'runtime': runtime.wireValue,
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (numInstances != null) 'numInstances': numInstances,
+    if (plan != null) 'plan': plan!.wireValue,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (region != null) 'region': region!.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+  };
 }
-
 
 /// A project is a collection of environments
 class Project {
@@ -4946,52 +5332,51 @@ class Project {
   });
 
   factory Project.fromJson(Map<String, Object?> json) => Project(
-        id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        environmentIds: ((json['environmentIds'] as List<Object?>?) ?? const []).map((e) => e as String? ?? '').toList(),
-      );
+    id: json['id'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    environmentIds: ((json['environmentIds'] as List<Object?>?) ?? const [])
+        .map((e) => e as String? ?? '')
+        .toList(),
+  );
 
   /// The ID of the project
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
+
   /// The name of the project
   final String name;
   final Owner owner;
+
   /// The environments associated with the project
   final List<String> environmentIds;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'name': name,
-        'owner': owner.toJson(),
-        'environmentIds': environmentIds.map((e) => e).toList(),
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'name': name,
+    'owner': owner.toJson(),
+    'environmentIds': environmentIds.map((e) => e).toList(),
+  };
 }
-
 
 /// Input type for updating a project
 class ProjectPatchinput {
-  const ProjectPatchinput({
-    this.name,
-  });
+  const ProjectPatchinput({this.name});
 
-  factory ProjectPatchinput.fromJson(Map<String, Object?> json) => ProjectPatchinput(
-        name: json['name'] as String?,
-      );
+  factory ProjectPatchinput.fromJson(Map<String, Object?> json) =>
+      ProjectPatchinput(name: json['name'] as String?);
 
   final String? name;
 
-  Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-      };
+  Map<String, Object?> toJson() => {if (name != null) 'name': name};
 }
-
 
 class ProjectPostenvironmentInput {
   const ProjectPostenvironmentInput({
@@ -5001,28 +5386,38 @@ class ProjectPostenvironmentInput {
     this.ipAllowList,
   });
 
-  factory ProjectPostenvironmentInput.fromJson(Map<String, Object?> json) => ProjectPostenvironmentInput(
+  factory ProjectPostenvironmentInput.fromJson(Map<String, Object?> json) =>
+      ProjectPostenvironmentInput(
         name: json['name'] as String? ?? '',
         protectedStatus: ProtectedStatus.fromWire(json['protectedStatus']),
         networkIsolationEnabled: json['networkIsolationEnabled'] as bool?,
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String name;
+
   /// Indicates whether an environment is `unprotected` or `protected`. Only admin users can perform destructive actions in `protected` environments.
   final ProtectedStatus? protectedStatus;
+
   /// Indicates whether network connections across environments are allowed.
   final bool? networkIsolationEnabled;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
-        if (networkIsolationEnabled != null) 'networkIsolationEnabled': networkIsolationEnabled,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    'name': name,
+    if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
+    if (networkIsolationEnabled != null)
+      'networkIsolationEnabled': networkIsolationEnabled,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 class ProjectPostinput {
   const ProjectPostinput({
@@ -5031,35 +5426,43 @@ class ProjectPostinput {
     required this.environments,
   });
 
-  factory ProjectPostinput.fromJson(Map<String, Object?> json) => ProjectPostinput(
+  factory ProjectPostinput.fromJson(Map<String, Object?> json) =>
+      ProjectPostinput(
         name: json['name'] as String? ?? '',
         ownerId: json['ownerId'] as String? ?? '',
-        environments: ((json['environments'] as List<Object?>?) ?? const []).map((e) => ProjectPostenvironmentInput.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        environments: ((json['environments'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ProjectPostenvironmentInput.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   /// The name of the project
   final String name;
+
   /// The ID of the owner that the project belongs to
   final String ownerId;
+
   /// The environments to create when creating the project
   final List<ProjectPostenvironmentInput> environments;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'ownerId': ownerId,
-        'environments': environments.map((e) => e.toJson()).toList(),
-      };
+    'name': name,
+    'ownerId': ownerId,
+    'environments': environments.map((e) => e.toJson()).toList(),
+  };
 }
 
-
 class ProjectWithCursor {
-  const ProjectWithCursor({
-    required this.project,
-    required this.cursor,
-  });
+  const ProjectWithCursor({required this.project, required this.cursor});
 
-  factory ProjectWithCursor.fromJson(Map<String, Object?> json) => ProjectWithCursor(
-        project: Project.fromJson((json['project'] as Map<String, Object?>?) ?? const {}),
+  factory ProjectWithCursor.fromJson(Map<String, Object?> json) =>
+      ProjectWithCursor(
+        project: Project.fromJson(
+          (json['project'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -5068,17 +5471,10 @@ class ProjectWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'project': project.toJson(),
-        'cursor': cursor,
-      };
+    'project': project.toJson(),
+    'cursor': cursor,
+  };
 }
-
-
-
-
-
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -5089,6 +5485,7 @@ enum RedisPlan {
   pro('pro'),
   proPlus('pro_plus'),
   custom('custom'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -5097,32 +5494,28 @@ enum RedisPlan {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RedisPlan fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RedisPlan fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Options for a Redis instance
 class RedisOptions {
-  const RedisOptions({
-    this.maxmemoryPolicy,
-    this.persistenceMode,
-  });
+  const RedisOptions({this.maxmemoryPolicy, this.persistenceMode});
 
   factory RedisOptions.fromJson(Map<String, Object?> json) => RedisOptions(
-        maxmemoryPolicy: json['maxmemoryPolicy'] as String?,
-        persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
-      );
+    maxmemoryPolicy: json['maxmemoryPolicy'] as String?,
+    persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
+  );
 
   final String? maxmemoryPolicy;
+
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
 
   Map<String, Object?> toJson() => {
-        if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy,
-        if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
-      };
+    if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy,
+    if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
+  };
 }
 
 /// A Redis instance
@@ -5144,62 +5537,80 @@ class Redis {
   });
 
   factory Redis.fromJson(Map<String, Object?> json) => Redis(
-        id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: DatabaseStatus.fromWire(json['status']),
-        region: Region.fromWire(json['region']),
-        plan: RedisPlan.fromWire(json['plan']),
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        options: RedisOptions.fromJson((json['options'] as Map<String, Object?>?) ?? const {}),
-        ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const []).map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-        version: json['version'] as String? ?? '',
-        dashboardUrl: json['dashboardUrl'] as String? ?? '',
-      );
+    id: json['id'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    status: DatabaseStatus.fromWire(json['status']),
+    region: Region.fromWire(json['region']),
+    plan: RedisPlan.fromWire(json['plan']),
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    options: RedisOptions.fromJson(
+      (json['options'] as Map<String, Object?>?) ?? const {},
+    ),
+    ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+    version: json['version'] as String? ?? '',
+    dashboardUrl: json['dashboardUrl'] as String? ?? '',
+  );
 
   /// The ID of the Redis instance
   final String id;
+
   /// The creation time of the Redis instance
   final DateTime createdAt;
+
   /// The last updated time of the Redis instance
   final DateTime updatedAt;
   final DatabaseStatus status;
+
   /// Defaults to "oregon"
   final Region region;
   final RedisPlan plan;
+
   /// The name of the Redis instance
   final String name;
   final Owner owner;
+
   /// Options for a Redis instance
   final RedisOptions options;
+
   /// The IP allow list for the Redis instance
   final List<CidrBlockAndDescription> ipAllowList;
+
   /// The ID of the environment the Redis instance is associated with
   final String? environmentId;
+
   /// The version of Redis
   final String version;
+
   /// The URL to view the Redis instance in the Render Dashboard
   final String dashboardUrl;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'status': status.wireValue,
-        'region': region.wireValue,
-        'plan': plan.wireValue,
-        'name': name,
-        'owner': owner.toJson(),
-        'options': options.toJson(),
-        'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-        'version': version,
-        'dashboardUrl': dashboardUrl,
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'status': status.wireValue,
+    'region': region.wireValue,
+    'plan': plan.wireValue,
+    'name': name,
+    'owner': owner.toJson(),
+    'options': options.toJson(),
+    'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+    'version': version,
+    'dashboardUrl': dashboardUrl,
+  };
 }
-
 
 /// A Redis instance
 class RedisConnectionInfo {
@@ -5209,26 +5620,29 @@ class RedisConnectionInfo {
     required this.redisClicommand,
   });
 
-  factory RedisConnectionInfo.fromJson(Map<String, Object?> json) => RedisConnectionInfo(
-        internalConnectionString: json['internalConnectionString'] as String? ?? '',
-        externalConnectionString: json['externalConnectionString'] as String? ?? '',
-        redisClicommand: json['redisCLICommand'] as String? ?? '',
-      );
+  factory RedisConnectionInfo.fromJson(
+    Map<String, Object?> json,
+  ) => RedisConnectionInfo(
+    internalConnectionString: json['internalConnectionString'] as String? ?? '',
+    externalConnectionString: json['externalConnectionString'] as String? ?? '',
+    redisClicommand: json['redisCLICommand'] as String? ?? '',
+  );
 
   /// The connection string to use from within Render
   final String internalConnectionString;
+
   /// The connection string to use from outside Render
   final String externalConnectionString;
+
   /// The Redis CLI command to connect to the Redis instance
   final String redisClicommand;
 
   Map<String, Object?> toJson() => {
-        'internalConnectionString': internalConnectionString,
-        'externalConnectionString': externalConnectionString,
-        'redisCLICommand': redisClicommand,
-      };
+    'internalConnectionString': internalConnectionString,
+    'externalConnectionString': externalConnectionString,
+    'redisCLICommand': redisClicommand,
+  };
 }
-
 
 class RedisDetailMaintenance {
   const RedisDetailMaintenance({
@@ -5239,10 +5653,13 @@ class RedisDetailMaintenance {
     required this.state,
   });
 
-  factory RedisDetailMaintenance.fromJson(Map<String, Object?> json) => RedisDetailMaintenance(
+  factory RedisDetailMaintenance.fromJson(Map<String, Object?> json) =>
+      RedisDetailMaintenance(
         id: json['id'] as String? ?? '',
         type: json['type'] as String? ?? '',
-        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        scheduledAt:
+            parseDate(json['scheduledAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
       );
@@ -5250,17 +5667,19 @@ class RedisDetailMaintenance {
   final String id;
   final String type;
   final DateTime scheduledAt;
+
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'type': type,
-        'scheduledAt': scheduledAt.toIso8601String(),
-        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
-        'state': state.wireValue,
-      };
+    'id': id,
+    'type': type,
+    'scheduledAt': scheduledAt.toIso8601String(),
+    if (pendingMaintenanceBy != null)
+      'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+    'state': state.wireValue,
+  };
 }
 
 /// A Redis instance
@@ -5282,62 +5701,82 @@ class RedisDetail {
   });
 
   factory RedisDetail.fromJson(Map<String, Object?> json) => RedisDetail(
-        id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: DatabaseStatus.fromWire(json['status']),
-        region: Region.fromWire(json['region']),
-        plan: RedisPlan.fromWire(json['plan']),
-        name: json['name'] as String? ?? '',
-        owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
-        options: RedisOptions.fromJson((json['options'] as Map<String, Object?>?) ?? const {}),
-        ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const []).map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-        version: json['version'] as String? ?? '',
-        maintenance: json['maintenance'] == null ? null : RedisDetailMaintenance.fromJson(json['maintenance']! as Map<String, Object?>),
-      );
+    id: json['id'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    status: DatabaseStatus.fromWire(json['status']),
+    region: Region.fromWire(json['region']),
+    plan: RedisPlan.fromWire(json['plan']),
+    name: json['name'] as String? ?? '',
+    owner: Owner.fromJson((json['owner'] as Map<String, Object?>?) ?? const {}),
+    options: RedisOptions.fromJson(
+      (json['options'] as Map<String, Object?>?) ?? const {},
+    ),
+    ipAllowList: ((json['ipAllowList'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+    version: json['version'] as String? ?? '',
+    maintenance: json['maintenance'] == null
+        ? null
+        : RedisDetailMaintenance.fromJson(
+            json['maintenance']! as Map<String, Object?>,
+          ),
+  );
 
   /// The ID of the Redis instance
   final String id;
+
   /// The creation time of the Redis instance
   final DateTime createdAt;
+
   /// The last updated time of the Redis instance
   final DateTime updatedAt;
   final DatabaseStatus status;
+
   /// Defaults to "oregon"
   final Region region;
   final RedisPlan plan;
+
   /// The name of the Redis instance
   final String name;
   final Owner owner;
+
   /// Options for a Redis instance
   final RedisOptions options;
+
   /// The IP allow list for the Redis instance
   final List<CidrBlockAndDescription> ipAllowList;
+
   /// The ID of the environment the Redis instance is associated with
   final String? environmentId;
+
   /// The version of Redis
   final String version;
   final RedisDetailMaintenance? maintenance;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'status': status.wireValue,
-        'region': region.wireValue,
-        'plan': plan.wireValue,
-        'name': name,
-        'owner': owner.toJson(),
-        'options': options.toJson(),
-        'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-        'version': version,
-        if (maintenance != null) 'maintenance': maintenance!.toJson(),
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'status': status.wireValue,
+    'region': region.wireValue,
+    'plan': plan.wireValue,
+    'name': name,
+    'owner': owner.toJson(),
+    'options': options.toJson(),
+    'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+    'version': version,
+    if (maintenance != null) 'maintenance': maintenance!.toJson(),
+  };
 }
-
-
 
 /// Input type for updating a Redis instance
 class RedisPatchinput {
@@ -5349,32 +5788,41 @@ class RedisPatchinput {
     this.ipAllowList,
   });
 
-  factory RedisPatchinput.fromJson(Map<String, Object?> json) => RedisPatchinput(
+  factory RedisPatchinput.fromJson(Map<String, Object?> json) =>
+      RedisPatchinput(
         name: json['name'] as String?,
         plan: RedisPlan.fromWire(json['plan']),
         maxmemoryPolicy: MaxmemoryPolicy.fromWire(json['maxmemoryPolicy']),
         persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   /// The name of the Redis instance
   final String? name;
   final RedisPlan? plan;
+
   /// The eviction policy for the Key Value instance
   final MaxmemoryPolicy? maxmemoryPolicy;
+
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (plan != null) 'plan': plan!.wireValue,
-        if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
-        if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    if (name != null) 'name': name,
+    if (plan != null) 'plan': plan!.wireValue,
+    if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
+    if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 /// Input type for creating a Redis instance
 class RedisPostinput {
@@ -5390,52 +5838,61 @@ class RedisPostinput {
   });
 
   factory RedisPostinput.fromJson(Map<String, Object?> json) => RedisPostinput(
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        plan: RedisPlan.fromWire(json['plan']),
-        region: Region.fromWire(json['region']),
-        environmentId: json['environmentId'] as String?,
-        maxmemoryPolicy: MaxmemoryPolicy.fromWire(json['maxmemoryPolicy']),
-        persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-      );
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    plan: RedisPlan.fromWire(json['plan']),
+    region: Region.fromWire(json['region']),
+    environmentId: json['environmentId'] as String?,
+    maxmemoryPolicy: MaxmemoryPolicy.fromWire(json['maxmemoryPolicy']),
+    persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
+    ipAllowList: (json['ipAllowList'] as List<Object?>?)
+        ?.map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+  );
 
   /// The name of the Redis instance
   final String name;
+
   /// The ID of the owner of the Redis instance
   final String ownerId;
   final RedisPlan plan;
+
   /// Defaults to "oregon"
   final Region? region;
   final String? environmentId;
+
   /// The eviction policy for the Key Value instance
   final MaxmemoryPolicy? maxmemoryPolicy;
+
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'ownerId': ownerId,
-        'plan': plan.wireValue,
-        if (region != null) 'region': region!.wireValue,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
-        if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    'name': name,
+    'ownerId': ownerId,
+    'plan': plan.wireValue,
+    if (region != null) 'region': region!.wireValue,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
+    if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
 
-
-
 class RedisWithCursor {
-  const RedisWithCursor({
-    required this.redis,
-    required this.cursor,
-  });
+  const RedisWithCursor({required this.redis, required this.cursor});
 
-  factory RedisWithCursor.fromJson(Map<String, Object?> json) => RedisWithCursor(
-        redis: Redis.fromJson((json['redis'] as Map<String, Object?>?) ?? const {}),
+  factory RedisWithCursor.fromJson(Map<String, Object?> json) =>
+      RedisWithCursor(
+        redis: Redis.fromJson(
+          (json['redis'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -5443,23 +5900,14 @@ class RedisWithCursor {
   final Redis redis;
   final String cursor;
 
-  Map<String, Object?> toJson() => {
-        'redis': redis.toJson(),
-        'cursor': cursor,
-      };
+  Map<String, Object?> toJson() => {'redis': redis.toJson(), 'cursor': cursor};
 }
 
-
-
-
-
 class RegistryCredentialSummary {
-  const RegistryCredentialSummary({
-    required this.id,
-    required this.name,
-  });
+  const RegistryCredentialSummary({required this.id, required this.name});
 
-  factory RegistryCredentialSummary.fromJson(Map<String, Object?> json) => RegistryCredentialSummary(
+  factory RegistryCredentialSummary.fromJson(Map<String, Object?> json) =>
+      RegistryCredentialSummary(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
       );
@@ -5467,12 +5915,8 @@ class RegistryCredentialSummary {
   final String id;
   final String name;
 
-  Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-      };
+  Map<String, Object?> toJson() => {'id': id, 'name': name};
 }
-
 
 /// Controls whether render.com subdomains are available for the service
 /// Decodes unrecognised values to [unknown] rather than
@@ -5480,6 +5924,7 @@ class RegistryCredentialSummary {
 enum RenderSubdomainPolicy {
   enabled('enabled'),
   disabled('disabled'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -5488,19 +5933,16 @@ enum RenderSubdomainPolicy {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RenderSubdomainPolicy fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RenderSubdomainPolicy fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum RouteType {
   redirect('redirect'),
   rewrite('rewrite'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -5509,10 +5951,8 @@ enum RouteType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RouteType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RouteType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Route {
@@ -5525,47 +5965,41 @@ class Route {
   });
 
   factory Route.fromJson(Map<String, Object?> json) => Route(
-        id: json['id'] as String? ?? '',
-        type: RouteType.fromWire(json['type']),
-        source: json['source'] as String? ?? '',
-        destination: json['destination'] as String? ?? '',
-        priority: (json['priority'] as num?)?.toInt() ?? 0,
-      );
+    id: json['id'] as String? ?? '',
+    type: RouteType.fromWire(json['type']),
+    source: json['source'] as String? ?? '',
+    destination: json['destination'] as String? ?? '',
+    priority: (json['priority'] as num?)?.toInt() ?? 0,
+  );
 
   final String id;
   final RouteType type;
   final String source;
   final String destination;
+
   /// Redirect and Rewrite Rules are applied in priority order starting at 0
   final int priority;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'type': type.wireValue,
-        'source': source,
-        'destination': destination,
-        'priority': priority,
-      };
+    'id': id,
+    'type': type.wireValue,
+    'source': source,
+    'destination': destination,
+    'priority': priority,
+  };
 }
 
-
 class RoutePatch {
-  const RoutePatch({
-    required this.priority,
-  });
+  const RoutePatch({required this.priority});
 
-  factory RoutePatch.fromJson(Map<String, Object?> json) => RoutePatch(
-        priority: (json['priority'] as num?)?.toInt() ?? 0,
-      );
+  factory RoutePatch.fromJson(Map<String, Object?> json) =>
+      RoutePatch(priority: (json['priority'] as num?)?.toInt() ?? 0);
 
   /// Redirect and Rewrite Rules are applied in priority order starting at 0. Moves this route to the specified priority and adjusts other route priorities accordingly.
   final int priority;
 
-  Map<String, Object?> toJson() => {
-        'priority': priority,
-      };
+  Map<String, Object?> toJson() => {'priority': priority};
 }
-
 
 class RoutePost {
   const RoutePost({
@@ -5576,26 +6010,26 @@ class RoutePost {
   });
 
   factory RoutePost.fromJson(Map<String, Object?> json) => RoutePost(
-        type: RouteType.fromWire(json['type']),
-        source: json['source'] as String? ?? '',
-        destination: json['destination'] as String? ?? '',
-        priority: (json['priority'] as num?)?.toInt(),
-      );
+    type: RouteType.fromWire(json['type']),
+    source: json['source'] as String? ?? '',
+    destination: json['destination'] as String? ?? '',
+    priority: (json['priority'] as num?)?.toInt(),
+  );
 
   final RouteType type;
   final String source;
   final String destination;
+
   /// Redirect and Rewrite Rules are applied in priority order starting at 0. Defaults to last in the priority list.
   final int? priority;
 
   Map<String, Object?> toJson() => {
-        'type': type.wireValue,
-        'source': source,
-        'destination': destination,
-        if (priority != null) 'priority': priority,
-      };
+    'type': type.wireValue,
+    'source': source,
+    'destination': destination,
+    if (priority != null) 'priority': priority,
+  };
 }
-
 
 class RoutePut {
   const RoutePut({
@@ -5605,54 +6039,47 @@ class RoutePut {
   });
 
   factory RoutePut.fromJson(Map<String, Object?> json) => RoutePut(
-        type: RouteType.fromWire(json['type']),
-        source: json['source'] as String? ?? '',
-        destination: json['destination'] as String? ?? '',
-      );
+    type: RouteType.fromWire(json['type']),
+    source: json['source'] as String? ?? '',
+    destination: json['destination'] as String? ?? '',
+  );
 
   final RouteType type;
   final String source;
   final String destination;
 
   Map<String, Object?> toJson() => {
-        'type': type.wireValue,
-        'source': source,
-        'destination': destination,
-      };
+    'type': type.wireValue,
+    'source': source,
+    'destination': destination,
+  };
 }
 
-
-
 class RouteWithCursor {
-  const RouteWithCursor({
-    required this.route,
-    required this.cursor,
-  });
+  const RouteWithCursor({required this.route, required this.cursor});
 
-  factory RouteWithCursor.fromJson(Map<String, Object?> json) => RouteWithCursor(
-        route: Route.fromJson((json['route'] as Map<String, Object?>?) ?? const {}),
+  factory RouteWithCursor.fromJson(Map<String, Object?> json) =>
+      RouteWithCursor(
+        route: Route.fromJson(
+          (json['route'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
   final Route route;
   final String cursor;
 
-  Map<String, Object?> toJson() => {
-        'route': route.toJson(),
-        'cursor': cursor,
-      };
+  Map<String, Object?> toJson() => {'route': route.toJson(), 'cursor': cursor};
 }
 
-
-
 class SecretFileWithCursor {
-  const SecretFileWithCursor({
-    required this.secretFile,
-    required this.cursor,
-  });
+  const SecretFileWithCursor({required this.secretFile, required this.cursor});
 
-  factory SecretFileWithCursor.fromJson(Map<String, Object?> json) => SecretFileWithCursor(
-        secretFile: SecretFile.fromJson((json['secretFile'] as Map<String, Object?>?) ?? const {}),
+  factory SecretFileWithCursor.fromJson(Map<String, Object?> json) =>
+      SecretFileWithCursor(
+        secretFile: SecretFile.fromJson(
+          (json['secretFile'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -5660,12 +6087,10 @@ class SecretFileWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'secretFile': secretFile.toJson(),
-        'cursor': cursor,
-      };
+    'secretFile': secretFile.toJson(),
+    'cursor': cursor,
+  };
 }
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -5675,6 +6100,7 @@ enum ServiceType {
   privateService('private_service'),
   backgroundWorker('background_worker'),
   cronJob('cron_job'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -5683,10 +6109,8 @@ enum ServiceType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ServiceType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ServiceType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class Service {
@@ -5714,33 +6138,44 @@ class Service {
   });
 
   factory Service.fromJson(Map<String, Object?> json) => Service(
-        id: json['id'] as String? ?? '',
-        autoDeploy: AutoDeploy.fromWire(json['autoDeploy']),
-        branch: json['branch'] as String?,
-        buildFilter: json['buildFilter'] == null ? null : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        dashboardUrl: json['dashboardUrl'] as String? ?? '',
-        environmentId: json['environmentId'] as String?,
-        imagePath: json['imagePath'] as String?,
-        name: json['name'] as String? ?? '',
-        notifyOnFail: NotifySetting.fromWire(json['notifyOnFail']),
-        ownerId: json['ownerId'] as String? ?? '',
-        registryCredential: json['registryCredential'] == null ? null : RegistryCredentialSummary.fromJson(json['registryCredential']! as Map<String, Object?>),
-        repo: json['repo'] as String?,
-        rootDir: json['rootDir'] as String? ?? '',
-        slug: json['slug'] as String? ?? '',
-        suspended: Suspended.fromWire(json['suspended']),
-        suspenders: ((json['suspenders'] as List<Object?>?) ?? const []).map((e) => SuspenderType.fromWire(e)).toList(),
-        type: ServiceType.fromWire(json['type']),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        serviceDetails: json['serviceDetails'],
-      );
+    id: json['id'] as String? ?? '',
+    autoDeploy: AutoDeploy.fromWire(json['autoDeploy']),
+    branch: json['branch'] as String?,
+    buildFilter: json['buildFilter'] == null
+        ? null
+        : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    dashboardUrl: json['dashboardUrl'] as String? ?? '',
+    environmentId: json['environmentId'] as String?,
+    imagePath: json['imagePath'] as String?,
+    name: json['name'] as String? ?? '',
+    notifyOnFail: NotifySetting.fromWire(json['notifyOnFail']),
+    ownerId: json['ownerId'] as String? ?? '',
+    registryCredential: json['registryCredential'] == null
+        ? null
+        : RegistryCredentialSummary.fromJson(
+            json['registryCredential']! as Map<String, Object?>,
+          ),
+    repo: json['repo'] as String?,
+    rootDir: json['rootDir'] as String? ?? '',
+    slug: json['slug'] as String? ?? '',
+    suspended: Suspended.fromWire(json['suspended']),
+    suspenders: ((json['suspenders'] as List<Object?>?) ?? const [])
+        .map((e) => SuspenderType.fromWire(e))
+        .toList(),
+    type: ServiceType.fromWire(json['type']),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    serviceDetails: json['serviceDetails'],
+  );
 
   final String id;
   final AutoDeploy autoDeploy;
   final String? branch;
   final BuildFilter? buildFilter;
   final DateTime createdAt;
+
   /// The URL to view the service in the Render Dashboard
   final String dashboardUrl;
   final String? environmentId;
@@ -5759,38 +6194,38 @@ class Service {
   final Object? serviceDetails;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'autoDeploy': autoDeploy.wireValue,
-        if (branch != null) 'branch': branch,
-        if (buildFilter != null) 'buildFilter': buildFilter!.toJson(),
-        'createdAt': createdAt.toIso8601String(),
-        'dashboardUrl': dashboardUrl,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (imagePath != null) 'imagePath': imagePath,
-        'name': name,
-        'notifyOnFail': notifyOnFail.wireValue,
-        'ownerId': ownerId,
-        if (registryCredential != null) 'registryCredential': registryCredential!.toJson(),
-        if (repo != null) 'repo': repo,
-        'rootDir': rootDir,
-        'slug': slug,
-        'suspended': suspended.wireValue,
-        'suspenders': suspenders.map((e) => e.wireValue).toList(),
-        'type': type.wireValue,
-        'updatedAt': updatedAt.toIso8601String(),
-        'serviceDetails': serviceDetails,
-      };
+    'id': id,
+    'autoDeploy': autoDeploy.wireValue,
+    if (branch != null) 'branch': branch,
+    if (buildFilter != null) 'buildFilter': buildFilter!.toJson(),
+    'createdAt': createdAt.toIso8601String(),
+    'dashboardUrl': dashboardUrl,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (imagePath != null) 'imagePath': imagePath,
+    'name': name,
+    'notifyOnFail': notifyOnFail.wireValue,
+    'ownerId': ownerId,
+    if (registryCredential != null)
+      'registryCredential': registryCredential!.toJson(),
+    if (repo != null) 'repo': repo,
+    'rootDir': rootDir,
+    'slug': slug,
+    'suspended': suspended.wireValue,
+    'suspenders': suspenders.map((e) => e.wireValue).toList(),
+    'type': type.wireValue,
+    'updatedAt': updatedAt.toIso8601String(),
+    'serviceDetails': serviceDetails,
+  };
 }
 
-
 class ServiceAndDeploy {
-  const ServiceAndDeploy({
-    this.service,
-    this.deployId,
-  });
+  const ServiceAndDeploy({this.service, this.deployId});
 
-  factory ServiceAndDeploy.fromJson(Map<String, Object?> json) => ServiceAndDeploy(
-        service: json['service'] == null ? null : Service.fromJson(json['service']! as Map<String, Object?>),
+  factory ServiceAndDeploy.fromJson(Map<String, Object?> json) =>
+      ServiceAndDeploy(
+        service: json['service'] == null
+            ? null
+            : Service.fromJson(json['service']! as Map<String, Object?>),
         deployId: json['deployId'] as String?,
       );
 
@@ -5798,13 +6233,10 @@ class ServiceAndDeploy {
   final String? deployId;
 
   Map<String, Object?> toJson() => {
-        if (service != null) 'service': service!.toJson(),
-        if (deployId != null) 'deployId': deployId,
-      };
+    if (service != null) 'service': service!.toJson(),
+    if (deployId != null) 'deployId': deployId,
+  };
 }
-
-
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -5850,6 +6282,7 @@ enum ServiceEventWithCursorEventType {
   zeroDowntimeRedeployStarted('zero_downtime_redeploy_started'),
   autoDeployDisabled('auto_deploy_disabled'),
   autoDeployEnabled('auto_deploy_enabled'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -5858,10 +6291,8 @@ enum ServiceEventWithCursorEventType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ServiceEventWithCursorEventType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ServiceEventWithCursorEventType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class ServiceEventWithCursorEvent {
@@ -5873,9 +6304,12 @@ class ServiceEventWithCursorEvent {
     required this.details,
   });
 
-  factory ServiceEventWithCursorEvent.fromJson(Map<String, Object?> json) => ServiceEventWithCursorEvent(
+  factory ServiceEventWithCursorEvent.fromJson(Map<String, Object?> json) =>
+      ServiceEventWithCursorEvent(
         id: json['id'] as String? ?? '',
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         serviceId: json['serviceId'] as String? ?? '',
         type: ServiceEventWithCursorEventType.fromWire(json['type']),
         details: json['details'],
@@ -5888,53 +6322,49 @@ class ServiceEventWithCursorEvent {
   final Object? details;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'timestamp': timestamp.toIso8601String(),
-        'serviceId': serviceId,
-        'type': type.wireValue,
-        'details': details,
-      };
+    'id': id,
+    'timestamp': timestamp.toIso8601String(),
+    'serviceId': serviceId,
+    'type': type.wireValue,
+    'details': details,
+  };
 }
 
 /// A service event with a cursor
 class ServiceEventWithCursor {
-  const ServiceEventWithCursor({
-    required this.event,
-  });
+  const ServiceEventWithCursor({required this.event});
 
-  factory ServiceEventWithCursor.fromJson(Map<String, Object?> json) => ServiceEventWithCursor(
-        event: ServiceEventWithCursorEvent.fromJson((json['event'] as Map<String, Object?>?) ?? const {}),
+  factory ServiceEventWithCursor.fromJson(Map<String, Object?> json) =>
+      ServiceEventWithCursor(
+        event: ServiceEventWithCursorEvent.fromJson(
+          (json['event'] as Map<String, Object?>?) ?? const {},
+        ),
       );
 
   final ServiceEventWithCursorEvent event;
 
-  Map<String, Object?> toJson() => {
-        'event': event.toJson(),
-      };
+  Map<String, Object?> toJson() => {'event': event.toJson()};
 }
 
-
 class ServiceInstance {
-  const ServiceInstance({
-    required this.id,
-    required this.createdAt,
-  });
+  const ServiceInstance({required this.id, required this.createdAt});
 
-  factory ServiceInstance.fromJson(Map<String, Object?> json) => ServiceInstance(
+  factory ServiceInstance.fromJson(Map<String, Object?> json) =>
+      ServiceInstance(
         id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
       );
 
   final String id;
   final DateTime createdAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+  };
 }
-
-
 
 class ServicePatch {
   const ServicePatch({
@@ -5949,15 +6379,19 @@ class ServicePatch {
   });
 
   factory ServicePatch.fromJson(Map<String, Object?> json) => ServicePatch(
-        autoDeploy: AutoDeploy.fromWire(json['autoDeploy']),
-        repo: json['repo'] as String?,
-        branch: json['branch'] as String?,
-        image: json['image'] == null ? null : Image.fromJson(json['image']! as Map<String, Object?>),
-        name: json['name'] as String?,
-        buildFilter: json['buildFilter'] == null ? null : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
-        rootDir: json['rootDir'] as String?,
-        serviceDetails: json['serviceDetails'],
-      );
+    autoDeploy: AutoDeploy.fromWire(json['autoDeploy']),
+    repo: json['repo'] as String?,
+    branch: json['branch'] as String?,
+    image: json['image'] == null
+        ? null
+        : Image.fromJson(json['image']! as Map<String, Object?>),
+    name: json['name'] as String?,
+    buildFilter: json['buildFilter'] == null
+        ? null
+        : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
+    rootDir: json['rootDir'] as String?,
+    serviceDetails: json['serviceDetails'],
+  );
 
   final AutoDeploy? autoDeploy;
   final String? repo;
@@ -5969,25 +6403,22 @@ class ServicePatch {
   final Object? serviceDetails;
 
   Map<String, Object?> toJson() => {
-        if (autoDeploy != null) 'autoDeploy': autoDeploy!.wireValue,
-        if (repo != null) 'repo': repo,
-        if (branch != null) 'branch': branch,
-        if (image != null) 'image': image!.toJson(),
-        if (name != null) 'name': name,
-        if (buildFilter != null) 'buildFilter': buildFilter!.toJson(),
-        if (rootDir != null) 'rootDir': rootDir,
-        if (serviceDetails != null) 'serviceDetails': serviceDetails,
-      };
+    if (autoDeploy != null) 'autoDeploy': autoDeploy!.wireValue,
+    if (repo != null) 'repo': repo,
+    if (branch != null) 'branch': branch,
+    if (image != null) 'image': image!.toJson(),
+    if (name != null) 'name': name,
+    if (buildFilter != null) 'buildFilter': buildFilter!.toJson(),
+    if (rootDir != null) 'rootDir': rootDir,
+    if (serviceDetails != null) 'serviceDetails': serviceDetails,
+  };
 }
 
-
 class ServicePostSecretFilesItem {
-  const ServicePostSecretFilesItem({
-    required this.name,
-    required this.content,
-  });
+  const ServicePostSecretFilesItem({required this.name, required this.content});
 
-  factory ServicePostSecretFilesItem.fromJson(Map<String, Object?> json) => ServicePostSecretFilesItem(
+  factory ServicePostSecretFilesItem.fromJson(Map<String, Object?> json) =>
+      ServicePostSecretFilesItem(
         name: json['name'] as String? ?? '',
         content: json['content'] as String? ?? '',
       );
@@ -5995,10 +6426,7 @@ class ServicePostSecretFilesItem {
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {
-        'name': name,
-        'content': content,
-      };
+  Map<String, Object?> toJson() => {'name': name, 'content': content};
 }
 
 class ServicePost {
@@ -6019,29 +6447,45 @@ class ServicePost {
   });
 
   factory ServicePost.fromJson(Map<String, Object?> json) => ServicePost(
-        type: ServiceType.fromWire(json['type']),
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        repo: json['repo'] as String?,
-        autoDeploy: AutoDeploy.fromWire(json['autoDeploy']),
-        branch: json['branch'] as String?,
-        image: json['image'] == null ? null : Image.fromJson(json['image']! as Map<String, Object?>),
-        buildFilter: json['buildFilter'] == null ? null : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
-        rootDir: json['rootDir'] as String?,
-        envVars: (json['envVars'] as List<Object?>?)?.map((e) => (e as Map<String, Object?>?) ?? const {}).toList(),
-        secretFiles: (json['secretFiles'] as List<Object?>?)?.map((e) => ServicePostSecretFilesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        environmentId: json['environmentId'] as String?,
-        serviceDetails: json['serviceDetails'],
-      );
+    type: ServiceType.fromWire(json['type']),
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    repo: json['repo'] as String?,
+    autoDeploy: AutoDeploy.fromWire(json['autoDeploy']),
+    branch: json['branch'] as String?,
+    image: json['image'] == null
+        ? null
+        : Image.fromJson(json['image']! as Map<String, Object?>),
+    buildFilter: json['buildFilter'] == null
+        ? null
+        : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
+    rootDir: json['rootDir'] as String?,
+    envVars: (json['envVars'] as List<Object?>?)
+        ?.map((e) => (e as Map<String, Object?>?) ?? const {})
+        .toList(),
+    secretFiles: (json['secretFiles'] as List<Object?>?)
+        ?.map(
+          (e) => ServicePostSecretFilesItem.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    environmentId: json['environmentId'] as String?,
+    serviceDetails: json['serviceDetails'],
+  );
 
   final ServiceType type;
+
   /// The service's name. Must be unique within the workspace.
   final String name;
+
   /// The ID of the workspace the service belongs to. Obtain your workspace's ID from its Settings page in the Render Dashboard.
   final String ownerId;
+
   /// The service's repository URL. Do not specify a branch in this string (use the `branch` parameter instead).
   final String? repo;
   final AutoDeploy? autoDeploy;
+
   /// The repo branch to pull, build, and deploy. If omitted, uses the repository's default branch.
   final String? branch;
   final Image? image;
@@ -6049,39 +6493,37 @@ class ServicePost {
   final String? rootDir;
   final List<Map<String, Object?>>? envVars;
   final List<ServicePostSecretFilesItem>? secretFiles;
+
   /// The ID of the environment the service belongs to, if any. Obtain an environment's ID from its Settings page in the Render Dashboard.
   final String? environmentId;
   final Object? serviceDetails;
 
   Map<String, Object?> toJson() => {
-        'type': type.wireValue,
-        'name': name,
-        'ownerId': ownerId,
-        if (repo != null) 'repo': repo,
-        if (autoDeploy != null) 'autoDeploy': autoDeploy!.wireValue,
-        if (branch != null) 'branch': branch,
-        if (image != null) 'image': image!.toJson(),
-        if (buildFilter != null) 'buildFilter': buildFilter!.toJson(),
-        if (rootDir != null) 'rootDir': rootDir,
-        if (envVars != null) 'envVars': envVars!.map((e) => e).toList(),
-        if (secretFiles != null) 'secretFiles': secretFiles!.map((e) => e.toJson()).toList(),
-        if (environmentId != null) 'environmentId': environmentId,
-        if (serviceDetails != null) 'serviceDetails': serviceDetails,
-      };
+    'type': type.wireValue,
+    'name': name,
+    'ownerId': ownerId,
+    if (repo != null) 'repo': repo,
+    if (autoDeploy != null) 'autoDeploy': autoDeploy!.wireValue,
+    if (branch != null) 'branch': branch,
+    if (image != null) 'image': image!.toJson(),
+    if (buildFilter != null) 'buildFilter': buildFilter!.toJson(),
+    if (rootDir != null) 'rootDir': rootDir,
+    if (envVars != null) 'envVars': envVars!.map((e) => e).toList(),
+    if (secretFiles != null)
+      'secretFiles': secretFiles!.map((e) => e.toJson()).toList(),
+    if (environmentId != null) 'environmentId': environmentId,
+    if (serviceDetails != null) 'serviceDetails': serviceDetails,
+  };
 }
 
-
-
-
-
 class ServiceWithCursor {
-  const ServiceWithCursor({
-    required this.service,
-    required this.cursor,
-  });
+  const ServiceWithCursor({required this.service, required this.cursor});
 
-  factory ServiceWithCursor.fromJson(Map<String, Object?> json) => ServiceWithCursor(
-        service: Service.fromJson((json['service'] as Map<String, Object?>?) ?? const {}),
+  factory ServiceWithCursor.fromJson(Map<String, Object?> json) =>
+      ServiceWithCursor(
+        service: Service.fromJson(
+          (json['service'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -6089,34 +6531,30 @@ class ServiceWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'service': service.toJson(),
-        'cursor': cursor,
-      };
+    'service': service.toJson(),
+    'cursor': cursor,
+  };
 }
 
-
 class SnapshotRestorePost {
-  const SnapshotRestorePost({
-    required this.snapshotKey,
-    this.instanceId,
-  });
+  const SnapshotRestorePost({required this.snapshotKey, this.instanceId});
 
-  factory SnapshotRestorePost.fromJson(Map<String, Object?> json) => SnapshotRestorePost(
+  factory SnapshotRestorePost.fromJson(Map<String, Object?> json) =>
+      SnapshotRestorePost(
         snapshotKey: json['snapshotKey'] as String? ?? '',
         instanceId: json['instanceId'] as String?,
       );
 
   final String snapshotKey;
+
   /// When a service with a disk is scaled, the instanceId is used to identify the instance that the disk is attached to. Each instance's disks get their own snapshots, and can be restored separately.
   final String? instanceId;
 
   Map<String, Object?> toJson() => {
-        'snapshotKey': snapshotKey,
-        if (instanceId != null) 'instanceId': instanceId,
-      };
+    'snapshotKey': snapshotKey,
+    if (instanceId != null) 'instanceId': instanceId,
+  };
 }
-
-
 
 class StaticSiteDetails {
   const StaticSiteDetails({
@@ -6131,43 +6569,62 @@ class StaticSiteDetails {
     this.renderSubdomainPolicy,
   });
 
-  factory StaticSiteDetails.fromJson(Map<String, Object?> json) => StaticSiteDetails(
+  factory StaticSiteDetails.fromJson(Map<String, Object?> json) =>
+      StaticSiteDetails(
         buildCommand: json['buildCommand'] as String? ?? '',
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        parentServer: json['parentServer'] == null ? null : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        parentServer: json['parentServer'] == null
+            ? null
+            : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
         publishPath: json['publishPath'] as String? ?? '',
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         url: json['url'] as String? ?? '',
         buildPlan: BuildPlan.fromWire(json['buildPlan']),
-        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(json['renderSubdomainPolicy']),
+        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
+          json['renderSubdomainPolicy'],
+        ),
       );
 
   final String buildCommand;
   final List<CidrBlockAndDescription>? ipAllowList;
   final Resource? parentServer;
   final String publishPath;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
   final String url;
   final BuildPlan buildPlan;
+
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
 
   Map<String, Object?> toJson() => {
-        'buildCommand': buildCommand,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        if (parentServer != null) 'parentServer': parentServer!.toJson(),
-        'publishPath': publishPath,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        'url': url,
-        'buildPlan': buildPlan.wireValue,
-        if (renderSubdomainPolicy != null) 'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
-      };
+    'buildCommand': buildCommand,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    if (parentServer != null) 'parentServer': parentServer!.toJson(),
+    'publishPath': publishPath,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    'url': url,
+    'buildPlan': buildPlan.wireValue,
+    if (renderSubdomainPolicy != null)
+      'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
+  };
 }
-
 
 class StaticSiteDetailsPatch {
   const StaticSiteDetailsPatch({
@@ -6179,34 +6636,51 @@ class StaticSiteDetailsPatch {
     this.ipAllowList,
   });
 
-  factory StaticSiteDetailsPatch.fromJson(Map<String, Object?> json) => StaticSiteDetailsPatch(
+  factory StaticSiteDetailsPatch.fromJson(Map<String, Object?> json) =>
+      StaticSiteDetailsPatch(
         buildCommand: json['buildCommand'] as String?,
         publishPath: json['publishPath'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
-        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(json['renderSubdomainPolicy']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
+          json['renderSubdomainPolicy'],
+        ),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String? buildCommand;
   final String? publishPath;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        if (buildCommand != null) 'buildCommand': buildCommand,
-        if (publishPath != null) 'publishPath': publishPath,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (renderSubdomainPolicy != null) 'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    if (buildCommand != null) 'buildCommand': buildCommand,
+    if (publishPath != null) 'publishPath': publishPath,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (renderSubdomainPolicy != null)
+      'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 class StaticSiteDetailsPost {
   const StaticSiteDetailsPost({
@@ -6220,57 +6694,80 @@ class StaticSiteDetailsPost {
     this.ipAllowList,
   });
 
-  factory StaticSiteDetailsPost.fromJson(Map<String, Object?> json) => StaticSiteDetailsPost(
+  factory StaticSiteDetailsPost.fromJson(Map<String, Object?> json) =>
+      StaticSiteDetailsPost(
         buildCommand: json['buildCommand'] as String?,
-        headers: (json['headers'] as List<Object?>?)?.map((e) => HeaderInput.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        headers: (json['headers'] as List<Object?>?)
+            ?.map(
+              (e) => HeaderInput.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         publishPath: json['publishPath'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
-        routes: (json['routes'] as List<Object?>?)?.map((e) => RoutePost.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(json['renderSubdomainPolicy']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        routes: (json['routes'] as List<Object?>?)
+            ?.map(
+              (e) =>
+                  RoutePost.fromJson((e as Map<String, Object?>?) ?? const {}),
+            )
+            .toList(),
+        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
+          json['renderSubdomainPolicy'],
+        ),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String? buildCommand;
   final List<HeaderInput>? headers;
+
   /// Defaults to "public"
   final String? publishPath;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
   final List<RoutePost>? routes;
+
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        if (buildCommand != null) 'buildCommand': buildCommand,
-        if (headers != null) 'headers': headers!.map((e) => e.toJson()).toList(),
-        if (publishPath != null) 'publishPath': publishPath,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (routes != null) 'routes': routes!.map((e) => e.toJson()).toList(),
-        if (renderSubdomainPolicy != null) 'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    if (buildCommand != null) 'buildCommand': buildCommand,
+    if (headers != null) 'headers': headers!.map((e) => e.toJson()).toList(),
+    if (publishPath != null) 'publishPath': publishPath,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (routes != null) 'routes': routes!.map((e) => e.toJson()).toList(),
+    if (renderSubdomainPolicy != null)
+      'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
 
-
-
 class SyncWithCursorSyncCommit {
-  const SyncWithCursorSyncCommit({
-    required this.id,
-  });
+  const SyncWithCursorSyncCommit({required this.id});
 
-  factory SyncWithCursorSyncCommit.fromJson(Map<String, Object?> json) => SyncWithCursorSyncCommit(
-        id: json['id'] as String? ?? '',
-      );
+  factory SyncWithCursorSyncCommit.fromJson(Map<String, Object?> json) =>
+      SyncWithCursorSyncCommit(id: json['id'] as String? ?? '');
 
   final String id;
 
-  Map<String, Object?> toJson() => {
-        'id': id,
-      };
+  Map<String, Object?> toJson() => {'id': id};
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -6281,6 +6778,7 @@ enum State {
   running('running'),
   error('error'),
   success('success'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -6289,10 +6787,8 @@ enum State {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static State fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static State fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class SyncWithCursorSync {
@@ -6304,9 +6800,12 @@ class SyncWithCursorSync {
     required this.state,
   });
 
-  factory SyncWithCursorSync.fromJson(Map<String, Object?> json) => SyncWithCursorSync(
+  factory SyncWithCursorSync.fromJson(Map<String, Object?> json) =>
+      SyncWithCursorSync(
         id: json['id'] as String? ?? '',
-        commit: SyncWithCursorSyncCommit.fromJson((json['commit'] as Map<String, Object?>?) ?? const {}),
+        commit: SyncWithCursorSyncCommit.fromJson(
+          (json['commit'] as Map<String, Object?>?) ?? const {},
+        ),
         startedAt: parseDate(json['startedAt']),
         completedAt: parseDate(json['completedAt']),
         state: State.fromWire(json['state']),
@@ -6319,35 +6818,30 @@ class SyncWithCursorSync {
   final State state;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'commit': commit.toJson(),
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-        'state': state.wireValue,
-      };
+    'id': id,
+    'commit': commit.toJson(),
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+    'state': state.wireValue,
+  };
 }
 
 /// A Blueprint sync with a cursor
 class SyncWithCursor {
-  const SyncWithCursor({
-    required this.sync_,
-    required this.cursor,
-  });
+  const SyncWithCursor({required this.sync_, required this.cursor});
 
   factory SyncWithCursor.fromJson(Map<String, Object?> json) => SyncWithCursor(
-        sync_: SyncWithCursorSync.fromJson((json['sync'] as Map<String, Object?>?) ?? const {}),
-        cursor: json['cursor'] as String? ?? '',
-      );
+    sync_: SyncWithCursorSync.fromJson(
+      (json['sync'] as Map<String, Object?>?) ?? const {},
+    ),
+    cursor: json['cursor'] as String? ?? '',
+  );
 
   final SyncWithCursorSync sync_;
   final String cursor;
 
-  Map<String, Object?> toJson() => {
-        'sync': sync_.toJson(),
-        'cursor': cursor,
-      };
+  Map<String, Object?> toJson() => {'sync': sync_.toJson(), 'cursor': cursor};
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -6359,6 +6853,7 @@ enum GetTaskRunStatus {
   failed('failed'),
   canceled('canceled'),
   paused('paused'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -6367,10 +6862,8 @@ enum GetTaskRunStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static GetTaskRunStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static GetTaskRunStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class TaskRunWithCursorTaskRunAttemptsItem {
@@ -6383,17 +6876,21 @@ class TaskRunWithCursorTaskRunAttemptsItem {
     this.completedAt,
   });
 
-  factory TaskRunWithCursorTaskRunAttemptsItem.fromJson(Map<String, Object?> json) => TaskRunWithCursorTaskRunAttemptsItem(
-        taskRunId: json['taskRunId'] as String?,
-        attempt: (json['attempt'] as num?)?.toInt() ?? 0,
-        status: GetTaskRunStatus.fromWire(json['status']),
-        enqueuedAt: parseDate(json['enqueuedAt']),
-        startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        completedAt: parseDate(json['completedAt']),
-      );
+  factory TaskRunWithCursorTaskRunAttemptsItem.fromJson(
+    Map<String, Object?> json,
+  ) => TaskRunWithCursorTaskRunAttemptsItem(
+    taskRunId: json['taskRunId'] as String?,
+    attempt: (json['attempt'] as num?)?.toInt() ?? 0,
+    status: GetTaskRunStatus.fromWire(json['status']),
+    enqueuedAt: parseDate(json['enqueuedAt']),
+    startedAt:
+        parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    completedAt: parseDate(json['completedAt']),
+  );
 
   /// The ID of the task run this attempt belongs to.
   final String? taskRunId;
+
   /// The 0-indexed attempt number.
   final int attempt;
   final GetTaskRunStatus status;
@@ -6402,13 +6899,13 @@ class TaskRunWithCursorTaskRunAttemptsItem {
   final DateTime? completedAt;
 
   Map<String, Object?> toJson() => {
-        if (taskRunId != null) 'taskRunId': taskRunId,
-        'attempt': attempt,
-        'status': status.wireValue,
-        if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
-        'startedAt': startedAt.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-      };
+    if (taskRunId != null) 'taskRunId': taskRunId,
+    'attempt': attempt,
+    'status': status.wireValue,
+    if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
+    'startedAt': startedAt.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+  };
 }
 
 class TaskRunWithCursorTaskRun {
@@ -6425,7 +6922,8 @@ class TaskRunWithCursorTaskRun {
     required this.attempts,
   });
 
-  factory TaskRunWithCursorTaskRun.fromJson(Map<String, Object?> json) => TaskRunWithCursorTaskRun(
+  factory TaskRunWithCursorTaskRun.fromJson(Map<String, Object?> json) =>
+      TaskRunWithCursorTaskRun(
         id: json['id'] as String? ?? '',
         taskId: json['taskId'] as String? ?? '',
         status: GetTaskRunStatus.fromWire(json['status']),
@@ -6435,7 +6933,13 @@ class TaskRunWithCursorTaskRun {
         parentTaskAttempt: (json['parentTaskAttempt'] as num?)?.toInt(),
         rootTaskRunId: json['rootTaskRunId'] as String? ?? '',
         retries: (json['retries'] as num?)?.toInt() ?? 0,
-        attempts: ((json['attempts'] as List<Object?>?) ?? const []).map((e) => TaskRunWithCursorTaskRunAttemptsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        attempts: ((json['attempts'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => TaskRunWithCursorTaskRunAttemptsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String id;
@@ -6444,6 +6948,7 @@ class TaskRunWithCursorTaskRun {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final String parentTaskRunId;
+
   /// The 0-indexed attempt of the parent task run that spawned this task run. Omitted for root task runs and for task runs created before this field was introduced.
   final int? parentTaskAttempt;
   final String rootTaskRunId;
@@ -6451,27 +6956,27 @@ class TaskRunWithCursorTaskRun {
   final List<TaskRunWithCursorTaskRunAttemptsItem> attempts;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'taskId': taskId,
-        'status': status.wireValue,
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-        'parentTaskRunId': parentTaskRunId,
-        if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
-        'rootTaskRunId': rootTaskRunId,
-        'retries': retries,
-        'attempts': attempts.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'taskId': taskId,
+    'status': status.wireValue,
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+    'parentTaskRunId': parentTaskRunId,
+    if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
+    'rootTaskRunId': rootTaskRunId,
+    'retries': retries,
+    'attempts': attempts.map((e) => e.toJson()).toList(),
+  };
 }
 
 class TaskRunWithCursor {
-  const TaskRunWithCursor({
-    required this.taskRun,
-    required this.cursor,
-  });
+  const TaskRunWithCursor({required this.taskRun, required this.cursor});
 
-  factory TaskRunWithCursor.fromJson(Map<String, Object?> json) => TaskRunWithCursor(
-        taskRun: TaskRunWithCursorTaskRun.fromJson((json['taskRun'] as Map<String, Object?>?) ?? const {}),
+  factory TaskRunWithCursor.fromJson(Map<String, Object?> json) =>
+      TaskRunWithCursor(
+        taskRun: TaskRunWithCursorTaskRun.fromJson(
+          (json['taskRun'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -6479,11 +6984,10 @@ class TaskRunWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'taskRun': taskRun.toJson(),
-        'cursor': cursor,
-      };
+    'taskRun': taskRun.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 class TaskWithCursorTask {
   const TaskWithCursorTask({
@@ -6494,10 +6998,13 @@ class TaskWithCursorTask {
     this.workflowVersionId,
   });
 
-  factory TaskWithCursorTask.fromJson(Map<String, Object?> json) => TaskWithCursorTask(
+  factory TaskWithCursorTask.fromJson(Map<String, Object?> json) =>
+      TaskWithCursorTask(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         workflowId: json['workflowId'] as String?,
         workflowVersionId: json['workflowVersionId'] as String?,
       );
@@ -6509,40 +7016,36 @@ class TaskWithCursorTask {
   final String? workflowVersionId;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-        if (workflowId != null) 'workflowId': workflowId,
-        if (workflowVersionId != null) 'workflowVersionId': workflowVersionId,
-      };
+    'id': id,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+    if (workflowId != null) 'workflowId': workflowId,
+    if (workflowVersionId != null) 'workflowVersionId': workflowVersionId,
+  };
 }
 
 class TaskWithCursor {
-  const TaskWithCursor({
-    required this.task,
-    required this.cursor,
-  });
+  const TaskWithCursor({required this.task, required this.cursor});
 
   factory TaskWithCursor.fromJson(Map<String, Object?> json) => TaskWithCursor(
-        task: TaskWithCursorTask.fromJson((json['task'] as Map<String, Object?>?) ?? const {}),
-        cursor: json['cursor'] as String? ?? '',
-      );
+    task: TaskWithCursorTask.fromJson(
+      (json['task'] as Map<String, Object?>?) ?? const {},
+    ),
+    cursor: json['cursor'] as String? ?? '',
+  );
 
   final TaskWithCursorTask task;
   final String cursor;
 
-  Map<String, Object?> toJson() => {
-        'task': task.toJson(),
-        'cursor': cursor,
-      };
+  Map<String, Object?> toJson() => {'task': task.toJson(), 'cursor': cursor};
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum TeamMemberStatus {
   active('active'),
   inactive('inactive'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -6551,10 +7054,8 @@ enum TeamMemberStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static TeamMemberStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static TeamMemberStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// The member's workspace role. Values are always returned in uppercase.
@@ -6566,6 +7067,7 @@ enum TeamMemberRole {
   workspaceContributor('WORKSPACE_CONTRIBUTOR'),
   workspaceBilling('WORKSPACE_BILLING'),
   workspaceViewer('WORKSPACE_VIEWER'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -6574,10 +7076,8 @@ enum TeamMemberRole {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static TeamMemberRole fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static TeamMemberRole fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class TeamMember {
@@ -6591,55 +7091,46 @@ class TeamMember {
   });
 
   factory TeamMember.fromJson(Map<String, Object?> json) => TeamMember(
-        userId: json['userId'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        email: json['email'] as String? ?? '',
-        status: TeamMemberStatus.fromWire(json['status']),
-        role: TeamMemberRole.fromWire(json['role']),
-        mfaEnabled: json['mfaEnabled'] as bool? ?? false,
-      );
+    userId: json['userId'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    email: json['email'] as String? ?? '',
+    status: TeamMemberStatus.fromWire(json['status']),
+    role: TeamMemberRole.fromWire(json['role']),
+    mfaEnabled: json['mfaEnabled'] as bool? ?? false,
+  );
 
   final String userId;
   final String name;
   final String email;
   final TeamMemberStatus status;
+
   /// The member's workspace role. Values are always returned in uppercase.
   final TeamMemberRole role;
   final bool mfaEnabled;
 
   Map<String, Object?> toJson() => {
-        'userId': userId,
-        'name': name,
-        'email': email,
-        'status': status.wireValue,
-        'role': role.wireValue,
-        'mfaEnabled': mfaEnabled,
-      };
+    'userId': userId,
+    'name': name,
+    'email': email,
+    'status': status.wireValue,
+    'role': role.wireValue,
+    'mfaEnabled': mfaEnabled,
+  };
 }
 
-
-
-
 class User {
-  const User({
-    required this.email,
-    required this.name,
-  });
+  const User({required this.email, required this.name});
 
   factory User.fromJson(Map<String, Object?> json) => User(
-        email: json['email'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-      );
+    email: json['email'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+  );
 
   final String email;
   final String name;
 
-  Map<String, Object?> toJson() => {
-        'email': email,
-        'name': name,
-      };
+  Map<String, Object?> toJson() => {'email': email, 'name': name};
 }
-
 
 class WebServiceDetailsAutoscalingCriteriaCpu {
   const WebServiceDetailsAutoscalingCriteriaCpu({
@@ -6647,19 +7138,22 @@ class WebServiceDetailsAutoscalingCriteriaCpu {
     required this.percentage,
   });
 
-  factory WebServiceDetailsAutoscalingCriteriaCpu.fromJson(Map<String, Object?> json) => WebServiceDetailsAutoscalingCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory WebServiceDetailsAutoscalingCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsAutoscalingCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class WebServiceDetailsAutoscalingCriteriaMemory {
@@ -6668,19 +7162,22 @@ class WebServiceDetailsAutoscalingCriteriaMemory {
     required this.percentage,
   });
 
-  factory WebServiceDetailsAutoscalingCriteriaMemory.fromJson(Map<String, Object?> json) => WebServiceDetailsAutoscalingCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory WebServiceDetailsAutoscalingCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsAutoscalingCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class WebServiceDetailsAutoscalingCriteria {
@@ -6689,18 +7186,24 @@ class WebServiceDetailsAutoscalingCriteria {
     required this.memory,
   });
 
-  factory WebServiceDetailsAutoscalingCriteria.fromJson(Map<String, Object?> json) => WebServiceDetailsAutoscalingCriteria(
-        cpu: WebServiceDetailsAutoscalingCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: WebServiceDetailsAutoscalingCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory WebServiceDetailsAutoscalingCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsAutoscalingCriteria(
+    cpu: WebServiceDetailsAutoscalingCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: WebServiceDetailsAutoscalingCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final WebServiceDetailsAutoscalingCriteriaCpu cpu;
   final WebServiceDetailsAutoscalingCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class WebServiceDetailsAutoscaling {
@@ -6711,26 +7214,31 @@ class WebServiceDetailsAutoscaling {
     required this.criteria,
   });
 
-  factory WebServiceDetailsAutoscaling.fromJson(Map<String, Object?> json) => WebServiceDetailsAutoscaling(
+  factory WebServiceDetailsAutoscaling.fromJson(Map<String, Object?> json) =>
+      WebServiceDetailsAutoscaling(
         enabled: json['enabled'] as bool? ?? false,
         min: (json['min'] as num?)?.toInt() ?? 0,
         max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: WebServiceDetailsAutoscalingCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
+        criteria: WebServiceDetailsAutoscalingCriteria.fromJson(
+          (json['criteria'] as Map<String, Object?>?) ?? const {},
+        ),
       );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final WebServiceDetailsAutoscalingCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class WebServiceDetailsDisk {
@@ -6741,7 +7249,8 @@ class WebServiceDetailsDisk {
     required this.mountPath,
   });
 
-  factory WebServiceDetailsDisk.fromJson(Map<String, Object?> json) => WebServiceDetailsDisk(
+  factory WebServiceDetailsDisk.fromJson(Map<String, Object?> json) =>
+      WebServiceDetailsDisk(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
@@ -6754,11 +7263,11 @@ class WebServiceDetailsDisk {
   final String mountPath;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+  };
 }
 
 class WebServiceDetails {
@@ -6786,86 +7295,132 @@ class WebServiceDetails {
     this.renderSubdomainPolicy,
   });
 
-  factory WebServiceDetails.fromJson(Map<String, Object?> json) => WebServiceDetails(
-        autoscaling: json['autoscaling'] == null ? null : WebServiceDetailsAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
-        cache: json['cache'] == null ? null : Cache.fromJson(json['cache']! as Map<String, Object?>),
-        disk: json['disk'] == null ? null : WebServiceDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
-        env: ServiceEnv.fromWire(json['env']),
-        envSpecificDetails: EnvSpecificDetails.fromJson((json['envSpecificDetails'] as Map<String, Object?>?) ?? const {}),
-        healthCheckPath: json['healthCheckPath'] as String? ?? '',
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        maintenanceMode: json['maintenanceMode'] == null ? null : MaintenanceMode.fromJson(json['maintenanceMode']! as Map<String, Object?>),
-        numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
-        openPorts: ((json['openPorts'] as List<Object?>?) ?? const []).map((e) => ServerPort.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        parentServer: json['parentServer'] == null ? null : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
-        plan: Plan.fromWire(json['plan']),
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
-        region: Region.fromWire(json['region']),
-        runtime: ServiceRuntime.fromWire(json['runtime']),
-        sshAddress: json['sshAddress'] as String?,
-        url: json['url'] as String? ?? '',
-        buildPlan: BuildPlan.fromWire(json['buildPlan']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
-        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(json['renderSubdomainPolicy']),
-      );
+  factory WebServiceDetails.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetails(
+    autoscaling: json['autoscaling'] == null
+        ? null
+        : WebServiceDetailsAutoscaling.fromJson(
+            json['autoscaling']! as Map<String, Object?>,
+          ),
+    cache: json['cache'] == null
+        ? null
+        : Cache.fromJson(json['cache']! as Map<String, Object?>),
+    disk: json['disk'] == null
+        ? null
+        : WebServiceDetailsDisk.fromJson(json['disk']! as Map<String, Object?>),
+    env: ServiceEnv.fromWire(json['env']),
+    envSpecificDetails: EnvSpecificDetails.fromJson(
+      (json['envSpecificDetails'] as Map<String, Object?>?) ?? const {},
+    ),
+    healthCheckPath: json['healthCheckPath'] as String? ?? '',
+    ipAllowList: (json['ipAllowList'] as List<Object?>?)
+        ?.map(
+          (e) => CidrBlockAndDescription.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    maintenanceMode: json['maintenanceMode'] == null
+        ? null
+        : MaintenanceMode.fromJson(
+            json['maintenanceMode']! as Map<String, Object?>,
+          ),
+    numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
+    openPorts: ((json['openPorts'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => ServerPort.fromJson((e as Map<String, Object?>?) ?? const {}),
+        )
+        .toList(),
+    parentServer: json['parentServer'] == null
+        ? null
+        : Resource.fromJson(json['parentServer']! as Map<String, Object?>),
+    plan: Plan.fromWire(json['plan']),
+    pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+      json['pullRequestPreviewsEnabled'],
+    ),
+    previews: json['previews'] == null
+        ? null
+        : Previews.fromJson(json['previews']! as Map<String, Object?>),
+    region: Region.fromWire(json['region']),
+    runtime: ServiceRuntime.fromWire(json['runtime']),
+    sshAddress: json['sshAddress'] as String?,
+    url: json['url'] as String? ?? '',
+    buildPlan: BuildPlan.fromWire(json['buildPlan']),
+    maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
+    renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
+      json['renderSubdomainPolicy'],
+    ),
+  );
 
   final WebServiceDetailsAutoscaling? autoscaling;
   final Cache? cache;
   final WebServiceDetailsDisk? disk;
+
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv env;
   final EnvSpecificDetails envSpecificDetails;
   final String healthCheckPath;
   final List<CidrBlockAndDescription>? ipAllowList;
   final MaintenanceMode? maintenanceMode;
+
   /// For a *manually* scaled service, this is the number of instances the service is scaled to. DOES NOT indicate the number of running instances for an *autoscaled* service.
   final int numInstances;
   final List<ServerPort> openPorts;
   final Resource? parentServer;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan plan;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Runtime
   final ServiceRuntime runtime;
+
   /// The SSH address for the service. Only present for services that have SSH enabled.
   final String? sshAddress;
   final String url;
   final BuildPlan buildPlan;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
+
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
 
   Map<String, Object?> toJson() => {
-        if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
-        if (cache != null) 'cache': cache!.toJson(),
-        if (disk != null) 'disk': disk!.toJson(),
-        'env': env.wireValue,
-        'envSpecificDetails': envSpecificDetails.toJson(),
-        'healthCheckPath': healthCheckPath,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
-        'numInstances': numInstances,
-        'openPorts': openPorts.map((e) => e.toJson()).toList(),
-        if (parentServer != null) 'parentServer': parentServer!.toJson(),
-        'plan': plan.wireValue,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        'region': region.wireValue,
-        'runtime': runtime.wireValue,
-        if (sshAddress != null) 'sshAddress': sshAddress,
-        'url': url,
-        'buildPlan': buildPlan.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-        if (renderSubdomainPolicy != null) 'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
-      };
+    if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
+    if (cache != null) 'cache': cache!.toJson(),
+    if (disk != null) 'disk': disk!.toJson(),
+    'env': env.wireValue,
+    'envSpecificDetails': envSpecificDetails.toJson(),
+    'healthCheckPath': healthCheckPath,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
+    'numInstances': numInstances,
+    'openPorts': openPorts.map((e) => e.toJson()).toList(),
+    if (parentServer != null) 'parentServer': parentServer!.toJson(),
+    'plan': plan.wireValue,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    'region': region.wireValue,
+    'runtime': runtime.wireValue,
+    if (sshAddress != null) 'sshAddress': sshAddress,
+    'url': url,
+    'buildPlan': buildPlan.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+    if (renderSubdomainPolicy != null)
+      'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
+  };
 }
-
 
 class WebServiceDetailsPatch {
   const WebServiceDetailsPatch({
@@ -6883,55 +7438,88 @@ class WebServiceDetailsPatch {
     this.cache,
   });
 
-  factory WebServiceDetailsPatch.fromJson(Map<String, Object?> json) => WebServiceDetailsPatch(
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPatch.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+  factory WebServiceDetailsPatch.fromJson(Map<String, Object?> json) =>
+      WebServiceDetailsPatch(
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPatch.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         healthCheckPath: json['healthCheckPath'] as String?,
-        maintenanceMode: json['maintenanceMode'] == null ? null : MaintenanceMode.fromJson(json['maintenanceMode']! as Map<String, Object?>),
+        maintenanceMode: json['maintenanceMode'] == null
+            ? null
+            : MaintenanceMode.fromJson(
+                json['maintenanceMode']! as Map<String, Object?>,
+              ),
         plan: Plan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
-        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(json['renderSubdomainPolicy']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        cache: json['cache'] == null ? null : Cache.fromJson(json['cache']! as Map<String, Object?>),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
+        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
+          json['renderSubdomainPolicy'],
+        ),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        cache: json['cache'] == null
+            ? null
+            : Cache.fromJson(json['cache']! as Map<String, Object?>),
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
   final String? healthCheckPath;
   final MaintenanceMode? maintenanceMode;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan? plan;
   final String? preDeployCommand;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Runtime
   final ServiceRuntime? runtime;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
+
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
   final Cache? cache;
 
   Map<String, Object?> toJson() => {
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
-        if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
-        if (plan != null) 'plan': plan!.wireValue,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (runtime != null) 'runtime': runtime!.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-        if (renderSubdomainPolicy != null) 'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-        if (cache != null) 'cache': cache!.toJson(),
-      };
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
+    if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
+    if (plan != null) 'plan': plan!.wireValue,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (runtime != null) 'runtime': runtime!.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+    if (renderSubdomainPolicy != null)
+      'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+    if (cache != null) 'cache': cache!.toJson(),
+  };
 }
-
 
 class WebServiceDetailsPostAutoscalingCriteriaCpu {
   const WebServiceDetailsPostAutoscalingCriteriaCpu({
@@ -6939,19 +7527,22 @@ class WebServiceDetailsPostAutoscalingCriteriaCpu {
     required this.percentage,
   });
 
-  factory WebServiceDetailsPostAutoscalingCriteriaCpu.fromJson(Map<String, Object?> json) => WebServiceDetailsPostAutoscalingCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory WebServiceDetailsPostAutoscalingCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsPostAutoscalingCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class WebServiceDetailsPostAutoscalingCriteriaMemory {
@@ -6960,19 +7551,22 @@ class WebServiceDetailsPostAutoscalingCriteriaMemory {
     required this.percentage,
   });
 
-  factory WebServiceDetailsPostAutoscalingCriteriaMemory.fromJson(Map<String, Object?> json) => WebServiceDetailsPostAutoscalingCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory WebServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsPostAutoscalingCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class WebServiceDetailsPostAutoscalingCriteria {
@@ -6981,18 +7575,24 @@ class WebServiceDetailsPostAutoscalingCriteria {
     required this.memory,
   });
 
-  factory WebServiceDetailsPostAutoscalingCriteria.fromJson(Map<String, Object?> json) => WebServiceDetailsPostAutoscalingCriteria(
-        cpu: WebServiceDetailsPostAutoscalingCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: WebServiceDetailsPostAutoscalingCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory WebServiceDetailsPostAutoscalingCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsPostAutoscalingCriteria(
+    cpu: WebServiceDetailsPostAutoscalingCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: WebServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final WebServiceDetailsPostAutoscalingCriteriaCpu cpu;
   final WebServiceDetailsPostAutoscalingCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class WebServiceDetailsPostAutoscaling {
@@ -7003,26 +7603,32 @@ class WebServiceDetailsPostAutoscaling {
     required this.criteria,
   });
 
-  factory WebServiceDetailsPostAutoscaling.fromJson(Map<String, Object?> json) => WebServiceDetailsPostAutoscaling(
-        enabled: json['enabled'] as bool? ?? false,
-        min: (json['min'] as num?)?.toInt() ?? 0,
-        max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: WebServiceDetailsPostAutoscalingCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory WebServiceDetailsPostAutoscaling.fromJson(
+    Map<String, Object?> json,
+  ) => WebServiceDetailsPostAutoscaling(
+    enabled: json['enabled'] as bool? ?? false,
+    min: (json['min'] as num?)?.toInt() ?? 0,
+    max: (json['max'] as num?)?.toInt() ?? 0,
+    criteria: WebServiceDetailsPostAutoscalingCriteria.fromJson(
+      (json['criteria'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final WebServiceDetailsPostAutoscalingCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class WebServiceDetailsPost {
@@ -7045,70 +7651,110 @@ class WebServiceDetailsPost {
     this.ipAllowList,
   });
 
-  factory WebServiceDetailsPost.fromJson(Map<String, Object?> json) => WebServiceDetailsPost(
-        autoscaling: json['autoscaling'] == null ? null : WebServiceDetailsPostAutoscaling.fromJson(json['autoscaling']! as Map<String, Object?>),
-        disk: json['disk'] == null ? null : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
+  factory WebServiceDetailsPost.fromJson(Map<String, Object?> json) =>
+      WebServiceDetailsPost(
+        autoscaling: json['autoscaling'] == null
+            ? null
+            : WebServiceDetailsPostAutoscaling.fromJson(
+                json['autoscaling']! as Map<String, Object?>,
+              ),
+        disk: json['disk'] == null
+            ? null
+            : ServiceDisk.fromJson(json['disk']! as Map<String, Object?>),
         env: ServiceEnv.fromWire(json['env']),
         runtime: ServiceRuntime.fromWire(json['runtime']),
-        envSpecificDetails: json['envSpecificDetails'] == null ? null : EnvSpecificDetailsPost.fromJson(json['envSpecificDetails']! as Map<String, Object?>),
+        envSpecificDetails: json['envSpecificDetails'] == null
+            ? null
+            : EnvSpecificDetailsPost.fromJson(
+                json['envSpecificDetails']! as Map<String, Object?>,
+              ),
         healthCheckPath: json['healthCheckPath'] as String?,
-        maintenanceMode: json['maintenanceMode'] == null ? null : MaintenanceMode.fromJson(json['maintenanceMode']! as Map<String, Object?>),
+        maintenanceMode: json['maintenanceMode'] == null
+            ? null
+            : MaintenanceMode.fromJson(
+                json['maintenanceMode']! as Map<String, Object?>,
+              ),
         numInstances: (json['numInstances'] as num?)?.toInt(),
         plan: Plan.fromWire(json['plan']),
         preDeployCommand: json['preDeployCommand'] as String?,
-        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(json['pullRequestPreviewsEnabled']),
-        previews: json['previews'] == null ? null : Previews.fromJson(json['previews']! as Map<String, Object?>),
+        pullRequestPreviewsEnabled: PullRequestPreviewsEnabled.fromWire(
+          json['pullRequestPreviewsEnabled'],
+        ),
+        previews: json['previews'] == null
+            ? null
+            : Previews.fromJson(json['previews']! as Map<String, Object?>),
         region: Region.fromWire(json['region']),
-        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)?.toInt(),
-        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(json['renderSubdomainPolicy']),
-        ipAllowList: (json['ipAllowList'] as List<Object?>?)?.map((e) => CidrBlockAndDescription.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
+            ?.toInt(),
+        renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
+          json['renderSubdomainPolicy'],
+        ),
+        ipAllowList: (json['ipAllowList'] as List<Object?>?)
+            ?.map(
+              (e) => CidrBlockAndDescription.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final WebServiceDetailsPostAutoscaling? autoscaling;
   final ServiceDisk? disk;
+
   /// This field has been deprecated, runtime should be used in its place.
   final ServiceEnv? env;
+
   /// Runtime
   final ServiceRuntime runtime;
   final EnvSpecificDetailsPost? envSpecificDetails;
   final String? healthCheckPath;
   final MaintenanceMode? maintenanceMode;
+
   /// Defaults to 1
   final int? numInstances;
+
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan? plan;
   final String? preDeployCommand;
+
   /// This field has been deprecated. previews.generation should be used in its place.
   final PullRequestPreviewsEnabled? pullRequestPreviewsEnabled;
   final Previews? previews;
+
   /// Defaults to "oregon"
   final Region? region;
+
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
+
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
 
   Map<String, Object?> toJson() => {
-        if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
-        if (disk != null) 'disk': disk!.toJson(),
-        if (env != null) 'env': env!.wireValue,
-        'runtime': runtime.wireValue,
-        if (envSpecificDetails != null) 'envSpecificDetails': envSpecificDetails!.toJson(),
-        if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
-        if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
-        if (numInstances != null) 'numInstances': numInstances,
-        if (plan != null) 'plan': plan!.wireValue,
-        if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
-        if (pullRequestPreviewsEnabled != null) 'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
-        if (previews != null) 'previews': previews!.toJson(),
-        if (region != null) 'region': region!.wireValue,
-        if (maxShutdownDelaySeconds != null) 'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
-        if (renderSubdomainPolicy != null) 'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
-        if (ipAllowList != null) 'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
-      };
+    if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
+    if (disk != null) 'disk': disk!.toJson(),
+    if (env != null) 'env': env!.wireValue,
+    'runtime': runtime.wireValue,
+    if (envSpecificDetails != null)
+      'envSpecificDetails': envSpecificDetails!.toJson(),
+    if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
+    if (maintenanceMode != null) 'maintenanceMode': maintenanceMode!.toJson(),
+    if (numInstances != null) 'numInstances': numInstances,
+    if (plan != null) 'plan': plan!.wireValue,
+    if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
+    if (pullRequestPreviewsEnabled != null)
+      'pullRequestPreviewsEnabled': pullRequestPreviewsEnabled!.wireValue,
+    if (previews != null) 'previews': previews!.toJson(),
+    if (region != null) 'region': region!.wireValue,
+    if (maxShutdownDelaySeconds != null)
+      'maxShutdownDelaySeconds': maxShutdownDelaySeconds,
+    if (renderSubdomainPolicy != null)
+      'renderSubdomainPolicy': renderSubdomainPolicy!.wireValue,
+    if (ipAllowList != null)
+      'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -7159,10 +7805,14 @@ enum RetrieveEventType {
   postgresBackupStarted('postgres_backup_started'),
   postgresClusterLeaderChanged('postgres_cluster_leader_changed'),
   postgresConnectionPoolChanged('postgres_connection_pool_changed'),
-  postgresConnectionPoolEnabledChanged('postgres_connection_pool_enabled_changed'),
+  postgresConnectionPoolEnabledChanged(
+    'postgres_connection_pool_enabled_changed',
+  ),
   postgresCreated('postgres_created'),
   postgresDiskSizeChanged('postgres_disk_size_changed'),
-  postgresDiskAutoscalingEnabledChanged('postgres_disk_autoscaling_enabled_changed'),
+  postgresDiskAutoscalingEnabledChanged(
+    'postgres_disk_autoscaling_enabled_changed',
+  ),
   postgresHaStatusChanged('postgres_ha_status_changed'),
   postgresRestarted('postgres_restarted'),
   postgresUnavailable('postgres_unavailable'),
@@ -7180,6 +7830,7 @@ enum RetrieveEventType {
   keyValueAvailable('key_value_available'),
   keyValueConfigRestart('key_value_config_restart'),
   keyValueUnhealthy('key_value_unhealthy'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -7188,10 +7839,8 @@ enum RetrieveEventType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RetrieveEventType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RetrieveEventType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class WebhookEventWithCursorWebhookEvent {
@@ -7205,36 +7854,40 @@ class WebhookEventWithCursorWebhookEvent {
     this.error,
   });
 
-  factory WebhookEventWithCursorWebhookEvent.fromJson(Map<String, Object?> json) => WebhookEventWithCursorWebhookEvent(
-        id: json['id'] as String? ?? '',
-        eventId: json['eventId'] as String? ?? '',
-        eventType: RetrieveEventType.fromWire(json['eventType']),
-        sentAt: parseDate(json['sentAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        statusCode: (json['statusCode'] as num?)?.toInt(),
-        responseBody: json['responseBody'] as String?,
-        error: json['error'] as String?,
-      );
+  factory WebhookEventWithCursorWebhookEvent.fromJson(
+    Map<String, Object?> json,
+  ) => WebhookEventWithCursorWebhookEvent(
+    id: json['id'] as String? ?? '',
+    eventId: json['eventId'] as String? ?? '',
+    eventType: RetrieveEventType.fromWire(json['eventType']),
+    sentAt: parseDate(json['sentAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    statusCode: (json['statusCode'] as num?)?.toInt(),
+    responseBody: json['responseBody'] as String?,
+    error: json['error'] as String?,
+  );
 
   /// the id of the webhook event
   final String id;
+
   /// the id of the event that triggered the webhook
   final String eventId;
   final RetrieveEventType eventType;
   final DateTime sentAt;
   final int? statusCode;
   final String? responseBody;
+
   /// error is populated when an error occurs without a response such as a timeout
   final String? error;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'eventId': eventId,
-        'eventType': eventType.wireValue,
-        'sentAt': sentAt.toIso8601String(),
-        if (statusCode != null) 'statusCode': statusCode,
-        if (responseBody != null) 'responseBody': responseBody,
-        if (error != null) 'error': error,
-      };
+    'id': id,
+    'eventId': eventId,
+    'eventType': eventType.wireValue,
+    'sentAt': sentAt.toIso8601String(),
+    if (statusCode != null) 'statusCode': statusCode,
+    if (responseBody != null) 'responseBody': responseBody,
+    if (error != null) 'error': error,
+  };
 }
 
 class WebhookEventWithCursor {
@@ -7243,8 +7896,11 @@ class WebhookEventWithCursor {
     required this.cursor,
   });
 
-  factory WebhookEventWithCursor.fromJson(Map<String, Object?> json) => WebhookEventWithCursor(
-        webhookEvent: WebhookEventWithCursorWebhookEvent.fromJson((json['webhookEvent'] as Map<String, Object?>?) ?? const {}),
+  factory WebhookEventWithCursor.fromJson(Map<String, Object?> json) =>
+      WebhookEventWithCursor(
+        webhookEvent: WebhookEventWithCursorWebhookEvent.fromJson(
+          (json['webhookEvent'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -7252,11 +7908,10 @@ class WebhookEventWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'webhookEvent': webhookEvent.toJson(),
-        'cursor': cursor,
-      };
+    'webhookEvent': webhookEvent.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 class WebhookWithCursorWebhook {
   const WebhookWithCursorWebhook({
@@ -7268,13 +7923,16 @@ class WebhookWithCursorWebhook {
     required this.eventFilter,
   });
 
-  factory WebhookWithCursorWebhook.fromJson(Map<String, Object?> json) => WebhookWithCursorWebhook(
+  factory WebhookWithCursorWebhook.fromJson(Map<String, Object?> json) =>
+      WebhookWithCursorWebhook(
         id: json['id'] as String? ?? '',
         url: json['url'] as String? ?? '',
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
+            .map((e) => RetrieveEventType.fromWire(e))
+            .toList(),
       );
 
   final String id;
@@ -7282,27 +7940,28 @@ class WebhookWithCursorWebhook {
   final String name;
   final String secret;
   final bool enabled;
+
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'url': url,
-        'name': name,
-        'secret': secret,
-        'enabled': enabled,
-        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
-      };
+    'id': id,
+    'url': url,
+    'name': name,
+    'secret': secret,
+    'enabled': enabled,
+    'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+  };
 }
 
 class WebhookWithCursor {
-  const WebhookWithCursor({
-    required this.webhook,
-    required this.cursor,
-  });
+  const WebhookWithCursor({required this.webhook, required this.cursor});
 
-  factory WebhookWithCursor.fromJson(Map<String, Object?> json) => WebhookWithCursor(
-        webhook: WebhookWithCursorWebhook.fromJson((json['webhook'] as Map<String, Object?>?) ?? const {}),
+  factory WebhookWithCursor.fromJson(Map<String, Object?> json) =>
+      WebhookWithCursor(
+        webhook: WebhookWithCursorWebhook.fromJson(
+          (json['webhook'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -7310,11 +7969,10 @@ class WebhookWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'webhook': webhook.toJson(),
-        'cursor': cursor,
-      };
+    'webhook': webhook.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
@@ -7325,6 +7983,7 @@ enum GetWorkflowVersionStatus {
   buildFailed('build_failed'),
   registrationFailed('registration_failed'),
   ready('ready'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -7333,10 +7992,8 @@ enum GetWorkflowVersionStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static GetWorkflowVersionStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static GetWorkflowVersionStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class WorkflowVersionWithCursorWorkflowVersion {
@@ -7348,13 +8005,16 @@ class WorkflowVersionWithCursorWorkflowVersion {
     required this.status,
   });
 
-  factory WorkflowVersionWithCursorWorkflowVersion.fromJson(Map<String, Object?> json) => WorkflowVersionWithCursorWorkflowVersion(
-        id: json['id'] as String? ?? '',
-        workflowId: json['workflowId'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        status: GetWorkflowVersionStatus.fromWire(json['status']),
-      );
+  factory WorkflowVersionWithCursorWorkflowVersion.fromJson(
+    Map<String, Object?> json,
+  ) => WorkflowVersionWithCursorWorkflowVersion(
+    id: json['id'] as String? ?? '',
+    workflowId: json['workflowId'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    status: GetWorkflowVersionStatus.fromWire(json['status']),
+  );
 
   final String id;
   final String workflowId;
@@ -7363,12 +8023,12 @@ class WorkflowVersionWithCursorWorkflowVersion {
   final GetWorkflowVersionStatus status;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'workflowId': workflowId,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-        'status': status.wireValue,
-      };
+    'id': id,
+    'workflowId': workflowId,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+    'status': status.wireValue,
+  };
 }
 
 class WorkflowVersionWithCursor {
@@ -7377,8 +8037,11 @@ class WorkflowVersionWithCursor {
     required this.cursor,
   });
 
-  factory WorkflowVersionWithCursor.fromJson(Map<String, Object?> json) => WorkflowVersionWithCursor(
-        workflowVersion: WorkflowVersionWithCursorWorkflowVersion.fromJson((json['workflowVersion'] as Map<String, Object?>?) ?? const {}),
+  factory WorkflowVersionWithCursor.fromJson(Map<String, Object?> json) =>
+      WorkflowVersionWithCursor(
+        workflowVersion: WorkflowVersionWithCursorWorkflowVersion.fromJson(
+          (json['workflowVersion'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -7386,11 +8049,10 @@ class WorkflowVersionWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'workflowVersion': workflowVersion.toJson(),
-        'cursor': cursor,
-      };
+    'workflowVersion': workflowVersion.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 /// The runtime environment for the workflow (e.g., node, python, etc.).
 /// Decodes unrecognised values to [unknown] rather than
@@ -7401,6 +8063,7 @@ enum Runtime {
   node('node'),
   python('python'),
   ruby('ruby'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -7409,10 +8072,8 @@ enum Runtime {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Runtime fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Runtime fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class WorkflowWithCursorWorkflowBuildConfig {
@@ -7424,32 +8085,38 @@ class WorkflowWithCursorWorkflowBuildConfig {
     required this.runtime,
   });
 
-  factory WorkflowWithCursorWorkflowBuildConfig.fromJson(Map<String, Object?> json) => WorkflowWithCursorWorkflowBuildConfig(
-        branch: json['branch'] as String?,
-        buildCommand: json['buildCommand'] as String? ?? '',
-        repo: json['repo'] as String? ?? '',
-        rootDir: json['rootDir'] as String?,
-        runtime: Runtime.fromWire(json['runtime']),
-      );
+  factory WorkflowWithCursorWorkflowBuildConfig.fromJson(
+    Map<String, Object?> json,
+  ) => WorkflowWithCursorWorkflowBuildConfig(
+    branch: json['branch'] as String?,
+    buildCommand: json['buildCommand'] as String? ?? '',
+    repo: json['repo'] as String? ?? '',
+    rootDir: json['rootDir'] as String?,
+    runtime: Runtime.fromWire(json['runtime']),
+  );
 
   /// The branch to use for the build, if applicable.
   final String? branch;
+
   /// The command to run to build the workflow.
   final String buildCommand;
+
   /// The repository URL to use for the build.
   final String repo;
+
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
+
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
   Map<String, Object?> toJson() => {
-        if (branch != null) 'branch': branch,
-        'buildCommand': buildCommand,
-        'repo': repo,
-        if (rootDir != null) 'rootDir': rootDir,
-        'runtime': runtime.wireValue,
-      };
+    if (branch != null) 'branch': branch,
+    'buildCommand': buildCommand,
+    'repo': repo,
+    if (rootDir != null) 'rootDir': rootDir,
+    'runtime': runtime.wireValue,
+  };
 }
 
 /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
@@ -7459,6 +8126,7 @@ enum NewTrigger {
   commit('commit'),
   off('off'),
   checksPass('checksPass'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -7467,10 +8135,8 @@ enum NewTrigger {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static NewTrigger fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static NewTrigger fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class WorkflowWithCursorWorkflow {
@@ -7488,19 +8154,25 @@ class WorkflowWithCursorWorkflow {
     this.autoDeployTrigger,
   });
 
-  factory WorkflowWithCursorWorkflow.fromJson(Map<String, Object?> json) => WorkflowWithCursorWorkflow(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        buildConfig: WorkflowWithCursorWorkflowBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
-        runCommand: json['runCommand'] as String? ?? '',
-        region: Region.fromWire(json['region']),
-        environmentId: json['environmentId'] as String?,
-        slug: json['slug'] as String?,
-        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
-      );
+  factory WorkflowWithCursorWorkflow.fromJson(
+    Map<String, Object?> json,
+  ) => WorkflowWithCursorWorkflow(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    buildConfig: WorkflowWithCursorWorkflowBuildConfig.fromJson(
+      (json['buildConfig'] as Map<String, Object?>?) ?? const {},
+    ),
+    runCommand: json['runCommand'] as String? ?? '',
+    region: Region.fromWire(json['region']),
+    environmentId: json['environmentId'] as String?,
+    slug: json['slug'] as String?,
+    autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+  );
 
   final String id;
   final String name;
@@ -7508,38 +8180,42 @@ class WorkflowWithCursorWorkflow {
   final DateTime createdAt;
   final DateTime updatedAt;
   final WorkflowWithCursorWorkflowBuildConfig buildConfig;
+
   /// Command to run the workflow.
   final String runCommand;
+
   /// Defaults to "oregon"
   final Region region;
   final String? environmentId;
   final String? slug;
+
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'buildConfig': buildConfig.toJson(),
-        'runCommand': runCommand,
-        'region': region.wireValue,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (slug != null) 'slug': slug,
-        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'buildConfig': buildConfig.toJson(),
+    'runCommand': runCommand,
+    'region': region.wireValue,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (slug != null) 'slug': slug,
+    if (autoDeployTrigger != null)
+      'autoDeployTrigger': autoDeployTrigger!.wireValue,
+  };
 }
 
 class WorkflowWithCursor {
-  const WorkflowWithCursor({
-    required this.workflow,
-    required this.cursor,
-  });
+  const WorkflowWithCursor({required this.workflow, required this.cursor});
 
-  factory WorkflowWithCursor.fromJson(Map<String, Object?> json) => WorkflowWithCursor(
-        workflow: WorkflowWithCursorWorkflow.fromJson((json['workflow'] as Map<String, Object?>?) ?? const {}),
+  factory WorkflowWithCursor.fromJson(Map<String, Object?> json) =>
+      WorkflowWithCursor(
+        workflow: WorkflowWithCursorWorkflow.fromJson(
+          (json['workflow'] as Map<String, Object?>?) ?? const {},
+        ),
         cursor: json['cursor'] as String? ?? '',
       );
 
@@ -7547,11 +8223,10 @@ class WorkflowWithCursor {
   final String cursor;
 
   Map<String, Object?> toJson() => {
-        'workflow': workflow.toJson(),
-        'cursor': cursor,
-      };
+    'workflow': workflow.toJson(),
+    'cursor': cursor,
+  };
 }
-
 
 /// Lenient ISO-8601 parsing: a malformed timestamp yields null rather than
 /// failing an entire response.
@@ -7566,28 +8241,33 @@ class ValidateBlueprintResponseErrorsItem {
     this.column,
   });
 
-  factory ValidateBlueprintResponseErrorsItem.fromJson(Map<String, Object?> json) => ValidateBlueprintResponseErrorsItem(
-        path: json['path'] as String?,
-        error: json['error'] as String? ?? '',
-        line: (json['line'] as num?)?.toInt(),
-        column: (json['column'] as num?)?.toInt(),
-      );
+  factory ValidateBlueprintResponseErrorsItem.fromJson(
+    Map<String, Object?> json,
+  ) => ValidateBlueprintResponseErrorsItem(
+    path: json['path'] as String?,
+    error: json['error'] as String? ?? '',
+    line: (json['line'] as num?)?.toInt(),
+    column: (json['column'] as num?)?.toInt(),
+  );
 
   /// The path to the field with the error (e.g., `services[0].plan`)
   final String? path;
+
   /// The error message
   final String error;
+
   /// The line number in the YAML file (1-indexed)
   final int? line;
+
   /// The column number in the YAML file (1-indexed)
   final int? column;
 
   Map<String, Object?> toJson() => {
-        if (path != null) 'path': path,
-        'error': error,
-        if (line != null) 'line': line,
-        if (column != null) 'column': column,
-      };
+    if (path != null) 'path': path,
+    'error': error,
+    if (line != null) 'line': line,
+    if (column != null) 'column': column,
+  };
 }
 
 /// A summary of the resources that would be created as part of the Blueprint. Only present if `valid` is `true`.
@@ -7600,32 +8280,45 @@ class ValidateBlueprintResponsePlan {
     this.totalActions,
   });
 
-  factory ValidateBlueprintResponsePlan.fromJson(Map<String, Object?> json) => ValidateBlueprintResponsePlan(
-        services: (json['services'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
-        databases: (json['databases'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
-        keyValue: (json['keyValue'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
-        envGroups: (json['envGroups'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+  factory ValidateBlueprintResponsePlan.fromJson(Map<String, Object?> json) =>
+      ValidateBlueprintResponsePlan(
+        services: (json['services'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
+        databases: (json['databases'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
+        keyValue: (json['keyValue'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
+        envGroups: (json['envGroups'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
         totalActions: (json['totalActions'] as num?)?.toInt(),
       );
 
   /// The names of services that would be created as part of the Blueprint.
   final List<String>? services;
+
   /// The names of Render Postgres databases that would be created as part of the Blueprint.
   final List<String>? databases;
+
   /// The names of Render Key Value instances that would be created as part of the Blueprint.
   final List<String>? keyValue;
+
   /// The names of environment groups that would be created as part of the Blueprint.
   final List<String>? envGroups;
+
   /// The total number of actions that would be performed by the Blueprint. In addition to created resources, this includes modifications to individual configuration fields.
   final int? totalActions;
 
   Map<String, Object?> toJson() => {
-        if (services != null) 'services': services!.map((e) => e).toList(),
-        if (databases != null) 'databases': databases!.map((e) => e).toList(),
-        if (keyValue != null) 'keyValue': keyValue!.map((e) => e).toList(),
-        if (envGroups != null) 'envGroups': envGroups!.map((e) => e).toList(),
-        if (totalActions != null) 'totalActions': totalActions,
-      };
+    if (services != null) 'services': services!.map((e) => e).toList(),
+    if (databases != null) 'databases': databases!.map((e) => e).toList(),
+    if (keyValue != null) 'keyValue': keyValue!.map((e) => e).toList(),
+    if (envGroups != null) 'envGroups': envGroups!.map((e) => e).toList(),
+    if (totalActions != null) 'totalActions': totalActions,
+  };
 }
 
 class ValidateBlueprintResponse {
@@ -7635,24 +8328,37 @@ class ValidateBlueprintResponse {
     this.plan,
   });
 
-  factory ValidateBlueprintResponse.fromJson(Map<String, Object?> json) => ValidateBlueprintResponse(
+  factory ValidateBlueprintResponse.fromJson(Map<String, Object?> json) =>
+      ValidateBlueprintResponse(
         valid: json['valid'] as bool? ?? false,
-        errors: (json['errors'] as List<Object?>?)?.map((e) => ValidateBlueprintResponseErrorsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        plan: json['plan'] == null ? null : ValidateBlueprintResponsePlan.fromJson(json['plan']! as Map<String, Object?>),
+        errors: (json['errors'] as List<Object?>?)
+            ?.map(
+              (e) => ValidateBlueprintResponseErrorsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        plan: json['plan'] == null
+            ? null
+            : ValidateBlueprintResponsePlan.fromJson(
+                json['plan']! as Map<String, Object?>,
+              ),
       );
 
   /// If `true`, the Blueprint validated successfully. If `false`, at least one validation error occurred.
   final bool valid;
+
   /// A list of validation errors. Only present if `valid` is `false`.
   final List<ValidateBlueprintResponseErrorsItem>? errors;
+
   /// A summary of the resources that would be created as part of the Blueprint. Only present if `valid` is `true`.
   final ValidateBlueprintResponsePlan? plan;
 
   Map<String, Object?> toJson() => {
-        'valid': valid,
-        if (errors != null) 'errors': errors!.map((e) => e.toJson()).toList(),
-        if (plan != null) 'plan': plan!.toJson(),
-      };
+    'valid': valid,
+    if (errors != null) 'errors': errors!.map((e) => e.toJson()).toList(),
+    if (plan != null) 'plan': plan!.toJson(),
+  };
 }
 
 /// type of the resource (ex. web_service or postgres)
@@ -7669,6 +8375,7 @@ enum RetrieveBlueprintType {
   postgres('postgres'),
   environmentGroup('environment_group'),
   artifactSource('artifact_source'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -7677,10 +8384,8 @@ enum RetrieveBlueprintType {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RetrieveBlueprintType fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RetrieveBlueprintType fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class RetrieveBlueprintResponseResourcesItem {
@@ -7690,22 +8395,25 @@ class RetrieveBlueprintResponseResourcesItem {
     required this.type,
   });
 
-  factory RetrieveBlueprintResponseResourcesItem.fromJson(Map<String, Object?> json) => RetrieveBlueprintResponseResourcesItem(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        type: RetrieveBlueprintType.fromWire(json['type']),
-      );
+  factory RetrieveBlueprintResponseResourcesItem.fromJson(
+    Map<String, Object?> json,
+  ) => RetrieveBlueprintResponseResourcesItem(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    type: RetrieveBlueprintType.fromWire(json['type']),
+  );
 
   final String id;
   final String name;
+
   /// type of the resource (ex. web_service or postgres)
   final RetrieveBlueprintType type;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'type': type.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'type': type.wireValue,
+  };
 }
 
 class RetrieveBlueprintResponse {
@@ -7721,7 +8429,8 @@ class RetrieveBlueprintResponse {
     required this.resources,
   });
 
-  factory RetrieveBlueprintResponse.fromJson(Map<String, Object?> json) => RetrieveBlueprintResponse(
+  factory RetrieveBlueprintResponse.fromJson(Map<String, Object?> json) =>
+      RetrieveBlueprintResponse(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         status: RetrieveBlueprintStatus.fromWire(json['status']),
@@ -7730,58 +8439,65 @@ class RetrieveBlueprintResponse {
         branch: json['branch'] as String? ?? '',
         path: json['path'] as String? ?? '',
         lastSync: parseDate(json['lastSync']),
-        resources: ((json['resources'] as List<Object?>?) ?? const []).map((e) => RetrieveBlueprintResponseResourcesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        resources: ((json['resources'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => RetrieveBlueprintResponseResourcesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String id;
   final String name;
   final RetrieveBlueprintStatus status;
+
   /// Automatically sync changes to render.yaml
   final bool autoSync;
   final String repo;
   final String branch;
+
   /// Path to the Blueprint file in the repository
   final String path;
   final DateTime? lastSync;
   final List<RetrieveBlueprintResponseResourcesItem> resources;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'status': status.wireValue,
-        'autoSync': autoSync,
-        'repo': repo,
-        'branch': branch,
-        'path': path,
-        if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
-        'resources': resources.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'name': name,
+    'status': status.wireValue,
+    'autoSync': autoSync,
+    'repo': repo,
+    'branch': branch,
+    'path': path,
+    if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
+    'resources': resources.map((e) => e.toJson()).toList(),
+  };
 }
 
 class UpdateBlueprintRequest {
-  const UpdateBlueprintRequest({
-    this.name,
-    this.autoSync,
-    this.path,
-  });
+  const UpdateBlueprintRequest({this.name, this.autoSync, this.path});
 
-  factory UpdateBlueprintRequest.fromJson(Map<String, Object?> json) => UpdateBlueprintRequest(
+  factory UpdateBlueprintRequest.fromJson(Map<String, Object?> json) =>
+      UpdateBlueprintRequest(
         name: json['name'] as String?,
         autoSync: json['autoSync'] as bool?,
         path: json['path'] as String?,
       );
 
   final String? name;
+
   /// Automatically sync changes to render.yaml
   final bool? autoSync;
+
   /// Path to the Blueprint file in the repository
   final String? path;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (autoSync != null) 'autoSync': autoSync,
-        if (path != null) 'path': path,
-      };
+    if (name != null) 'name': name,
+    if (autoSync != null) 'autoSync': autoSync,
+    if (path != null) 'path': path,
+  };
 }
 
 class UpdateBlueprintResponse {
@@ -7796,7 +8512,8 @@ class UpdateBlueprintResponse {
     this.lastSync,
   });
 
-  factory UpdateBlueprintResponse.fromJson(Map<String, Object?> json) => UpdateBlueprintResponse(
+  factory UpdateBlueprintResponse.fromJson(Map<String, Object?> json) =>
+      UpdateBlueprintResponse(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
         status: RetrieveBlueprintStatus.fromWire(json['status']),
@@ -7810,24 +8527,26 @@ class UpdateBlueprintResponse {
   final String id;
   final String name;
   final RetrieveBlueprintStatus status;
+
   /// Automatically sync changes to render.yaml
   final bool autoSync;
   final String repo;
   final String branch;
+
   /// Path to the Blueprint file in the repository
   final String path;
   final DateTime? lastSync;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'status': status.wireValue,
-        'autoSync': autoSync,
-        'repo': repo,
-        'branch': branch,
-        'path': path,
-        if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'status': status.wireValue,
+    'autoSync': autoSync,
+    'repo': repo,
+    'branch': branch,
+    'path': path,
+    if (lastSync != null) 'lastSync': lastSync!.toIso8601String(),
+  };
 }
 
 class AddDiskRequest {
@@ -7839,11 +8558,11 @@ class AddDiskRequest {
   });
 
   factory AddDiskRequest.fromJson(Map<String, Object?> json) => AddDiskRequest(
-        name: json['name'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
-        mountPath: json['mountPath'] as String? ?? '',
-        serviceId: json['serviceId'] as String? ?? '',
-      );
+    name: json['name'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+    mountPath: json['mountPath'] as String? ?? '',
+    serviceId: json['serviceId'] as String? ?? '',
+  );
 
   final String name;
   final int sizeGb;
@@ -7851,11 +8570,11 @@ class AddDiskRequest {
   final String serviceId;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-        'serviceId': serviceId,
-      };
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+    'serviceId': serviceId,
+  };
 }
 
 class AddDiskResponse {
@@ -7869,15 +8588,19 @@ class AddDiskResponse {
     required this.updatedAt,
   });
 
-  factory AddDiskResponse.fromJson(Map<String, Object?> json) => AddDiskResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
-        mountPath: json['mountPath'] as String? ?? '',
-        serviceId: json['serviceId'] as String?,
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      );
+  factory AddDiskResponse.fromJson(
+    Map<String, Object?> json,
+  ) => AddDiskResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+    mountPath: json['mountPath'] as String? ?? '',
+    serviceId: json['serviceId'] as String?,
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  );
 
   final String id;
   final String name;
@@ -7888,14 +8611,14 @@ class AddDiskResponse {
   final DateTime updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-        if (serviceId != null) 'serviceId': serviceId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+    if (serviceId != null) 'serviceId': serviceId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 class RetrieveDiskResponse {
@@ -7909,15 +8632,19 @@ class RetrieveDiskResponse {
     required this.updatedAt,
   });
 
-  factory RetrieveDiskResponse.fromJson(Map<String, Object?> json) => RetrieveDiskResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
-        mountPath: json['mountPath'] as String? ?? '',
-        serviceId: json['serviceId'] as String?,
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      );
+  factory RetrieveDiskResponse.fromJson(
+    Map<String, Object?> json,
+  ) => RetrieveDiskResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+    mountPath: json['mountPath'] as String? ?? '',
+    serviceId: json['serviceId'] as String?,
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  );
 
   final String id;
   final String name;
@@ -7928,24 +8655,21 @@ class RetrieveDiskResponse {
   final DateTime updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-        if (serviceId != null) 'serviceId': serviceId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+    if (serviceId != null) 'serviceId': serviceId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 class UpdateDiskRequest {
-  const UpdateDiskRequest({
-    this.name,
-    this.sizeGb,
-    this.mountPath,
-  });
+  const UpdateDiskRequest({this.name, this.sizeGb, this.mountPath});
 
-  factory UpdateDiskRequest.fromJson(Map<String, Object?> json) => UpdateDiskRequest(
+  factory UpdateDiskRequest.fromJson(Map<String, Object?> json) =>
+      UpdateDiskRequest(
         name: json['name'] as String?,
         sizeGb: (json['sizeGB'] as num?)?.toInt(),
         mountPath: json['mountPath'] as String?,
@@ -7956,10 +8680,10 @@ class UpdateDiskRequest {
   final String? mountPath;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (sizeGb != null) 'sizeGB': sizeGb,
-        if (mountPath != null) 'mountPath': mountPath,
-      };
+    if (name != null) 'name': name,
+    if (sizeGb != null) 'sizeGB': sizeGb,
+    if (mountPath != null) 'mountPath': mountPath,
+  };
 }
 
 class UpdateDiskResponse {
@@ -7973,15 +8697,19 @@ class UpdateDiskResponse {
     required this.updatedAt,
   });
 
-  factory UpdateDiskResponse.fromJson(Map<String, Object?> json) => UpdateDiskResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
-        mountPath: json['mountPath'] as String? ?? '',
-        serviceId: json['serviceId'] as String?,
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      );
+  factory UpdateDiskResponse.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateDiskResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+    mountPath: json['mountPath'] as String? ?? '',
+    serviceId: json['serviceId'] as String?,
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  );
 
   final String id;
   final String name;
@@ -7992,14 +8720,14 @@ class UpdateDiskResponse {
   final DateTime updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-        if (serviceId != null) 'serviceId': serviceId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+    if (serviceId != null) 'serviceId': serviceId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 class RestoreSnapshotResponse {
@@ -8013,15 +8741,19 @@ class RestoreSnapshotResponse {
     required this.updatedAt,
   });
 
-  factory RestoreSnapshotResponse.fromJson(Map<String, Object?> json) => RestoreSnapshotResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
-        mountPath: json['mountPath'] as String? ?? '',
-        serviceId: json['serviceId'] as String?,
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-      );
+  factory RestoreSnapshotResponse.fromJson(
+    Map<String, Object?> json,
+  ) => RestoreSnapshotResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
+    mountPath: json['mountPath'] as String? ?? '',
+    serviceId: json['serviceId'] as String?,
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  );
 
   final String id;
   final String name;
@@ -8032,30 +8764,25 @@ class RestoreSnapshotResponse {
   final DateTime updatedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'sizeGB': sizeGb,
-        'mountPath': mountPath,
-        if (serviceId != null) 'serviceId': serviceId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-      };
+    'id': id,
+    'name': name,
+    'sizeGB': sizeGb,
+    'mountPath': mountPath,
+    if (serviceId != null) 'serviceId': serviceId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+  };
 }
 
 class UpdateEnvGroupSecretFileRequest {
-  const UpdateEnvGroupSecretFileRequest({
-    this.content,
-  });
+  const UpdateEnvGroupSecretFileRequest({this.content});
 
-  factory UpdateEnvGroupSecretFileRequest.fromJson(Map<String, Object?> json) => UpdateEnvGroupSecretFileRequest(
-        content: json['content'] as String?,
-      );
+  factory UpdateEnvGroupSecretFileRequest.fromJson(Map<String, Object?> json) =>
+      UpdateEnvGroupSecretFileRequest(content: json['content'] as String?);
 
   final String? content;
 
-  Map<String, Object?> toJson() => {
-        if (content != null) 'content': content,
-      };
+  Map<String, Object?> toJson() => {if (content != null) 'content': content};
 }
 
 class RetrieveEventResponse {
@@ -8067,9 +8794,12 @@ class RetrieveEventResponse {
     required this.details,
   });
 
-  factory RetrieveEventResponse.fromJson(Map<String, Object?> json) => RetrieveEventResponse(
+  factory RetrieveEventResponse.fromJson(Map<String, Object?> json) =>
+      RetrieveEventResponse(
         id: json['id'] as String? ?? '',
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         serviceId: json['serviceId'] as String? ?? '',
         type: RetrieveEventType.fromWire(json['type']),
         details: json['details'],
@@ -8082,12 +8812,12 @@ class RetrieveEventResponse {
   final Object? details;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'timestamp': timestamp.toIso8601String(),
-        'serviceId': serviceId,
-        'type': type.wireValue,
-        'details': details,
-      };
+    'id': id,
+    'timestamp': timestamp.toIso8601String(),
+    'serviceId': serviceId,
+    'type': type.wireValue,
+    'details': details,
+  };
 }
 
 /// The name of the log label
@@ -8109,6 +8839,7 @@ enum Name {
   text('text'),
   path('path'),
   blocked('blocked'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -8117,10 +8848,8 @@ enum Name {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Name fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Name fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// A log label
@@ -8130,20 +8859,20 @@ class ListLogsResponseLogsItemLabelsItem {
     required this.value,
   });
 
-  factory ListLogsResponseLogsItemLabelsItem.fromJson(Map<String, Object?> json) => ListLogsResponseLogsItemLabelsItem(
-        name: Name.fromWire(json['name']),
-        value: json['value'] as String? ?? '',
-      );
+  factory ListLogsResponseLogsItemLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => ListLogsResponseLogsItemLabelsItem(
+    name: Name.fromWire(json['name']),
+    value: json['value'] as String? ?? '',
+  );
 
   /// The name of the log label
   final Name name;
+
   /// The value of the log label
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'name': name.wireValue,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'name': name.wireValue, 'value': value};
 }
 
 /// A log entry with metadata
@@ -8155,27 +8884,38 @@ class ListLogsResponseLogsItem {
     required this.labels,
   });
 
-  factory ListLogsResponseLogsItem.fromJson(Map<String, Object?> json) => ListLogsResponseLogsItem(
+  factory ListLogsResponseLogsItem.fromJson(Map<String, Object?> json) =>
+      ListLogsResponseLogsItem(
         id: json['id'] as String? ?? '',
         message: json['message'] as String? ?? '',
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => ListLogsResponseLogsItemLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ListLogsResponseLogsItemLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   /// A unique ID of the log entry
   final String id;
+
   /// The message of the log entry
   final String message;
+
   /// The timestamp of the log entry
   final DateTime timestamp;
   final List<ListLogsResponseLogsItemLabelsItem> labels;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'message': message,
-        'timestamp': timestamp.toIso8601String(),
-        'labels': labels.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'message': message,
+    'timestamp': timestamp.toIso8601String(),
+    'labels': labels.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// A run of a cron job
@@ -8187,27 +8927,40 @@ class ListLogsResponse {
     required this.logs,
   });
 
-  factory ListLogsResponse.fromJson(Map<String, Object?> json) => ListLogsResponse(
+  factory ListLogsResponse.fromJson(Map<String, Object?> json) =>
+      ListLogsResponse(
         hasMore: json['hasMore'] as bool? ?? false,
-        nextStartTime: parseDate(json['nextStartTime']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        nextEndTime: parseDate(json['nextEndTime']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        logs: ((json['logs'] as List<Object?>?) ?? const []).map((e) => ListLogsResponseLogsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        nextStartTime:
+            parseDate(json['nextStartTime']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
+        nextEndTime:
+            parseDate(json['nextEndTime']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
+        logs: ((json['logs'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ListLogsResponseLogsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   /// True if there are more logs to fetch
   final bool hasMore;
+
   /// The start time to use in the next query to fetch the next set of logs
   final DateTime nextStartTime;
+
   /// The end time to use in the next query to fetch the next set of logs
   final DateTime nextEndTime;
   final List<ListLogsResponseLogsItem> logs;
 
   Map<String, Object?> toJson() => {
-        'hasMore': hasMore,
-        'nextStartTime': nextStartTime.toIso8601String(),
-        'nextEndTime': nextEndTime.toIso8601String(),
-        'logs': logs.map((e) => e.toJson()).toList(),
-      };
+    'hasMore': hasMore,
+    'nextStartTime': nextStartTime.toIso8601String(),
+    'nextEndTime': nextEndTime.toIso8601String(),
+    'logs': logs.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// Whether to send logs or drop them.
@@ -8216,6 +8969,7 @@ class ListLogsResponse {
 enum Preview {
   send('send'),
   drop('drop'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -8224,21 +8978,16 @@ enum Preview {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Preview fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Preview fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 /// Owner log stream settings
 class GetOwnerLogStreamResponse {
-  const GetOwnerLogStreamResponse({
-    this.ownerId,
-    this.endpoint,
-    this.preview,
-  });
+  const GetOwnerLogStreamResponse({this.ownerId, this.endpoint, this.preview});
 
-  factory GetOwnerLogStreamResponse.fromJson(Map<String, Object?> json) => GetOwnerLogStreamResponse(
+  factory GetOwnerLogStreamResponse.fromJson(Map<String, Object?> json) =>
+      GetOwnerLogStreamResponse(
         ownerId: json['ownerId'] as String?,
         endpoint: json['endpoint'] as String?,
         preview: Preview.fromWire(json['preview']),
@@ -8246,16 +8995,18 @@ class GetOwnerLogStreamResponse {
 
   /// The ID of the owner.
   final String? ownerId;
+
   /// The endpoint to stream logs to.
   final String? endpoint;
+
   /// Whether to send logs or drop them.
   final Preview? preview;
 
   Map<String, Object?> toJson() => {
-        if (ownerId != null) 'ownerId': ownerId,
-        if (endpoint != null) 'endpoint': endpoint,
-        if (preview != null) 'preview': preview!.wireValue,
-      };
+    if (ownerId != null) 'ownerId': ownerId,
+    if (endpoint != null) 'endpoint': endpoint,
+    if (preview != null) 'preview': preview!.wireValue,
+  };
 }
 
 class UpdateOwnerLogStreamRequest {
@@ -8265,7 +9016,8 @@ class UpdateOwnerLogStreamRequest {
     required this.preview,
   });
 
-  factory UpdateOwnerLogStreamRequest.fromJson(Map<String, Object?> json) => UpdateOwnerLogStreamRequest(
+  factory UpdateOwnerLogStreamRequest.fromJson(Map<String, Object?> json) =>
+      UpdateOwnerLogStreamRequest(
         endpoint: json['endpoint'] as String?,
         token: json['token'] as String?,
         preview: Preview.fromWire(json['preview']),
@@ -8273,16 +9025,18 @@ class UpdateOwnerLogStreamRequest {
 
   /// The endpoint to stream logs to.
   final String? endpoint;
+
   /// The optional token to authenticate the log stream.
   final String? token;
+
   /// Whether to send logs or drop them.
   final Preview preview;
 
   Map<String, Object?> toJson() => {
-        if (endpoint != null) 'endpoint': endpoint,
-        if (token != null) 'token': token,
-        'preview': preview.wireValue,
-      };
+    if (endpoint != null) 'endpoint': endpoint,
+    if (token != null) 'token': token,
+    'preview': preview.wireValue,
+  };
 }
 
 /// Owner log stream settings
@@ -8293,7 +9047,8 @@ class UpdateOwnerLogStreamResponse {
     this.preview,
   });
 
-  factory UpdateOwnerLogStreamResponse.fromJson(Map<String, Object?> json) => UpdateOwnerLogStreamResponse(
+  factory UpdateOwnerLogStreamResponse.fromJson(Map<String, Object?> json) =>
+      UpdateOwnerLogStreamResponse(
         ownerId: json['ownerId'] as String?,
         endpoint: json['endpoint'] as String?,
         preview: Preview.fromWire(json['preview']),
@@ -8301,16 +9056,18 @@ class UpdateOwnerLogStreamResponse {
 
   /// The ID of the owner.
   final String? ownerId;
+
   /// The endpoint to stream logs to.
   final String? endpoint;
+
   /// Whether to send logs or drop them.
   final Preview? preview;
 
   Map<String, Object?> toJson() => {
-        if (ownerId != null) 'ownerId': ownerId,
-        if (endpoint != null) 'endpoint': endpoint,
-        if (preview != null) 'preview': preview!.wireValue,
-      };
+    if (ownerId != null) 'ownerId': ownerId,
+    if (endpoint != null) 'endpoint': endpoint,
+    if (preview != null) 'preview': preview!.wireValue,
+  };
 }
 
 /// Resource log stream overrides
@@ -8321,7 +9078,8 @@ class ListResourceLogStreamsResponse {
     this.setting,
   });
 
-  factory ListResourceLogStreamsResponse.fromJson(Map<String, Object?> json) => ListResourceLogStreamsResponse(
+  factory ListResourceLogStreamsResponse.fromJson(Map<String, Object?> json) =>
+      ListResourceLogStreamsResponse(
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
         setting: Preview.fromWire(json['setting']),
@@ -8329,16 +9087,18 @@ class ListResourceLogStreamsResponse {
 
   /// The ID of the resource.
   final String? resourceId;
+
   /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
   final String? endpoint;
+
   /// Whether to send logs or drop them.
   final Preview? setting;
 
   Map<String, Object?> toJson() => {
-        if (resourceId != null) 'resourceId': resourceId,
-        if (endpoint != null) 'endpoint': endpoint,
-        if (setting != null) 'setting': setting!.wireValue,
-      };
+    if (resourceId != null) 'resourceId': resourceId,
+    if (endpoint != null) 'endpoint': endpoint,
+    if (setting != null) 'setting': setting!.wireValue,
+  };
 }
 
 /// Resource log stream overrides
@@ -8349,7 +9109,8 @@ class GetResourceLogStreamResponse {
     this.setting,
   });
 
-  factory GetResourceLogStreamResponse.fromJson(Map<String, Object?> json) => GetResourceLogStreamResponse(
+  factory GetResourceLogStreamResponse.fromJson(Map<String, Object?> json) =>
+      GetResourceLogStreamResponse(
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
         setting: Preview.fromWire(json['setting']),
@@ -8357,16 +9118,18 @@ class GetResourceLogStreamResponse {
 
   /// The ID of the resource.
   final String? resourceId;
+
   /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
   final String? endpoint;
+
   /// Whether to send logs or drop them.
   final Preview? setting;
 
   Map<String, Object?> toJson() => {
-        if (resourceId != null) 'resourceId': resourceId,
-        if (endpoint != null) 'endpoint': endpoint,
-        if (setting != null) 'setting': setting!.wireValue,
-      };
+    if (resourceId != null) 'resourceId': resourceId,
+    if (endpoint != null) 'endpoint': endpoint,
+    if (setting != null) 'setting': setting!.wireValue,
+  };
 }
 
 class UpdateResourceLogStreamRequest {
@@ -8376,7 +9139,8 @@ class UpdateResourceLogStreamRequest {
     required this.setting,
   });
 
-  factory UpdateResourceLogStreamRequest.fromJson(Map<String, Object?> json) => UpdateResourceLogStreamRequest(
+  factory UpdateResourceLogStreamRequest.fromJson(Map<String, Object?> json) =>
+      UpdateResourceLogStreamRequest(
         endpoint: json['endpoint'] as String?,
         token: json['token'] as String?,
         setting: Preview.fromWire(json['setting']),
@@ -8384,16 +9148,18 @@ class UpdateResourceLogStreamRequest {
 
   /// The endpoint to stream logs to.
   final String? endpoint;
+
   /// The optional token to authenticate the log stream.
   final String? token;
+
   /// Whether to send logs or drop them.
   final Preview setting;
 
   Map<String, Object?> toJson() => {
-        if (endpoint != null) 'endpoint': endpoint,
-        if (token != null) 'token': token,
-        'setting': setting.wireValue,
-      };
+    if (endpoint != null) 'endpoint': endpoint,
+    if (token != null) 'token': token,
+    'setting': setting.wireValue,
+  };
 }
 
 /// Resource log stream overrides
@@ -8404,7 +9170,8 @@ class UpdateResourceLogStreamResponse {
     this.setting,
   });
 
-  factory UpdateResourceLogStreamResponse.fromJson(Map<String, Object?> json) => UpdateResourceLogStreamResponse(
+  factory UpdateResourceLogStreamResponse.fromJson(Map<String, Object?> json) =>
+      UpdateResourceLogStreamResponse(
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
         setting: Preview.fromWire(json['setting']),
@@ -8412,16 +9179,18 @@ class UpdateResourceLogStreamResponse {
 
   /// The ID of the resource.
   final String? resourceId;
+
   /// The endpoint to stream logs to. Must be present if setting is send. Cannot be present if setting is drop.
   final String? endpoint;
+
   /// Whether to send logs or drop them.
   final Preview? setting;
 
   Map<String, Object?> toJson() => {
-        if (resourceId != null) 'resourceId': resourceId,
-        if (endpoint != null) 'endpoint': endpoint,
-        if (setting != null) 'setting': setting!.wireValue,
-      };
+    if (resourceId != null) 'resourceId': resourceId,
+    if (endpoint != null) 'endpoint': endpoint,
+    if (setting != null) 'setting': setting!.wireValue,
+  };
 }
 
 class ListMaintenanceResponse {
@@ -8434,10 +9203,13 @@ class ListMaintenanceResponse {
     required this.resourceId,
   });
 
-  factory ListMaintenanceResponse.fromJson(Map<String, Object?> json) => ListMaintenanceResponse(
+  factory ListMaintenanceResponse.fromJson(Map<String, Object?> json) =>
+      ListMaintenanceResponse(
         id: json['id'] as String? ?? '',
         type: json['type'] as String? ?? '',
-        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        scheduledAt:
+            parseDate(json['scheduledAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
         resourceId: json['resourceId'] as String? ?? '',
@@ -8446,20 +9218,23 @@ class ListMaintenanceResponse {
   final String id;
   final String type;
   final DateTime scheduledAt;
+
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
+
   /// The Id of a resource that can undergo maintenance (Id of a service, a Postgres instance, or a Redis instance)
   final String resourceId;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'type': type,
-        'scheduledAt': scheduledAt.toIso8601String(),
-        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
-        'state': state.wireValue,
-        'resourceId': resourceId,
-      };
+    'id': id,
+    'type': type,
+    'scheduledAt': scheduledAt.toIso8601String(),
+    if (pendingMaintenanceBy != null)
+      'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+    'state': state.wireValue,
+    'resourceId': resourceId,
+  };
 }
 
 class RetrieveMaintenanceResponse {
@@ -8472,10 +9247,13 @@ class RetrieveMaintenanceResponse {
     required this.resourceId,
   });
 
-  factory RetrieveMaintenanceResponse.fromJson(Map<String, Object?> json) => RetrieveMaintenanceResponse(
+  factory RetrieveMaintenanceResponse.fromJson(Map<String, Object?> json) =>
+      RetrieveMaintenanceResponse(
         id: json['id'] as String? ?? '',
         type: json['type'] as String? ?? '',
-        scheduledAt: parseDate(json['scheduledAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        scheduledAt:
+            parseDate(json['scheduledAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
         resourceId: json['resourceId'] as String? ?? '',
@@ -8484,47 +9262,45 @@ class RetrieveMaintenanceResponse {
   final String id;
   final String type;
   final DateTime scheduledAt;
+
   /// If present, the maintenance run cannot be scheduled for later than this date-time.
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
+
   /// The Id of a resource that can undergo maintenance (Id of a service, a Postgres instance, or a Redis instance)
   final String resourceId;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'type': type,
-        'scheduledAt': scheduledAt.toIso8601String(),
-        if (pendingMaintenanceBy != null) 'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
-        'state': state.wireValue,
-        'resourceId': resourceId,
-      };
+    'id': id,
+    'type': type,
+    'scheduledAt': scheduledAt.toIso8601String(),
+    if (pendingMaintenanceBy != null)
+      'pendingMaintenanceBy': pendingMaintenanceBy!.toIso8601String(),
+    'state': state.wireValue,
+    'resourceId': resourceId,
+  };
 }
 
 class UpdateMaintenanceRequest {
-  const UpdateMaintenanceRequest({
-    this.scheduledAt,
-  });
+  const UpdateMaintenanceRequest({this.scheduledAt});
 
-  factory UpdateMaintenanceRequest.fromJson(Map<String, Object?> json) => UpdateMaintenanceRequest(
-        scheduledAt: parseDate(json['scheduledAt']),
-      );
+  factory UpdateMaintenanceRequest.fromJson(Map<String, Object?> json) =>
+      UpdateMaintenanceRequest(scheduledAt: parseDate(json['scheduledAt']));
 
   /// The date-time at which the maintenance is scheduled to start. This must be before the pendingMaintenanceBy date-time.
   final DateTime? scheduledAt;
 
   Map<String, Object?> toJson() => {
-        if (scheduledAt != null) 'scheduledAt': scheduledAt!.toIso8601String(),
-      };
+    if (scheduledAt != null) 'scheduledAt': scheduledAt!.toIso8601String(),
+  };
 }
 
 /// A time series datapoint label
 class GetCpuResponseLabelsItem {
-  const GetCpuResponseLabelsItem({
-    required this.field,
-    required this.value,
-  });
+  const GetCpuResponseLabelsItem({required this.field, required this.value});
 
-  factory GetCpuResponseLabelsItem.fromJson(Map<String, Object?> json) => GetCpuResponseLabelsItem(
+  factory GetCpuResponseLabelsItem.fromJson(Map<String, Object?> json) =>
+      GetCpuResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
       );
@@ -8532,10 +9308,7 @@ class GetCpuResponseLabelsItem {
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8545,8 +9318,11 @@ class GetCpuResponseValuesItem {
     required this.value,
   });
 
-  factory GetCpuResponseValuesItem.fromJson(Map<String, Object?> json) => GetCpuResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  factory GetCpuResponseValuesItem.fromJson(Map<String, Object?> json) =>
+      GetCpuResponseValuesItem(
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
       );
 
@@ -8554,9 +9330,9 @@ class GetCpuResponseValuesItem {
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8568,22 +9344,35 @@ class GetCpuResponse {
   });
 
   factory GetCpuResponse.fromJson(Map<String, Object?> json) => GetCpuResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetCpuResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetCpuResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        unit: json['unit'] as String? ?? '',
-      );
+    labels: ((json['labels'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => GetCpuResponseLabelsItem.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    values: ((json['values'] as List<Object?>?) ?? const [])
+        .map(
+          (e) => GetCpuResponseValuesItem.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+    unit: json['unit'] as String? ?? '',
+  );
 
   /// List of labels describing the time series
   final List<GetCpuResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetCpuResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -8593,7 +9382,8 @@ class GetCpuLimitResponseLabelsItem {
     required this.value,
   });
 
-  factory GetCpuLimitResponseLabelsItem.fromJson(Map<String, Object?> json) => GetCpuLimitResponseLabelsItem(
+  factory GetCpuLimitResponseLabelsItem.fromJson(Map<String, Object?> json) =>
+      GetCpuLimitResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
       );
@@ -8601,10 +9391,7 @@ class GetCpuLimitResponseLabelsItem {
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8614,8 +9401,11 @@ class GetCpuLimitResponseValuesItem {
     required this.value,
   });
 
-  factory GetCpuLimitResponseValuesItem.fromJson(Map<String, Object?> json) => GetCpuLimitResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  factory GetCpuLimitResponseValuesItem.fromJson(Map<String, Object?> json) =>
+      GetCpuLimitResponseValuesItem(
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
       );
 
@@ -8623,9 +9413,9 @@ class GetCpuLimitResponseValuesItem {
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8636,23 +9426,37 @@ class GetCpuLimitResponse {
     required this.unit,
   });
 
-  factory GetCpuLimitResponse.fromJson(Map<String, Object?> json) => GetCpuLimitResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetCpuLimitResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetCpuLimitResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetCpuLimitResponse.fromJson(Map<String, Object?> json) =>
+      GetCpuLimitResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetCpuLimitResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetCpuLimitResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetCpuLimitResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetCpuLimitResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -8662,7 +9466,8 @@ class GetCpuTargetResponseLabelsItem {
     required this.value,
   });
 
-  factory GetCpuTargetResponseLabelsItem.fromJson(Map<String, Object?> json) => GetCpuTargetResponseLabelsItem(
+  factory GetCpuTargetResponseLabelsItem.fromJson(Map<String, Object?> json) =>
+      GetCpuTargetResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
       );
@@ -8670,10 +9475,7 @@ class GetCpuTargetResponseLabelsItem {
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8683,8 +9485,11 @@ class GetCpuTargetResponseValuesItem {
     required this.value,
   });
 
-  factory GetCpuTargetResponseValuesItem.fromJson(Map<String, Object?> json) => GetCpuTargetResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  factory GetCpuTargetResponseValuesItem.fromJson(Map<String, Object?> json) =>
+      GetCpuTargetResponseValuesItem(
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
       );
 
@@ -8692,9 +9497,9 @@ class GetCpuTargetResponseValuesItem {
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8705,33 +9510,45 @@ class GetCpuTargetResponse {
     required this.unit,
   });
 
-  factory GetCpuTargetResponse.fromJson(Map<String, Object?> json) => GetCpuTargetResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetCpuTargetResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetCpuTargetResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetCpuTargetResponse.fromJson(Map<String, Object?> json) =>
+      GetCpuTargetResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetCpuTargetResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetCpuTargetResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetCpuTargetResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetCpuTargetResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
 class GetMemoryResponseLabelsItem {
-  const GetMemoryResponseLabelsItem({
-    required this.field,
-    required this.value,
-  });
+  const GetMemoryResponseLabelsItem({required this.field, required this.value});
 
-  factory GetMemoryResponseLabelsItem.fromJson(Map<String, Object?> json) => GetMemoryResponseLabelsItem(
+  factory GetMemoryResponseLabelsItem.fromJson(Map<String, Object?> json) =>
+      GetMemoryResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
       );
@@ -8739,10 +9556,7 @@ class GetMemoryResponseLabelsItem {
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8752,8 +9566,11 @@ class GetMemoryResponseValuesItem {
     required this.value,
   });
 
-  factory GetMemoryResponseValuesItem.fromJson(Map<String, Object?> json) => GetMemoryResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  factory GetMemoryResponseValuesItem.fromJson(Map<String, Object?> json) =>
+      GetMemoryResponseValuesItem(
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
       );
 
@@ -8761,9 +9578,9 @@ class GetMemoryResponseValuesItem {
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8774,23 +9591,37 @@ class GetMemoryResponse {
     required this.unit,
   });
 
-  factory GetMemoryResponse.fromJson(Map<String, Object?> json) => GetMemoryResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetMemoryResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetMemoryResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetMemoryResponse.fromJson(Map<String, Object?> json) =>
+      GetMemoryResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetMemoryResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetMemoryResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetMemoryResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetMemoryResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -8800,18 +9631,17 @@ class GetMemoryLimitResponseLabelsItem {
     required this.value,
   });
 
-  factory GetMemoryLimitResponseLabelsItem.fromJson(Map<String, Object?> json) => GetMemoryLimitResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetMemoryLimitResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetMemoryLimitResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8821,18 +9651,21 @@ class GetMemoryLimitResponseValuesItem {
     required this.value,
   });
 
-  factory GetMemoryLimitResponseValuesItem.fromJson(Map<String, Object?> json) => GetMemoryLimitResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetMemoryLimitResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetMemoryLimitResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8843,23 +9676,37 @@ class GetMemoryLimitResponse {
     required this.unit,
   });
 
-  factory GetMemoryLimitResponse.fromJson(Map<String, Object?> json) => GetMemoryLimitResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetMemoryLimitResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetMemoryLimitResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetMemoryLimitResponse.fromJson(Map<String, Object?> json) =>
+      GetMemoryLimitResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetMemoryLimitResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetMemoryLimitResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetMemoryLimitResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetMemoryLimitResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -8869,18 +9716,17 @@ class GetMemoryTargetResponseLabelsItem {
     required this.value,
   });
 
-  factory GetMemoryTargetResponseLabelsItem.fromJson(Map<String, Object?> json) => GetMemoryTargetResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetMemoryTargetResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetMemoryTargetResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8890,18 +9736,21 @@ class GetMemoryTargetResponseValuesItem {
     required this.value,
   });
 
-  factory GetMemoryTargetResponseValuesItem.fromJson(Map<String, Object?> json) => GetMemoryTargetResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetMemoryTargetResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetMemoryTargetResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8912,23 +9761,37 @@ class GetMemoryTargetResponse {
     required this.unit,
   });
 
-  factory GetMemoryTargetResponse.fromJson(Map<String, Object?> json) => GetMemoryTargetResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetMemoryTargetResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetMemoryTargetResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetMemoryTargetResponse.fromJson(Map<String, Object?> json) =>
+      GetMemoryTargetResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetMemoryTargetResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetMemoryTargetResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetMemoryTargetResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetMemoryTargetResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -8938,18 +9801,17 @@ class GetHttpRequestsResponseLabelsItem {
     required this.value,
   });
 
-  factory GetHttpRequestsResponseLabelsItem.fromJson(Map<String, Object?> json) => GetHttpRequestsResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetHttpRequestsResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetHttpRequestsResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -8959,18 +9821,21 @@ class GetHttpRequestsResponseValuesItem {
     required this.value,
   });
 
-  factory GetHttpRequestsResponseValuesItem.fromJson(Map<String, Object?> json) => GetHttpRequestsResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetHttpRequestsResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetHttpRequestsResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -8981,23 +9846,37 @@ class GetHttpRequestsResponse {
     required this.unit,
   });
 
-  factory GetHttpRequestsResponse.fromJson(Map<String, Object?> json) => GetHttpRequestsResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetHttpRequestsResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetHttpRequestsResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetHttpRequestsResponse.fromJson(Map<String, Object?> json) =>
+      GetHttpRequestsResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetHttpRequestsResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetHttpRequestsResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetHttpRequestsResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetHttpRequestsResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9007,18 +9886,17 @@ class GetHttpLatencyResponseLabelsItem {
     required this.value,
   });
 
-  factory GetHttpLatencyResponseLabelsItem.fromJson(Map<String, Object?> json) => GetHttpLatencyResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetHttpLatencyResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetHttpLatencyResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9028,18 +9906,21 @@ class GetHttpLatencyResponseValuesItem {
     required this.value,
   });
 
-  factory GetHttpLatencyResponseValuesItem.fromJson(Map<String, Object?> json) => GetHttpLatencyResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetHttpLatencyResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetHttpLatencyResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9050,23 +9931,37 @@ class GetHttpLatencyResponse {
     required this.unit,
   });
 
-  factory GetHttpLatencyResponse.fromJson(Map<String, Object?> json) => GetHttpLatencyResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetHttpLatencyResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetHttpLatencyResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetHttpLatencyResponse.fromJson(Map<String, Object?> json) =>
+      GetHttpLatencyResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetHttpLatencyResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetHttpLatencyResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetHttpLatencyResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetHttpLatencyResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9076,7 +9971,8 @@ class GetBandwidthResponseLabelsItem {
     required this.value,
   });
 
-  factory GetBandwidthResponseLabelsItem.fromJson(Map<String, Object?> json) => GetBandwidthResponseLabelsItem(
+  factory GetBandwidthResponseLabelsItem.fromJson(Map<String, Object?> json) =>
+      GetBandwidthResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
       );
@@ -9084,10 +9980,7 @@ class GetBandwidthResponseLabelsItem {
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9097,8 +9990,11 @@ class GetBandwidthResponseValuesItem {
     required this.value,
   });
 
-  factory GetBandwidthResponseValuesItem.fromJson(Map<String, Object?> json) => GetBandwidthResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  factory GetBandwidthResponseValuesItem.fromJson(Map<String, Object?> json) =>
+      GetBandwidthResponseValuesItem(
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
       );
 
@@ -9106,9 +10002,9 @@ class GetBandwidthResponseValuesItem {
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9119,23 +10015,37 @@ class GetBandwidthResponse {
     required this.unit,
   });
 
-  factory GetBandwidthResponse.fromJson(Map<String, Object?> json) => GetBandwidthResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetBandwidthResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetBandwidthResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetBandwidthResponse.fromJson(Map<String, Object?> json) =>
+      GetBandwidthResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetBandwidthResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetBandwidthResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetBandwidthResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetBandwidthResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -9146,6 +10056,7 @@ enum TrafficSource {
   websocket('websocket'),
   nat('nat'),
   privatelink('privatelink'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -9154,10 +10065,8 @@ enum TrafficSource {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static TrafficSource fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static TrafficSource fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class GetBandwidthSourcesResponseDataItemLabels {
@@ -9166,18 +10075,20 @@ class GetBandwidthSourcesResponseDataItemLabels {
     this.trafficSource,
   });
 
-  factory GetBandwidthSourcesResponseDataItemLabels.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItemLabels(
-        resource: json['resource'] as String?,
-        trafficSource: TrafficSource.fromWire(json['trafficSource']),
-      );
+  factory GetBandwidthSourcesResponseDataItemLabels.fromJson(
+    Map<String, Object?> json,
+  ) => GetBandwidthSourcesResponseDataItemLabels(
+    resource: json['resource'] as String?,
+    trafficSource: TrafficSource.fromWire(json['trafficSource']),
+  );
 
   final String? resource;
   final TrafficSource? trafficSource;
 
   Map<String, Object?> toJson() => {
-        if (resource != null) 'resource': resource,
-        if (trafficSource != null) 'trafficSource': trafficSource!.wireValue,
-      };
+    if (resource != null) 'resource': resource,
+    if (trafficSource != null) 'trafficSource': trafficSource!.wireValue,
+  };
 }
 
 class GetBandwidthSourcesResponseDataItemValuesItem {
@@ -9186,54 +10097,70 @@ class GetBandwidthSourcesResponseDataItemValuesItem {
     this.value,
   });
 
-  factory GetBandwidthSourcesResponseDataItemValuesItem.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItemValuesItem(
-        timestamp: (json['timestamp'] as num?)?.toInt(),
-        value: (json['value'] as num?)?.toDouble(),
-      );
+  factory GetBandwidthSourcesResponseDataItemValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetBandwidthSourcesResponseDataItemValuesItem(
+    timestamp: (json['timestamp'] as num?)?.toInt(),
+    value: (json['value'] as num?)?.toDouble(),
+  );
 
   final int? timestamp;
   final double? value;
 
   Map<String, Object?> toJson() => {
-        if (timestamp != null) 'timestamp': timestamp,
-        if (value != null) 'value': value,
-      };
+    if (timestamp != null) 'timestamp': timestamp,
+    if (value != null) 'value': value,
+  };
 }
 
 class GetBandwidthSourcesResponseDataItem {
-  const GetBandwidthSourcesResponseDataItem({
-    this.labels,
-    this.values,
-  });
+  const GetBandwidthSourcesResponseDataItem({this.labels, this.values});
 
-  factory GetBandwidthSourcesResponseDataItem.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponseDataItem(
-        labels: json['labels'] == null ? null : GetBandwidthSourcesResponseDataItemLabels.fromJson(json['labels']! as Map<String, Object?>),
-        values: (json['values'] as List<Object?>?)?.map((e) => GetBandwidthSourcesResponseDataItemValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-      );
+  factory GetBandwidthSourcesResponseDataItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetBandwidthSourcesResponseDataItem(
+    labels: json['labels'] == null
+        ? null
+        : GetBandwidthSourcesResponseDataItemLabels.fromJson(
+            json['labels']! as Map<String, Object?>,
+          ),
+    values: (json['values'] as List<Object?>?)
+        ?.map(
+          (e) => GetBandwidthSourcesResponseDataItemValuesItem.fromJson(
+            (e as Map<String, Object?>?) ?? const {},
+          ),
+        )
+        .toList(),
+  );
 
   final GetBandwidthSourcesResponseDataItemLabels? labels;
   final List<GetBandwidthSourcesResponseDataItemValuesItem>? values;
 
   Map<String, Object?> toJson() => {
-        if (labels != null) 'labels': labels!.toJson(),
-        if (values != null) 'values': values!.map((e) => e.toJson()).toList(),
-      };
+    if (labels != null) 'labels': labels!.toJson(),
+    if (values != null) 'values': values!.map((e) => e.toJson()).toList(),
+  };
 }
 
 class GetBandwidthSourcesResponse {
-  const GetBandwidthSourcesResponse({
-    this.data,
-  });
+  const GetBandwidthSourcesResponse({this.data});
 
-  factory GetBandwidthSourcesResponse.fromJson(Map<String, Object?> json) => GetBandwidthSourcesResponse(
-        data: (json['data'] as List<Object?>?)?.map((e) => GetBandwidthSourcesResponseDataItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetBandwidthSourcesResponse.fromJson(Map<String, Object?> json) =>
+      GetBandwidthSourcesResponse(
+        data: (json['data'] as List<Object?>?)
+            ?.map(
+              (e) => GetBandwidthSourcesResponseDataItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final List<GetBandwidthSourcesResponseDataItem>? data;
 
   Map<String, Object?> toJson() => {
-        if (data != null) 'data': data!.map((e) => e.toJson()).toList(),
-      };
+    if (data != null) 'data': data!.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// A time series datapoint label
@@ -9243,7 +10170,8 @@ class GetDiskUsageResponseLabelsItem {
     required this.value,
   });
 
-  factory GetDiskUsageResponseLabelsItem.fromJson(Map<String, Object?> json) => GetDiskUsageResponseLabelsItem(
+  factory GetDiskUsageResponseLabelsItem.fromJson(Map<String, Object?> json) =>
+      GetDiskUsageResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
       );
@@ -9251,10 +10179,7 @@ class GetDiskUsageResponseLabelsItem {
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9264,8 +10189,11 @@ class GetDiskUsageResponseValuesItem {
     required this.value,
   });
 
-  factory GetDiskUsageResponseValuesItem.fromJson(Map<String, Object?> json) => GetDiskUsageResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+  factory GetDiskUsageResponseValuesItem.fromJson(Map<String, Object?> json) =>
+      GetDiskUsageResponseValuesItem(
+        timestamp:
+            parseDate(json['timestamp']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
       );
 
@@ -9273,9 +10201,9 @@ class GetDiskUsageResponseValuesItem {
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9286,23 +10214,37 @@ class GetDiskUsageResponse {
     required this.unit,
   });
 
-  factory GetDiskUsageResponse.fromJson(Map<String, Object?> json) => GetDiskUsageResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetDiskUsageResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetDiskUsageResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetDiskUsageResponse.fromJson(Map<String, Object?> json) =>
+      GetDiskUsageResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetDiskUsageResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetDiskUsageResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetDiskUsageResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetDiskUsageResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9312,18 +10254,17 @@ class GetDiskCapacityResponseLabelsItem {
     required this.value,
   });
 
-  factory GetDiskCapacityResponseLabelsItem.fromJson(Map<String, Object?> json) => GetDiskCapacityResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetDiskCapacityResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetDiskCapacityResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9333,18 +10274,21 @@ class GetDiskCapacityResponseValuesItem {
     required this.value,
   });
 
-  factory GetDiskCapacityResponseValuesItem.fromJson(Map<String, Object?> json) => GetDiskCapacityResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetDiskCapacityResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetDiskCapacityResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9355,23 +10299,37 @@ class GetDiskCapacityResponse {
     required this.unit,
   });
 
-  factory GetDiskCapacityResponse.fromJson(Map<String, Object?> json) => GetDiskCapacityResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetDiskCapacityResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetDiskCapacityResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetDiskCapacityResponse.fromJson(Map<String, Object?> json) =>
+      GetDiskCapacityResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetDiskCapacityResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetDiskCapacityResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetDiskCapacityResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetDiskCapacityResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9381,18 +10339,17 @@ class GetInstanceCountResponseLabelsItem {
     required this.value,
   });
 
-  factory GetInstanceCountResponseLabelsItem.fromJson(Map<String, Object?> json) => GetInstanceCountResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetInstanceCountResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetInstanceCountResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9402,18 +10359,21 @@ class GetInstanceCountResponseValuesItem {
     required this.value,
   });
 
-  factory GetInstanceCountResponseValuesItem.fromJson(Map<String, Object?> json) => GetInstanceCountResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetInstanceCountResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetInstanceCountResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9424,23 +10384,37 @@ class GetInstanceCountResponse {
     required this.unit,
   });
 
-  factory GetInstanceCountResponse.fromJson(Map<String, Object?> json) => GetInstanceCountResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetInstanceCountResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetInstanceCountResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetInstanceCountResponse.fromJson(Map<String, Object?> json) =>
+      GetInstanceCountResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetInstanceCountResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetInstanceCountResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetInstanceCountResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetInstanceCountResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9450,18 +10424,17 @@ class GetActiveConnectionsResponseLabelsItem {
     required this.value,
   });
 
-  factory GetActiveConnectionsResponseLabelsItem.fromJson(Map<String, Object?> json) => GetActiveConnectionsResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetActiveConnectionsResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetActiveConnectionsResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9471,18 +10444,21 @@ class GetActiveConnectionsResponseValuesItem {
     required this.value,
   });
 
-  factory GetActiveConnectionsResponseValuesItem.fromJson(Map<String, Object?> json) => GetActiveConnectionsResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetActiveConnectionsResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetActiveConnectionsResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9493,23 +10469,37 @@ class GetActiveConnectionsResponse {
     required this.unit,
   });
 
-  factory GetActiveConnectionsResponse.fromJson(Map<String, Object?> json) => GetActiveConnectionsResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetActiveConnectionsResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetActiveConnectionsResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetActiveConnectionsResponse.fromJson(Map<String, Object?> json) =>
+      GetActiveConnectionsResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetActiveConnectionsResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetActiveConnectionsResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetActiveConnectionsResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetActiveConnectionsResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9519,18 +10509,17 @@ class GetReplicationLagResponseLabelsItem {
     required this.value,
   });
 
-  factory GetReplicationLagResponseLabelsItem.fromJson(Map<String, Object?> json) => GetReplicationLagResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetReplicationLagResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetReplicationLagResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9540,18 +10529,21 @@ class GetReplicationLagResponseValuesItem {
     required this.value,
   });
 
-  factory GetReplicationLagResponseValuesItem.fromJson(Map<String, Object?> json) => GetReplicationLagResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetReplicationLagResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetReplicationLagResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9562,29 +10554,44 @@ class GetReplicationLagResponse {
     required this.unit,
   });
 
-  factory GetReplicationLagResponse.fromJson(Map<String, Object?> json) => GetReplicationLagResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetReplicationLagResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetReplicationLagResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetReplicationLagResponse.fromJson(Map<String, Object?> json) =>
+      GetReplicationLagResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetReplicationLagResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetReplicationLagResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetReplicationLagResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetReplicationLagResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
 /// throwing: Render ships new values without warning.
 enum Filter {
   instance('instance'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -9593,30 +10600,29 @@ enum Filter {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Filter fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Filter fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class ListApplicationFilterValuesResponse {
-  const ListApplicationFilterValuesResponse({
-    this.filter,
-    this.values,
-  });
+  const ListApplicationFilterValuesResponse({this.filter, this.values});
 
-  factory ListApplicationFilterValuesResponse.fromJson(Map<String, Object?> json) => ListApplicationFilterValuesResponse(
-        filter: Filter.fromWire(json['filter']),
-        values: (json['values'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
-      );
+  factory ListApplicationFilterValuesResponse.fromJson(
+    Map<String, Object?> json,
+  ) => ListApplicationFilterValuesResponse(
+    filter: Filter.fromWire(json['filter']),
+    values: (json['values'] as List<Object?>?)
+        ?.map((e) => e as String? ?? '')
+        .toList(),
+  );
 
   final Filter? filter;
   final List<String>? values;
 
   Map<String, Object?> toJson() => {
-        if (filter != null) 'filter': filter!.wireValue,
-        if (values != null) 'values': values!.map((e) => e).toList(),
-      };
+    if (filter != null) 'filter': filter!.wireValue,
+    if (values != null) 'values': values!.map((e) => e).toList(),
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -9624,6 +10630,7 @@ class ListApplicationFilterValuesResponse {
 enum ListHttpFilterValuesFilter {
   host('host'),
   statusCode('statusCode'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -9632,30 +10639,28 @@ enum ListHttpFilterValuesFilter {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ListHttpFilterValuesFilter fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ListHttpFilterValuesFilter fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class ListHttpFilterValuesResponse {
-  const ListHttpFilterValuesResponse({
-    this.filter,
-    this.values,
-  });
+  const ListHttpFilterValuesResponse({this.filter, this.values});
 
-  factory ListHttpFilterValuesResponse.fromJson(Map<String, Object?> json) => ListHttpFilterValuesResponse(
+  factory ListHttpFilterValuesResponse.fromJson(Map<String, Object?> json) =>
+      ListHttpFilterValuesResponse(
         filter: ListHttpFilterValuesFilter.fromWire(json['filter']),
-        values: (json['values'] as List<Object?>?)?.map((e) => e as String? ?? '').toList(),
+        values: (json['values'] as List<Object?>?)
+            ?.map((e) => e as String? ?? '')
+            .toList(),
       );
 
   final ListHttpFilterValuesFilter? filter;
   final List<String>? values;
 
   Map<String, Object?> toJson() => {
-        if (filter != null) 'filter': filter!.wireValue,
-        if (values != null) 'values': values!.map((e) => e).toList(),
-      };
+    if (filter != null) 'filter': filter!.wireValue,
+    if (values != null) 'values': values!.map((e) => e).toList(),
+  };
 }
 
 /// A time series datapoint label
@@ -9665,18 +10670,17 @@ class GetTaskRunsQueuedResponseLabelsItem {
     required this.value,
   });
 
-  factory GetTaskRunsQueuedResponseLabelsItem.fromJson(Map<String, Object?> json) => GetTaskRunsQueuedResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetTaskRunsQueuedResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetTaskRunsQueuedResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9686,18 +10690,21 @@ class GetTaskRunsQueuedResponseValuesItem {
     required this.value,
   });
 
-  factory GetTaskRunsQueuedResponseValuesItem.fromJson(Map<String, Object?> json) => GetTaskRunsQueuedResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetTaskRunsQueuedResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetTaskRunsQueuedResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9708,23 +10715,37 @@ class GetTaskRunsQueuedResponse {
     required this.unit,
   });
 
-  factory GetTaskRunsQueuedResponse.fromJson(Map<String, Object?> json) => GetTaskRunsQueuedResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsQueuedResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsQueuedResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetTaskRunsQueuedResponse.fromJson(Map<String, Object?> json) =>
+      GetTaskRunsQueuedResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetTaskRunsQueuedResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetTaskRunsQueuedResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetTaskRunsQueuedResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetTaskRunsQueuedResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// A time series datapoint label
@@ -9734,18 +10755,17 @@ class GetTaskRunsCompletedResponseLabelsItem {
     required this.value,
   });
 
-  factory GetTaskRunsCompletedResponseLabelsItem.fromJson(Map<String, Object?> json) => GetTaskRunsCompletedResponseLabelsItem(
-        field: json['field'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory GetTaskRunsCompletedResponseLabelsItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetTaskRunsCompletedResponseLabelsItem(
+    field: json['field'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {
-        'field': field,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'field': field, 'value': value};
 }
 
 /// A time series datapoint value
@@ -9755,18 +10775,21 @@ class GetTaskRunsCompletedResponseValuesItem {
     required this.value,
   });
 
-  factory GetTaskRunsCompletedResponseValuesItem.fromJson(Map<String, Object?> json) => GetTaskRunsCompletedResponseValuesItem(
-        timestamp: parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        value: (json['value'] as num?)?.toDouble() ?? 0,
-      );
+  factory GetTaskRunsCompletedResponseValuesItem.fromJson(
+    Map<String, Object?> json,
+  ) => GetTaskRunsCompletedResponseValuesItem(
+    timestamp:
+        parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    value: (json['value'] as num?)?.toDouble() ?? 0,
+  );
 
   final DateTime timestamp;
   final double value;
 
   Map<String, Object?> toJson() => {
-        'timestamp': timestamp.toIso8601String(),
-        'value': value,
-      };
+    'timestamp': timestamp.toIso8601String(),
+    'value': value,
+  };
 }
 
 /// A time series data point
@@ -9777,23 +10800,37 @@ class GetTaskRunsCompletedResponse {
     required this.unit,
   });
 
-  factory GetTaskRunsCompletedResponse.fromJson(Map<String, Object?> json) => GetTaskRunsCompletedResponse(
-        labels: ((json['labels'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsCompletedResponseLabelsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
-        values: ((json['values'] as List<Object?>?) ?? const []).map((e) => GetTaskRunsCompletedResponseValuesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory GetTaskRunsCompletedResponse.fromJson(Map<String, Object?> json) =>
+      GetTaskRunsCompletedResponse(
+        labels: ((json['labels'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetTaskRunsCompletedResponseLabelsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
+        values: ((json['values'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetTaskRunsCompletedResponseValuesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
         unit: json['unit'] as String? ?? '',
       );
 
   /// List of labels describing the time series
   final List<GetTaskRunsCompletedResponseLabelsItem> labels;
+
   /// The values of the time series
   final List<GetTaskRunsCompletedResponseValuesItem> values;
   final String unit;
 
   Map<String, Object?> toJson() => {
-        'labels': labels.map((e) => e.toJson()).toList(),
-        'values': values.map((e) => e.toJson()).toList(),
-        'unit': unit,
-      };
+    'labels': labels.map((e) => e.toJson()).toList(),
+    'values': values.map((e) => e.toJson()).toList(),
+    'unit': unit,
+  };
 }
 
 /// Provider to send metrics to
@@ -9809,6 +10846,7 @@ enum Provider {
   groundcover('GROUNDCOVER'),
   logfire('LOGFIRE'),
   custom('CUSTOM'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -9817,10 +10855,8 @@ enum Provider {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static Provider fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static Provider fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class GetOwnerMetricsStreamResponse {
@@ -9830,7 +10866,8 @@ class GetOwnerMetricsStreamResponse {
     required this.url,
   });
 
-  factory GetOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) => GetOwnerMetricsStreamResponse(
+  factory GetOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) =>
+      GetOwnerMetricsStreamResponse(
         ownerId: json['ownerId'] as String? ?? '',
         provider: Provider.fromWire(json['provider']),
         url: json['url'] as String? ?? '',
@@ -9838,27 +10875,26 @@ class GetOwnerMetricsStreamResponse {
 
   /// The ID of the owner
   final String ownerId;
+
   /// Provider to send metrics to
   final Provider provider;
+
   /// The endpoint URL to stream metrics to
   final String url;
 
   Map<String, Object?> toJson() => {
-        'ownerId': ownerId,
-        'provider': provider.wireValue,
-        'url': url,
-      };
+    'ownerId': ownerId,
+    'provider': provider.wireValue,
+    'url': url,
+  };
 }
 
 /// Input for creating or updating a metrics stream
 class UpsertOwnerMetricsStreamRequest {
-  const UpsertOwnerMetricsStreamRequest({
-    this.provider,
-    this.url,
-    this.token,
-  });
+  const UpsertOwnerMetricsStreamRequest({this.provider, this.url, this.token});
 
-  factory UpsertOwnerMetricsStreamRequest.fromJson(Map<String, Object?> json) => UpsertOwnerMetricsStreamRequest(
+  factory UpsertOwnerMetricsStreamRequest.fromJson(Map<String, Object?> json) =>
+      UpsertOwnerMetricsStreamRequest(
         provider: Provider.fromWire(json['provider']),
         url: json['url'] as String?,
         token: json['token'] as String?,
@@ -9866,16 +10902,18 @@ class UpsertOwnerMetricsStreamRequest {
 
   /// Provider to send metrics to
   final Provider? provider;
+
   /// The endpoint URL to stream metrics to
   final String? url;
+
   /// Authentication token for the metrics stream
   final String? token;
 
   Map<String, Object?> toJson() => {
-        if (provider != null) 'provider': provider!.wireValue,
-        if (url != null) 'url': url,
-        if (token != null) 'token': token,
-      };
+    if (provider != null) 'provider': provider!.wireValue,
+    if (url != null) 'url': url,
+    if (token != null) 'token': token,
+  };
 }
 
 class UpsertOwnerMetricsStreamResponse {
@@ -9885,24 +10923,28 @@ class UpsertOwnerMetricsStreamResponse {
     required this.url,
   });
 
-  factory UpsertOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) => UpsertOwnerMetricsStreamResponse(
-        ownerId: json['ownerId'] as String? ?? '',
-        provider: Provider.fromWire(json['provider']),
-        url: json['url'] as String? ?? '',
-      );
+  factory UpsertOwnerMetricsStreamResponse.fromJson(
+    Map<String, Object?> json,
+  ) => UpsertOwnerMetricsStreamResponse(
+    ownerId: json['ownerId'] as String? ?? '',
+    provider: Provider.fromWire(json['provider']),
+    url: json['url'] as String? ?? '',
+  );
 
   /// The ID of the owner
   final String ownerId;
+
   /// Provider to send metrics to
   final Provider provider;
+
   /// The endpoint URL to stream metrics to
   final String url;
 
   Map<String, Object?> toJson() => {
-        'ownerId': ownerId,
-        'provider': provider.wireValue,
-        'url': url,
-      };
+    'ownerId': ownerId,
+    'provider': provider.wireValue,
+    'url': url,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -9911,6 +10953,7 @@ enum NotificationsToSend {
   none('none'),
   failure('failure'),
   all('all'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -9919,10 +10962,8 @@ enum NotificationsToSend {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static NotificationsToSend fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static NotificationsToSend fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class RetrieveOwnerNotificationSettingsResponse {
@@ -9934,13 +10975,18 @@ class RetrieveOwnerNotificationSettingsResponse {
     required this.notificationsToSend,
   });
 
-  factory RetrieveOwnerNotificationSettingsResponse.fromJson(Map<String, Object?> json) => RetrieveOwnerNotificationSettingsResponse(
-        ownerId: json['ownerId'] as String? ?? '',
-        slackEnabled: json['slackEnabled'] as bool? ?? false,
-        emailEnabled: json['emailEnabled'] as bool? ?? false,
-        previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool? ?? false,
-        notificationsToSend: NotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory RetrieveOwnerNotificationSettingsResponse.fromJson(
+    Map<String, Object?> json,
+  ) => RetrieveOwnerNotificationSettingsResponse(
+    ownerId: json['ownerId'] as String? ?? '',
+    slackEnabled: json['slackEnabled'] as bool? ?? false,
+    emailEnabled: json['emailEnabled'] as bool? ?? false,
+    previewNotificationsEnabled:
+        json['previewNotificationsEnabled'] as bool? ?? false,
+    notificationsToSend: NotificationsToSend.fromWire(
+      json['notificationsToSend'],
+    ),
+  );
 
   final String ownerId;
   final bool slackEnabled;
@@ -9949,12 +10995,12 @@ class RetrieveOwnerNotificationSettingsResponse {
   final NotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        'ownerId': ownerId,
-        'slackEnabled': slackEnabled,
-        'emailEnabled': emailEnabled,
-        'previewNotificationsEnabled': previewNotificationsEnabled,
-        'notificationsToSend': notificationsToSend.wireValue,
-      };
+    'ownerId': ownerId,
+    'slackEnabled': slackEnabled,
+    'emailEnabled': emailEnabled,
+    'previewNotificationsEnabled': previewNotificationsEnabled,
+    'notificationsToSend': notificationsToSend.wireValue,
+  };
 }
 
 class PatchOwnerNotificationSettingsRequest {
@@ -9964,21 +11010,27 @@ class PatchOwnerNotificationSettingsRequest {
     this.notificationsToSend,
   });
 
-  factory PatchOwnerNotificationSettingsRequest.fromJson(Map<String, Object?> json) => PatchOwnerNotificationSettingsRequest(
-        emailEnabled: json['emailEnabled'] as bool?,
-        previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool?,
-        notificationsToSend: NotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory PatchOwnerNotificationSettingsRequest.fromJson(
+    Map<String, Object?> json,
+  ) => PatchOwnerNotificationSettingsRequest(
+    emailEnabled: json['emailEnabled'] as bool?,
+    previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool?,
+    notificationsToSend: NotificationsToSend.fromWire(
+      json['notificationsToSend'],
+    ),
+  );
 
   final bool? emailEnabled;
   final bool? previewNotificationsEnabled;
   final NotificationsToSend? notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        if (emailEnabled != null) 'emailEnabled': emailEnabled,
-        if (previewNotificationsEnabled != null) 'previewNotificationsEnabled': previewNotificationsEnabled,
-        if (notificationsToSend != null) 'notificationsToSend': notificationsToSend!.wireValue,
-      };
+    if (emailEnabled != null) 'emailEnabled': emailEnabled,
+    if (previewNotificationsEnabled != null)
+      'previewNotificationsEnabled': previewNotificationsEnabled,
+    if (notificationsToSend != null)
+      'notificationsToSend': notificationsToSend!.wireValue,
+  };
 }
 
 class PatchOwnerNotificationSettingsResponse {
@@ -9990,13 +11042,18 @@ class PatchOwnerNotificationSettingsResponse {
     required this.notificationsToSend,
   });
 
-  factory PatchOwnerNotificationSettingsResponse.fromJson(Map<String, Object?> json) => PatchOwnerNotificationSettingsResponse(
-        ownerId: json['ownerId'] as String? ?? '',
-        slackEnabled: json['slackEnabled'] as bool? ?? false,
-        emailEnabled: json['emailEnabled'] as bool? ?? false,
-        previewNotificationsEnabled: json['previewNotificationsEnabled'] as bool? ?? false,
-        notificationsToSend: NotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory PatchOwnerNotificationSettingsResponse.fromJson(
+    Map<String, Object?> json,
+  ) => PatchOwnerNotificationSettingsResponse(
+    ownerId: json['ownerId'] as String? ?? '',
+    slackEnabled: json['slackEnabled'] as bool? ?? false,
+    emailEnabled: json['emailEnabled'] as bool? ?? false,
+    previewNotificationsEnabled:
+        json['previewNotificationsEnabled'] as bool? ?? false,
+    notificationsToSend: NotificationsToSend.fromWire(
+      json['notificationsToSend'],
+    ),
+  );
 
   final String ownerId;
   final bool slackEnabled;
@@ -10005,12 +11062,12 @@ class PatchOwnerNotificationSettingsResponse {
   final NotificationsToSend notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        'ownerId': ownerId,
-        'slackEnabled': slackEnabled,
-        'emailEnabled': emailEnabled,
-        'previewNotificationsEnabled': previewNotificationsEnabled,
-        'notificationsToSend': notificationsToSend.wireValue,
-      };
+    'ownerId': ownerId,
+    'slackEnabled': slackEnabled,
+    'emailEnabled': emailEnabled,
+    'previewNotificationsEnabled': previewNotificationsEnabled,
+    'notificationsToSend': notificationsToSend.wireValue,
+  };
 }
 
 class RetrieveServiceNotificationOverridesResponse {
@@ -10020,21 +11077,29 @@ class RetrieveServiceNotificationOverridesResponse {
     required this.notificationsToSend,
   });
 
-  factory RetrieveServiceNotificationOverridesResponse.fromJson(Map<String, Object?> json) => RetrieveServiceNotificationOverridesResponse(
-        serviceId: json['serviceId'] as String? ?? '',
-        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory RetrieveServiceNotificationOverridesResponse.fromJson(
+    Map<String, Object?> json,
+  ) => RetrieveServiceNotificationOverridesResponse(
+    serviceId: json['serviceId'] as String? ?? '',
+    previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(
+      json['previewNotificationsEnabled'],
+    ),
+    notificationsToSend:
+        PatchServiceNotificationOverridesNotificationsToSend.fromWire(
+          json['notificationsToSend'],
+        ),
+  );
 
   final String serviceId;
   final PreviewNotificationsEnabled previewNotificationsEnabled;
-  final PatchServiceNotificationOverridesNotificationsToSend notificationsToSend;
+  final PatchServiceNotificationOverridesNotificationsToSend
+  notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        'serviceId': serviceId,
-        'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
-        'notificationsToSend': notificationsToSend.wireValue,
-      };
+    'serviceId': serviceId,
+    'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
+    'notificationsToSend': notificationsToSend.wireValue,
+  };
 }
 
 class PatchServiceNotificationOverridesRequest {
@@ -10043,18 +11108,28 @@ class PatchServiceNotificationOverridesRequest {
     this.notificationsToSend,
   });
 
-  factory PatchServiceNotificationOverridesRequest.fromJson(Map<String, Object?> json) => PatchServiceNotificationOverridesRequest(
-        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory PatchServiceNotificationOverridesRequest.fromJson(
+    Map<String, Object?> json,
+  ) => PatchServiceNotificationOverridesRequest(
+    previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(
+      json['previewNotificationsEnabled'],
+    ),
+    notificationsToSend:
+        PatchServiceNotificationOverridesNotificationsToSend.fromWire(
+          json['notificationsToSend'],
+        ),
+  );
 
   final PreviewNotificationsEnabled? previewNotificationsEnabled;
-  final PatchServiceNotificationOverridesNotificationsToSend? notificationsToSend;
+  final PatchServiceNotificationOverridesNotificationsToSend?
+  notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        if (previewNotificationsEnabled != null) 'previewNotificationsEnabled': previewNotificationsEnabled!.wireValue,
-        if (notificationsToSend != null) 'notificationsToSend': notificationsToSend!.wireValue,
-      };
+    if (previewNotificationsEnabled != null)
+      'previewNotificationsEnabled': previewNotificationsEnabled!.wireValue,
+    if (notificationsToSend != null)
+      'notificationsToSend': notificationsToSend!.wireValue,
+  };
 }
 
 class PatchServiceNotificationOverridesResponse {
@@ -10064,38 +11139,41 @@ class PatchServiceNotificationOverridesResponse {
     required this.notificationsToSend,
   });
 
-  factory PatchServiceNotificationOverridesResponse.fromJson(Map<String, Object?> json) => PatchServiceNotificationOverridesResponse(
-        serviceId: json['serviceId'] as String? ?? '',
-        previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(json['previewNotificationsEnabled']),
-        notificationsToSend: PatchServiceNotificationOverridesNotificationsToSend.fromWire(json['notificationsToSend']),
-      );
+  factory PatchServiceNotificationOverridesResponse.fromJson(
+    Map<String, Object?> json,
+  ) => PatchServiceNotificationOverridesResponse(
+    serviceId: json['serviceId'] as String? ?? '',
+    previewNotificationsEnabled: PreviewNotificationsEnabled.fromWire(
+      json['previewNotificationsEnabled'],
+    ),
+    notificationsToSend:
+        PatchServiceNotificationOverridesNotificationsToSend.fromWire(
+          json['notificationsToSend'],
+        ),
+  );
 
   final String serviceId;
   final PreviewNotificationsEnabled previewNotificationsEnabled;
-  final PatchServiceNotificationOverridesNotificationsToSend notificationsToSend;
+  final PatchServiceNotificationOverridesNotificationsToSend
+  notificationsToSend;
 
   Map<String, Object?> toJson() => {
-        'serviceId': serviceId,
-        'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
-        'notificationsToSend': notificationsToSend.wireValue,
-      };
+    'serviceId': serviceId,
+    'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
+    'notificationsToSend': notificationsToSend.wireValue,
+  };
 }
 
 class UpdateWorkspaceMemberRequest {
-  const UpdateWorkspaceMemberRequest({
-    required this.role,
-  });
+  const UpdateWorkspaceMemberRequest({required this.role});
 
-  factory UpdateWorkspaceMemberRequest.fromJson(Map<String, Object?> json) => UpdateWorkspaceMemberRequest(
-        role: TeamMemberRole.fromWire(json['role']),
-      );
+  factory UpdateWorkspaceMemberRequest.fromJson(Map<String, Object?> json) =>
+      UpdateWorkspaceMemberRequest(role: TeamMemberRole.fromWire(json['role']));
 
   /// The member's workspace role. Values are always returned in uppercase.
   final TeamMemberRole role;
 
-  Map<String, Object?> toJson() => {
-        'role': role.wireValue,
-      };
+  Map<String, Object?> toJson() => {'role': role.wireValue};
 }
 
 /// Availability of point-in-time recovery.
@@ -10105,6 +11183,7 @@ enum RecoveryStatus {
   available('AVAILABLE'),
   backupNotReady('BACKUP_NOT_READY'),
   notAvailable('NOT_AVAILABLE'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -10113,10 +11192,8 @@ enum RecoveryStatus {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static RecoveryStatus fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static RecoveryStatus fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class RetrievePostgresRecoveryInfoResponse {
@@ -10125,19 +11202,21 @@ class RetrievePostgresRecoveryInfoResponse {
     this.startsAt,
   });
 
-  factory RetrievePostgresRecoveryInfoResponse.fromJson(Map<String, Object?> json) => RetrievePostgresRecoveryInfoResponse(
-        recoveryStatus: RecoveryStatus.fromWire(json['recoveryStatus']),
-        startsAt: parseDate(json['startsAt']),
-      );
+  factory RetrievePostgresRecoveryInfoResponse.fromJson(
+    Map<String, Object?> json,
+  ) => RetrievePostgresRecoveryInfoResponse(
+    recoveryStatus: RecoveryStatus.fromWire(json['recoveryStatus']),
+    startsAt: parseDate(json['startsAt']),
+  );
 
   /// Availability of point-in-time recovery.
   final RecoveryStatus recoveryStatus;
   final DateTime? startsAt;
 
   Map<String, Object?> toJson() => {
-        'recoveryStatus': recoveryStatus.wireValue,
-        if (startsAt != null) 'startsAt': startsAt!.toIso8601String(),
-      };
+    'recoveryStatus': recoveryStatus.wireValue,
+    if (startsAt != null) 'startsAt': startsAt!.toIso8601String(),
+  };
 }
 
 class RecoverPostgresRequest {
@@ -10150,9 +11229,12 @@ class RecoverPostgresRequest {
     this.environmentId,
   });
 
-  factory RecoverPostgresRequest.fromJson(Map<String, Object?> json) => RecoverPostgresRequest(
+  factory RecoverPostgresRequest.fromJson(Map<String, Object?> json) =>
+      RecoverPostgresRequest(
         restoreName: json['restoreName'] as String?,
-        restoreTime: parseDate(json['restoreTime']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        restoreTime:
+            parseDate(json['restoreTime']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         datadogApiKey: json['datadogApiKey'] as String?,
         datadogSite: json['datadogSite'] as String?,
         plan: json['plan'] as String?,
@@ -10161,25 +11243,30 @@ class RecoverPostgresRequest {
 
   /// Name of the new database.
   final String? restoreName;
+
   /// The point in time to restore the database to. See `/recovery-info` for restore availability
   final DateTime restoreTime;
+
   /// Datadog API key to use for monitoring the new database. Defaults to the API key of the original database. Use an empty string to prevent copying of the API key to the new database.
   final String? datadogApiKey;
+
   /// Datadog region code to use for monitoring the new database. Defaults to the region code of the original database. Use an empty string to prevent copying of the region code to the new database.
   final String? datadogSite;
+
   /// The plan to use for the new database. Defaults to the same plan as the original database. Cannot be a lower tier plan than the original database.
   final String? plan;
+
   /// The environment to create the new database in. Defaults to the environment of the original database.
   final String? environmentId;
 
   Map<String, Object?> toJson() => {
-        if (restoreName != null) 'restoreName': restoreName,
-        'restoreTime': restoreTime.toIso8601String(),
-        if (datadogApiKey != null) 'datadogApiKey': datadogApiKey,
-        if (datadogSite != null) 'datadogSite': datadogSite,
-        if (plan != null) 'plan': plan,
-        if (environmentId != null) 'environmentId': environmentId,
-      };
+    if (restoreName != null) 'restoreName': restoreName,
+    'restoreTime': restoreTime.toIso8601String(),
+    if (datadogApiKey != null) 'datadogApiKey': datadogApiKey,
+    if (datadogSite != null) 'datadogSite': datadogSite,
+    if (plan != null) 'plan': plan,
+    if (environmentId != null) 'environmentId': environmentId,
+  };
 }
 
 class ListPostgresExportResponse {
@@ -10189,22 +11276,26 @@ class ListPostgresExportResponse {
     this.url,
   });
 
-  factory ListPostgresExportResponse.fromJson(Map<String, Object?> json) => ListPostgresExportResponse(
+  factory ListPostgresExportResponse.fromJson(Map<String, Object?> json) =>
+      ListPostgresExportResponse(
         id: json['id'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         url: json['url'] as String?,
       );
 
   final String id;
   final DateTime createdAt;
+
   /// URL to download the Postgres export
   final String? url;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'createdAt': createdAt.toIso8601String(),
-        if (url != null) 'url': url,
-      };
+    'id': id,
+    'createdAt': createdAt.toIso8601String(),
+    if (url != null) 'url': url,
+  };
 }
 
 class ListPostgresUsersResponse {
@@ -10215,7 +11306,8 @@ class ListPostgresUsersResponse {
     this.openConnections,
   });
 
-  factory ListPostgresUsersResponse.fromJson(Map<String, Object?> json) => ListPostgresUsersResponse(
+  factory ListPostgresUsersResponse.fromJson(Map<String, Object?> json) =>
+      ListPostgresUsersResponse(
         username: json['username'] as String?,
         default_: json['default'] as bool?,
         createdAt: json['createdAt'] as String?,
@@ -10228,28 +11320,23 @@ class ListPostgresUsersResponse {
   final int? openConnections;
 
   Map<String, Object?> toJson() => {
-        if (username != null) 'username': username,
-        if (default_ != null) 'default': default_,
-        if (createdAt != null) 'createdAt': createdAt,
-        if (openConnections != null) 'openConnections': openConnections,
-      };
+    if (username != null) 'username': username,
+    if (default_ != null) 'default': default_,
+    if (createdAt != null) 'createdAt': createdAt,
+    if (openConnections != null) 'openConnections': openConnections,
+  };
 }
 
 class CreatePostgresUserRequest {
-  const CreatePostgresUserRequest({
-    required this.username,
-  });
+  const CreatePostgresUserRequest({required this.username});
 
-  factory CreatePostgresUserRequest.fromJson(Map<String, Object?> json) => CreatePostgresUserRequest(
-        username: json['username'] as String? ?? '',
-      );
+  factory CreatePostgresUserRequest.fromJson(Map<String, Object?> json) =>
+      CreatePostgresUserRequest(username: json['username'] as String? ?? '');
 
   /// Name of the new user.
   final String username;
 
-  Map<String, Object?> toJson() => {
-        'username': username,
-      };
+  Map<String, Object?> toJson() => {'username': username};
 }
 
 /// A single live process from pg_stat_activity.
@@ -10270,21 +11357,23 @@ class ListPostgresProcessesResponseProcessesItem {
     this.isLeader,
   });
 
-  factory ListPostgresProcessesResponseProcessesItem.fromJson(Map<String, Object?> json) => ListPostgresProcessesResponseProcessesItem(
-        pid: (json['pid'] as num?)?.toInt(),
-        databaseName: json['databaseName'] as String?,
-        username: json['username'] as String?,
-        applicationName: json['applicationName'] as String?,
-        clientAddr: json['clientAddr'] as String?,
-        backendStart: parseDate(json['backendStart']),
-        queryStart: parseDate(json['queryStart']),
-        state: json['state'] as String?,
-        waitEvent: json['waitEvent'] as String?,
-        waitEventType: json['waitEventType'] as String?,
-        query: json['query'] as String?,
-        duration: (json['duration'] as num?)?.toDouble(),
-        isLeader: json['isLeader'] as bool?,
-      );
+  factory ListPostgresProcessesResponseProcessesItem.fromJson(
+    Map<String, Object?> json,
+  ) => ListPostgresProcessesResponseProcessesItem(
+    pid: (json['pid'] as num?)?.toInt(),
+    databaseName: json['databaseName'] as String?,
+    username: json['username'] as String?,
+    applicationName: json['applicationName'] as String?,
+    clientAddr: json['clientAddr'] as String?,
+    backendStart: parseDate(json['backendStart']),
+    queryStart: parseDate(json['queryStart']),
+    state: json['state'] as String?,
+    waitEvent: json['waitEvent'] as String?,
+    waitEventType: json['waitEventType'] as String?,
+    query: json['query'] as String?,
+    duration: (json['duration'] as num?)?.toDouble(),
+    isLeader: json['isLeader'] as bool?,
+  );
 
   final int? pid;
   final String? databaseName;
@@ -10297,42 +11386,49 @@ class ListPostgresProcessesResponseProcessesItem {
   final String? waitEvent;
   final String? waitEventType;
   final String? query;
+
   /// Duration of the query, in seconds.
   final double? duration;
+
   /// Whether this process is running against the primary instance of a highly available database.
   final bool? isLeader;
 
   Map<String, Object?> toJson() => {
-        if (pid != null) 'pid': pid,
-        if (databaseName != null) 'databaseName': databaseName,
-        if (username != null) 'username': username,
-        if (applicationName != null) 'applicationName': applicationName,
-        if (clientAddr != null) 'clientAddr': clientAddr,
-        if (backendStart != null) 'backendStart': backendStart!.toIso8601String(),
-        if (queryStart != null) 'queryStart': queryStart!.toIso8601String(),
-        if (state != null) 'state': state,
-        if (waitEvent != null) 'waitEvent': waitEvent,
-        if (waitEventType != null) 'waitEventType': waitEventType,
-        if (query != null) 'query': query,
-        if (duration != null) 'duration': duration,
-        if (isLeader != null) 'isLeader': isLeader,
-      };
+    if (pid != null) 'pid': pid,
+    if (databaseName != null) 'databaseName': databaseName,
+    if (username != null) 'username': username,
+    if (applicationName != null) 'applicationName': applicationName,
+    if (clientAddr != null) 'clientAddr': clientAddr,
+    if (backendStart != null) 'backendStart': backendStart!.toIso8601String(),
+    if (queryStart != null) 'queryStart': queryStart!.toIso8601String(),
+    if (state != null) 'state': state,
+    if (waitEvent != null) 'waitEvent': waitEvent,
+    if (waitEventType != null) 'waitEventType': waitEventType,
+    if (query != null) 'query': query,
+    if (duration != null) 'duration': duration,
+    if (isLeader != null) 'isLeader': isLeader,
+  };
 }
 
 class ListPostgresProcessesResponse {
-  const ListPostgresProcessesResponse({
-    required this.processes,
-  });
+  const ListPostgresProcessesResponse({required this.processes});
 
-  factory ListPostgresProcessesResponse.fromJson(Map<String, Object?> json) => ListPostgresProcessesResponse(
-        processes: ((json['processes'] as List<Object?>?) ?? const []).map((e) => ListPostgresProcessesResponseProcessesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory ListPostgresProcessesResponse.fromJson(Map<String, Object?> json) =>
+      ListPostgresProcessesResponse(
+        processes: ((json['processes'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ListPostgresProcessesResponseProcessesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final List<ListPostgresProcessesResponseProcessesItem> processes;
 
   Map<String, Object?> toJson() => {
-        'processes': processes.map((e) => e.toJson()).toList(),
-      };
+    'processes': processes.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// A single query from pg_stat_statements.
@@ -10359,27 +11455,29 @@ class ListPostgresTopQueriesResponseTopQueriesItem {
     this.tempBlocksWritten,
   });
 
-  factory ListPostgresTopQueriesResponseTopQueriesItem.fromJson(Map<String, Object?> json) => ListPostgresTopQueriesResponseTopQueriesItem(
-        queryId: json['queryId'] as String?,
-        query: json['query'] as String?,
-        calls: (json['calls'] as num?)?.toInt(),
-        totalTimeMs: (json['totalTimeMs'] as num?)?.toDouble(),
-        minTimeMs: (json['minTimeMs'] as num?)?.toDouble(),
-        maxTimeMs: (json['maxTimeMs'] as num?)?.toDouble(),
-        meanTimeMs: (json['meanTimeMs'] as num?)?.toDouble(),
-        stddevTimeMs: (json['stddevTimeMs'] as num?)?.toDouble(),
-        rows: (json['rows'] as num?)?.toInt(),
-        sharedBlocksHit: (json['sharedBlocksHit'] as num?)?.toInt(),
-        sharedBlocksRead: (json['sharedBlocksRead'] as num?)?.toInt(),
-        sharedBlocksDirtied: (json['sharedBlocksDirtied'] as num?)?.toInt(),
-        sharedBlocksWritten: (json['sharedBlocksWritten'] as num?)?.toInt(),
-        localBlocksHit: (json['localBlocksHit'] as num?)?.toInt(),
-        localBlocksRead: (json['localBlocksRead'] as num?)?.toInt(),
-        localBlocksDirtied: (json['localBlocksDirtied'] as num?)?.toInt(),
-        localBlocksWritten: (json['localBlocksWritten'] as num?)?.toInt(),
-        tempBlocksRead: (json['tempBlocksRead'] as num?)?.toInt(),
-        tempBlocksWritten: (json['tempBlocksWritten'] as num?)?.toInt(),
-      );
+  factory ListPostgresTopQueriesResponseTopQueriesItem.fromJson(
+    Map<String, Object?> json,
+  ) => ListPostgresTopQueriesResponseTopQueriesItem(
+    queryId: json['queryId'] as String?,
+    query: json['query'] as String?,
+    calls: (json['calls'] as num?)?.toInt(),
+    totalTimeMs: (json['totalTimeMs'] as num?)?.toDouble(),
+    minTimeMs: (json['minTimeMs'] as num?)?.toDouble(),
+    maxTimeMs: (json['maxTimeMs'] as num?)?.toDouble(),
+    meanTimeMs: (json['meanTimeMs'] as num?)?.toDouble(),
+    stddevTimeMs: (json['stddevTimeMs'] as num?)?.toDouble(),
+    rows: (json['rows'] as num?)?.toInt(),
+    sharedBlocksHit: (json['sharedBlocksHit'] as num?)?.toInt(),
+    sharedBlocksRead: (json['sharedBlocksRead'] as num?)?.toInt(),
+    sharedBlocksDirtied: (json['sharedBlocksDirtied'] as num?)?.toInt(),
+    sharedBlocksWritten: (json['sharedBlocksWritten'] as num?)?.toInt(),
+    localBlocksHit: (json['localBlocksHit'] as num?)?.toInt(),
+    localBlocksRead: (json['localBlocksRead'] as num?)?.toInt(),
+    localBlocksDirtied: (json['localBlocksDirtied'] as num?)?.toInt(),
+    localBlocksWritten: (json['localBlocksWritten'] as num?)?.toInt(),
+    tempBlocksRead: (json['tempBlocksRead'] as num?)?.toInt(),
+    tempBlocksWritten: (json['tempBlocksWritten'] as num?)?.toInt(),
+  );
 
   final String? queryId;
   final String? query;
@@ -10402,42 +11500,47 @@ class ListPostgresTopQueriesResponseTopQueriesItem {
   final int? tempBlocksWritten;
 
   Map<String, Object?> toJson() => {
-        if (queryId != null) 'queryId': queryId,
-        if (query != null) 'query': query,
-        if (calls != null) 'calls': calls,
-        if (totalTimeMs != null) 'totalTimeMs': totalTimeMs,
-        if (minTimeMs != null) 'minTimeMs': minTimeMs,
-        if (maxTimeMs != null) 'maxTimeMs': maxTimeMs,
-        if (meanTimeMs != null) 'meanTimeMs': meanTimeMs,
-        if (stddevTimeMs != null) 'stddevTimeMs': stddevTimeMs,
-        if (rows != null) 'rows': rows,
-        if (sharedBlocksHit != null) 'sharedBlocksHit': sharedBlocksHit,
-        if (sharedBlocksRead != null) 'sharedBlocksRead': sharedBlocksRead,
-        if (sharedBlocksDirtied != null) 'sharedBlocksDirtied': sharedBlocksDirtied,
-        if (sharedBlocksWritten != null) 'sharedBlocksWritten': sharedBlocksWritten,
-        if (localBlocksHit != null) 'localBlocksHit': localBlocksHit,
-        if (localBlocksRead != null) 'localBlocksRead': localBlocksRead,
-        if (localBlocksDirtied != null) 'localBlocksDirtied': localBlocksDirtied,
-        if (localBlocksWritten != null) 'localBlocksWritten': localBlocksWritten,
-        if (tempBlocksRead != null) 'tempBlocksRead': tempBlocksRead,
-        if (tempBlocksWritten != null) 'tempBlocksWritten': tempBlocksWritten,
-      };
+    if (queryId != null) 'queryId': queryId,
+    if (query != null) 'query': query,
+    if (calls != null) 'calls': calls,
+    if (totalTimeMs != null) 'totalTimeMs': totalTimeMs,
+    if (minTimeMs != null) 'minTimeMs': minTimeMs,
+    if (maxTimeMs != null) 'maxTimeMs': maxTimeMs,
+    if (meanTimeMs != null) 'meanTimeMs': meanTimeMs,
+    if (stddevTimeMs != null) 'stddevTimeMs': stddevTimeMs,
+    if (rows != null) 'rows': rows,
+    if (sharedBlocksHit != null) 'sharedBlocksHit': sharedBlocksHit,
+    if (sharedBlocksRead != null) 'sharedBlocksRead': sharedBlocksRead,
+    if (sharedBlocksDirtied != null) 'sharedBlocksDirtied': sharedBlocksDirtied,
+    if (sharedBlocksWritten != null) 'sharedBlocksWritten': sharedBlocksWritten,
+    if (localBlocksHit != null) 'localBlocksHit': localBlocksHit,
+    if (localBlocksRead != null) 'localBlocksRead': localBlocksRead,
+    if (localBlocksDirtied != null) 'localBlocksDirtied': localBlocksDirtied,
+    if (localBlocksWritten != null) 'localBlocksWritten': localBlocksWritten,
+    if (tempBlocksRead != null) 'tempBlocksRead': tempBlocksRead,
+    if (tempBlocksWritten != null) 'tempBlocksWritten': tempBlocksWritten,
+  };
 }
 
 class ListPostgresTopQueriesResponse {
-  const ListPostgresTopQueriesResponse({
-    required this.topQueries,
-  });
+  const ListPostgresTopQueriesResponse({required this.topQueries});
 
-  factory ListPostgresTopQueriesResponse.fromJson(Map<String, Object?> json) => ListPostgresTopQueriesResponse(
-        topQueries: ((json['topQueries'] as List<Object?>?) ?? const []).map((e) => ListPostgresTopQueriesResponseTopQueriesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory ListPostgresTopQueriesResponse.fromJson(Map<String, Object?> json) =>
+      ListPostgresTopQueriesResponse(
+        topQueries: ((json['topQueries'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ListPostgresTopQueriesResponseTopQueriesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final List<ListPostgresTopQueriesResponseTopQueriesItem> topQueries;
 
   Map<String, Object?> toJson() => {
-        'topQueries': topQueries.map((e) => e.toJson()).toList(),
-      };
+    'topQueries': topQueries.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// The size of an index, table, or database.
@@ -10450,13 +11553,15 @@ class ListPostgresSizesResponseSizesItem {
     this.bytes,
   });
 
-  factory ListPostgresSizesResponseSizesItem.fromJson(Map<String, Object?> json) => ListPostgresSizesResponseSizesItem(
-        database: json['Database'] as String?,
-        schema: json['Schema'] as String?,
-        table: json['Table'] as String?,
-        index: json['Index'] as String?,
-        bytes: (json['Bytes'] as num?)?.toInt(),
-      );
+  factory ListPostgresSizesResponseSizesItem.fromJson(
+    Map<String, Object?> json,
+  ) => ListPostgresSizesResponseSizesItem(
+    database: json['Database'] as String?,
+    schema: json['Schema'] as String?,
+    table: json['Table'] as String?,
+    index: json['Index'] as String?,
+    bytes: (json['Bytes'] as num?)?.toInt(),
+  );
 
   final String? database;
   final String? schema;
@@ -10465,28 +11570,33 @@ class ListPostgresSizesResponseSizesItem {
   final int? bytes;
 
   Map<String, Object?> toJson() => {
-        if (database != null) 'Database': database,
-        if (schema != null) 'Schema': schema,
-        if (table != null) 'Table': table,
-        if (index != null) 'Index': index,
-        if (bytes != null) 'Bytes': bytes,
-      };
+    if (database != null) 'Database': database,
+    if (schema != null) 'Schema': schema,
+    if (table != null) 'Table': table,
+    if (index != null) 'Index': index,
+    if (bytes != null) 'Bytes': bytes,
+  };
 }
 
 class ListPostgresSizesResponse {
-  const ListPostgresSizesResponse({
-    required this.sizes,
-  });
+  const ListPostgresSizesResponse({required this.sizes});
 
-  factory ListPostgresSizesResponse.fromJson(Map<String, Object?> json) => ListPostgresSizesResponse(
-        sizes: ((json['sizes'] as List<Object?>?) ?? const []).map((e) => ListPostgresSizesResponseSizesItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory ListPostgresSizesResponse.fromJson(Map<String, Object?> json) =>
+      ListPostgresSizesResponse(
+        sizes: ((json['sizes'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ListPostgresSizesResponseSizesItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final List<ListPostgresSizesResponseSizesItem> sizes;
 
   Map<String, Object?> toJson() => {
-        'sizes': sizes.map((e) => e.toJson()).toList(),
-      };
+    'sizes': sizes.map((e) => e.toJson()).toList(),
+  };
 }
 
 /// The number of sequential scans performed against a table.
@@ -10498,12 +11608,14 @@ class ListPostgresTableScansResponseTableScansItem {
     this.scans,
   });
 
-  factory ListPostgresTableScansResponseTableScansItem.fromJson(Map<String, Object?> json) => ListPostgresTableScansResponseTableScansItem(
-        database: json['Database'] as String?,
-        schema: json['Schema'] as String?,
-        table: json['Table'] as String?,
-        scans: (json['Scans'] as num?)?.toInt(),
-      );
+  factory ListPostgresTableScansResponseTableScansItem.fromJson(
+    Map<String, Object?> json,
+  ) => ListPostgresTableScansResponseTableScansItem(
+    database: json['Database'] as String?,
+    schema: json['Schema'] as String?,
+    table: json['Table'] as String?,
+    scans: (json['Scans'] as num?)?.toInt(),
+  );
 
   final String? database;
   final String? schema;
@@ -10511,27 +11623,32 @@ class ListPostgresTableScansResponseTableScansItem {
   final int? scans;
 
   Map<String, Object?> toJson() => {
-        if (database != null) 'Database': database,
-        if (schema != null) 'Schema': schema,
-        if (table != null) 'Table': table,
-        if (scans != null) 'Scans': scans,
-      };
+    if (database != null) 'Database': database,
+    if (schema != null) 'Schema': schema,
+    if (table != null) 'Table': table,
+    if (scans != null) 'Scans': scans,
+  };
 }
 
 class ListPostgresTableScansResponse {
-  const ListPostgresTableScansResponse({
-    required this.tableScans,
-  });
+  const ListPostgresTableScansResponse({required this.tableScans});
 
-  factory ListPostgresTableScansResponse.fromJson(Map<String, Object?> json) => ListPostgresTableScansResponse(
-        tableScans: ((json['tableScans'] as List<Object?>?) ?? const []).map((e) => ListPostgresTableScansResponseTableScansItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+  factory ListPostgresTableScansResponse.fromJson(Map<String, Object?> json) =>
+      ListPostgresTableScansResponse(
+        tableScans: ((json['tableScans'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => ListPostgresTableScansResponseTableScansItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final List<ListPostgresTableScansResponseTableScansItem> tableScans;
 
   Map<String, Object?> toJson() => {
-        'tableScans': tableScans.map((e) => e.toJson()).toList(),
-      };
+    'tableScans': tableScans.map((e) => e.toJson()).toList(),
+  };
 }
 
 class CreateRegistryCredentialRequest {
@@ -10543,7 +11660,8 @@ class CreateRegistryCredentialRequest {
     required this.ownerId,
   });
 
-  factory CreateRegistryCredentialRequest.fromJson(Map<String, Object?> json) => CreateRegistryCredentialRequest(
+  factory CreateRegistryCredentialRequest.fromJson(Map<String, Object?> json) =>
+      CreateRegistryCredentialRequest(
         registry: RegistryCredentialRegistry.fromWire(json['registry']),
         name: json['name'] as String? ?? '',
         username: json['username'] as String? ?? '',
@@ -10559,12 +11677,12 @@ class CreateRegistryCredentialRequest {
   final String ownerId;
 
   Map<String, Object?> toJson() => {
-        'registry': registry.wireValue,
-        'name': name,
-        'username': username,
-        'authToken': authToken,
-        'ownerId': ownerId,
-      };
+    'registry': registry.wireValue,
+    'name': name,
+    'username': username,
+    'authToken': authToken,
+    'ownerId': ownerId,
+  };
 }
 
 class UpdateRegistryCredentialRequest {
@@ -10575,7 +11693,8 @@ class UpdateRegistryCredentialRequest {
     required this.authToken,
   });
 
-  factory UpdateRegistryCredentialRequest.fromJson(Map<String, Object?> json) => UpdateRegistryCredentialRequest(
+  factory UpdateRegistryCredentialRequest.fromJson(Map<String, Object?> json) =>
+      UpdateRegistryCredentialRequest(
         registry: RegistryCredentialRegistry.fromWire(json['registry']),
         name: json['name'] as String? ?? '',
         username: json['username'] as String? ?? '',
@@ -10589,11 +11708,11 @@ class UpdateRegistryCredentialRequest {
   final String authToken;
 
   Map<String, Object?> toJson() => {
-        'registry': registry.wireValue,
-        'name': name,
-        'username': username,
-        'authToken': authToken,
-      };
+    'registry': registry.wireValue,
+    'name': name,
+    'username': username,
+    'authToken': authToken,
+  };
 }
 
 /// If `clear`, Render clears the service's build cache before deploying. This can be useful if you're experiencing issues with your build.
@@ -10602,6 +11721,7 @@ class UpdateRegistryCredentialRequest {
 enum ClearCache {
   clear('clear'),
   doNotClear('do_not_clear'),
+
   /// A value this package does not know about.
   unknown('');
 
@@ -10610,10 +11730,8 @@ enum ClearCache {
   /// The value exactly as Render sends it.
   final String wireValue;
 
-  static ClearCache fromWire(Object? value) => values.firstWhere(
-        (e) => e.wireValue == value,
-        orElse: () => unknown,
-      );
+  static ClearCache fromWire(Object? value) =>
+      values.firstWhere((e) => e.wireValue == value, orElse: () => unknown);
 }
 
 class CreateDeployRequest {
@@ -10624,7 +11742,8 @@ class CreateDeployRequest {
     this.deployMode,
   });
 
-  factory CreateDeployRequest.fromJson(Map<String, Object?> json) => CreateDeployRequest(
+  factory CreateDeployRequest.fromJson(Map<String, Object?> json) =>
+      CreateDeployRequest(
         clearCache: ClearCache.fromWire(json['clearCache']),
         commitId: json['commitId'] as String?,
         imageUrl: json['imageUrl'] as String?,
@@ -10633,6 +11752,7 @@ class CreateDeployRequest {
 
   /// If `clear`, Render clears the service's build cache before deploying. This can be useful if you're experiencing issues with your build.
   final ClearCache? clearCache;
+
   /// The SHA of a specific Git commit to deploy for a service. Defaults to the latest commit on the service's connected branch.
   ///
   /// Note that deploying a specific commit with this endpoint does not disable autodeploys for the service.
@@ -10641,10 +11761,12 @@ class CreateDeployRequest {
   ///
   /// Not supported for cron jobs.
   final String? commitId;
+
   /// The URL of the image to deploy for an image-backed service.
   ///
   /// The host, repository, and image name all must match the currently configured image for the service.
   final String? imageUrl;
+
   /// Controls deployment behavior when triggering a deploy.
   ///
   /// - `deploy_only`: Deploy the last successful build without rebuilding (minimizes downtime)
@@ -10655,28 +11777,23 @@ class CreateDeployRequest {
   final DeployMode? deployMode;
 
   Map<String, Object?> toJson() => {
-        if (clearCache != null) 'clearCache': clearCache!.wireValue,
-        if (commitId != null) 'commitId': commitId,
-        if (imageUrl != null) 'imageUrl': imageUrl,
-        if (deployMode != null) 'deployMode': deployMode!.wireValue,
-      };
+    if (clearCache != null) 'clearCache': clearCache!.wireValue,
+    if (commitId != null) 'commitId': commitId,
+    if (imageUrl != null) 'imageUrl': imageUrl,
+    if (deployMode != null) 'deployMode': deployMode!.wireValue,
+  };
 }
 
 class RollbackDeployRequest {
-  const RollbackDeployRequest({
-    required this.deployId,
-  });
+  const RollbackDeployRequest({required this.deployId});
 
-  factory RollbackDeployRequest.fromJson(Map<String, Object?> json) => RollbackDeployRequest(
-        deployId: json['deployId'] as String? ?? '',
-      );
+  factory RollbackDeployRequest.fromJson(Map<String, Object?> json) =>
+      RollbackDeployRequest(deployId: json['deployId'] as String? ?? '');
 
   /// The ID of the deploy to roll back to
   final String deployId;
 
-  Map<String, Object?> toJson() => {
-        'deployId': deployId,
-      };
+  Map<String, Object?> toJson() => {'deployId': deployId};
 }
 
 /// One of 2 shapes. Which one is decided by
@@ -10685,7 +11802,9 @@ class RollbackDeployRequest {
 sealed class UpdateEnvVarsForServiceRequestItem {
   const UpdateEnvVarsForServiceRequestItem();
 
-  factory UpdateEnvVarsForServiceRequestItem.fromJson(Map<String, Object?> json) {
+  factory UpdateEnvVarsForServiceRequestItem.fromJson(
+    Map<String, Object?> json,
+  ) {
     if (json.containsKey('value')) {
       return UpdateEnvVarsForServiceRequestItemValue.fromJson(json);
     }
@@ -10695,47 +11814,48 @@ sealed class UpdateEnvVarsForServiceRequestItem {
   Map<String, Object?> toJson();
 }
 
-final class UpdateEnvVarsForServiceRequestItemValue extends UpdateEnvVarsForServiceRequestItem {
+final class UpdateEnvVarsForServiceRequestItemValue
+    extends UpdateEnvVarsForServiceRequestItem {
   const UpdateEnvVarsForServiceRequestItemValue({
     required this.key,
     required this.value,
   });
 
-  factory UpdateEnvVarsForServiceRequestItemValue.fromJson(Map<String, Object?> json) => UpdateEnvVarsForServiceRequestItemValue(
-        key: json['key'] as String? ?? '',
-        value: json['value'] as String? ?? '',
-      );
+  factory UpdateEnvVarsForServiceRequestItemValue.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateEnvVarsForServiceRequestItemValue(
+    key: json['key'] as String? ?? '',
+    value: json['value'] as String? ?? '',
+  );
 
   final String key;
   final String value;
 
   @override
-  Map<String, Object?> toJson() => {
-        'key': key,
-        'value': value,
-      };
+  Map<String, Object?> toJson() => {'key': key, 'value': value};
 }
 
-final class UpdateEnvVarsForServiceRequestItemGenerateValue extends UpdateEnvVarsForServiceRequestItem {
+final class UpdateEnvVarsForServiceRequestItemGenerateValue
+    extends UpdateEnvVarsForServiceRequestItem {
   const UpdateEnvVarsForServiceRequestItemGenerateValue({
     required this.key,
     required this.generateValue,
   });
 
-  factory UpdateEnvVarsForServiceRequestItemGenerateValue.fromJson(Map<String, Object?> json) => UpdateEnvVarsForServiceRequestItemGenerateValue(
-        key: json['key'] as String? ?? '',
-        generateValue: json['generateValue'] as bool? ?? false,
-      );
+  factory UpdateEnvVarsForServiceRequestItemGenerateValue.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateEnvVarsForServiceRequestItemGenerateValue(
+    key: json['key'] as String? ?? '',
+    generateValue: json['generateValue'] as bool? ?? false,
+  );
 
   final String key;
+
   /// If true, Render generates a strong random value for this environment variable on creation. Cannot be combined with `value`.
   final bool generateValue;
 
   @override
-  Map<String, Object?> toJson() => {
-        'key': key,
-        'generateValue': generateValue,
-      };
+  Map<String, Object?> toJson() => {'key': key, 'generateValue': generateValue};
 }
 
 class UpdateSecretFilesForServiceRequestItem {
@@ -10744,98 +11864,86 @@ class UpdateSecretFilesForServiceRequestItem {
     required this.content,
   });
 
-  factory UpdateSecretFilesForServiceRequestItem.fromJson(Map<String, Object?> json) => UpdateSecretFilesForServiceRequestItem(
-        name: json['name'] as String? ?? '',
-        content: json['content'] as String? ?? '',
-      );
+  factory UpdateSecretFilesForServiceRequestItem.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateSecretFilesForServiceRequestItem(
+    name: json['name'] as String? ?? '',
+    content: json['content'] as String? ?? '',
+  );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {
-        'name': name,
-        'content': content,
-      };
+  Map<String, Object?> toJson() => {'name': name, 'content': content};
 }
 
 class AddOrUpdateSecretFileRequest {
-  const AddOrUpdateSecretFileRequest({
-    this.content,
-  });
+  const AddOrUpdateSecretFileRequest({this.content});
 
-  factory AddOrUpdateSecretFileRequest.fromJson(Map<String, Object?> json) => AddOrUpdateSecretFileRequest(
-        content: json['content'] as String?,
-      );
+  factory AddOrUpdateSecretFileRequest.fromJson(Map<String, Object?> json) =>
+      AddOrUpdateSecretFileRequest(content: json['content'] as String?);
 
   final String? content;
 
-  Map<String, Object?> toJson() => {
-        if (content != null) 'content': content,
-      };
+  Map<String, Object?> toJson() => {if (content != null) 'content': content};
 }
 
 class AddHeadersResponse {
-  const AddHeadersResponse({
-    this.headers,
-  });
+  const AddHeadersResponse({this.headers});
 
-  factory AddHeadersResponse.fromJson(Map<String, Object?> json) => AddHeadersResponse(
-        headers: json['headers'] == null ? null : Header.fromJson(json['headers']! as Map<String, Object?>),
+  factory AddHeadersResponse.fromJson(Map<String, Object?> json) =>
+      AddHeadersResponse(
+        headers: json['headers'] == null
+            ? null
+            : Header.fromJson(json['headers']! as Map<String, Object?>),
       );
 
   final Header? headers;
 
   Map<String, Object?> toJson() => {
-        if (headers != null) 'headers': headers!.toJson(),
-      };
+    if (headers != null) 'headers': headers!.toJson(),
+  };
 }
 
 class PatchRouteResponse {
-  const PatchRouteResponse({
-    this.headers,
-  });
+  const PatchRouteResponse({this.headers});
 
-  factory PatchRouteResponse.fromJson(Map<String, Object?> json) => PatchRouteResponse(
-        headers: json['headers'] == null ? null : Route.fromJson(json['headers']! as Map<String, Object?>),
+  factory PatchRouteResponse.fromJson(Map<String, Object?> json) =>
+      PatchRouteResponse(
+        headers: json['headers'] == null
+            ? null
+            : Route.fromJson(json['headers']! as Map<String, Object?>),
       );
 
   final Route? headers;
 
   Map<String, Object?> toJson() => {
-        if (headers != null) 'headers': headers!.toJson(),
-      };
+    if (headers != null) 'headers': headers!.toJson(),
+  };
 }
 
 class CreateCustomDomainRequest {
-  const CreateCustomDomainRequest({
-    required this.name,
-  });
+  const CreateCustomDomainRequest({required this.name});
 
-  factory CreateCustomDomainRequest.fromJson(Map<String, Object?> json) => CreateCustomDomainRequest(
-        name: json['name'] as String? ?? '',
-      );
+  factory CreateCustomDomainRequest.fromJson(Map<String, Object?> json) =>
+      CreateCustomDomainRequest(name: json['name'] as String? ?? '');
 
   final String name;
 
-  Map<String, Object?> toJson() => {
-        'name': name,
-      };
+  Map<String, Object?> toJson() => {'name': name};
 }
 
 class ScaleServiceRequest {
-  const ScaleServiceRequest({
-    required this.numInstances,
-  });
+  const ScaleServiceRequest({required this.numInstances});
 
-  factory ScaleServiceRequest.fromJson(Map<String, Object?> json) => ScaleServiceRequest(
+  factory ScaleServiceRequest.fromJson(Map<String, Object?> json) =>
+      ScaleServiceRequest(
         numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
       );
 
   final int numInstances;
 
-  Map<String, Object?> toJson() => {
-        'numInstances': numInstances,
-      };
+  Map<String, Object?> toJson() => {'numInstances': numInstances};
 }
 
 class AutoscaleServiceRequestCriteriaCpu {
@@ -10844,19 +11952,22 @@ class AutoscaleServiceRequestCriteriaCpu {
     required this.percentage,
   });
 
-  factory AutoscaleServiceRequestCriteriaCpu.fromJson(Map<String, Object?> json) => AutoscaleServiceRequestCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory AutoscaleServiceRequestCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => AutoscaleServiceRequestCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class AutoscaleServiceRequestCriteriaMemory {
@@ -10865,19 +11976,22 @@ class AutoscaleServiceRequestCriteriaMemory {
     required this.percentage,
   });
 
-  factory AutoscaleServiceRequestCriteriaMemory.fromJson(Map<String, Object?> json) => AutoscaleServiceRequestCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory AutoscaleServiceRequestCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => AutoscaleServiceRequestCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class AutoscaleServiceRequestCriteria {
@@ -10886,18 +12000,23 @@ class AutoscaleServiceRequestCriteria {
     required this.memory,
   });
 
-  factory AutoscaleServiceRequestCriteria.fromJson(Map<String, Object?> json) => AutoscaleServiceRequestCriteria(
-        cpu: AutoscaleServiceRequestCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: AutoscaleServiceRequestCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
+  factory AutoscaleServiceRequestCriteria.fromJson(Map<String, Object?> json) =>
+      AutoscaleServiceRequestCriteria(
+        cpu: AutoscaleServiceRequestCriteriaCpu.fromJson(
+          (json['cpu'] as Map<String, Object?>?) ?? const {},
+        ),
+        memory: AutoscaleServiceRequestCriteriaMemory.fromJson(
+          (json['memory'] as Map<String, Object?>?) ?? const {},
+        ),
       );
 
   final AutoscaleServiceRequestCriteriaCpu cpu;
   final AutoscaleServiceRequestCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class AutoscaleServiceRequest {
@@ -10908,26 +12027,31 @@ class AutoscaleServiceRequest {
     required this.criteria,
   });
 
-  factory AutoscaleServiceRequest.fromJson(Map<String, Object?> json) => AutoscaleServiceRequest(
+  factory AutoscaleServiceRequest.fromJson(Map<String, Object?> json) =>
+      AutoscaleServiceRequest(
         enabled: json['enabled'] as bool? ?? false,
         min: (json['min'] as num?)?.toInt() ?? 0,
         max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: AutoscaleServiceRequestCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
+        criteria: AutoscaleServiceRequestCriteria.fromJson(
+          (json['criteria'] as Map<String, Object?>?) ?? const {},
+        ),
       );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final AutoscaleServiceRequestCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class AutoscaleServiceResponseCriteriaCpu {
@@ -10936,19 +12060,22 @@ class AutoscaleServiceResponseCriteriaCpu {
     required this.percentage,
   });
 
-  factory AutoscaleServiceResponseCriteriaCpu.fromJson(Map<String, Object?> json) => AutoscaleServiceResponseCriteriaCpu(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory AutoscaleServiceResponseCriteriaCpu.fromJson(
+    Map<String, Object?> json,
+  ) => AutoscaleServiceResponseCriteriaCpu(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class AutoscaleServiceResponseCriteriaMemory {
@@ -10957,19 +12084,22 @@ class AutoscaleServiceResponseCriteriaMemory {
     required this.percentage,
   });
 
-  factory AutoscaleServiceResponseCriteriaMemory.fromJson(Map<String, Object?> json) => AutoscaleServiceResponseCriteriaMemory(
-        enabled: json['enabled'] as bool? ?? false,
-        percentage: (json['percentage'] as num?)?.toInt() ?? 0,
-      );
+  factory AutoscaleServiceResponseCriteriaMemory.fromJson(
+    Map<String, Object?> json,
+  ) => AutoscaleServiceResponseCriteriaMemory(
+    enabled: json['enabled'] as bool? ?? false,
+    percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+  );
 
   final bool enabled;
+
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'percentage': percentage,
-      };
+    'enabled': enabled,
+    'percentage': percentage,
+  };
 }
 
 class AutoscaleServiceResponseCriteria {
@@ -10978,18 +12108,24 @@ class AutoscaleServiceResponseCriteria {
     required this.memory,
   });
 
-  factory AutoscaleServiceResponseCriteria.fromJson(Map<String, Object?> json) => AutoscaleServiceResponseCriteria(
-        cpu: AutoscaleServiceResponseCriteriaCpu.fromJson((json['cpu'] as Map<String, Object?>?) ?? const {}),
-        memory: AutoscaleServiceResponseCriteriaMemory.fromJson((json['memory'] as Map<String, Object?>?) ?? const {}),
-      );
+  factory AutoscaleServiceResponseCriteria.fromJson(
+    Map<String, Object?> json,
+  ) => AutoscaleServiceResponseCriteria(
+    cpu: AutoscaleServiceResponseCriteriaCpu.fromJson(
+      (json['cpu'] as Map<String, Object?>?) ?? const {},
+    ),
+    memory: AutoscaleServiceResponseCriteriaMemory.fromJson(
+      (json['memory'] as Map<String, Object?>?) ?? const {},
+    ),
+  );
 
   final AutoscaleServiceResponseCriteriaCpu cpu;
   final AutoscaleServiceResponseCriteriaMemory memory;
 
   Map<String, Object?> toJson() => {
-        'cpu': cpu.toJson(),
-        'memory': memory.toJson(),
-      };
+    'cpu': cpu.toJson(),
+    'memory': memory.toJson(),
+  };
 }
 
 class AutoscaleServiceResponse {
@@ -11000,46 +12136,48 @@ class AutoscaleServiceResponse {
     required this.criteria,
   });
 
-  factory AutoscaleServiceResponse.fromJson(Map<String, Object?> json) => AutoscaleServiceResponse(
+  factory AutoscaleServiceResponse.fromJson(Map<String, Object?> json) =>
+      AutoscaleServiceResponse(
         enabled: json['enabled'] as bool? ?? false,
         min: (json['min'] as num?)?.toInt() ?? 0,
         max: (json['max'] as num?)?.toInt() ?? 0,
-        criteria: AutoscaleServiceResponseCriteria.fromJson((json['criteria'] as Map<String, Object?>?) ?? const {}),
+        criteria: AutoscaleServiceResponseCriteria.fromJson(
+          (json['criteria'] as Map<String, Object?>?) ?? const {},
+        ),
       );
 
   final bool enabled;
+
   /// The minimum number of instances for the service
   final int min;
+
   /// The maximum number of instances for the service
   final int max;
   final AutoscaleServiceResponseCriteria criteria;
 
   Map<String, Object?> toJson() => {
-        'enabled': enabled,
-        'min': min,
-        'max': max,
-        'criteria': criteria.toJson(),
-      };
+    'enabled': enabled,
+    'min': min,
+    'max': max,
+    'criteria': criteria.toJson(),
+  };
 }
 
 class PostJobRequest {
-  const PostJobRequest({
-    required this.startCommand,
-    this.planId,
-  });
+  const PostJobRequest({required this.startCommand, this.planId});
 
   factory PostJobRequest.fromJson(Map<String, Object?> json) => PostJobRequest(
-        startCommand: json['startCommand'] as String? ?? '',
-        planId: json['planId'] as String?,
-      );
+    startCommand: json['startCommand'] as String? ?? '',
+    planId: json['planId'] as String?,
+  );
 
   final String startCommand;
   final String? planId;
 
   Map<String, Object?> toJson() => {
-        'startCommand': startCommand,
-        if (planId != null) 'planId': planId,
-      };
+    'startCommand': startCommand,
+    if (planId != null) 'planId': planId,
+  };
 }
 
 class PostJobResponse {
@@ -11054,13 +12192,16 @@ class PostJobResponse {
     this.finishedAt,
   });
 
-  factory PostJobResponse.fromJson(Map<String, Object?> json) => PostJobResponse(
+  factory PostJobResponse.fromJson(Map<String, Object?> json) =>
+      PostJobResponse(
         id: json['id'] as String? ?? '',
         serviceId: json['serviceId'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         planId: json['planId'] as String? ?? '',
         status: JobWithCursorJobStatus.fromWire(json['status']),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
       );
@@ -11075,15 +12216,15 @@ class PostJobResponse {
   final DateTime? finishedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'serviceId': serviceId,
-        'startCommand': startCommand,
-        'planId': planId,
-        if (status != null) 'status': status!.wireValue,
-        'createdAt': createdAt.toIso8601String(),
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
-      };
+    'id': id,
+    'serviceId': serviceId,
+    'startCommand': startCommand,
+    'planId': planId,
+    if (status != null) 'status': status!.wireValue,
+    'createdAt': createdAt.toIso8601String(),
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+  };
 }
 
 class RetrieveJobResponse {
@@ -11098,13 +12239,16 @@ class RetrieveJobResponse {
     this.finishedAt,
   });
 
-  factory RetrieveJobResponse.fromJson(Map<String, Object?> json) => RetrieveJobResponse(
+  factory RetrieveJobResponse.fromJson(Map<String, Object?> json) =>
+      RetrieveJobResponse(
         id: json['id'] as String? ?? '',
         serviceId: json['serviceId'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         planId: json['planId'] as String? ?? '',
         status: JobWithCursorJobStatus.fromWire(json['status']),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
       );
@@ -11119,15 +12263,15 @@ class RetrieveJobResponse {
   final DateTime? finishedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'serviceId': serviceId,
-        'startCommand': startCommand,
-        'planId': planId,
-        if (status != null) 'status': status!.wireValue,
-        'createdAt': createdAt.toIso8601String(),
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
-      };
+    'id': id,
+    'serviceId': serviceId,
+    'startCommand': startCommand,
+    'planId': planId,
+    if (status != null) 'status': status!.wireValue,
+    'createdAt': createdAt.toIso8601String(),
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+  };
 }
 
 class CancelJobResponse {
@@ -11142,13 +12286,16 @@ class CancelJobResponse {
     this.finishedAt,
   });
 
-  factory CancelJobResponse.fromJson(Map<String, Object?> json) => CancelJobResponse(
+  factory CancelJobResponse.fromJson(Map<String, Object?> json) =>
+      CancelJobResponse(
         id: json['id'] as String? ?? '',
         serviceId: json['serviceId'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         planId: json['planId'] as String? ?? '',
         status: JobWithCursorJobStatus.fromWire(json['status']),
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
       );
@@ -11163,37 +12310,33 @@ class CancelJobResponse {
   final DateTime? finishedAt;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'serviceId': serviceId,
-        'startCommand': startCommand,
-        'planId': planId,
-        if (status != null) 'status': status!.wireValue,
-        'createdAt': createdAt.toIso8601String(),
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
-      };
+    'id': id,
+    'serviceId': serviceId,
+    'startCommand': startCommand,
+    'planId': planId,
+    if (status != null) 'status': status!.wireValue,
+    'createdAt': createdAt.toIso8601String(),
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (finishedAt != null) 'finishedAt': finishedAt!.toIso8601String(),
+  };
 }
 
 class CreateTaskRequest {
-  const CreateTaskRequest({
-    required this.task,
-    required this.input,
-  });
+  const CreateTaskRequest({required this.task, required this.input});
 
-  factory CreateTaskRequest.fromJson(Map<String, Object?> json) => CreateTaskRequest(
+  factory CreateTaskRequest.fromJson(Map<String, Object?> json) =>
+      CreateTaskRequest(
         task: json['task'] as String? ?? '',
         input: json['input'],
       );
 
   /// A task slug in the format workflow-slug/task-name. An optional version can be appended (workflow-slug/task-name:version). If no version is provided, the latest version is used.
   final String task;
+
   /// Input data for a task. Can be either an array (for positional arguments) or an object (for named parameters).
   final Object? input;
 
-  Map<String, Object?> toJson() => {
-        'task': task,
-        'input': input,
-      };
+  Map<String, Object?> toJson() => {'task': task, 'input': input};
 }
 
 class CreateTaskResponseAttemptsItem {
@@ -11206,17 +12349,21 @@ class CreateTaskResponseAttemptsItem {
     this.completedAt,
   });
 
-  factory CreateTaskResponseAttemptsItem.fromJson(Map<String, Object?> json) => CreateTaskResponseAttemptsItem(
+  factory CreateTaskResponseAttemptsItem.fromJson(Map<String, Object?> json) =>
+      CreateTaskResponseAttemptsItem(
         taskRunId: json['taskRunId'] as String?,
         attempt: (json['attempt'] as num?)?.toInt() ?? 0,
         status: GetTaskRunStatus.fromWire(json['status']),
         enqueuedAt: parseDate(json['enqueuedAt']),
-        startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        startedAt:
+            parseDate(json['startedAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
       );
 
   /// The ID of the task run this attempt belongs to.
   final String? taskRunId;
+
   /// The 0-indexed attempt number.
   final int attempt;
   final GetTaskRunStatus status;
@@ -11225,13 +12372,13 @@ class CreateTaskResponseAttemptsItem {
   final DateTime? completedAt;
 
   Map<String, Object?> toJson() => {
-        if (taskRunId != null) 'taskRunId': taskRunId,
-        'attempt': attempt,
-        'status': status.wireValue,
-        if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
-        'startedAt': startedAt.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-      };
+    if (taskRunId != null) 'taskRunId': taskRunId,
+    'attempt': attempt,
+    'status': status.wireValue,
+    if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
+    'startedAt': startedAt.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+  };
 }
 
 class CreateTaskResponse {
@@ -11248,7 +12395,8 @@ class CreateTaskResponse {
     required this.attempts,
   });
 
-  factory CreateTaskResponse.fromJson(Map<String, Object?> json) => CreateTaskResponse(
+  factory CreateTaskResponse.fromJson(Map<String, Object?> json) =>
+      CreateTaskResponse(
         id: json['id'] as String? ?? '',
         taskId: json['taskId'] as String? ?? '',
         status: GetTaskRunStatus.fromWire(json['status']),
@@ -11258,7 +12406,13 @@ class CreateTaskResponse {
         parentTaskAttempt: (json['parentTaskAttempt'] as num?)?.toInt(),
         rootTaskRunId: json['rootTaskRunId'] as String? ?? '',
         retries: (json['retries'] as num?)?.toInt() ?? 0,
-        attempts: ((json['attempts'] as List<Object?>?) ?? const []).map((e) => CreateTaskResponseAttemptsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        attempts: ((json['attempts'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => CreateTaskResponseAttemptsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String id;
@@ -11267,6 +12421,7 @@ class CreateTaskResponse {
   final DateTime? startedAt;
   final DateTime? completedAt;
   final String parentTaskRunId;
+
   /// The 0-indexed attempt of the parent task run that spawned this task run. Omitted for root task runs and for task runs created before this field was introduced.
   final int? parentTaskAttempt;
   final String rootTaskRunId;
@@ -11274,17 +12429,17 @@ class CreateTaskResponse {
   final List<CreateTaskResponseAttemptsItem> attempts;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'taskId': taskId,
-        'status': status.wireValue,
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-        'parentTaskRunId': parentTaskRunId,
-        if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
-        'rootTaskRunId': rootTaskRunId,
-        'retries': retries,
-        'attempts': attempts.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'taskId': taskId,
+    'status': status.wireValue,
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+    'parentTaskRunId': parentTaskRunId,
+    if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
+    'rootTaskRunId': rootTaskRunId,
+    'retries': retries,
+    'attempts': attempts.map((e) => e.toJson()).toList(),
+  };
 }
 
 class GetTaskRunResponseAttemptsItem {
@@ -11299,12 +12454,15 @@ class GetTaskRunResponseAttemptsItem {
     this.results,
   });
 
-  factory GetTaskRunResponseAttemptsItem.fromJson(Map<String, Object?> json) => GetTaskRunResponseAttemptsItem(
+  factory GetTaskRunResponseAttemptsItem.fromJson(Map<String, Object?> json) =>
+      GetTaskRunResponseAttemptsItem(
         taskRunId: json['taskRunId'] as String?,
         attempt: (json['attempt'] as num?)?.toInt() ?? 0,
         status: GetTaskRunStatus.fromWire(json['status']),
         enqueuedAt: parseDate(json['enqueuedAt']),
-        startedAt: parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        startedAt:
+            parseDate(json['startedAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
         error: json['error'] as String?,
         results: (json['results'] as List<Object?>?)?.map((e) => e).toList(),
@@ -11312,26 +12470,28 @@ class GetTaskRunResponseAttemptsItem {
 
   /// The ID of the task run this attempt belongs to.
   final String? taskRunId;
+
   /// The 0-indexed attempt number.
   final int attempt;
   final GetTaskRunStatus status;
   final DateTime? enqueuedAt;
   final DateTime startedAt;
   final DateTime? completedAt;
+
   /// Error message if the task attempt failed.
   final String? error;
   final List<Object?>? results;
 
   Map<String, Object?> toJson() => {
-        if (taskRunId != null) 'taskRunId': taskRunId,
-        'attempt': attempt,
-        'status': status.wireValue,
-        if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
-        'startedAt': startedAt.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-        if (error != null) 'error': error,
-        if (results != null) 'results': results!.map((e) => e).toList(),
-      };
+    if (taskRunId != null) 'taskRunId': taskRunId,
+    'attempt': attempt,
+    'status': status.wireValue,
+    if (enqueuedAt != null) 'enqueuedAt': enqueuedAt!.toIso8601String(),
+    'startedAt': startedAt.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+    if (error != null) 'error': error,
+    if (results != null) 'results': results!.map((e) => e).toList(),
+  };
 }
 
 class GetTaskRunResponse {
@@ -11351,11 +12511,14 @@ class GetTaskRunResponse {
     required this.attempts,
   });
 
-  factory GetTaskRunResponse.fromJson(Map<String, Object?> json) => GetTaskRunResponse(
+  factory GetTaskRunResponse.fromJson(Map<String, Object?> json) =>
+      GetTaskRunResponse(
         id: json['id'] as String? ?? '',
         taskId: json['taskId'] as String? ?? '',
         status: GetTaskRunStatus.fromWire(json['status']),
-        results: ((json['results'] as List<Object?>?) ?? const []).map((e) => e).toList(),
+        results: ((json['results'] as List<Object?>?) ?? const [])
+            .map((e) => e)
+            .toList(),
         error: json['error'] as String?,
         startedAt: parseDate(json['startedAt']),
         completedAt: parseDate(json['completedAt']),
@@ -11364,20 +12527,29 @@ class GetTaskRunResponse {
         parentTaskAttempt: (json['parentTaskAttempt'] as num?)?.toInt(),
         rootTaskRunId: json['rootTaskRunId'] as String? ?? '',
         retries: (json['retries'] as num?)?.toInt() ?? 0,
-        attempts: ((json['attempts'] as List<Object?>?) ?? const []).map((e) => GetTaskRunResponseAttemptsItem.fromJson((e as Map<String, Object?>?) ?? const {})).toList(),
+        attempts: ((json['attempts'] as List<Object?>?) ?? const [])
+            .map(
+              (e) => GetTaskRunResponseAttemptsItem.fromJson(
+                (e as Map<String, Object?>?) ?? const {},
+              ),
+            )
+            .toList(),
       );
 
   final String id;
   final String taskId;
   final GetTaskRunStatus status;
   final List<Object?> results;
+
   /// Error message if the task run failed.
   final String? error;
   final DateTime? startedAt;
   final DateTime? completedAt;
+
   /// Input data for a task. Can be either an array (for positional arguments) or an object (for named parameters).
   final Object? input;
   final String parentTaskRunId;
+
   /// The 0-indexed attempt of the parent task run that spawned this task run. Omitted for root task runs and for task runs created before this field was introduced.
   final int? parentTaskAttempt;
   final String rootTaskRunId;
@@ -11385,20 +12557,20 @@ class GetTaskRunResponse {
   final List<GetTaskRunResponseAttemptsItem> attempts;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'taskId': taskId,
-        'status': status.wireValue,
-        'results': results.map((e) => e).toList(),
-        if (error != null) 'error': error,
-        if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
-        if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
-        'input': input,
-        'parentTaskRunId': parentTaskRunId,
-        if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
-        'rootTaskRunId': rootTaskRunId,
-        'retries': retries,
-        'attempts': attempts.map((e) => e.toJson()).toList(),
-      };
+    'id': id,
+    'taskId': taskId,
+    'status': status.wireValue,
+    'results': results.map((e) => e).toList(),
+    if (error != null) 'error': error,
+    if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
+    if (completedAt != null) 'completedAt': completedAt!.toIso8601String(),
+    'input': input,
+    'parentTaskRunId': parentTaskRunId,
+    if (parentTaskAttempt != null) 'parentTaskAttempt': parentTaskAttempt,
+    'rootTaskRunId': rootTaskRunId,
+    'retries': retries,
+    'attempts': attempts.map((e) => e.toJson()).toList(),
+  };
 }
 
 class GetTaskResponse {
@@ -11410,10 +12582,13 @@ class GetTaskResponse {
     this.workflowVersionId,
   });
 
-  factory GetTaskResponse.fromJson(Map<String, Object?> json) => GetTaskResponse(
+  factory GetTaskResponse.fromJson(Map<String, Object?> json) =>
+      GetTaskResponse(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         workflowId: json['workflowId'] as String?,
         workflowVersionId: json['workflowVersionId'] as String?,
       );
@@ -11425,12 +12600,12 @@ class GetTaskResponse {
   final String? workflowVersionId;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-        if (workflowId != null) 'workflowId': workflowId,
-        if (workflowVersionId != null) 'workflowVersionId': workflowVersionId,
-      };
+    'id': id,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+    if (workflowId != null) 'workflowId': workflowId,
+    if (workflowVersionId != null) 'workflowVersionId': workflowVersionId,
+  };
 }
 
 class CreateWebhookRequest {
@@ -11442,12 +12617,15 @@ class CreateWebhookRequest {
     required this.eventFilter,
   });
 
-  factory CreateWebhookRequest.fromJson(Map<String, Object?> json) => CreateWebhookRequest(
+  factory CreateWebhookRequest.fromJson(Map<String, Object?> json) =>
+      CreateWebhookRequest(
         ownerId: json['ownerId'] as String? ?? '',
         url: json['url'] as String? ?? '',
         name: json['name'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
+            .map((e) => RetrieveEventType.fromWire(e))
+            .toList(),
       );
 
   /// The ID of the owner (team or personal user) whose resources should be returned
@@ -11455,16 +12633,17 @@ class CreateWebhookRequest {
   final String url;
   final String name;
   final bool enabled;
+
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
-        'ownerId': ownerId,
-        'url': url,
-        'name': name,
-        'enabled': enabled,
-        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
-      };
+    'ownerId': ownerId,
+    'url': url,
+    'name': name,
+    'enabled': enabled,
+    'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+  };
 }
 
 class CreateWebhookResponse {
@@ -11477,13 +12656,16 @@ class CreateWebhookResponse {
     required this.eventFilter,
   });
 
-  factory CreateWebhookResponse.fromJson(Map<String, Object?> json) => CreateWebhookResponse(
+  factory CreateWebhookResponse.fromJson(Map<String, Object?> json) =>
+      CreateWebhookResponse(
         id: json['id'] as String? ?? '',
         url: json['url'] as String? ?? '',
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
+            .map((e) => RetrieveEventType.fromWire(e))
+            .toList(),
       );
 
   final String id;
@@ -11491,17 +12673,18 @@ class CreateWebhookResponse {
   final String name;
   final String secret;
   final bool enabled;
+
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'url': url,
-        'name': name,
-        'secret': secret,
-        'enabled': enabled,
-        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
-      };
+    'id': id,
+    'url': url,
+    'name': name,
+    'secret': secret,
+    'enabled': enabled,
+    'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+  };
 }
 
 class RetrieveWebhookResponse {
@@ -11514,13 +12697,16 @@ class RetrieveWebhookResponse {
     required this.eventFilter,
   });
 
-  factory RetrieveWebhookResponse.fromJson(Map<String, Object?> json) => RetrieveWebhookResponse(
+  factory RetrieveWebhookResponse.fromJson(Map<String, Object?> json) =>
+      RetrieveWebhookResponse(
         id: json['id'] as String? ?? '',
         url: json['url'] as String? ?? '',
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
+            .map((e) => RetrieveEventType.fromWire(e))
+            .toList(),
       );
 
   final String id;
@@ -11528,17 +12714,18 @@ class RetrieveWebhookResponse {
   final String name;
   final String secret;
   final bool enabled;
+
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'url': url,
-        'name': name,
-        'secret': secret,
-        'enabled': enabled,
-        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
-      };
+    'id': id,
+    'url': url,
+    'name': name,
+    'secret': secret,
+    'enabled': enabled,
+    'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+  };
 }
 
 class UpdateWebhookRequest {
@@ -11549,25 +12736,30 @@ class UpdateWebhookRequest {
     this.eventFilter,
   });
 
-  factory UpdateWebhookRequest.fromJson(Map<String, Object?> json) => UpdateWebhookRequest(
+  factory UpdateWebhookRequest.fromJson(Map<String, Object?> json) =>
+      UpdateWebhookRequest(
         name: json['name'] as String?,
         url: json['url'] as String?,
         enabled: json['enabled'] as bool?,
-        eventFilter: (json['eventFilter'] as List<Object?>?)?.map((e) => RetrieveEventType.fromWire(e)).toList(),
+        eventFilter: (json['eventFilter'] as List<Object?>?)
+            ?.map((e) => RetrieveEventType.fromWire(e))
+            .toList(),
       );
 
   final String? name;
   final String? url;
   final bool? enabled;
+
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType>? eventFilter;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (url != null) 'url': url,
-        if (enabled != null) 'enabled': enabled,
-        if (eventFilter != null) 'eventFilter': eventFilter!.map((e) => e.wireValue).toList(),
-      };
+    if (name != null) 'name': name,
+    if (url != null) 'url': url,
+    if (enabled != null) 'enabled': enabled,
+    if (eventFilter != null)
+      'eventFilter': eventFilter!.map((e) => e.wireValue).toList(),
+  };
 }
 
 class UpdateWebhookResponse {
@@ -11580,13 +12772,16 @@ class UpdateWebhookResponse {
     required this.eventFilter,
   });
 
-  factory UpdateWebhookResponse.fromJson(Map<String, Object?> json) => UpdateWebhookResponse(
+  factory UpdateWebhookResponse.fromJson(Map<String, Object?> json) =>
+      UpdateWebhookResponse(
         id: json['id'] as String? ?? '',
         url: json['url'] as String? ?? '',
         name: json['name'] as String? ?? '',
         secret: json['secret'] as String? ?? '',
         enabled: json['enabled'] as bool? ?? false,
-        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const []).map((e) => RetrieveEventType.fromWire(e)).toList(),
+        eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
+            .map((e) => RetrieveEventType.fromWire(e))
+            .toList(),
       );
 
   final String id;
@@ -11594,17 +12789,18 @@ class UpdateWebhookResponse {
   final String name;
   final String secret;
   final bool enabled;
+
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'url': url,
-        'name': name,
-        'secret': secret,
-        'enabled': enabled,
-        'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
-      };
+    'id': id,
+    'url': url,
+    'name': name,
+    'secret': secret,
+    'enabled': enabled,
+    'eventFilter': eventFilter.map((e) => e.wireValue).toList(),
+  };
 }
 
 class CreateWorkflowRequestBuildConfig {
@@ -11616,32 +12812,38 @@ class CreateWorkflowRequestBuildConfig {
     required this.runtime,
   });
 
-  factory CreateWorkflowRequestBuildConfig.fromJson(Map<String, Object?> json) => CreateWorkflowRequestBuildConfig(
-        branch: json['branch'] as String?,
-        buildCommand: json['buildCommand'] as String? ?? '',
-        repo: json['repo'] as String? ?? '',
-        rootDir: json['rootDir'] as String?,
-        runtime: Runtime.fromWire(json['runtime']),
-      );
+  factory CreateWorkflowRequestBuildConfig.fromJson(
+    Map<String, Object?> json,
+  ) => CreateWorkflowRequestBuildConfig(
+    branch: json['branch'] as String?,
+    buildCommand: json['buildCommand'] as String? ?? '',
+    repo: json['repo'] as String? ?? '',
+    rootDir: json['rootDir'] as String?,
+    runtime: Runtime.fromWire(json['runtime']),
+  );
 
   /// The branch to use for the build, if applicable.
   final String? branch;
+
   /// The command to run to build the workflow.
   final String buildCommand;
+
   /// The repository URL to use for the build.
   final String repo;
+
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
+
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
   Map<String, Object?> toJson() => {
-        if (branch != null) 'branch': branch,
-        'buildCommand': buildCommand,
-        'repo': repo,
-        if (rootDir != null) 'rootDir': rootDir,
-        'runtime': runtime.wireValue,
-      };
+    if (branch != null) 'branch': branch,
+    'buildCommand': buildCommand,
+    'repo': repo,
+    if (rootDir != null) 'rootDir': rootDir,
+    'runtime': runtime.wireValue,
+  };
 }
 
 class CreateWorkflowRequest {
@@ -11655,36 +12857,45 @@ class CreateWorkflowRequest {
     this.envVars,
   });
 
-  factory CreateWorkflowRequest.fromJson(Map<String, Object?> json) => CreateWorkflowRequest(
+  factory CreateWorkflowRequest.fromJson(Map<String, Object?> json) =>
+      CreateWorkflowRequest(
         name: json['name'] as String? ?? '',
         ownerId: json['ownerId'] as String? ?? '',
-        buildConfig: CreateWorkflowRequestBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
+        buildConfig: CreateWorkflowRequestBuildConfig.fromJson(
+          (json['buildConfig'] as Map<String, Object?>?) ?? const {},
+        ),
         runCommand: json['runCommand'] as String? ?? '',
         region: Region.fromWire(json['region']),
         autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
-        envVars: (json['envVars'] as List<Object?>?)?.map((e) => (e as Map<String, Object?>?) ?? const {}).toList(),
+        envVars: (json['envVars'] as List<Object?>?)
+            ?.map((e) => (e as Map<String, Object?>?) ?? const {})
+            .toList(),
       );
 
   final String name;
   final String ownerId;
   final CreateWorkflowRequestBuildConfig buildConfig;
+
   /// The command to run the workflow
   final String runCommand;
+
   /// Defaults to "oregon"
   final Region region;
+
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
   final List<Map<String, Object?>>? envVars;
 
   Map<String, Object?> toJson() => {
-        'name': name,
-        'ownerId': ownerId,
-        'buildConfig': buildConfig.toJson(),
-        'runCommand': runCommand,
-        'region': region.wireValue,
-        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
-        if (envVars != null) 'envVars': envVars!.map((e) => e).toList(),
-      };
+    'name': name,
+    'ownerId': ownerId,
+    'buildConfig': buildConfig.toJson(),
+    'runCommand': runCommand,
+    'region': region.wireValue,
+    if (autoDeployTrigger != null)
+      'autoDeployTrigger': autoDeployTrigger!.wireValue,
+    if (envVars != null) 'envVars': envVars!.map((e) => e).toList(),
+  };
 }
 
 class CreateWorkflowResponseBuildConfig {
@@ -11696,32 +12907,38 @@ class CreateWorkflowResponseBuildConfig {
     required this.runtime,
   });
 
-  factory CreateWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) => CreateWorkflowResponseBuildConfig(
-        branch: json['branch'] as String?,
-        buildCommand: json['buildCommand'] as String? ?? '',
-        repo: json['repo'] as String? ?? '',
-        rootDir: json['rootDir'] as String?,
-        runtime: Runtime.fromWire(json['runtime']),
-      );
+  factory CreateWorkflowResponseBuildConfig.fromJson(
+    Map<String, Object?> json,
+  ) => CreateWorkflowResponseBuildConfig(
+    branch: json['branch'] as String?,
+    buildCommand: json['buildCommand'] as String? ?? '',
+    repo: json['repo'] as String? ?? '',
+    rootDir: json['rootDir'] as String?,
+    runtime: Runtime.fromWire(json['runtime']),
+  );
 
   /// The branch to use for the build, if applicable.
   final String? branch;
+
   /// The command to run to build the workflow.
   final String buildCommand;
+
   /// The repository URL to use for the build.
   final String repo;
+
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
+
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
   Map<String, Object?> toJson() => {
-        if (branch != null) 'branch': branch,
-        'buildCommand': buildCommand,
-        'repo': repo,
-        if (rootDir != null) 'rootDir': rootDir,
-        'runtime': runtime.wireValue,
-      };
+    if (branch != null) 'branch': branch,
+    'buildCommand': buildCommand,
+    'repo': repo,
+    if (rootDir != null) 'rootDir': rootDir,
+    'runtime': runtime.wireValue,
+  };
 }
 
 class CreateWorkflowResponse {
@@ -11739,19 +12956,25 @@ class CreateWorkflowResponse {
     this.autoDeployTrigger,
   });
 
-  factory CreateWorkflowResponse.fromJson(Map<String, Object?> json) => CreateWorkflowResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        buildConfig: CreateWorkflowResponseBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
-        runCommand: json['runCommand'] as String? ?? '',
-        region: Region.fromWire(json['region']),
-        environmentId: json['environmentId'] as String?,
-        slug: json['slug'] as String?,
-        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
-      );
+  factory CreateWorkflowResponse.fromJson(
+    Map<String, Object?> json,
+  ) => CreateWorkflowResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    buildConfig: CreateWorkflowResponseBuildConfig.fromJson(
+      (json['buildConfig'] as Map<String, Object?>?) ?? const {},
+    ),
+    runCommand: json['runCommand'] as String? ?? '',
+    region: Region.fromWire(json['region']),
+    environmentId: json['environmentId'] as String?,
+    slug: json['slug'] as String?,
+    autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+  );
 
   final String id;
   final String name;
@@ -11759,28 +12982,32 @@ class CreateWorkflowResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
   final CreateWorkflowResponseBuildConfig buildConfig;
+
   /// Command to run the workflow.
   final String runCommand;
+
   /// Defaults to "oregon"
   final Region region;
   final String? environmentId;
   final String? slug;
+
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'buildConfig': buildConfig.toJson(),
-        'runCommand': runCommand,
-        'region': region.wireValue,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (slug != null) 'slug': slug,
-        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'buildConfig': buildConfig.toJson(),
+    'runCommand': runCommand,
+    'region': region.wireValue,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (slug != null) 'slug': slug,
+    if (autoDeployTrigger != null)
+      'autoDeployTrigger': autoDeployTrigger!.wireValue,
+  };
 }
 
 class GetWorkflowResponseBuildConfig {
@@ -11792,7 +13019,8 @@ class GetWorkflowResponseBuildConfig {
     required this.runtime,
   });
 
-  factory GetWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) => GetWorkflowResponseBuildConfig(
+  factory GetWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) =>
+      GetWorkflowResponseBuildConfig(
         branch: json['branch'] as String?,
         buildCommand: json['buildCommand'] as String? ?? '',
         repo: json['repo'] as String? ?? '',
@@ -11802,22 +13030,26 @@ class GetWorkflowResponseBuildConfig {
 
   /// The branch to use for the build, if applicable.
   final String? branch;
+
   /// The command to run to build the workflow.
   final String buildCommand;
+
   /// The repository URL to use for the build.
   final String repo;
+
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
+
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
   Map<String, Object?> toJson() => {
-        if (branch != null) 'branch': branch,
-        'buildCommand': buildCommand,
-        'repo': repo,
-        if (rootDir != null) 'rootDir': rootDir,
-        'runtime': runtime.wireValue,
-      };
+    if (branch != null) 'branch': branch,
+    'buildCommand': buildCommand,
+    'repo': repo,
+    if (rootDir != null) 'rootDir': rootDir,
+    'runtime': runtime.wireValue,
+  };
 }
 
 class GetWorkflowResponse {
@@ -11835,19 +13067,25 @@ class GetWorkflowResponse {
     this.autoDeployTrigger,
   });
 
-  factory GetWorkflowResponse.fromJson(Map<String, Object?> json) => GetWorkflowResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        buildConfig: GetWorkflowResponseBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
-        runCommand: json['runCommand'] as String? ?? '',
-        region: Region.fromWire(json['region']),
-        environmentId: json['environmentId'] as String?,
-        slug: json['slug'] as String?,
-        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
-      );
+  factory GetWorkflowResponse.fromJson(
+    Map<String, Object?> json,
+  ) => GetWorkflowResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    buildConfig: GetWorkflowResponseBuildConfig.fromJson(
+      (json['buildConfig'] as Map<String, Object?>?) ?? const {},
+    ),
+    runCommand: json['runCommand'] as String? ?? '',
+    region: Region.fromWire(json['region']),
+    environmentId: json['environmentId'] as String?,
+    slug: json['slug'] as String?,
+    autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+  );
 
   final String id;
   final String name;
@@ -11855,28 +13093,32 @@ class GetWorkflowResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
   final GetWorkflowResponseBuildConfig buildConfig;
+
   /// Command to run the workflow.
   final String runCommand;
+
   /// Defaults to "oregon"
   final Region region;
   final String? environmentId;
   final String? slug;
+
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'buildConfig': buildConfig.toJson(),
-        'runCommand': runCommand,
-        'region': region.wireValue,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (slug != null) 'slug': slug,
-        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'buildConfig': buildConfig.toJson(),
+    'runCommand': runCommand,
+    'region': region.wireValue,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (slug != null) 'slug': slug,
+    if (autoDeployTrigger != null)
+      'autoDeployTrigger': autoDeployTrigger!.wireValue,
+  };
 }
 
 class UpdateWorkflowRequestBuildConfig {
@@ -11888,32 +13130,38 @@ class UpdateWorkflowRequestBuildConfig {
     required this.runtime,
   });
 
-  factory UpdateWorkflowRequestBuildConfig.fromJson(Map<String, Object?> json) => UpdateWorkflowRequestBuildConfig(
-        branch: json['branch'] as String?,
-        buildCommand: json['buildCommand'] as String? ?? '',
-        repo: json['repo'] as String? ?? '',
-        rootDir: json['rootDir'] as String?,
-        runtime: Runtime.fromWire(json['runtime']),
-      );
+  factory UpdateWorkflowRequestBuildConfig.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateWorkflowRequestBuildConfig(
+    branch: json['branch'] as String?,
+    buildCommand: json['buildCommand'] as String? ?? '',
+    repo: json['repo'] as String? ?? '',
+    rootDir: json['rootDir'] as String?,
+    runtime: Runtime.fromWire(json['runtime']),
+  );
 
   /// The branch to use for the build, if applicable.
   final String? branch;
+
   /// The command to run to build the workflow.
   final String buildCommand;
+
   /// The repository URL to use for the build.
   final String repo;
+
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
+
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
   Map<String, Object?> toJson() => {
-        if (branch != null) 'branch': branch,
-        'buildCommand': buildCommand,
-        'repo': repo,
-        if (rootDir != null) 'rootDir': rootDir,
-        'runtime': runtime.wireValue,
-      };
+    if (branch != null) 'branch': branch,
+    'buildCommand': buildCommand,
+    'repo': repo,
+    if (rootDir != null) 'rootDir': rootDir,
+    'runtime': runtime.wireValue,
+  };
 }
 
 class UpdateWorkflowRequest {
@@ -11924,26 +13172,34 @@ class UpdateWorkflowRequest {
     this.autoDeployTrigger,
   });
 
-  factory UpdateWorkflowRequest.fromJson(Map<String, Object?> json) => UpdateWorkflowRequest(
+  factory UpdateWorkflowRequest.fromJson(Map<String, Object?> json) =>
+      UpdateWorkflowRequest(
         name: json['name'] as String?,
-        buildConfig: json['buildConfig'] == null ? null : UpdateWorkflowRequestBuildConfig.fromJson(json['buildConfig']! as Map<String, Object?>),
+        buildConfig: json['buildConfig'] == null
+            ? null
+            : UpdateWorkflowRequestBuildConfig.fromJson(
+                json['buildConfig']! as Map<String, Object?>,
+              ),
         runCommand: json['runCommand'] as String?,
         autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
       );
 
   final String? name;
   final UpdateWorkflowRequestBuildConfig? buildConfig;
+
   /// The command to run the workflow
   final String? runCommand;
+
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
-        if (name != null) 'name': name,
-        if (buildConfig != null) 'buildConfig': buildConfig!.toJson(),
-        if (runCommand != null) 'runCommand': runCommand,
-        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
-      };
+    if (name != null) 'name': name,
+    if (buildConfig != null) 'buildConfig': buildConfig!.toJson(),
+    if (runCommand != null) 'runCommand': runCommand,
+    if (autoDeployTrigger != null)
+      'autoDeployTrigger': autoDeployTrigger!.wireValue,
+  };
 }
 
 class UpdateWorkflowResponseBuildConfig {
@@ -11955,32 +13211,38 @@ class UpdateWorkflowResponseBuildConfig {
     required this.runtime,
   });
 
-  factory UpdateWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) => UpdateWorkflowResponseBuildConfig(
-        branch: json['branch'] as String?,
-        buildCommand: json['buildCommand'] as String? ?? '',
-        repo: json['repo'] as String? ?? '',
-        rootDir: json['rootDir'] as String?,
-        runtime: Runtime.fromWire(json['runtime']),
-      );
+  factory UpdateWorkflowResponseBuildConfig.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateWorkflowResponseBuildConfig(
+    branch: json['branch'] as String?,
+    buildCommand: json['buildCommand'] as String? ?? '',
+    repo: json['repo'] as String? ?? '',
+    rootDir: json['rootDir'] as String?,
+    runtime: Runtime.fromWire(json['runtime']),
+  );
 
   /// The branch to use for the build, if applicable.
   final String? branch;
+
   /// The command to run to build the workflow.
   final String buildCommand;
+
   /// The repository URL to use for the build.
   final String repo;
+
   /// The root directory of the repository to use for the build, if applicable.
   final String? rootDir;
+
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
   Map<String, Object?> toJson() => {
-        if (branch != null) 'branch': branch,
-        'buildCommand': buildCommand,
-        'repo': repo,
-        if (rootDir != null) 'rootDir': rootDir,
-        'runtime': runtime.wireValue,
-      };
+    if (branch != null) 'branch': branch,
+    'buildCommand': buildCommand,
+    'repo': repo,
+    if (rootDir != null) 'rootDir': rootDir,
+    'runtime': runtime.wireValue,
+  };
 }
 
 class UpdateWorkflowResponse {
@@ -11998,19 +13260,25 @@ class UpdateWorkflowResponse {
     this.autoDeployTrigger,
   });
 
-  factory UpdateWorkflowResponse.fromJson(Map<String, Object?> json) => UpdateWorkflowResponse(
-        id: json['id'] as String? ?? '',
-        name: json['name'] as String? ?? '',
-        ownerId: json['ownerId'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        updatedAt: parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
-        buildConfig: UpdateWorkflowResponseBuildConfig.fromJson((json['buildConfig'] as Map<String, Object?>?) ?? const {}),
-        runCommand: json['runCommand'] as String? ?? '',
-        region: Region.fromWire(json['region']),
-        environmentId: json['environmentId'] as String?,
-        slug: json['slug'] as String?,
-        autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
-      );
+  factory UpdateWorkflowResponse.fromJson(
+    Map<String, Object?> json,
+  ) => UpdateWorkflowResponse(
+    id: json['id'] as String? ?? '',
+    name: json['name'] as String? ?? '',
+    ownerId: json['ownerId'] as String? ?? '',
+    createdAt:
+        parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    updatedAt:
+        parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    buildConfig: UpdateWorkflowResponseBuildConfig.fromJson(
+      (json['buildConfig'] as Map<String, Object?>?) ?? const {},
+    ),
+    runCommand: json['runCommand'] as String? ?? '',
+    region: Region.fromWire(json['region']),
+    environmentId: json['environmentId'] as String?,
+    slug: json['slug'] as String?,
+    autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+  );
 
   final String id;
   final String name;
@@ -12018,37 +13286,39 @@ class UpdateWorkflowResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
   final UpdateWorkflowResponseBuildConfig buildConfig;
+
   /// Command to run the workflow.
   final String runCommand;
+
   /// Defaults to "oregon"
   final Region region;
   final String? environmentId;
   final String? slug;
+
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'name': name,
-        'ownerId': ownerId,
-        'createdAt': createdAt.toIso8601String(),
-        'updatedAt': updatedAt.toIso8601String(),
-        'buildConfig': buildConfig.toJson(),
-        'runCommand': runCommand,
-        'region': region.wireValue,
-        if (environmentId != null) 'environmentId': environmentId,
-        if (slug != null) 'slug': slug,
-        if (autoDeployTrigger != null) 'autoDeployTrigger': autoDeployTrigger!.wireValue,
-      };
+    'id': id,
+    'name': name,
+    'ownerId': ownerId,
+    'createdAt': createdAt.toIso8601String(),
+    'updatedAt': updatedAt.toIso8601String(),
+    'buildConfig': buildConfig.toJson(),
+    'runCommand': runCommand,
+    'region': region.wireValue,
+    if (environmentId != null) 'environmentId': environmentId,
+    if (slug != null) 'slug': slug,
+    if (autoDeployTrigger != null)
+      'autoDeployTrigger': autoDeployTrigger!.wireValue,
+  };
 }
 
 class CreateWorkflowVersionRequest {
-  const CreateWorkflowVersionRequest({
-    required this.workflowId,
-    this.commit,
-  });
+  const CreateWorkflowVersionRequest({required this.workflowId, this.commit});
 
-  factory CreateWorkflowVersionRequest.fromJson(Map<String, Object?> json) => CreateWorkflowVersionRequest(
+  factory CreateWorkflowVersionRequest.fromJson(Map<String, Object?> json) =>
+      CreateWorkflowVersionRequest(
         workflowId: json['workflowId'] as String? ?? '',
         commit: json['commit'] as String?,
       );
@@ -12057,9 +13327,9 @@ class CreateWorkflowVersionRequest {
   final String? commit;
 
   Map<String, Object?> toJson() => {
-        'workflowId': workflowId,
-        if (commit != null) 'commit': commit,
-      };
+    'workflowId': workflowId,
+    if (commit != null) 'commit': commit,
+  };
 }
 
 class GetWorkflowVersionResponse {
@@ -12071,11 +13341,14 @@ class GetWorkflowVersionResponse {
     required this.status,
   });
 
-  factory GetWorkflowVersionResponse.fromJson(Map<String, Object?> json) => GetWorkflowVersionResponse(
+  factory GetWorkflowVersionResponse.fromJson(Map<String, Object?> json) =>
+      GetWorkflowVersionResponse(
         id: json['id'] as String? ?? '',
         workflowId: json['workflowId'] as String? ?? '',
         name: json['name'] as String? ?? '',
-        createdAt: parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+        createdAt:
+            parseDate(json['createdAt']) ??
+            DateTime.fromMillisecondsSinceEpoch(0),
         status: GetWorkflowVersionStatus.fromWire(json['status']),
       );
 
@@ -12086,11 +13359,10 @@ class GetWorkflowVersionResponse {
   final GetWorkflowVersionStatus status;
 
   Map<String, Object?> toJson() => {
-        'id': id,
-        'workflowId': workflowId,
-        'name': name,
-        'createdAt': createdAt.toIso8601String(),
-        'status': status.wireValue,
-      };
+    'id': id,
+    'workflowId': workflowId,
+    'name': name,
+    'createdAt': createdAt.toIso8601String(),
+    'status': status.wireValue,
+  };
 }
-

@@ -18,24 +18,28 @@ class WebhooksEndpoints {
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [ownerId] The ID of the workspaces to return resources for
-  Future<List<WebhookWithCursor>> listWebhooks({String? cursor, int? limit, List<String>? ownerId}) async {
+  Future<List<WebhookWithCursor>> listWebhooks({
+    String? cursor,
+    int? limit,
+    List<String>? ownerId,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/webhooks',
-      query: {
-        'cursor': cursor,
-        'limit': limit,
-        'ownerId': ownerId,
-      },
+      query: {'cursor': cursor, 'limit': limit, 'ownerId': ownerId},
     );
-    return json.whereType<Map<String, Object?>>().map(WebhookWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(WebhookWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create a webhook
   ///
   /// Create a new webhook.
-  Future<CreateWebhookResponse> createWebhook({required CreateWebhookRequest body}) async {
+  Future<CreateWebhookResponse> createWebhook({
+    required CreateWebhookRequest body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/webhooks',
@@ -44,23 +48,23 @@ class WebhooksEndpoints {
     return CreateWebhookResponse.fromJson(json);
   }
 
-
   /// Retrieve a webhook
   ///
   /// Retrieve the webhook with the provided ID
-  Future<RetrieveWebhookResponse> retrieveWebhook({required String webhookId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/webhooks/$webhookId',
-    );
+  Future<RetrieveWebhookResponse> retrieveWebhook({
+    required String webhookId,
+  }) async {
+    final json = await _client.sendObject('GET', '/webhooks/$webhookId');
     return RetrieveWebhookResponse.fromJson(json);
   }
-
 
   /// Update a webhook
   ///
   /// Update the webhook with the provided ID.
-  Future<UpdateWebhookResponse> updateWebhook({required String webhookId, required UpdateWebhookRequest body}) async {
+  Future<UpdateWebhookResponse> updateWebhook({
+    required String webhookId,
+    required UpdateWebhookRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/webhooks/$webhookId',
@@ -69,17 +73,12 @@ class WebhooksEndpoints {
     return UpdateWebhookResponse.fromJson(json);
   }
 
-
   /// Delete a webhook
   ///
   /// Delete the webhook with the provided ID.
   Future<void> deleteWebhook({required String webhookId}) async {
-    await _client.send(
-      'DELETE',
-      '/webhooks/$webhookId',
-    );
+    await _client.send('DELETE', '/webhooks/$webhookId');
   }
-
 
   /// List webhook events
   ///
@@ -92,7 +91,13 @@ class WebhooksEndpoints {
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<WebhookEventWithCursor>> listWebhookEvents({required String webhookId, String? sentBefore, String? sentAfter, int? limit, String? cursor}) async {
+  Future<List<WebhookEventWithCursor>> listWebhookEvents({
+    required String webhookId,
+    String? sentBefore,
+    String? sentAfter,
+    int? limit,
+    String? cursor,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/webhooks/$webhookId/events',
@@ -103,8 +108,9 @@ class WebhooksEndpoints {
         'cursor': cursor,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(WebhookEventWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(WebhookEventWithCursor.fromJson)
+        .toList();
   }
-
-
 }

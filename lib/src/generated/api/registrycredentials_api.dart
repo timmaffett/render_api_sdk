@@ -34,7 +34,18 @@ class RegistrycredentialsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<RegistryCredential>> listRegistryCredentials({List<String>? name, List<String>? username, List<String>? type, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, String? cursor, int? limit}) async {
+  Future<List<RegistryCredential>> listRegistryCredentials({
+    List<String>? name,
+    List<String>? username,
+    List<String>? type,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? ownerId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/registrycredentials',
@@ -51,14 +62,18 @@ class RegistrycredentialsEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(RegistryCredential.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(RegistryCredential.fromJson)
+        .toList();
   }
-
 
   /// Create registry credential
   ///
   /// Create a new registry credential.
-  Future<RegistryCredential> createRegistryCredential({required CreateRegistryCredentialRequest body}) async {
+  Future<RegistryCredential> createRegistryCredential({
+    required CreateRegistryCredentialRequest body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/registrycredentials',
@@ -67,11 +82,12 @@ class RegistrycredentialsEndpoints {
     return RegistryCredential.fromJson(json);
   }
 
-
   /// Retrieve registry credential
   ///
   /// Retrieve the registry credential with the provided ID.
-  Future<RegistryCredential> retrieveRegistryCredential({required String registryCredentialId}) async {
+  Future<RegistryCredential> retrieveRegistryCredential({
+    required String registryCredentialId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/registrycredentials/$registryCredentialId',
@@ -79,11 +95,13 @@ class RegistrycredentialsEndpoints {
     return RegistryCredential.fromJson(json);
   }
 
-
   /// Update registry credential
   ///
   /// Update the registry credential with the provided ID. Services that use this credential must be redeployed to use updated values.
-  Future<RegistryCredential> updateRegistryCredential({required String registryCredentialId, required UpdateRegistryCredentialRequest body}) async {
+  Future<RegistryCredential> updateRegistryCredential({
+    required String registryCredentialId,
+    required UpdateRegistryCredentialRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/registrycredentials/$registryCredentialId',
@@ -92,16 +110,12 @@ class RegistrycredentialsEndpoints {
     return RegistryCredential.fromJson(json);
   }
 
-
   /// Delete registry credential
   ///
   /// Delete the registry credential with the provided ID.
-  Future<void> deleteRegistryCredential({required String registryCredentialId}) async {
-    await _client.send(
-      'DELETE',
-      '/registrycredentials/$registryCredentialId',
-    );
+  Future<void> deleteRegistryCredential({
+    required String registryCredentialId,
+  }) async {
+    await _client.send('DELETE', '/registrycredentials/$registryCredentialId');
   }
-
-
 }

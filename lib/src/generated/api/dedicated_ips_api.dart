@@ -20,18 +20,20 @@ class DedicatedIpsEndpoints {
   /// [environmentId] Filter dedicated IP sets limited to this environment. Excludes workspace-scoped dedicated IP sets.
   ///
   /// The environment must belong to the workspace named by `ownerId`.
-  Future<List<DedicatedIp>> listDedicatedIps({required String ownerId, String? environmentId}) async {
+  Future<List<DedicatedIp>> listDedicatedIps({
+    required String ownerId,
+    String? environmentId,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/dedicated-ips',
-      query: {
-        'ownerId': ownerId,
-        'environmentId': environmentId,
-      },
+      query: {'ownerId': ownerId, 'environmentId': environmentId},
     );
-    return json.whereType<Map<String, Object?>>().map(DedicatedIp.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(DedicatedIp.fromJson)
+        .toList();
   }
-
 
   /// Create dedicated IP set
   ///
@@ -47,11 +49,12 @@ class DedicatedIpsEndpoints {
     return DedicatedIp.fromJson(json);
   }
 
-
   /// Retrieve dedicated IP set
   ///
   /// Retrieve the dedicated IP set with the provided ID.
-  Future<DedicatedIp> retrieveDedicatedIp({required String dedicatedIpId}) async {
+  Future<DedicatedIp> retrieveDedicatedIp({
+    required String dedicatedIpId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/dedicated-ips/$dedicatedIpId',
@@ -59,11 +62,13 @@ class DedicatedIpsEndpoints {
     return DedicatedIp.fromJson(json);
   }
 
-
   /// Update dedicated IP set
   ///
   /// Update the dedicated IP set with the provided ID. All fields are optional. Omitted fields are left unchanged. To switch from environment-scoped to workspace-scoped, provide `environmentIds: []`.
-  Future<DedicatedIp> updateDedicatedIp({required String dedicatedIpId, required DedicatedIppatch body}) async {
+  Future<DedicatedIp> updateDedicatedIp({
+    required String dedicatedIpId,
+    required DedicatedIppatch body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/dedicated-ips/$dedicatedIpId',
@@ -72,16 +77,10 @@ class DedicatedIpsEndpoints {
     return DedicatedIp.fromJson(json);
   }
 
-
   /// Delete dedicated IP set
   ///
   /// Delete the dedicated IP set with the provided ID.
   Future<void> deleteDedicatedIp({required String dedicatedIpId}) async {
-    await _client.send(
-      'DELETE',
-      '/dedicated-ips/$dedicatedIpId',
-    );
+    await _client.send('DELETE', '/dedicated-ips/$dedicatedIpId');
   }
-
-
 }

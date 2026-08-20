@@ -26,7 +26,14 @@ class TasksEndpoints {
   /// [workflowVersionId] An array of workflow version IDs
   ///
   /// [workflowId] An array of workflow IDs
-  Future<List<TaskWithCursor>> listTasks({String? cursor, int? limit, List<String>? ownerId, List<String>? taskSlug, List<String>? workflowVersionId, List<String>? workflowId}) async {
+  Future<List<TaskWithCursor>> listTasks({
+    String? cursor,
+    int? limit,
+    List<String>? ownerId,
+    List<String>? taskSlug,
+    List<String>? workflowVersionId,
+    List<String>? workflowId,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/tasks',
@@ -39,20 +46,17 @@ class TasksEndpoints {
         'workflowId': workflowId,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(TaskWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(TaskWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Retrieve task
   ///
   /// Retrieve the workflow task with the provided ID.
   Future<GetTaskResponse> getTask({required String taskId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/tasks/$taskId',
-    );
+    final json = await _client.sendObject('GET', '/tasks/$taskId');
     return GetTaskResponse.fromJson(json);
   }
-
-
 }

@@ -25,10 +25,10 @@ class RenderApiClient {
     http.Client? httpClient,
     this.maxRetries = 3,
     this.timeout = const Duration(seconds: 30),
-  })  : _token = token ?? readEnv('RENDER_API_KEY'),
-        baseUrl = _resolveBaseUrl(baseUrl),
-        _http = httpClient ?? http.Client(),
-        _ownsHttpClient = httpClient == null {
+  }) : _token = token ?? readEnv('RENDER_API_KEY'),
+       baseUrl = _resolveBaseUrl(baseUrl),
+       _http = httpClient ?? http.Client(),
+       _ownsHttpClient = httpClient == null {
     if (_token == null || _token.isEmpty) {
       throw ArgumentError(
         'No Render API key. Pass token:, or set RENDER_API_KEY in the '
@@ -46,12 +46,11 @@ class RenderApiClient {
     String? url,
     String? token,
     http.Client? httpClient,
-  }) =>
-      RenderApiClient(
-        token: token ?? 'local-dev',
-        baseUrl: url ?? readEnv('RENDER_LOCAL_DEV_URL') ?? kRenderLocalDevUrl,
-        httpClient: httpClient,
-      );
+  }) => RenderApiClient(
+    token: token ?? 'local-dev',
+    baseUrl: url ?? readEnv('RENDER_LOCAL_DEV_URL') ?? kRenderLocalDevUrl,
+    httpClient: httpClient,
+  );
 
   static String _resolveBaseUrl(String? explicit) {
     if (explicit != null) return _stripTrailingSlash(explicit);
@@ -104,7 +103,8 @@ class RenderApiClient {
             throw RenderNetworkException(
               'Render returned a ${response.statusCode} with a body that is '
               'not valid JSON.',
-              hint: 'Body started with: '
+              hint:
+                  'Body started with: '
                   '${response.body.substring(0, response.body.length.clamp(0, 120))}',
               cause: e,
             );
@@ -183,10 +183,10 @@ class RenderApiClient {
   /// Headers for an authenticated request, for callers hand-rolling a request
   /// this package does not model — streaming endpoints, for instance.
   Map<String, String> authHeaders({String accept = 'application/json'}) => {
-        'Authorization': 'Bearer $_token',
-        'Accept': accept,
-        'User-Agent': _userAgent,
-      };
+    'Authorization': 'Bearer $_token',
+    'Accept': accept,
+    'User-Agent': _userAgent,
+  };
 
   Future<http.Response> _sendOnce(String method, Uri uri, String? payload) {
     final request = http.Request(method, uri)
@@ -198,10 +198,7 @@ class RenderApiClient {
       });
     if (payload != null) request.body = payload;
 
-    return _http
-        .send(request)
-        .then(http.Response.fromStream)
-        .timeout(timeout);
+    return _http.send(request).then(http.Response.fromStream).timeout(timeout);
   }
 
   Uri _uri(String path, Map<String, Object?>? query) {
@@ -220,7 +217,9 @@ class RenderApiClient {
       }
     });
 
-    return base.replace(queryParameters: {...base.queryParametersAll, ...params});
+    return base.replace(
+      queryParameters: {...base.queryParametersAll, ...params},
+    );
   }
 
   /// Whether a failed response is worth retrying.

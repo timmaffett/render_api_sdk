@@ -34,7 +34,18 @@ class DisksEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<DiskWithCursor>> listDisks({List<String>? ownerId, List<String>? diskId, List<String>? name, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? serviceId, String? cursor, int? limit}) async {
+  Future<List<DiskWithCursor>> listDisks({
+    List<String>? ownerId,
+    List<String>? diskId,
+    List<String>? name,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? serviceId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/disks',
@@ -51,9 +62,11 @@ class DisksEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(DiskWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(DiskWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Add disk
   ///
@@ -69,18 +82,13 @@ class DisksEndpoints {
     return AddDiskResponse.fromJson(json);
   }
 
-
   /// Retrieve disk
   ///
   /// Retrieve the persistent disk with the provided ID.
   Future<RetrieveDiskResponse> retrieveDisk({required String diskId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/disks/$diskId',
-    );
+    final json = await _client.sendObject('GET', '/disks/$diskId');
     return RetrieveDiskResponse.fromJson(json);
   }
-
 
   /// Update disk
   ///
@@ -89,7 +97,10 @@ class DisksEndpoints {
   /// The disk's associated service must be deployed and active for updates to take effect.
   ///
   /// When resizing a disk, the new size must be greater than the current size.
-  Future<UpdateDiskResponse> updateDisk({required String diskId, required UpdateDiskRequest body}) async {
+  Future<UpdateDiskResponse> updateDisk({
+    required String diskId,
+    required UpdateDiskRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/disks/$diskId',
@@ -98,31 +109,25 @@ class DisksEndpoints {
     return UpdateDiskResponse.fromJson(json);
   }
 
-
   /// Delete disk
   ///
   /// Delete a persistent disk attached to a service.
   ///
   /// **All data on the disk will be lost.** The disk's associated service will immediately lose access to it.
   Future<void> deleteDisk({required String diskId}) async {
-    await _client.send(
-      'DELETE',
-      '/disks/$diskId',
-    );
+    await _client.send('DELETE', '/disks/$diskId');
   }
-
 
   /// List snapshots
   ///
   /// List snapshots for the persistent disk with the provided ID. Each snapshot is a point-in-time copy of the disk's data.
   Future<List<DiskSnapshot>> listSnapshots({required String diskId}) async {
-    final json = await _client.sendList(
-      'GET',
-      '/disks/$diskId/snapshots',
-    );
-    return json.whereType<Map<String, Object?>>().map(DiskSnapshot.fromJson).toList();
+    final json = await _client.sendList('GET', '/disks/$diskId/snapshots');
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(DiskSnapshot.fromJson)
+        .toList();
   }
-
 
   /// Restore snapshot
   ///
@@ -131,7 +136,10 @@ class DisksEndpoints {
   /// **This operation is irreversible.** It will overwrite the current disk data. It might also trigger a service deploy.
   ///
   /// Snapshot keys returned from the [List snapshots](https://api-docs.render.com/reference/list-snapshots) endpoint expire after 24 hours. If a snapshot key has expired, query the endpoint again for a new key.
-  Future<RestoreSnapshotResponse> restoreSnapshot({required String diskId, required SnapshotRestorePost body}) async {
+  Future<RestoreSnapshotResponse> restoreSnapshot({
+    required String diskId,
+    required SnapshotRestorePost body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/disks/$diskId/snapshots/restore',
@@ -139,6 +147,4 @@ class DisksEndpoints {
     );
     return RestoreSnapshotResponse.fromJson(json);
   }
-
-
 }

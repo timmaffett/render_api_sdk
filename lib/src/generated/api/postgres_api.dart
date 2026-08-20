@@ -38,7 +38,20 @@ class PostgresEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<PostgresWithCursor>> listPostgres({List<String>? name, List<String>? region, List<String>? suspended, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, List<String>? environmentId, bool? includeReplicas, String? cursor, int? limit}) async {
+  Future<List<PostgresWithCursor>> listPostgres({
+    List<String>? name,
+    List<String>? region,
+    List<String>? suspended,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? ownerId,
+    List<String>? environmentId,
+    bool? includeReplicas,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/postgres',
@@ -57,14 +70,18 @@ class PostgresEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(PostgresWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(PostgresWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create Postgres instance
   ///
   /// Create a new Postgres instance.
-  Future<PostgresDetail> createPostgres({required PostgresPostinput body}) async {
+  Future<PostgresDetail> createPostgres({
+    required PostgresPostinput body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/postgres',
@@ -73,23 +90,21 @@ class PostgresEndpoints {
     return PostgresDetail.fromJson(json);
   }
 
-
   /// Retrieve Postgres instance
   ///
   /// Retrieve a Postgres instance by ID.
   Future<PostgresDetail> retrievePostgres({required String postgresId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/postgres/$postgresId',
-    );
+    final json = await _client.sendObject('GET', '/postgres/$postgresId');
     return PostgresDetail.fromJson(json);
   }
-
 
   /// Update Postgres instance
   ///
   /// Update a Postgres instance by ID.
-  Future<PostgresDetail> updatePostgres({required String postgresId, required PostgresPatchinput body}) async {
+  Future<PostgresDetail> updatePostgres({
+    required String postgresId,
+    required PostgresPatchinput body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/postgres/$postgresId',
@@ -98,23 +113,20 @@ class PostgresEndpoints {
     return PostgresDetail.fromJson(json);
   }
 
-
   /// Delete Postgres instance
   ///
   /// Delete a Postgres instance by ID. This operation is irreversible, and
   /// all data will be lost.
   Future<void> deletePostgres({required String postgresId}) async {
-    await _client.send(
-      'DELETE',
-      '/postgres/$postgresId',
-    );
+    await _client.send('DELETE', '/postgres/$postgresId');
   }
-
 
   /// Retrieve Postgres connection info
   ///
   /// Retrieve connection info for a Postgres instance by ID. Connection info includes sensitive information.
-  Future<PostgresConnectionInfo> retrievePostgresConnectionInfo({required String postgresId}) async {
+  Future<PostgresConnectionInfo> retrievePostgresConnectionInfo({
+    required String postgresId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/postgres/$postgresId/connection-info',
@@ -122,11 +134,12 @@ class PostgresEndpoints {
     return PostgresConnectionInfo.fromJson(json);
   }
 
-
   /// Retrieve point-in-time recovery status
   ///
   /// Retrieve information on the availability of Postgres point-in-time recovery for a Postgres instance by ID.
-  Future<RetrievePostgresRecoveryInfoResponse> retrievePostgresRecoveryInfo({required String postgresId}) async {
+  Future<RetrievePostgresRecoveryInfoResponse> retrievePostgresRecoveryInfo({
+    required String postgresId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/postgres/$postgresId/recovery',
@@ -134,11 +147,13 @@ class PostgresEndpoints {
     return RetrievePostgresRecoveryInfoResponse.fromJson(json);
   }
 
-
   /// Trigger point-in-time recovery
   ///
   /// Trigger [point-in-time recovery](https://render.com/docs/postgresql-backups) on the Postgres instance with the provided ID.
-  Future<PostgresDetail> recoverPostgres({required String postgresId, required RecoverPostgresRequest body}) async {
+  Future<PostgresDetail> recoverPostgres({
+    required String postgresId,
+    required RecoverPostgresRequest body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/postgres/$postgresId/recovery',
@@ -147,90 +162,77 @@ class PostgresEndpoints {
     return PostgresDetail.fromJson(json);
   }
 
-
   /// Suspend Postgres instance
   ///
   /// Suspend a Postgres instance by ID.
   Future<void> suspendPostgres({required String postgresId}) async {
-    await _client.send(
-      'POST',
-      '/postgres/$postgresId/suspend',
-    );
+    await _client.send('POST', '/postgres/$postgresId/suspend');
   }
-
 
   /// Resume Postgres instance
   ///
   /// Resume a Postgres instance by ID.
   Future<void> resumePostgres({required String postgresId}) async {
-    await _client.send(
-      'POST',
-      '/postgres/$postgresId/resume',
-    );
+    await _client.send('POST', '/postgres/$postgresId/resume');
   }
-
 
   /// Restart Postgres instance
   ///
   /// Restart a Postgres instance by ID.
   Future<void> restartPostgres({required String postgresId}) async {
-    await _client.send(
-      'POST',
-      '/postgres/$postgresId/restart',
-    );
+    await _client.send('POST', '/postgres/$postgresId/restart');
   }
-
 
   /// Failover Postgres instance
   ///
   /// Failover a [highly available Postgres](https://render.com/docs/postgresql-high-availability) instance.
   Future<void> failoverPostgres({required String postgresId}) async {
-    await _client.send(
-      'POST',
-      '/postgres/$postgresId/failover',
-    );
+    await _client.send('POST', '/postgres/$postgresId/failover');
   }
-
 
   /// List Postgres exports
   ///
   /// List [exports](https://render.com/docs/postgresql-backups#logical-backups) for a Postgres instance by ID. Returns a URL to download the export.
-  Future<List<ListPostgresExportResponse>> listPostgresExport({required String postgresId}) async {
-    final json = await _client.sendList(
-      'GET',
-      '/postgres/$postgresId/export',
-    );
-    return json.whereType<Map<String, Object?>>().map(ListPostgresExportResponse.fromJson).toList();
+  Future<List<ListPostgresExportResponse>> listPostgresExport({
+    required String postgresId,
+  }) async {
+    final json = await _client.sendList('GET', '/postgres/$postgresId/export');
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(ListPostgresExportResponse.fromJson)
+        .toList();
   }
-
 
   /// Create Postgres export
   ///
   /// Create an [export](https://render.com/docs/postgresql-backups#logical-backups) of a Postgres instance by ID.
   Future<void> createPostgresExport({required String postgresId}) async {
-    await _client.send(
-      'POST',
-      '/postgres/$postgresId/export',
-    );
+    await _client.send('POST', '/postgres/$postgresId/export');
   }
-
 
   /// List PostgreSQL Users
   ///
   /// List PostgreSQL users for the Render Postgres instance with the provided ID.
-  Future<List<ListPostgresUsersResponse>> listPostgresUsers({required String postgresId}) async {
+  Future<List<ListPostgresUsersResponse>> listPostgresUsers({
+    required String postgresId,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/postgres/$postgresId/credentials',
     );
-    return json.whereType<Map<String, Object?>>().map(ListPostgresUsersResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(ListPostgresUsersResponse.fromJson)
+        .toList();
   }
-
 
   /// Create PostgreSQL User
   ///
   /// Create a new PostgreSQL user for the Render Postgres instance with the provided ID. This becomes the database's new "default" user.
-  Future<void> createPostgresUser({required String postgresId, required CreatePostgresUserRequest body}) async {
+  Future<void> createPostgresUser({
+    required String postgresId,
+    required CreatePostgresUserRequest body,
+  }) async {
     await _client.send(
       'POST',
       '/postgres/$postgresId/credentials',
@@ -238,22 +240,22 @@ class PostgresEndpoints {
     );
   }
 
-
   /// Delete PostgreSQL User
   ///
   /// Delete a PostgreSQL user from the Render Postgres instance with the provided ID.
-  Future<void> deletePostgresUser({required String postgresId, required String username}) async {
-    await _client.send(
-      'DELETE',
-      '/postgres/$postgresId/credentials/$username',
-    );
+  Future<void> deletePostgresUser({
+    required String postgresId,
+    required String username,
+  }) async {
+    await _client.send('DELETE', '/postgres/$postgresId/credentials/$username');
   }
-
 
   /// List live queries
   ///
   /// List currently running queries (from `pg_stat_activity`) on a Postgres instance by ID.
-  Future<ListPostgresProcessesResponse> listPostgresProcesses({required String postgresId}) async {
+  Future<ListPostgresProcessesResponse> listPostgresProcesses({
+    required String postgresId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/postgres/$postgresId/query/processes',
@@ -261,11 +263,12 @@ class PostgresEndpoints {
     return ListPostgresProcessesResponse.fromJson(json);
   }
 
-
   /// List top queries
   ///
   /// List the top 50 queries by total execution time (from `pg_stat_statements`) on a Postgres instance by ID.
-  Future<ListPostgresTopQueriesResponse> listPostgresTopQueries({required String postgresId}) async {
+  Future<ListPostgresTopQueriesResponse> listPostgresTopQueries({
+    required String postgresId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/postgres/$postgresId/query/top-queries',
@@ -273,11 +276,12 @@ class PostgresEndpoints {
     return ListPostgresTopQueriesResponse.fromJson(json);
   }
 
-
   /// List database, table, and index sizes
   ///
   /// List the sizes of databases, tables, and indexes on a Postgres instance by ID.
-  Future<ListPostgresSizesResponse> listPostgresSizes({required String postgresId}) async {
+  Future<ListPostgresSizesResponse> listPostgresSizes({
+    required String postgresId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/postgres/$postgresId/query/sizes',
@@ -285,17 +289,16 @@ class PostgresEndpoints {
     return ListPostgresSizesResponse.fromJson(json);
   }
 
-
   /// List table scans
   ///
   /// List the number of sequential scans performed against each table on a Postgres instance by ID.
-  Future<ListPostgresTableScansResponse> listPostgresTableScans({required String postgresId}) async {
+  Future<ListPostgresTableScansResponse> listPostgresTableScans({
+    required String postgresId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/postgres/$postgresId/query/table-scans',
     );
     return ListPostgresTableScansResponse.fromJson(json);
   }
-
-
 }

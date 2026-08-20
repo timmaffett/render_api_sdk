@@ -20,19 +20,21 @@ class BlueprintsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<BlueprintWithCursor>> listBlueprints({List<String>? ownerId, String? cursor, int? limit}) async {
+  Future<List<BlueprintWithCursor>> listBlueprints({
+    List<String>? ownerId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/blueprints',
-      query: {
-        'ownerId': ownerId,
-        'cursor': cursor,
-        'limit': limit,
-      },
+      query: {'ownerId': ownerId, 'cursor': cursor, 'limit': limit},
     );
-    return json.whereType<Map<String, Object?>>().map(BlueprintWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(BlueprintWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Validate Blueprint
   ///
@@ -40,30 +42,27 @@ class BlueprintsEndpoints {
   ///
   /// Requests to this endpoint use `Content-Type: multipart/form-data`. The request body (including the Blueprint file) cannot exceed 10MB in size.
   Future<ValidateBlueprintResponse> validateBlueprint() async {
-    final json = await _client.sendObject(
-      'POST',
-      '/blueprints/validate',
-    );
+    final json = await _client.sendObject('POST', '/blueprints/validate');
     return ValidateBlueprintResponse.fromJson(json);
   }
-
 
   /// Retrieve Blueprint
   ///
   /// Retrieve the Blueprint with the provided ID.
-  Future<RetrieveBlueprintResponse> retrieveBlueprint({required String blueprintId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/blueprints/$blueprintId',
-    );
+  Future<RetrieveBlueprintResponse> retrieveBlueprint({
+    required String blueprintId,
+  }) async {
+    final json = await _client.sendObject('GET', '/blueprints/$blueprintId');
     return RetrieveBlueprintResponse.fromJson(json);
   }
-
 
   /// Update Blueprint
   ///
   /// Update the Blueprint with the provided ID.
-  Future<UpdateBlueprintResponse> updateBlueprint({required String blueprintId, required UpdateBlueprintRequest body}) async {
+  Future<UpdateBlueprintResponse> updateBlueprint({
+    required String blueprintId,
+    required UpdateBlueprintRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/blueprints/$blueprintId',
@@ -72,19 +71,14 @@ class BlueprintsEndpoints {
     return UpdateBlueprintResponse.fromJson(json);
   }
 
-
   /// Disconnect Blueprint
   ///
   /// Disconnect the Blueprint with the provided ID.
   ///
   /// Disconnecting a Blueprint stops automatic resource syncing via the associated `render.yaml` file. It does not _delete_ any services or other resources that were managed by the blueprint.
   Future<void> disconnectBlueprint({required String blueprintId}) async {
-    await _client.send(
-      'DELETE',
-      '/blueprints/$blueprintId',
-    );
+    await _client.send('DELETE', '/blueprints/$blueprintId');
   }
-
 
   /// List Blueprint syncs
   ///
@@ -93,17 +87,19 @@ class BlueprintsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<SyncWithCursor>> listBlueprintSyncs({required String blueprintId, String? cursor, int? limit}) async {
+  Future<List<SyncWithCursor>> listBlueprintSyncs({
+    required String blueprintId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/blueprints/$blueprintId/syncs',
-      query: {
-        'cursor': cursor,
-        'limit': limit,
-      },
+      query: {'cursor': cursor, 'limit': limit},
     );
-    return json.whereType<Map<String, Object?>>().map(SyncWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(SyncWithCursor.fromJson)
+        .toList();
   }
-
-
 }

@@ -34,7 +34,18 @@ class EnvironmentsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<EnvironmentWithCursor>> listEnvironments({List<String>? name, required List<String> projectId, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, List<String>? environmentId, String? cursor, int? limit}) async {
+  Future<List<EnvironmentWithCursor>> listEnvironments({
+    List<String>? name,
+    required List<String> projectId,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? ownerId,
+    List<String>? environmentId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/environments',
@@ -51,14 +62,18 @@ class EnvironmentsEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(EnvironmentWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(EnvironmentWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create environment
   ///
   /// Create a new environment belonging to the project with the provided ID.
-  Future<Environment> createEnvironment({required EnvironmentPostinput body}) async {
+  Future<Environment> createEnvironment({
+    required EnvironmentPostinput body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/environments',
@@ -67,11 +82,12 @@ class EnvironmentsEndpoints {
     return Environment.fromJson(json);
   }
 
-
   /// Retrieve environment
   ///
   /// Retrieve the environment with the provided ID.
-  Future<Environment> retrieveEnvironment({required String environmentId}) async {
+  Future<Environment> retrieveEnvironment({
+    required String environmentId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/environments/$environmentId',
@@ -79,11 +95,13 @@ class EnvironmentsEndpoints {
     return Environment.fromJson(json);
   }
 
-
   /// Update environment
   ///
   /// Update the details of the environment with the provided ID.
-  Future<Environment> updateEnvironment({required String environmentId, required EnvironmentPatchinput body}) async {
+  Future<Environment> updateEnvironment({
+    required String environmentId,
+    required EnvironmentPatchinput body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/environments/$environmentId',
@@ -91,7 +109,6 @@ class EnvironmentsEndpoints {
     );
     return Environment.fromJson(json);
   }
-
 
   /// Delete environment
   ///
@@ -103,17 +120,16 @@ class EnvironmentsEndpoints {
   /// - First move or delete all contained services and other resources.
   /// - Delete the environment in the [Render Dashboard](https://dashboard.render.com).
   Future<void> deleteEnvironment({required String environmentId}) async {
-    await _client.send(
-      'DELETE',
-      '/environments/$environmentId',
-    );
+    await _client.send('DELETE', '/environments/$environmentId');
   }
-
 
   /// Add resources to environment
   ///
   /// Add resources to the environment with the provided ID.
-  Future<Environment> addResourcesToEnvironment({required String environmentId, required EnvironmentResourcesPostinput body}) async {
+  Future<Environment> addResourcesToEnvironment({
+    required String environmentId,
+    required EnvironmentResourcesPostinput body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/environments/$environmentId/resources',
@@ -122,19 +138,17 @@ class EnvironmentsEndpoints {
     return Environment.fromJson(json);
   }
 
-
   /// Remove resources from environment
   ///
   /// Remove resources from the environment with the provided ID.
-  Future<void> removeResourcesFromEnvironment({required String environmentId, required List<String> resourceIds}) async {
+  Future<void> removeResourcesFromEnvironment({
+    required String environmentId,
+    required List<String> resourceIds,
+  }) async {
     await _client.send(
       'DELETE',
       '/environments/$environmentId/resources',
-      query: {
-        'resourceIds': resourceIds,
-      },
+      query: {'resourceIds': resourceIds},
     );
   }
-
-
 }

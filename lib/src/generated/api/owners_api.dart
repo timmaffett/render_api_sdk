@@ -14,7 +14,11 @@ class OwnersEndpoints {
   /// Update workspace member role
   ///
   /// Update the role of an existing workspace member.
-  Future<TeamMember> updateWorkspaceMember({required String ownerId, required String userId, required UpdateWorkspaceMemberRequest body}) async {
+  Future<TeamMember> updateWorkspaceMember({
+    required String ownerId,
+    required String userId,
+    required UpdateWorkspaceMemberRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/owners/$ownerId/members/$userId',
@@ -23,17 +27,15 @@ class OwnersEndpoints {
     return TeamMember.fromJson(json);
   }
 
-
   /// Remove workspace member
   ///
   /// Remove a user from the specified workspace.
-  Future<void> removeWorkspaceMember({required String ownerId, required String userId}) async {
-    await _client.send(
-      'DELETE',
-      '/owners/$ownerId/members/$userId',
-    );
+  Future<void> removeWorkspaceMember({
+    required String ownerId,
+    required String userId,
+  }) async {
+    await _client.send('DELETE', '/owners/$ownerId/members/$userId');
   }
-
 
   /// List workspaces
   ///
@@ -46,20 +48,22 @@ class OwnersEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<OwnerWithCursor>> listOwners({List<String>? name, List<String>? email, String? cursor, int? limit}) async {
+  Future<List<OwnerWithCursor>> listOwners({
+    List<String>? name,
+    List<String>? email,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/owners',
-      query: {
-        'name': name,
-        'email': email,
-        'cursor': cursor,
-        'limit': limit,
-      },
+      query: {'name': name, 'email': email, 'cursor': cursor, 'limit': limit},
     );
-    return json.whereType<Map<String, Object?>>().map(OwnerWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(OwnerWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Retrieve workspace
   ///
@@ -67,25 +71,22 @@ class OwnersEndpoints {
   ///
   /// Workspace IDs start with `tea-`. If you provide a user ID (starts with `own-`), this endpoint returns the user's default workspace.
   Future<Owner> retrieveOwner({required String ownerId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/owners/$ownerId',
-    );
+    final json = await _client.sendObject('GET', '/owners/$ownerId');
     return Owner.fromJson(json);
   }
-
 
   /// List workspace members
   ///
   /// Retrieves the list of users belonging to the workspace with the provided ID.
-  Future<List<TeamMember>> retrieveOwnerMembers({required String ownerId}) async {
-    final json = await _client.sendList(
-      'GET',
-      '/owners/$ownerId/members',
-    );
-    return json.whereType<Map<String, Object?>>().map(TeamMember.fromJson).toList();
+  Future<List<TeamMember>> retrieveOwnerMembers({
+    required String ownerId,
+  }) async {
+    final json = await _client.sendList('GET', '/owners/$ownerId/members');
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(TeamMember.fromJson)
+        .toList();
   }
-
 
   /// List workspace audit logs
   ///
@@ -101,7 +102,14 @@ class OwnersEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of audit log items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<AuditLogWithCursor>> listOwnerAuditLogs({required String ownerId, String? startTime, String? endTime, String? direction, String? cursor, int? limit}) async {
+  Future<List<AuditLogWithCursor>> listOwnerAuditLogs({
+    required String ownerId,
+    String? startTime,
+    String? endTime,
+    String? direction,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/owners/$ownerId/audit-logs',
@@ -113,8 +121,9 @@ class OwnersEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(AuditLogWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(AuditLogWithCursor.fromJson)
+        .toList();
   }
-
-
 }

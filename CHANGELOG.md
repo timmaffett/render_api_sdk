@@ -1,6 +1,15 @@
 ## 0.1.1
 
-Documentation only; no code changes.
+Documentation and packaging; no API changes.
+
+- **The README's usage example did not compile.** It described an earlier
+  hand-written facade — `render.taskRuns.run(...)`, `render.workflows.list()`,
+  `waitFor` — none of which exist on the generated API. Rewritten around what
+  the package actually exposes, and every snippet now verified by compiling it.
+- Adds `example/example.dart`, and formats the package. Those were the two
+  things costing pub.dev points; the score is now 160/160.
+- `tool/generate.dart` runs `dart format` as its last step, so regenerating
+  cannot undo the formatting.
 
 - The README now points at the two companion packages:
   [`render_workflows`](https://pub.dev/packages/render_workflows) for running

@@ -21,8 +21,9 @@ sealed class RenderException implements Exception {
   final String? hint;
 
   @override
-  String toString() =>
-      hint == null ? 'RenderException: $message' : 'RenderException: $message\n  $hint';
+  String toString() => hint == null
+      ? 'RenderException: $message'
+      : 'RenderException: $message\n  $hint';
 }
 
 /// The request never reached Render, or the response could not be read.
@@ -32,7 +33,8 @@ final class RenderNetworkException extends RenderException {
   final Object? cause;
 
   @override
-  String toString() => 'RenderNetworkException: $message'
+  String toString() =>
+      'RenderNetworkException: $message'
       '${hint == null ? '' : '\n  $hint'}';
 }
 
@@ -159,55 +161,57 @@ RenderApiException exceptionFor({
   Duration? retryAfter,
 }) {
   final hint = hintFor(statusCode: statusCode, method: method, path: path);
-  final detail = (body == null || body.isEmpty) ? 'Render returned no detail.' : body;
+  final detail = (body == null || body.isEmpty)
+      ? 'Render returned no detail.'
+      : body;
 
   return switch (statusCode) {
     401 || 403 => RenderAuthException(
-        'Authentication failed. $detail',
-        statusCode: statusCode,
-        method: method,
-        path: path,
-        body: body,
-        hint: hint,
-      ),
+      'Authentication failed. $detail',
+      statusCode: statusCode,
+      method: method,
+      path: path,
+      body: body,
+      hint: hint,
+    ),
     402 => RenderPaymentRequiredException(
-        'Payment information is required. $detail',
-        method: method,
-        path: path,
-        body: body,
-        hint: hint,
-      ),
+      'Payment information is required. $detail',
+      method: method,
+      path: path,
+      body: body,
+      hint: hint,
+    ),
     404 => RenderNotFoundException(
-        'Not found. $detail',
-        method: method,
-        path: path,
-        body: body,
-        hint: hint,
-      ),
+      'Not found. $detail',
+      method: method,
+      path: path,
+      body: body,
+      hint: hint,
+    ),
     429 => RenderRateLimitException(
-        'Rate limited. $detail',
-        method: method,
-        path: path,
-        retryAfter: retryAfter,
-        body: body,
-        hint: hint,
-      ),
+      'Rate limited. $detail',
+      method: method,
+      path: path,
+      retryAfter: retryAfter,
+      body: body,
+      hint: hint,
+    ),
     >= 500 => RenderServerException(
-        'Render returned a server error. $detail',
-        statusCode: statusCode,
-        method: method,
-        path: path,
-        body: body,
-        hint: hint,
-      ),
+      'Render returned a server error. $detail',
+      statusCode: statusCode,
+      method: method,
+      path: path,
+      body: body,
+      hint: hint,
+    ),
     _ => RenderClientException(
-        'Request rejected. $detail',
-        statusCode: statusCode,
-        method: method,
-        path: path,
-        body: body,
-        hint: hint,
-      ),
+      'Request rejected. $detail',
+      statusCode: statusCode,
+      method: method,
+      path: path,
+      body: body,
+      hint: hint,
+    ),
   };
 }
 

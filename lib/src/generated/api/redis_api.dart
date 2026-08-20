@@ -35,7 +35,18 @@ class RedisEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<RedisWithCursor>> listRedis({List<String>? name, List<String>? region, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, List<String>? environmentId, String? cursor, int? limit}) async {
+  Future<List<RedisWithCursor>> listRedis({
+    List<String>? name,
+    List<String>? region,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? ownerId,
+    List<String>? environmentId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/redis',
@@ -52,9 +63,11 @@ class RedisEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(RedisWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(RedisWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create Redis instance
   ///
@@ -68,23 +81,21 @@ class RedisEndpoints {
     return RedisDetail.fromJson(json);
   }
 
-
   /// Retrieve Redis instance
   ///
   /// Retrieve a Redis instance by ID. This API is deprecated in favor of the Key Value API.
   Future<RedisDetail> retrieveRedis({required String redisId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/redis/$redisId',
-    );
+    final json = await _client.sendObject('GET', '/redis/$redisId');
     return RedisDetail.fromJson(json);
   }
-
 
   /// Update Redis instance
   ///
   /// Update a Redis instance by ID. This API is deprecated in favor of the Key Value API.
-  Future<RedisDetail> updateRedis({required String redisId, required RedisPatchinput body}) async {
+  Future<RedisDetail> updateRedis({
+    required String redisId,
+    required RedisPatchinput body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/redis/$redisId',
@@ -93,23 +104,20 @@ class RedisEndpoints {
     return RedisDetail.fromJson(json);
   }
 
-
   /// Delete Redis instance
   ///
   /// Delete a Redis instance by ID. This API is deprecated in favor of the Key Value API.
   Future<void> deleteRedis({required String redisId}) async {
-    await _client.send(
-      'DELETE',
-      '/redis/$redisId',
-    );
+    await _client.send('DELETE', '/redis/$redisId');
   }
-
 
   /// Retrieve Redis connection info
   ///
   /// Retrieve connection info for a Redis instance by ID. Connection info includes sensitive information.
   /// This API is deprecated in favor of the Key Value API.
-  Future<RedisConnectionInfo> retrieveRedisConnectionInfo({required String redisId}) async {
+  Future<RedisConnectionInfo> retrieveRedisConnectionInfo({
+    required String redisId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/redis/$redisId/connection-info',
@@ -117,27 +125,17 @@ class RedisEndpoints {
     return RedisConnectionInfo.fromJson(json);
   }
 
-
   /// Suspend Redis instance
   ///
   /// Suspend a Redis instance by ID. This API is deprecated in favor of the Key Value API.
   Future<void> suspendRedis({required String redisId}) async {
-    await _client.send(
-      'POST',
-      '/redis/$redisId/suspend',
-    );
+    await _client.send('POST', '/redis/$redisId/suspend');
   }
-
 
   /// Resume Redis instance
   ///
   /// Resume a Redis instance by ID. This API is deprecated in favor of the Key Value API.
   Future<void> resumeRedis({required String redisId}) async {
-    await _client.send(
-      'POST',
-      '/redis/$redisId/resume',
-    );
+    await _client.send('POST', '/redis/$redisId/resume');
   }
-
-
 }

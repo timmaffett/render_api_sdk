@@ -28,7 +28,15 @@ class MetricsEndpoints {
   /// [instance] Instance ID to query. When multiple instance ID query params are provided, they are ORed together
   ///
   /// [aggregationMethod] The aggregation method to apply to multiple time series
-  Future<List<GetCpuResponse>> getCpu({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance, String? aggregationMethod}) async {
+  Future<List<GetCpuResponse>> getCpu({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? instance,
+    String? aggregationMethod,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/cpu',
@@ -42,9 +50,11 @@ class MetricsEndpoints {
         'aggregationMethod': aggregationMethod,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetCpuResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetCpuResponse.fromJson)
+        .toList();
   }
-
 
   /// Get CPU limit
   ///
@@ -61,7 +71,14 @@ class MetricsEndpoints {
   /// [service] This parameter is deprecated. Please use `resource` instead
   ///
   /// [instance] Instance ID to query. When multiple instance ID query params are provided, they are ORed together
-  Future<List<GetCpuLimitResponse>> getCpuLimit({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) async {
+  Future<List<GetCpuLimitResponse>> getCpuLimit({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? instance,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/cpu-limit',
@@ -74,9 +91,11 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetCpuLimitResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetCpuLimitResponse.fromJson)
+        .toList();
   }
-
 
   /// Get CPU target
   ///
@@ -93,7 +112,14 @@ class MetricsEndpoints {
   /// [service] This parameter is deprecated. Please use `resource` instead
   ///
   /// [instance] Instance ID to query. When multiple instance ID query params are provided, they are ORed together
-  Future<List<GetCpuTargetResponse>> getCpuTarget({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) async {
+  Future<List<GetCpuTargetResponse>> getCpuTarget({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? instance,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/cpu-target',
@@ -106,9 +132,11 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetCpuTargetResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetCpuTargetResponse.fromJson)
+        .toList();
   }
-
 
   /// Get memory usage
   ///
@@ -125,7 +153,14 @@ class MetricsEndpoints {
   /// [service] This parameter is deprecated. Please use `resource` instead
   ///
   /// [instance] Instance ID to query. When multiple instance ID query params are provided, they are ORed together
-  Future<List<GetMemoryResponse>> getMemory({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) async {
+  Future<List<GetMemoryResponse>> getMemory({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? instance,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/memory',
@@ -138,9 +173,11 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetMemoryResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetMemoryResponse.fromJson)
+        .toList();
   }
-
 
   /// Get memory limit
   ///
@@ -157,7 +194,14 @@ class MetricsEndpoints {
   /// [service] This parameter is deprecated. Please use `resource` instead
   ///
   /// [instance] Instance ID to query. When multiple instance ID query params are provided, they are ORed together
-  Future<List<GetMemoryLimitResponse>> getMemoryLimit({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) async {
+  Future<List<GetMemoryLimitResponse>> getMemoryLimit({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? instance,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/memory-limit',
@@ -170,9 +214,11 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetMemoryLimitResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetMemoryLimitResponse.fromJson)
+        .toList();
   }
-
 
   /// Get memory target
   ///
@@ -189,7 +235,14 @@ class MetricsEndpoints {
   /// [service] This parameter is deprecated. Please use `resource` instead
   ///
   /// [instance] Instance ID to query. When multiple instance ID query params are provided, they are ORed together
-  Future<List<GetMemoryTargetResponse>> getMemoryTarget({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? instance}) async {
+  Future<List<GetMemoryTargetResponse>> getMemoryTarget({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? instance,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/memory-target',
@@ -202,9 +255,11 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetMemoryTargetResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetMemoryTargetResponse.fromJson)
+        .toList();
   }
-
 
   /// Get HTTP request count
   ///
@@ -225,7 +280,16 @@ class MetricsEndpoints {
   /// [path] The paths of HTTP requests to filter to. When multiple path query params are provided, they are ORed together
   ///
   /// [aggregateBy] The field to aggregate by
-  Future<List<GetHttpRequestsResponse>> getHttpRequests({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? path, String? aggregateBy}) async {
+  Future<List<GetHttpRequestsResponse>> getHttpRequests({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? host,
+    String? path,
+    String? aggregateBy,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/http-requests',
@@ -240,9 +304,11 @@ class MetricsEndpoints {
         'aggregateBy': aggregateBy,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetHttpRequestsResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetHttpRequestsResponse.fromJson)
+        .toList();
   }
-
 
   /// Get HTTP latency
   ///
@@ -263,7 +329,16 @@ class MetricsEndpoints {
   /// [path] The paths of HTTP requests to filter to. When multiple path query params are provided, they are ORed together
   ///
   /// [quantile] The quantile of latencies to fetch. When multiple quantile query params are provided, they are ORed together
-  Future<List<GetHttpLatencyResponse>> getHttpLatency({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? path, double? quantile}) async {
+  Future<List<GetHttpLatencyResponse>> getHttpLatency({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? host,
+    String? path,
+    double? quantile,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/http-latency',
@@ -278,9 +353,11 @@ class MetricsEndpoints {
         'quantile': quantile,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetHttpLatencyResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetHttpLatencyResponse.fromJson)
+        .toList();
   }
-
 
   /// Get bandwidth usage
   ///
@@ -293,7 +370,12 @@ class MetricsEndpoints {
   /// [resource] Service ID to query. When multiple service ids are provided, they are ORed together
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<List<GetBandwidthResponse>> getBandwidth({String? startTime, String? endTime, String? resource, String? service}) async {
+  Future<List<GetBandwidthResponse>> getBandwidth({
+    String? startTime,
+    String? endTime,
+    String? resource,
+    String? service,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/bandwidth',
@@ -304,9 +386,11 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetBandwidthResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetBandwidthResponse.fromJson)
+        .toList();
   }
-
 
   /// Get bandwidth usage breakdown by traffic source
   ///
@@ -322,7 +406,12 @@ class MetricsEndpoints {
   /// [resource] Service ID to query. When multiple service ids are provided, they are ORed together
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<GetBandwidthSourcesResponse> getBandwidthSources({String? startTime, String? endTime, String? resource, String? service}) async {
+  Future<GetBandwidthSourcesResponse> getBandwidthSources({
+    String? startTime,
+    String? endTime,
+    String? resource,
+    String? service,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/metrics/bandwidth-sources',
@@ -335,7 +424,6 @@ class MetricsEndpoints {
     );
     return GetBandwidthSourcesResponse.fromJson(json);
   }
-
 
   /// Get disk usage
   ///
@@ -350,7 +438,13 @@ class MetricsEndpoints {
   /// [resource] Resource ID to query. When multiple resource query params are provided, they are ORed together. Resources can be service ids, Postgres ids, or Redis ids
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<List<GetDiskUsageResponse>> getDiskUsage({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) async {
+  Future<List<GetDiskUsageResponse>> getDiskUsage({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/disk-usage',
@@ -362,9 +456,11 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetDiskUsageResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetDiskUsageResponse.fromJson)
+        .toList();
   }
-
 
   /// Get disk capacity
   ///
@@ -379,7 +475,13 @@ class MetricsEndpoints {
   /// [resource] Resource ID to query. When multiple resource query params are provided, they are ORed together. Resources can be service ids, Postgres ids, or Redis ids
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<List<GetDiskCapacityResponse>> getDiskCapacity({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) async {
+  Future<List<GetDiskCapacityResponse>> getDiskCapacity({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/disk-capacity',
@@ -391,9 +493,11 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetDiskCapacityResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetDiskCapacityResponse.fromJson)
+        .toList();
   }
-
 
   /// Get instance count
   ///
@@ -408,7 +512,13 @@ class MetricsEndpoints {
   /// [resource] Resource ID to query. When multiple resource query params are provided, they are ORed together. Resources can be service ids, Postgres ids, or Redis ids
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<List<GetInstanceCountResponse>> getInstanceCount({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) async {
+  Future<List<GetInstanceCountResponse>> getInstanceCount({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/instance-count',
@@ -420,9 +530,11 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetInstanceCountResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetInstanceCountResponse.fromJson)
+        .toList();
   }
-
 
   /// Get active connection count
   ///
@@ -435,7 +547,12 @@ class MetricsEndpoints {
   /// [resolutionSeconds] The resolution of the returned data
   ///
   /// [resource] Resource ID to query. When multiple resource query params are provided, they are ORed together. Resources Postgres ids or Redis ids
-  Future<List<GetActiveConnectionsResponse>> getActiveConnections({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) async {
+  Future<List<GetActiveConnectionsResponse>> getActiveConnections({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/active-connections',
@@ -446,9 +563,11 @@ class MetricsEndpoints {
         'resource': resource,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetActiveConnectionsResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetActiveConnectionsResponse.fromJson)
+        .toList();
   }
-
 
   /// Get replica lag
   ///
@@ -461,7 +580,12 @@ class MetricsEndpoints {
   /// [resolutionSeconds] The resolution of the returned data
   ///
   /// [resource] Postgres ID to query. When multiple resource query params are provided, they are ORed together
-  Future<List<GetReplicationLagResponse>> getReplicationLag({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) async {
+  Future<List<GetReplicationLagResponse>> getReplicationLag({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/replication-lag',
@@ -472,9 +596,11 @@ class MetricsEndpoints {
         'resource': resource,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetReplicationLagResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetReplicationLagResponse.fromJson)
+        .toList();
   }
-
 
   /// List queryable instance values
   ///
@@ -489,7 +615,14 @@ class MetricsEndpoints {
   /// [resource] Service ID to query. When multiple service ids are provided, they are ORed together
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<List<ListApplicationFilterValuesResponse>> listApplicationFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service}) async {
+  Future<List<ListApplicationFilterValuesResponse>>
+  listApplicationFilterValues({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/filters/application',
@@ -501,9 +634,11 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(ListApplicationFilterValuesResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(ListApplicationFilterValuesResponse.fromJson)
+        .toList();
   }
-
 
   /// List queryable status codes and host values
   ///
@@ -522,7 +657,15 @@ class MetricsEndpoints {
   /// [host] The hosts of HTTP requests to filter to. When multiple host query params are provided, they are ORed together
   ///
   /// [statusCode] The status codes of HTTP requests to filter to. When multiple status code query params are provided, they are ORed together
-  Future<List<ListHttpFilterValuesResponse>> listHttpFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? statusCode}) async {
+  Future<List<ListHttpFilterValuesResponse>> listHttpFilterValues({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? host,
+    String? statusCode,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/filters/http',
@@ -536,9 +679,11 @@ class MetricsEndpoints {
         'statusCode': statusCode,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(ListHttpFilterValuesResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(ListHttpFilterValuesResponse.fromJson)
+        .toList();
   }
-
 
   /// List queryable paths
   ///
@@ -559,7 +704,16 @@ class MetricsEndpoints {
   /// [statusCode] The status codes of HTTP requests to filter to. When multiple status code query params are provided, they are ORed together
   ///
   /// [path] The paths of HTTP requests to filter to. When multiple path query params are provided, they are ORed together
-  Future<List<Object?>> listPathFilterValues({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? service, String? host, String? statusCode, String? path}) async {
+  Future<List<Object?>> listPathFilterValues({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? service,
+    String? host,
+    String? statusCode,
+    String? path,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/filters/path',
@@ -577,7 +731,6 @@ class MetricsEndpoints {
     return json;
   }
 
-
   /// Get task runs queued count
   ///
   /// Get the total number of task runs queued for one or more tasks.
@@ -589,7 +742,12 @@ class MetricsEndpoints {
   /// [resolutionSeconds] The resolution of the returned data
   ///
   /// [resource] Task ID to query. When multiple task IDs are provided, they are ORed together
-  Future<List<GetTaskRunsQueuedResponse>> getTaskRunsQueued({String? startTime, String? endTime, double? resolutionSeconds, String? resource}) async {
+  Future<List<GetTaskRunsQueuedResponse>> getTaskRunsQueued({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/task-runs-queued',
@@ -600,9 +758,11 @@ class MetricsEndpoints {
         'resource': resource,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetTaskRunsQueuedResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetTaskRunsQueuedResponse.fromJson)
+        .toList();
   }
-
 
   /// Get task runs completed count
   ///
@@ -619,7 +779,14 @@ class MetricsEndpoints {
   /// [state] The state of task runs to filter to. When multiple state query params are provided, they are ORed together
   ///
   /// [aggregateBy] The field to aggregate by
-  Future<List<GetTaskRunsCompletedResponse>> getTaskRunsCompleted({String? startTime, String? endTime, double? resolutionSeconds, String? resource, String? state, String? aggregateBy}) async {
+  Future<List<GetTaskRunsCompletedResponse>> getTaskRunsCompleted({
+    String? startTime,
+    String? endTime,
+    double? resolutionSeconds,
+    String? resource,
+    String? state,
+    String? aggregateBy,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/metrics/task-runs-completed',
@@ -632,8 +799,9 @@ class MetricsEndpoints {
         'aggregateBy': aggregateBy,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(GetTaskRunsCompletedResponse.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetTaskRunsCompletedResponse.fromJson)
+        .toList();
   }
-
-
 }

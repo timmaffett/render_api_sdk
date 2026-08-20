@@ -14,7 +14,9 @@ Future<void> main() async {
     print('workflows: ${(await render.listWorkflows(limit: 10)).length}');
 
     // Grouped form — the same call by another route.
-    print('grouped:   ${(await render.raw.workflows.listWorkflows(limit: 10)).length}');
+    print(
+      'grouped:   ${(await render.raw.workflows.listWorkflows(limit: 10)).length}',
+    );
   } finally {
     render.close();
   }

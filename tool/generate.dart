@@ -111,7 +111,9 @@ void _planEnumNames() {
   schemas.forEach((name, schema) {
     if (schema is Map<String, dynamic> && schema['enum'] is List) {
       enumsByValues.putIfAbsent(
-          _enumKey(schema['enum'] as List), () => _className(name));
+        _enumKey(schema['enum'] as List),
+        () => _className(name),
+      );
     }
   });
 
@@ -196,7 +198,9 @@ void _planEnumNames() {
 void main() {
   final file = File('tool/render-openapi.json');
   if (!file.existsSync()) {
-    stderr.writeln('tool/render-openapi.json not found. Run from the package root.');
+    stderr.writeln(
+      'tool/render-openapi.json not found. Run from the package root.',
+    );
     exit(1);
   }
   spec = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
@@ -250,8 +254,10 @@ void main() {
   // Written now, after API emission has contributed its inline response types.
   models.write(extraModels);
   File('lib/src/generated/models.dart').writeAsStringSync(models.toString());
-  apiFiles.forEach((name, source) =>
-      File('lib/src/generated/api/$name').writeAsStringSync(source));
+  apiFiles.forEach(
+    (name, source) =>
+        File('lib/src/generated/api/$name').writeAsStringSync(source),
+  );
 
   final barrel = StringBuffer()..writeln(_header);
   for (final e in exports..sort()) {
@@ -294,7 +300,9 @@ void main() {
     endpoints.writeln();
   }
   endpoints.writeln('}');
-  File('lib/src/generated/endpoints.dart').writeAsStringSync(endpoints.toString());
+  File(
+    'lib/src/generated/endpoints.dart',
+  ).writeAsStringSync(endpoints.toString());
 
   // A flat facade, so every call matches Render's official Node bindings
   // one for one: renderApi.listHeaders({...}) becomes render.listHeaders(...).
@@ -323,8 +331,23 @@ void main() {
   _emitDocs(groups);
 
   final ops = groups.values.fold<int>(0, (n, l) => n + l.length);
-  stdout.writeln('generated ${names.length} models and $ops operations '
-      'across ${groups.length} groups');
+  stdout.writeln(
+    'generated ${names.length} models and $ops operations '
+    'across ${groups.length} groups',
+  );
+
+  // Formatting is part of generating, not a separate chore.
+  //
+  // pana scores `dart format` compliance, and almost every file in this package
+  // is generated — so without this, formatting drifts back out on the next
+  // regeneration and the score quietly drops again.
+  final formatted = Process.runSync('dart', ['format', '.']);
+  if (formatted.exitCode != 0) {
+    stderr.writeln('dart format failed:\n${formatted.stderr}');
+    exitCode = 1;
+    return;
+  }
+  stdout.writeln('formatted');
 }
 
 // ---------------------------------------------------------------------------
@@ -364,8 +387,11 @@ Map<String, dynamic> _flattenAllOf(Map<String, dynamic> node) {
   for (final member in (node['allOf'] as List)) {
     final resolved = _resolve((member as Map).cast<String, dynamic>());
     properties.addAll(
-        (resolved['properties'] as Map<String, dynamic>?) ?? const {});
-    required.addAll(((resolved['required'] as List?) ?? const []).cast<String>());
+      (resolved['properties'] as Map<String, dynamic>?) ?? const {},
+    );
+    required.addAll(
+      ((resolved['required'] as List?) ?? const []).cast<String>(),
+    );
     // A description on a member is better than none on the whole.
     merged['description'] ??= resolved['description'];
   }
@@ -531,7 +557,11 @@ String _emitEnum(String name, Map<String, dynamic> schema) {
   return buf.toString();
 }
 
-String _emitClass(String name, Map<String, dynamic> schema, {String? extendsName}) {
+String _emitClass(
+  String name,
+  Map<String, dynamic> schema, {
+  String? extendsName,
+}) {
   final props = (schema['properties'] as Map<String, dynamic>?) ?? const {};
   final required = ((schema['required'] as List?) ?? const []).cast<String>();
 
@@ -539,14 +569,23 @@ String _emitClass(String name, Map<String, dynamic> schema, {String? extendsName
   final fields = <_Field>[];
 
   for (final entry in props.entries) {
-    final field = _field(name, entry.key, entry.value as Map<String, dynamic>,
-        required.contains(entry.key), nested);
+    final field = _field(
+      name,
+      entry.key,
+      entry.value as Map<String, dynamic>,
+      required.contains(entry.key),
+      nested,
+    );
     fields.add(field);
   }
 
   modelFields[name] = [
     for (final f in fields)
-      _DocField(f.dartName, '${f.dartType}${f.dartType.endsWith('?') ? '' : (f.nullable ? '?' : '')}', f.doc),
+      _DocField(
+        f.dartName,
+        '${f.dartType}${f.dartType.endsWith('?') ? '' : (f.nullable ? '?' : '')}',
+        f.doc,
+      ),
   ];
 
   final buf = StringBuffer();
@@ -563,7 +602,9 @@ String _emitClass(String name, Map<String, dynamic> schema, {String? extendsName
     buf.writeln('  factory $name.fromJson(Map<String, Object?> json) =>');
     buf.writeln('      $name(json);');
     buf.writeln();
-    buf.writeln('  /// The spec declares no fixed properties for this type, so');
+    buf.writeln(
+      '  /// The spec declares no fixed properties for this type, so',
+    );
     buf.writeln('  /// the payload is preserved verbatim.');
     buf.writeln('  final Map<String, Object?> json;');
     buf.writeln();
@@ -573,9 +614,11 @@ String _emitClass(String name, Map<String, dynamic> schema, {String? extendsName
     return nested.toString() + buf.toString();
   }
 
-  buf.writeln(extendsName == null
-      ? 'class $name {'
-      : 'final class $name extends $extendsName {');
+  buf.writeln(
+    extendsName == null
+        ? 'class $name {'
+        : 'final class $name extends $extendsName {',
+  );
   buf.writeln('  const $name({');
   for (final f in fields) {
     buf.writeln('    ${f.nullable ? '' : 'required '}this.${f.dartName},');
@@ -600,12 +643,16 @@ String _emitClass(String name, Map<String, dynamic> schema, {String? extendsName
   buf.writeln();
 
   // toJson — omits nulls so PATCH bodies only carry what was set.
-  buf.writeln(extendsName == null
-      ? '  Map<String, Object?> toJson() => {'
-      : '  @override\n  Map<String, Object?> toJson() => {');
+  buf.writeln(
+    extendsName == null
+        ? '  Map<String, Object?> toJson() => {'
+        : '  @override\n  Map<String, Object?> toJson() => {',
+  );
   for (final f in fields) {
     if (f.nullable) {
-      buf.writeln("        if (${f.dartName} != null) '${f.wireName}': ${f.encode},");
+      buf.writeln(
+        "        if (${f.dartName} != null) '${f.wireName}': ${f.encode},",
+      );
     } else {
       buf.writeln("        '${f.wireName}': ${f.encode},");
     }
@@ -637,8 +684,13 @@ class _Field {
   final String? doc;
 }
 
-_Field _field(String owner, String wireName, Map<String, dynamic> schema,
-    bool isRequired, StringBuffer nested) {
+_Field _field(
+  String owner,
+  String wireName,
+  Map<String, dynamic> schema,
+  bool isRequired,
+  StringBuffer nested,
+) {
   final dartName = _fieldName(wireName);
   final t = _dartType(owner, wireName, schema, nested);
   final access = "json['$wireName']";
@@ -662,8 +714,12 @@ class _TypeRef {
   final String Function(String value, bool nullable) encode;
 }
 
-_TypeRef _dartType(String owner, String hint, Map<String, dynamic> schema,
-    StringBuffer nested) {
+_TypeRef _dartType(
+  String owner,
+  String hint,
+  Map<String, dynamic> schema,
+  StringBuffer nested,
+) {
   final refName = _refName(schema);
   final s = _resolve(schema);
 
@@ -690,8 +746,8 @@ _TypeRef _dartType(String owner, String hint, Map<String, dynamic> schema,
 
   if (s['enum'] is List && (s['type'] ?? 'string') == 'string') {
     final values = (s['enum'] as List).cast<String>();
-    final name = enumsByValues[_enumKey(values)] ??
-        _className('$owner${_pascal(hint)}');
+    final name =
+        enumsByValues[_enumKey(values)] ?? _className('$owner${_pascal(hint)}');
     if (!emittedModels.containsKey(name)) {
       emittedModels[name] = '';
       nested.write(_emitEnum(name, s));
@@ -893,21 +949,24 @@ String _emitMethod(String name, _Op op) {
     if (loc == 'path') {
       pathParams.add(pname);
     } else if (loc == 'query') {
-      queryParams.add(_QueryParam(
-        pname,
-        _fieldName(pname),
-        (p['required'] as bool?) ?? false,
-        p['description'] as String?,
-        _queryType((p['schema'] as Map<String, dynamic>?) ?? const {}),
-      ));
+      queryParams.add(
+        _QueryParam(
+          pname,
+          _fieldName(pname),
+          (p['required'] as bool?) ?? false,
+          p['description'] as String?,
+          _queryType((p['schema'] as Map<String, dynamic>?) ?? const {}),
+        ),
+      );
     }
   }
 
   // Body
   final body = op.op['requestBody'] as Map<String, dynamic>?;
   final bodySchema =
-      (body?['content'] as Map<String, dynamic>?)?['application/json']
-          ?['schema'] as Map<String, dynamic>?;
+      (body?['content']
+              as Map<String, dynamic>?)?['application/json']?['schema']
+          as Map<String, dynamic>?;
   final bodyType = bodySchema == null ? null : _bodyType(op, bodySchema);
 
   // Return type
@@ -930,27 +989,29 @@ String _emitMethod(String name, _Op op) {
     if (bodyType != null) 'body: body',
     for (final q in queryParams) '${q.dartName}: ${q.dartName}',
   ].join(', ');
-  emittedMethods.add(_Emitted(
-    group: op.group,
-    name: name,
-    signature: signature,
-    args: forwardArgs,
-    returnType: ret.type,
-    operationId: op.id,
-    httpMethod: op.method.toUpperCase(),
-    path: op.path,
-    summary: summary,
-    description: description,
-    bodyType: bodyType?.type,
-    params: [
-      for (final p in pathParams)
-        _DocParam(_fieldName(p), 'String', true, 'path', null),
-      if (bodyType != null)
-        _DocParam('body', bodyType.type, true, 'body', null),
-      for (final q in queryParams)
-        _DocParam(q.dartName, q.type, q.required, 'query', q.doc),
-    ],
-  ));
+  emittedMethods.add(
+    _Emitted(
+      group: op.group,
+      name: name,
+      signature: signature,
+      args: forwardArgs,
+      returnType: ret.type,
+      operationId: op.id,
+      httpMethod: op.method.toUpperCase(),
+      path: op.path,
+      summary: summary,
+      description: description,
+      bodyType: bodyType?.type,
+      params: [
+        for (final p in pathParams)
+          _DocParam(_fieldName(p), 'String', true, 'path', null),
+        if (bodyType != null)
+          _DocParam('body', bodyType.type, true, 'body', null),
+        for (final q in queryParams)
+          _DocParam(q.dartName, q.type, q.required, 'query', q.doc),
+      ],
+    ),
+  );
 
   for (final q in queryParams) {
     if (q.doc == null) continue;
@@ -964,10 +1025,12 @@ String _emitMethod(String name, _Op op) {
     (m) => '\$${_fieldName(m[1]!)}',
   );
 
-  final call = StringBuffer("    ${ret.needsResult ? 'final json = ' : ''}"
-      "await _client.${ret.clientMethod}(\n"
-      "      '${op.method.toUpperCase()}',\n"
-      "      '$dartPath',\n");
+  final call = StringBuffer(
+    "    ${ret.needsResult ? 'final json = ' : ''}"
+    "await _client.${ret.clientMethod}(\n"
+    "      '${op.method.toUpperCase()}',\n"
+    "      '$dartPath',\n",
+  );
   if (queryParams.isNotEmpty) {
     call.writeln('      query: {');
     for (final q in queryParams) {
@@ -1146,11 +1209,15 @@ _Return _returnType(_Op op) {
   }
   if (resolved['properties'] is Map) {
     extraModels.write(_emitType(inlineName, resolved));
-    return _Return(inlineName, 'sendObject', '$inlineName.fromJson(json)', true);
+    return _Return(
+      inlineName,
+      'sendObject',
+      '$inlineName.fromJson(json)',
+      true,
+    );
   }
   return _Return('Map<String, Object?>', 'sendObject', 'json', true);
 }
-
 
 // ---------------------------------------------------------------------------
 // Documentation
@@ -1180,7 +1247,9 @@ void _emitDocs(Map<String, List<_Op>> groups) {
     ..writeln()
     ..writeln('```dart')
     ..writeln('await render.listHeaders(serviceId: id);            // flat')
-    ..writeln('await render.raw.services.listHeaders(serviceId: id); // grouped')
+    ..writeln(
+      'await render.raw.services.listHeaders(serviceId: id); // grouped',
+    )
     ..writeln('```')
     ..writeln()
     ..writeln('| Group | Operations | |')
@@ -1188,21 +1257,27 @@ void _emitDocs(Map<String, List<_Op>> groups) {
 
   for (final group in byGroup.keys.toList()..sort()) {
     final methods = byGroup[group]!..sort((a, b) => a.name.compareTo(b.name));
-    index.writeln('| `${_fieldName(group)}` | ${methods.length} | '
-        '[reference](${_snake(group)}.md) |');
+    index.writeln(
+      '| `${_fieldName(group)}` | ${methods.length} | '
+      '[reference](${_snake(group)}.md) |',
+    );
 
     final page = StringBuffer()
       ..writeln('# ${_className(group)}')
       ..writeln()
-      ..writeln('`render.raw.${_fieldName(group)}` — ${methods.length} '
-          'operation${methods.length == 1 ? '' : 's'} on `/$group`.')
+      ..writeln(
+        '`render.raw.${_fieldName(group)}` — ${methods.length} '
+        'operation${methods.length == 1 ? '' : 's'} on `/$group`.',
+      )
       ..writeln()
       ..writeln('| Method | | |')
       ..writeln('| --- | --- | --- |');
     for (final m in methods) {
       final line = m.summary?.split('\n').first ?? '';
-      page.writeln('| [`${m.name}`](#${m.name.toLowerCase()}) | '
-          '`${m.httpMethod} ${m.path}` | $line |');
+      page.writeln(
+        '| [`${m.name}`](#${m.name.toLowerCase()}) | '
+        '`${m.httpMethod} ${m.path}` | $line |',
+      );
     }
     page.writeln();
     page.writeln('---');
@@ -1231,30 +1306,40 @@ void _emitDocs(Map<String, List<_Op>> groups) {
         page.writeln('| Parameter | Type | In | Required | |');
         page.writeln('| --- | --- | --- | --- | --- |');
         for (final p in m.params) {
-          final doc = (p.doc ?? '').replaceAll('\n', ' ').replaceAll('|', '\\|');
-          page.writeln('| `${p.name}` | `${p.type}` | ${p.location} | '
-              '${p.required ? 'yes' : 'no'} | $doc |');
+          final doc = (p.doc ?? '')
+              .replaceAll('\n', ' ')
+              .replaceAll('|', '\\|');
+          page.writeln(
+            '| `${p.name}` | `${p.type}` | ${p.location} | '
+            '${p.required ? 'yes' : 'no'} | $doc |',
+          );
         }
         page.writeln();
       }
 
       final element = _bareType(m.returnType);
-      page.writeln(element == m.returnType
-          ? 'Returns `${m.returnType}`.'
-          : 'Returns `${m.returnType}` — each element carries:');
+      page.writeln(
+        element == m.returnType
+            ? 'Returns `${m.returnType}`.'
+            : 'Returns `${m.returnType}` — each element carries:',
+      );
       final fields = modelFields[element];
       if (fields != null && fields.isNotEmpty) {
         page.writeln();
         page.writeln('| Field | Type | |');
         page.writeln('| --- | --- | --- |');
         for (final f in fields) {
-          final doc = (f.doc ?? '').replaceAll('\n', ' ').replaceAll('|', '\\|');
+          final doc = (f.doc ?? '')
+              .replaceAll('\n', ' ')
+              .replaceAll('|', '\\|');
           page.writeln('| `${f.name}` | `${f.type}` | $doc |');
         }
       }
       page.writeln();
-      page.writeln('[Render documentation]'
-          '(https://api-docs.render.com/reference/${m.operationId})');
+      page.writeln(
+        '[Render documentation]'
+        '(https://api-docs.render.com/reference/${m.operationId})',
+      );
       page.writeln();
     }
 
@@ -1277,12 +1362,55 @@ String _bareType(String type) => type.startsWith('List<') && type.endsWith('>')
 // ---------------------------------------------------------------------------
 
 final _reserved = {
-  'is', 'in', 'if', 'for', 'new', 'this', 'class', 'enum', 'default', 'switch',
-  'return', 'void', 'const', 'final', 'var', 'true', 'false', 'null', 'super',
-  'with', 'extends', 'implements', 'static', 'abstract', 'operator', 'part',
-  'show', 'hide', 'sync', 'async', 'await', 'yield', 'assert', 'break',
-  'case', 'catch', 'continue', 'do', 'else', 'rethrow', 'throw', 'try',
-  'while', 'get', 'set', 'external', 'factory', 'library', 'typedef',
+  'is',
+  'in',
+  'if',
+  'for',
+  'new',
+  'this',
+  'class',
+  'enum',
+  'default',
+  'switch',
+  'return',
+  'void',
+  'const',
+  'final',
+  'var',
+  'true',
+  'false',
+  'null',
+  'super',
+  'with',
+  'extends',
+  'implements',
+  'static',
+  'abstract',
+  'operator',
+  'part',
+  'show',
+  'hide',
+  'sync',
+  'async',
+  'await',
+  'yield',
+  'assert',
+  'break',
+  'case',
+  'catch',
+  'continue',
+  'do',
+  'else',
+  'rethrow',
+  'throw',
+  'try',
+  'while',
+  'get',
+  'set',
+  'external',
+  'factory',
+  'library',
+  'typedef',
 };
 
 List<String> _words(String raw) => raw
@@ -1293,8 +1421,9 @@ List<String> _words(String raw) => raw
     .where((w) => w.isNotEmpty)
     .toList();
 
-String _pascal(String raw) =>
-    _words(raw).map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase()).join();
+String _pascal(String raw) => _words(
+  raw,
+).map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase()).join();
 
 String _camel(String raw) {
   final p = _pascal(raw);
@@ -1332,10 +1461,6 @@ String _fieldName(String raw) {
 }
 
 String _doc(String text, {String indent = ''}) {
-  final lines = text
-      .trim()
-      .split('\n')
-      .map((l) => l.trimRight())
-      .toList();
+  final lines = text.trim().split('\n').map((l) => l.trimRight()).toList();
   return lines.map((l) => '$indent/// ${l.trim()}'.trimRight()).join('\n');
 }

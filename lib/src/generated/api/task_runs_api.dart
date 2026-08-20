@@ -28,7 +28,15 @@ class TaskRunsEndpoints {
   /// [workflowVersionId] An array of workflow version IDs
   ///
   /// [workflowId] An array of workflow IDs
-  Future<List<TaskRunWithCursor>> listTaskRuns({String? cursor, int? limit, List<String>? taskSlug, List<String>? rootTaskRunId, List<String>? ownerId, List<String>? workflowVersionId, List<String>? workflowId}) async {
+  Future<List<TaskRunWithCursor>> listTaskRuns({
+    String? cursor,
+    int? limit,
+    List<String>? taskSlug,
+    List<String>? rootTaskRunId,
+    List<String>? ownerId,
+    List<String>? workflowVersionId,
+    List<String>? workflowId,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/task-runs',
@@ -42,14 +50,18 @@ class TaskRunsEndpoints {
         'workflowId': workflowId,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(TaskRunWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(TaskRunWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Run task
   ///
   /// Kicks off a run of the workflow task with the provided ID, passing the provided input data.
-  Future<CreateTaskResponse> createTask({required CreateTaskRequest body}) async {
+  Future<CreateTaskResponse> createTask({
+    required CreateTaskRequest body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/task-runs',
@@ -57,7 +69,6 @@ class TaskRunsEndpoints {
     );
     return CreateTaskResponse.fromJson(json);
   }
-
 
   /// Stream realtime events (SSE)
   ///
@@ -70,34 +81,22 @@ class TaskRunsEndpoints {
     await _client.send(
       'GET',
       '/task-runs/events',
-      query: {
-        'taskRunIds': taskRunIds,
-      },
+      query: {'taskRunIds': taskRunIds},
     );
   }
-
 
   /// Retrieve task run
   ///
   /// Retrieve the workflow task run with the provided ID.
   Future<GetTaskRunResponse> getTaskRun({required String taskRunId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/task-runs/$taskRunId',
-    );
+    final json = await _client.sendObject('GET', '/task-runs/$taskRunId');
     return GetTaskRunResponse.fromJson(json);
   }
-
 
   /// Cancel task run
   ///
   /// Cancel a running task run with the provided ID.
   Future<void> cancelTaskRun({required String taskRunId}) async {
-    await _client.send(
-      'DELETE',
-      '/task-runs/$taskRunId',
-    );
+    await _client.send('DELETE', '/task-runs/$taskRunId');
   }
-
-
 }

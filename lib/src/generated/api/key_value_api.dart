@@ -34,7 +34,18 @@ class KeyValueEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<KeyValueWithCursor>> listKeyValue({List<String>? name, List<String>? region, String? createdBefore, String? createdAfter, String? updatedBefore, String? updatedAfter, List<String>? ownerId, List<String>? environmentId, String? cursor, int? limit}) async {
+  Future<List<KeyValueWithCursor>> listKeyValue({
+    List<String>? name,
+    List<String>? region,
+    String? createdBefore,
+    String? createdAfter,
+    String? updatedBefore,
+    String? updatedAfter,
+    List<String>? ownerId,
+    List<String>? environmentId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/key-value',
@@ -51,14 +62,18 @@ class KeyValueEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(KeyValueWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(KeyValueWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Create Key Value instance
   ///
   /// Create a new Key Value instance.
-  Future<KeyValueDetail> createKeyValue({required KeyValuePostinput body}) async {
+  Future<KeyValueDetail> createKeyValue({
+    required KeyValuePostinput body,
+  }) async {
     final json = await _client.sendObject(
       'POST',
       '/key-value',
@@ -67,23 +82,21 @@ class KeyValueEndpoints {
     return KeyValueDetail.fromJson(json);
   }
 
-
   /// Retrieve Key Value instance
   ///
   /// Retrieve a Key Value instance by ID.
   Future<KeyValueDetail> retrieveKeyValue({required String redisId}) async {
-    final json = await _client.sendObject(
-      'GET',
-      '/key-value/$redisId',
-    );
+    final json = await _client.sendObject('GET', '/key-value/$redisId');
     return KeyValueDetail.fromJson(json);
   }
-
 
   /// Update Key Value instance
   ///
   /// Update a Key Value instance by ID. Note that changing your plan, max memory policy, or persistence mode will restart your Key Value instance.
-  Future<KeyValueDetail> updateKeyValue({required String redisId, required KeyValuePatchinput body}) async {
+  Future<KeyValueDetail> updateKeyValue({
+    required String redisId,
+    required KeyValuePatchinput body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/key-value/$redisId',
@@ -92,22 +105,19 @@ class KeyValueEndpoints {
     return KeyValueDetail.fromJson(json);
   }
 
-
   /// Delete Key Value instance
   ///
   /// Delete a Key Value instance by ID.
   Future<void> deleteKeyValue({required String redisId}) async {
-    await _client.send(
-      'DELETE',
-      '/key-value/$redisId',
-    );
+    await _client.send('DELETE', '/key-value/$redisId');
   }
-
 
   /// Retrieve Key Value connection info
   ///
   /// Retrieve connection info for a Key Value instance by ID. Connection info includes sensitive information.
-  Future<KeyValueConnectionInfo> retrieveKeyValueConnectionInfo({required String redisId}) async {
+  Future<KeyValueConnectionInfo> retrieveKeyValueConnectionInfo({
+    required String redisId,
+  }) async {
     final json = await _client.sendObject(
       'GET',
       '/key-value/$redisId/connection-info',
@@ -115,27 +125,17 @@ class KeyValueEndpoints {
     return KeyValueConnectionInfo.fromJson(json);
   }
 
-
   /// Suspend Key Value instance
   ///
   /// Suspend a Key Value instance by ID.
   Future<void> suspendKeyValue({required String redisId}) async {
-    await _client.send(
-      'POST',
-      '/key-value/$redisId/suspend',
-    );
+    await _client.send('POST', '/key-value/$redisId/suspend');
   }
-
 
   /// Resume Key Value instance
   ///
   /// Resume a Key Value instance by ID.
   Future<void> resumeKeyValue({required String redisId}) async {
-    await _client.send(
-      'POST',
-      '/key-value/$redisId/resume',
-    );
+    await _client.send('POST', '/key-value/$redisId/resume');
   }
-
-
 }

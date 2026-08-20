@@ -7,45 +7,46 @@ import 'package:test/test.dart';
 
 /// A minimal valid body, now that request bodies are typed rather than maps.
 CreateWorkflowRequest workflowBody() => CreateWorkflowRequest(
-      name: 'w',
-      ownerId: 'tea-1',
-      runCommand: 'node index.js',
-      region: Region.oregon,
-      buildConfig: CreateWorkflowRequestBuildConfig(
-        repo: 'https://github.com/o/r',
-        buildCommand: 'npm install',
-        runtime: Runtime.node,
-      ),
-    );
+  name: 'w',
+  ownerId: 'tea-1',
+  runCommand: 'node index.js',
+  region: Region.oregon,
+  buildConfig: CreateWorkflowRequestBuildConfig(
+    repo: 'https://github.com/o/r',
+    buildCommand: 'npm install',
+    runtime: Runtime.node,
+  ),
+);
 
 /// Builds an API whose transport is driven by [handler], so tests need no
 /// credentials and no network.
 RenderApi apiWith(
   Future<http.Response> Function(http.Request) handler, {
   int maxRetries = 3,
-}) =>
-    RenderApi(
-      token: 'test-token',
-      maxRetries: maxRetries,
-      httpClient: MockClient(handler),
-    );
+}) => RenderApi(
+  token: 'test-token',
+  maxRetries: maxRetries,
+  httpClient: MockClient(handler),
+);
 
 http.Response json(Object? body, [int status = 200]) => http.Response(
-      jsonEncode(body),
-      status,
-      headers: {'content-type': 'application/json'},
-    );
+  jsonEncode(body),
+  status,
+  headers: {'content-type': 'application/json'},
+);
 
 void main() {
   group('authentication', () {
     test('rejects construction without a token', () {
       expect(
         () => RenderApi(token: ''),
-        throwsA(isA<ArgumentError>().having(
-          (e) => e.message.toString(),
-          'message',
-          contains('RENDER_API_KEY'),
-        )),
+        throwsA(
+          isA<ArgumentError>().having(
+            (e) => e.message.toString(),
+            'message',
+            contains('RENDER_API_KEY'),
+          ),
+        ),
       );
     });
 
@@ -70,8 +71,13 @@ void main() {
 
       await expectLater(
         api.listOwners(),
-        throwsA(isA<RenderPaymentRequiredException>()
-            .having((e) => e.hint, 'hint', contains('payment method'))),
+        throwsA(
+          isA<RenderPaymentRequiredException>().having(
+            (e) => e.hint,
+            'hint',
+            contains('payment method'),
+          ),
+        ),
       );
     });
 
@@ -79,13 +85,19 @@ void main() {
       // The live API returns exactly this, with no usable detail, when its Git
       // app cannot read the repo. Turning that into something actionable is
       // most of the reason this client exists.
-      final api =
-          apiWith((_) async => http.Response('internal server error', 500));
+      final api = apiWith(
+        (_) async => http.Response('internal server error', 500),
+      );
 
       await expectLater(
         api.createWorkflow(body: workflowBody()),
-        throwsA(isA<RenderServerException>()
-            .having((e) => e.hint, 'hint', contains('grant'))),
+        throwsA(
+          isA<RenderServerException>().having(
+            (e) => e.hint,
+            'hint',
+            contains('grant'),
+          ),
+        ),
       );
     });
 
@@ -94,8 +106,13 @@ void main() {
 
       await expectLater(
         api.retrieveService(serviceId: 'srv-nope'),
-        throwsA(isA<RenderNotFoundException>()
-            .having((e) => e.statusCode, 'statusCode', 404)),
+        throwsA(
+          isA<RenderNotFoundException>().having(
+            (e) => e.statusCode,
+            'statusCode',
+            404,
+          ),
+        ),
       );
     });
 
@@ -108,11 +125,13 @@ void main() {
 
       await expectLater(
         api.listOwners(),
-        throwsA(isA<RenderRateLimitException>().having(
-          (e) => e.retryAfter,
-          'retryAfter',
-          const Duration(seconds: 7),
-        )),
+        throwsA(
+          isA<RenderRateLimitException>().having(
+            (e) => e.retryAfter,
+            'retryAfter',
+            const Duration(seconds: 7),
+          ),
+        ),
       );
     });
   });
@@ -179,18 +198,20 @@ void main() {
 
   group('generated models', () {
     test('decode a typed response', () async {
-      final api = apiWith((_) async => json({
-            'id': 'wfl-1',
-            'name': 'my-workflow',
-            'ownerId': 'tea-1',
-            'runCommand': 'node index.js',
-            'region': 'oregon',
-            'buildConfig': {
-              'repo': 'https://github.com/o/r',
-              'buildCommand': 'npm install',
-              'runtime': 'node',
-            },
-          }));
+      final api = apiWith(
+        (_) async => json({
+          'id': 'wfl-1',
+          'name': 'my-workflow',
+          'ownerId': 'tea-1',
+          'runCommand': 'node index.js',
+          'region': 'oregon',
+          'buildConfig': {
+            'repo': 'https://github.com/o/r',
+            'buildCommand': 'npm install',
+            'runtime': 'node',
+          },
+        }),
+      );
 
       final workflow = await api.getWorkflow(workflowId: 'wfl-1');
       expect(workflow.name, 'my-workflow');
@@ -235,15 +256,16 @@ void _unionTests() {
       expect(literal, isA<AddUpdateEnvVarInputValue>());
       expect((literal as AddUpdateEnvVarInputValue).value, 'secret');
 
-      final generated =
-          AddUpdateEnvVarInput.fromJson({'generateValue': true});
+      final generated = AddUpdateEnvVarInput.fromJson({'generateValue': true});
       expect(generated, isA<AddUpdateEnvVarInputGenerateValue>());
     });
 
     test('env var input round-trips', () {
       const input = AddUpdateEnvVarInputValue(value: 'secret');
-      expect(AddUpdateEnvVarInput.fromJson(input.toJson()),
-          isA<AddUpdateEnvVarInputValue>());
+      expect(
+        AddUpdateEnvVarInput.fromJson(input.toJson()),
+        isA<AddUpdateEnvVarInputValue>(),
+      );
     });
 
     test('env-specific details tell docker from a native build', () {
@@ -266,30 +288,32 @@ void _unionTests() {
       // Sealed means adding a variant becomes a compile error at every switch
       // rather than a silent fallthrough at runtime.
       String describe(AddUpdateEnvVarInput input) => switch (input) {
-            AddUpdateEnvVarInputValue() => 'literal',
-            AddUpdateEnvVarInputGenerateValue() => 'generated',
-          };
+        AddUpdateEnvVarInputValue() => 'literal',
+        AddUpdateEnvVarInputGenerateValue() => 'generated',
+      };
 
       expect(describe(const AddUpdateEnvVarInputValue(value: 'x')), 'literal');
     });
 
-    test('a body typed as a union serialises to the variant it holds',
-        () async {
-      late http.Request seen;
-      final api = apiWith((req) async {
-        seen = req;
-        return json({'key': 'K', 'value': 'V'});
-      });
+    test(
+      'a body typed as a union serialises to the variant it holds',
+      () async {
+        late http.Request seen;
+        final api = apiWith((req) async {
+          seen = req;
+          return json({'key': 'K', 'value': 'V'});
+        });
 
-      await api.updateEnvVar(
-        serviceId: 'srv-1',
-        envVarKey: 'K',
-        body: const AddUpdateEnvVarInputValue(value: 'V'),
-      );
+        await api.updateEnvVar(
+          serviceId: 'srv-1',
+          envVarKey: 'K',
+          body: const AddUpdateEnvVarInputValue(value: 'V'),
+        );
 
-      final body = jsonDecode(seen.body) as Map<String, Object?>;
-      expect(body, {'value': 'V'});
-      expect(body.containsKey('generateValue'), isFalse);
-    });
+        final body = jsonDecode(seen.body) as Map<String, Object?>;
+        expect(body, {'value': 'V'});
+        expect(body.containsKey('generateValue'), isFalse);
+      },
+    );
   });
 }

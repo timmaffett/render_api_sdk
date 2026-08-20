@@ -16,7 +16,8 @@ class NotificationSettingsEndpoints {
   /// Retrieve notification settings for the owner with the provided ID.
   ///
   /// Note that you provide an owner ID to this endpoint, not the ID for a particular resource.
-  Future<RetrieveOwnerNotificationSettingsResponse> retrieveOwnerNotificationSettings({required String ownerId}) async {
+  Future<RetrieveOwnerNotificationSettingsResponse>
+  retrieveOwnerNotificationSettings({required String ownerId}) async {
     final json = await _client.sendObject(
       'GET',
       '/notification-settings/owners/$ownerId',
@@ -24,11 +25,14 @@ class NotificationSettingsEndpoints {
     return RetrieveOwnerNotificationSettingsResponse.fromJson(json);
   }
 
-
   /// Update notification settings
   ///
   /// Update notification settings for the owner with the provided ID.
-  Future<PatchOwnerNotificationSettingsResponse> patchOwnerNotificationSettings({required String ownerId, required PatchOwnerNotificationSettingsRequest body}) async {
+  Future<PatchOwnerNotificationSettingsResponse>
+  patchOwnerNotificationSettings({
+    required String ownerId,
+    required PatchOwnerNotificationSettingsRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/notification-settings/owners/$ownerId',
@@ -36,7 +40,6 @@ class NotificationSettingsEndpoints {
     );
     return PatchOwnerNotificationSettingsResponse.fromJson(json);
   }
-
 
   /// List notification overrides
   ///
@@ -49,7 +52,12 @@ class NotificationSettingsEndpoints {
   /// [cursor] The position in the result list to start from when fetching paginated results. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
   ///
   /// [limit] The maximum number of items to return. For details, see [Pagination](https://api-docs.render.com/reference/pagination).
-  Future<List<NotificationOverrideWithCursor>> listNotificationOverrides({List<String>? ownerId, List<String>? serviceId, String? cursor, int? limit}) async {
+  Future<List<NotificationOverrideWithCursor>> listNotificationOverrides({
+    List<String>? ownerId,
+    List<String>? serviceId,
+    String? cursor,
+    int? limit,
+  }) async {
     final json = await _client.sendList(
       'GET',
       '/notification-settings/overrides',
@@ -60,16 +68,19 @@ class NotificationSettingsEndpoints {
         'limit': limit,
       },
     );
-    return json.whereType<Map<String, Object?>>().map(NotificationOverrideWithCursor.fromJson).toList();
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(NotificationOverrideWithCursor.fromJson)
+        .toList();
   }
-
 
   /// Retrieve notification override
   ///
   /// Retrieve the notification override for the service with the provided ID.
   ///
   /// Note that you provide a service ID to this endpoint, not the ID for a particular override.
-  Future<RetrieveServiceNotificationOverridesResponse> retrieveServiceNotificationOverrides({required String serviceId}) async {
+  Future<RetrieveServiceNotificationOverridesResponse>
+  retrieveServiceNotificationOverrides({required String serviceId}) async {
     final json = await _client.sendObject(
       'GET',
       '/notification-settings/overrides/services/$serviceId',
@@ -77,11 +88,14 @@ class NotificationSettingsEndpoints {
     return RetrieveServiceNotificationOverridesResponse.fromJson(json);
   }
 
-
   /// Update notification override
   ///
   /// Update the notification override for the service with the provided ID.
-  Future<PatchServiceNotificationOverridesResponse> patchServiceNotificationOverrides({required String serviceId, required PatchServiceNotificationOverridesRequest body}) async {
+  Future<PatchServiceNotificationOverridesResponse>
+  patchServiceNotificationOverrides({
+    required String serviceId,
+    required PatchServiceNotificationOverridesRequest body,
+  }) async {
     final json = await _client.sendObject(
       'PATCH',
       '/notification-settings/overrides/services/$serviceId',
@@ -89,6 +103,4 @@ class NotificationSettingsEndpoints {
     );
     return PatchServiceNotificationOverridesResponse.fromJson(json);
   }
-
-
 }
