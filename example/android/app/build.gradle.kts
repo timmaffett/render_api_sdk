@@ -6,7 +6,13 @@ plugins {
 
 android {
     namespace = "com.timmaffett.render_dashboard"
-    compileSdk = flutter.compileSdkVersion
+    // Not flutter.compileSdkVersion, which is 36 on Flutter 3.47.
+    // flutter_secure_storage 11 declares that anything depending on it must
+    // compile against API 37 or later, so the build fails at
+    // checkDebugAarMetadata without this. Android Gradle Plugin 9.1.0 calls 37
+    // above its maximum *recommended* level and warns; the warning is
+    // suppressed in gradle.properties rather than pinning the plugin back.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
