@@ -50,9 +50,18 @@ class AdaptiveScheme {
     BuildContext context,
     AppDesignSystem system,
   ) => switch (system) {
-    AppDesignSystem.auris => _fromAuris(
-      Theme.of(context).extension<auris_kit.AurisScheme>()!,
-    ),
+    // Not `!`. Switching *from* Fluent or Shadcn back to Auris updates
+    // DesignScope before the root swaps from FluentApp to MaterialApp, so
+    // for one frame the tree says Auris while the inherited theme has no
+    // AurisScheme. A null assertion there throws, which is the red box
+    // that flashes on the way back — a system that can be swapped at
+    // runtime has to tolerate the frame where the two disagree.
+    AppDesignSystem.auris => switch (Theme.of(
+      context,
+    ).extension<auris_kit.AurisScheme>()) {
+      final auris_kit.AurisScheme s => _fromAuris(s),
+      null => _fromMaterial(Theme.of(context)),
+    },
     AppDesignSystem.forui => _fromForui(forui_kit.FTheme.of(context)),
     AppDesignSystem.fluent => _fromFluent(fluent_kit.FluentTheme.of(context)),
     AppDesignSystem.shadcn => _fromShadcn(shadcn_kit.Theme.of(context)),
@@ -105,6 +114,30 @@ class AdaptiveScheme {
     borderStrong: s.borderBright,
     cornerCut: s.bevel.lg,
   );
+
+  /// The last resort, for the frame where the chosen system's theme is not in
+  /// the tree yet. Material's own ColorScheme is always there, so this can
+  /// always answer — badly, briefly, and without throwing.
+  static AdaptiveScheme _fromMaterial(ThemeData t) {
+    final c = t.colorScheme;
+    return AdaptiveScheme(
+      page: c.surface,
+      panel: c.surfaceContainer,
+      inset: c.surfaceContainerHighest,
+      textBright: c.onSurface,
+      textMid: c.onSurfaceVariant,
+      textDim: c.onSurfaceVariant.withValues(alpha: 0.7),
+      border: c.outlineVariant,
+      accent: c.primary,
+      danger: c.error,
+      dangerStrong: c.error,
+      success: const Color(0xFF3FB950),
+      secondary: c.secondary,
+      accentDim: c.primary.withValues(alpha: 0.5),
+      borderStrong: c.outline,
+      cornerCut: 0,
+    );
+  }
 
   static AdaptiveScheme _fromForui(forui_kit.FThemeData t) {
     final c = t.colors;
