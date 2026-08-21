@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:forui/forui.dart' as forui_kit;
 import 'package:shadcn_flutter/shadcn_flutter.dart' as shadcn_kit;
 
+import 'design_scope.dart';
 import 'design_system.dart';
 
 /// The colours this app actually asks for, named by what they mean.
@@ -29,25 +30,33 @@ class AdaptiveScheme {
     required this.border,
     required this.accent,
     required this.danger,
+    required this.dangerStrong,
     required this.success,
     required this.secondary,
+    required this.accentDim,
+    required this.borderStrong,
+    required this.cornerCut,
   });
 
   /// Reads the scheme for whichever system is in force.
   ///
   /// Auris is the only one that publishes a full semantic palette; the rest are
-  /// mapped from what they do publish.
-  factory AdaptiveScheme.of(BuildContext context, AppDesignSystem system) =>
-      switch (system) {
-        AppDesignSystem.auris => _fromAuris(
-          Theme.of(context).extension<auris_kit.AurisScheme>()!,
-        ),
-        AppDesignSystem.forui => _fromForui(forui_kit.FTheme.of(context)),
-        AppDesignSystem.fluent => _fromFluent(
-          fluent_kit.FluentTheme.of(context),
-        ),
-        AppDesignSystem.shadcn => _fromShadcn(shadcn_kit.Theme.of(context)),
-      };
+  /// mapped from what they do publish. The system comes from [DesignScope], so
+  /// a call site asks for colours and never for a system.
+  factory AdaptiveScheme.of(BuildContext context) =>
+      AdaptiveScheme.forSystem(context, DesignScope.of(context));
+
+  factory AdaptiveScheme.forSystem(
+    BuildContext context,
+    AppDesignSystem system,
+  ) => switch (system) {
+    AppDesignSystem.auris => _fromAuris(
+      Theme.of(context).extension<auris_kit.AurisScheme>()!,
+    ),
+    AppDesignSystem.forui => _fromForui(forui_kit.FTheme.of(context)),
+    AppDesignSystem.fluent => _fromFluent(fluent_kit.FluentTheme.of(context)),
+    AppDesignSystem.shadcn => _fromShadcn(shadcn_kit.Theme.of(context)),
+  };
 
   final Color page;
   final Color panel;
@@ -58,8 +67,26 @@ class AdaptiveScheme {
   final Color border;
   final Color accent;
   final Color danger;
+
+  /// The louder danger, where a system has two. Where it has one, the same.
+  final Color dangerStrong;
+
   final Color success;
   final Color secondary;
+
+  /// The quieter accent, for rules and inactive marks.
+  final Color accentDim;
+
+  /// The stronger border, for a raised edge against a plain one.
+  final Color borderStrong;
+
+  /// How far a corner is chamfered.
+  ///
+  /// Geometry rather than colour, and the one token that is zero for three of
+  /// the four: Auris's chamfer is a signature, and the flat systems would look
+  /// wrong wearing it. Keeping it here means a surface can ask "how do corners
+  /// work in this system" instead of asking which system it is.
+  final double cornerCut;
 
   static AdaptiveScheme _fromAuris(auris_kit.AurisScheme s) => AdaptiveScheme(
     page: s.surfacePage,
@@ -70,9 +97,13 @@ class AdaptiveScheme {
     textDim: s.textDim,
     border: s.borderResting,
     accent: s.primaryActive,
-    danger: s.dangerBright,
+    danger: s.danger,
+    dangerStrong: s.dangerBright,
     success: s.success,
     secondary: s.secondary,
+    accentDim: s.primaryDim,
+    borderStrong: s.borderBright,
+    cornerCut: s.bevel.lg,
   );
 
   static AdaptiveScheme _fromForui(forui_kit.FThemeData t) {
@@ -89,10 +120,14 @@ class AdaptiveScheme {
       border: c.border,
       accent: c.primary,
       danger: c.destructive,
+      dangerStrong: c.destructive,
       // Nor a success colour: shadcn-descended palettes are deliberately
       // neutral, so this is the one place a literal is unavoidable.
       success: const Color(0xFF3FB950),
       secondary: c.secondaryForeground,
+      accentDim: c.primary.withValues(alpha: 0.5),
+      borderStrong: c.border,
+      cornerCut: 0,
     );
   }
 
@@ -108,8 +143,14 @@ class AdaptiveScheme {
       border: r.controlStrokeColorDefault,
       accent: t.accentColor.defaultBrushFor(t.brightness),
       danger: fluent_kit.Colors.red,
+      dangerStrong: fluent_kit.Colors.red.lighter,
       success: fluent_kit.Colors.green,
       secondary: fluent_kit.Colors.blue,
+      accentDim: t.accentColor
+          .defaultBrushFor(t.brightness)
+          .withValues(alpha: 0.5),
+      borderStrong: r.controlStrongStrokeColorDefault,
+      cornerCut: 0,
     );
   }
 
@@ -125,8 +166,12 @@ class AdaptiveScheme {
       border: c.border,
       accent: c.primary,
       danger: c.destructive,
+      dangerStrong: c.destructive,
       success: const Color(0xFF3FB950),
       secondary: c.secondaryForeground,
+      accentDim: c.primary.withValues(alpha: 0.5),
+      borderStrong: c.border,
+      cornerCut: 0,
     );
   }
 }

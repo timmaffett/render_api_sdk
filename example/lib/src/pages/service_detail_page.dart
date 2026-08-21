@@ -7,6 +7,7 @@ import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
 import '../widgets/metric_panel.dart';
+import '../design/adaptive_scheme.dart';
 
 /// One service: deploys, events, environment and metrics.
 ///
@@ -24,11 +25,11 @@ class ServiceDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: scheme.surfacePage,
+        backgroundColor: scheme.page,
         appBar: AppBar(
           title: Text(service.name.toUpperCase()),
           actions: const [RefreshButton()],
@@ -193,7 +194,7 @@ class _ChartPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     return LoadedPanel<MetricChartData>(
       title: title,
       load: load,

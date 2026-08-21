@@ -1,8 +1,8 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../data/response_cache.dart';
 import 'data_time.dart';
+import '../design/adaptive_scheme.dart';
 
 /// A bare notifier: the refresh button pokes it, every view listens.
 class RefreshSignal extends ChangeNotifier {
@@ -55,7 +55,7 @@ class RefreshButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final scope = RefreshScope.maybeOf(context);
     if (scope == null) return const SizedBox.shrink();
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
 
     return ListenableBuilder(
       listenable: scope.cache ?? scope.signal,

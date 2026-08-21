@@ -37,7 +37,7 @@ class AdaptiveStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final system = DesignScope.of(context);
-    final scheme = AdaptiveScheme.of(context, system);
+    final scheme = AdaptiveScheme.forSystem(context, system);
 
     return switch (system) {
       // Auris ships this one, so nothing is reinvented.

@@ -1,9 +1,9 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../data/render_client.dart';
 import 'metric_palette.dart';
+import '../design/adaptive_scheme.dart';
 
 /// Every metric on one axis, each line keeping the colour it uses everywhere.
 ///
@@ -33,7 +33,7 @@ class CombinedMetricChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final text = Theme.of(context).textTheme;
 
     // One line per metric: the first series it has, which for a single-instance
@@ -97,13 +97,13 @@ class CombinedMetricChart extends StatelessWidget {
                 drawVerticalLine: false,
                 horizontalInterval: step,
                 getDrawingHorizontalLine: (_) =>
-                    FlLine(color: scheme.borderResting, strokeWidth: 1),
+                    FlLine(color: scheme.border, strokeWidth: 1),
               ),
               borderData: FlBorderData(
                 show: true,
                 border: Border(
-                  left: BorderSide(color: scheme.borderResting),
-                  bottom: BorderSide(color: scheme.borderResting),
+                  left: BorderSide(color: scheme.border),
+                  bottom: BorderSide(color: scheme.border),
                 ),
               ),
               titlesData: FlTitlesData(
@@ -142,7 +142,7 @@ class CombinedMetricChart extends StatelessWidget {
                               radius: 2,
                               color: scrubDotColor(
                                 scheme,
-                                bar.color ?? scheme.primaryActive,
+                                bar.color ?? scheme.accent,
                               ),
                               strokeWidth: 0,
                             ),
@@ -150,8 +150,8 @@ class CombinedMetricChart extends StatelessWidget {
                     ),
                 ],
                 touchTooltipData: LineTouchTooltipData(
-                  getTooltipColor: (_) => scheme.surfaceInset,
-                  tooltipBorder: BorderSide(color: scheme.primaryDim),
+                  getTooltipColor: (_) => scheme.inset,
+                  tooltipBorder: BorderSide(color: scheme.accentDim),
                   maxContentWidth: 260,
                   getTooltipItems: (spots) => [
                     for (final (index, spot) in spots.indexed)

@@ -5,6 +5,7 @@ import '../data/response_cache.dart';
 import 'async_view.dart';
 import 'data_time.dart';
 import 'refresh_scope.dart';
+import '../design/adaptive_scheme.dart';
 
 /// A titled panel whose header carries controls, not just text.
 ///
@@ -43,18 +44,18 @@ class MetricPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
 
     return AurisContainer(
-      cut: scheme.bevel.lg,
-      borderColor: scheme.borderBright,
+      cut: scheme.cornerCut,
+      borderColor: scheme.borderStrong,
       padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
           ColoredBox(
-            color: scheme.surfaceInset,
+            color: scheme.inset,
             child: Padding(
               // Tighter vertically than AurisPanel's 11, because an IconButton
               // is taller than a line of text and would otherwise grow the strip.
@@ -74,7 +75,7 @@ class MetricPanel extends StatelessWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        _Tick(color: scheme.primaryDim, left: true),
+                        _Tick(color: scheme.accentDim, left: true),
                         const SizedBox(width: 10),
                         Flexible(
                           child: Text(
@@ -88,7 +89,7 @@ class MetricPanel extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 10),
-                        _Tick(color: scheme.primaryDim, left: false),
+                        _Tick(color: scheme.accentDim, left: false),
                       ],
                     ),
                   ),
@@ -107,7 +108,7 @@ class MetricPanel extends StatelessWidget {
               ),
             ),
           ),
-          Container(height: 1, color: scheme.borderResting),
+          Container(height: 1, color: scheme.border),
           Padding(padding: padding, child: child),
         ],
       ),
@@ -200,7 +201,7 @@ class _LoadedPanelState<T> extends State<LoadedPanel<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final age = _age;
     final at = age?.at;
 

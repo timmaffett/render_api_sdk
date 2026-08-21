@@ -2,6 +2,7 @@ import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'app_settings.dart';
+import '../design/adaptive_scheme.dart';
 
 /// Live theme controls.
 ///
@@ -20,7 +21,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final text = Theme.of(context).textTheme;
 
     return ListenableBuilder(
@@ -49,7 +50,7 @@ class SettingsPage extends StatelessWidget {
                     for (final (label, color) in AppSettings.accents)
                       _Swatch(
                         label: label,
-                        color: color ?? scheme.primaryActive,
+                        color: color ?? scheme.accent,
                         selected: settings.accent == color,
                         onTap: () => settings.accent = color,
                       ),
@@ -199,7 +200,7 @@ class _Swatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: AurisContainer(
@@ -207,7 +208,7 @@ class _Swatch extends StatelessWidget {
         height: 44,
         cut: 6,
         fill: color.withValues(alpha: selected ? 0.28 : 0.12),
-        borderColor: selected ? color : scheme.borderResting,
+        borderColor: selected ? color : scheme.border,
         borderWidth: selected ? 2 : 1,
         alignment: Alignment.center,
         child: Text(

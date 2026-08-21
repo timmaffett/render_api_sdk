@@ -1,6 +1,7 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
+import '../design/adaptive_scheme.dart';
 
 /// Where the API token is pasted in.
 ///
@@ -58,11 +59,11 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final text = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: scheme.surfacePage,
+      backgroundColor: scheme.page,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -101,7 +102,7 @@ class _SignInPageState extends State<SignInPage> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: scheme.surfaceInset,
+                        color: scheme.inset,
                         border: Border(
                           left: BorderSide(color: scheme.danger, width: 2),
                         ),

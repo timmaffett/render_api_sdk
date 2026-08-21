@@ -1,6 +1,6 @@
-import 'package:auris/auris.dart';
 import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
+import '../design/adaptive_scheme.dart';
 
 /// The one place loading, error and empty states are rendered.
 ///
@@ -78,7 +78,7 @@ class _ErrorPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final text = Theme.of(context).textTheme;
 
     final (message, hint) = switch (error) {
@@ -110,9 +110,9 @@ class _ErrorPanel extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: scheme.surfaceInset,
+                    color: scheme.inset,
                     border: Border(
-                      left: BorderSide(color: scheme.primaryActive, width: 2),
+                      left: BorderSide(color: scheme.accent, width: 2),
                     ),
                   ),
                   // Verbatim: the hints exist because the status code alone is
@@ -145,7 +145,7 @@ class _Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     return Center(
       child: Text(
         message,

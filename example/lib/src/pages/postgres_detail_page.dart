@@ -8,6 +8,7 @@ import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
 import '../widgets/metric_palette.dart';
 import '../widgets/metric_panel.dart';
+import '../design/adaptive_scheme.dart';
 
 /// One Postgres instance: what it is doing, and what it holds.
 ///
@@ -31,11 +32,11 @@ class PostgresDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        backgroundColor: scheme.surfacePage,
+        backgroundColor: scheme.page,
         appBar: AppBar(
           title: Text(database.name.toUpperCase()),
           actions: const [RefreshButton()],

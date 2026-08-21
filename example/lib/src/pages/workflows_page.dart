@@ -7,6 +7,7 @@ import '../data/render_client.dart';
 import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
+import '../design/adaptive_scheme.dart';
 
 /// Workflow services, their tasks, and how their runs have been going.
 ///
@@ -68,7 +69,7 @@ class _RunOutcomes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
 
     return LoadOnce<List<render.TaskRunWithCursorTaskRun>>(
       refresh: RefreshScope.of(context),
@@ -131,10 +132,8 @@ class _RunOutcomes extends StatelessWidget {
                           'completed' || 'succeeded' => scheme.success,
                           'failed' => scheme.danger,
                           'canceled' => scheme.secondary,
-                          'running' ||
-                          'pending' ||
-                          'paused' => scheme.primaryActive,
-                          _ => scheme.primaryDim,
+                          'running' || 'pending' || 'paused' => scheme.accent,
+                          _ => scheme.accentDim,
                         },
                       ),
                     ],

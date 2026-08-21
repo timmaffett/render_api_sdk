@@ -1,5 +1,5 @@
-import 'package:auris/auris.dart';
 import 'package:flutter/material.dart';
+import '../design/adaptive_scheme.dart';
 
 /// One destination in the app's navigation.
 class Destination {
@@ -39,12 +39,12 @@ class ResponsiveScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final wide = MediaQuery.sizeOf(context).width >= kWideBreakpoint;
     final body = destinations[selectedIndex].builder(context);
 
     return Scaffold(
-      backgroundColor: scheme.surfacePage,
+      backgroundColor: scheme.page,
       appBar: AppBar(
         title: Text(
           title.toUpperCase(),
@@ -61,7 +61,7 @@ class ResponsiveScaffold extends StatelessWidget {
                   selectedIndex: selectedIndex,
                   onDestinationSelected: onSelect,
                   labelType: NavigationRailLabelType.all,
-                  backgroundColor: scheme.surfacePanel,
+                  backgroundColor: scheme.panel,
                   destinations: [
                     for (final d in destinations)
                       NavigationRailDestination(
@@ -70,7 +70,7 @@ class ResponsiveScaffold extends StatelessWidget {
                       ),
                   ],
                 ),
-                VerticalDivider(width: 1, color: scheme.borderResting),
+                VerticalDivider(width: 1, color: scheme.border),
                 Expanded(child: body),
               ],
             )
@@ -80,7 +80,7 @@ class ResponsiveScaffold extends StatelessWidget {
           : NavigationBar(
               selectedIndex: selectedIndex,
               onDestinationSelected: onSelect,
-              backgroundColor: scheme.surfacePanel,
+              backgroundColor: scheme.panel,
               destinations: [
                 for (final d in destinations)
                   NavigationDestination(icon: Icon(d.icon), label: d.label),

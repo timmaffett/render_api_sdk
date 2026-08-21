@@ -6,6 +6,7 @@ import '../data/render_client.dart';
 import 'metric_palette.dart';
 import '../theme/app_settings.dart';
 import 'data_time.dart';
+import '../design/adaptive_scheme.dart';
 
 /// How a metric's values are labelled.
 enum MetricScale {
@@ -56,7 +57,7 @@ class _MetricChartState extends State<MetricChart> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final text = Theme.of(context).textTheme;
     final data = widget.data;
     // A tooltip marks when a *reading* was taken, so it is always a clock —
@@ -95,10 +96,10 @@ class _MetricChartState extends State<MetricChart> {
     final palette = widget.kind != null
         ? <Color>[widget.kind!.color(scheme)]
         : <Color>[
-            scheme.primaryActive,
+            scheme.accent,
             scheme.secondary,
             scheme.success,
-            scheme.dangerBright,
+            scheme.dangerStrong,
           ];
 
     return Column(
@@ -137,13 +138,13 @@ class _MetricChartState extends State<MetricChart> {
                 horizontalInterval:
                     (scale == MetricScale.percent ? 100 : ceiling) / 4,
                 getDrawingHorizontalLine: (_) =>
-                    FlLine(color: scheme.borderResting, strokeWidth: 1),
+                    FlLine(color: scheme.border, strokeWidth: 1),
               ),
               borderData: FlBorderData(
                 show: true,
                 border: Border(
-                  left: BorderSide(color: scheme.borderResting),
-                  bottom: BorderSide(color: scheme.borderResting),
+                  left: BorderSide(color: scheme.border),
+                  bottom: BorderSide(color: scheme.border),
                 ),
               ),
               titlesData: FlTitlesData(
@@ -169,8 +170,8 @@ class _MetricChartState extends State<MetricChart> {
               ),
               lineTouchData: LineTouchData(
                 touchTooltipData: LineTouchTooltipData(
-                  getTooltipColor: (_) => scheme.surfaceInset,
-                  tooltipBorder: BorderSide(color: scheme.primaryDim),
+                  getTooltipColor: (_) => scheme.inset,
+                  tooltipBorder: BorderSide(color: scheme.accentDim),
                   maxContentWidth: 260,
                   getTooltipItems: (spots) => [
                     for (final spot in spots)
@@ -200,7 +201,7 @@ class _MetricChartState extends State<MetricChart> {
                               radius: 2,
                               color: scrubDotColor(
                                 scheme,
-                                bar.color ?? scheme.primaryActive,
+                                bar.color ?? scheme.accent,
                               ),
                               strokeWidth: 0,
                             ),
@@ -326,7 +327,7 @@ class _ScaleToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     final text = Theme.of(context).textTheme;
 
     Widget option(MetricScale value, String label) {
@@ -336,8 +337,8 @@ class _ScaleToggle extends StatelessWidget {
         child: AurisContainer(
           cut: 4,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          fill: selected ? scheme.primaryDim.withValues(alpha: 0.3) : null,
-          borderColor: selected ? scheme.primaryActive : scheme.borderResting,
+          fill: selected ? scheme.accentDim.withValues(alpha: 0.3) : null,
+          borderColor: selected ? scheme.accent : scheme.border,
           child: Text(
             label,
             style: text.labelSmall?.copyWith(

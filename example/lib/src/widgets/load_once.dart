@@ -1,10 +1,10 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../data/response_cache.dart';
 import 'async_view.dart';
 import 'data_time.dart';
 import 'refresh_scope.dart';
+import '../design/adaptive_scheme.dart';
 
 /// Starts a load once, and offers to run it again.
 ///
@@ -93,7 +93,7 @@ class _LoadOnceState<T> extends State<LoadOnce<T>> {
     final at = age?.at;
     if (!widget.stamp || age == null || at == null) return view;
 
-    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    final scheme = AdaptiveScheme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
+
+import '../design/adaptive_scheme.dart';
 
 /// The metrics a resource reports, each with a colour it keeps everywhere.
 ///
@@ -8,8 +9,9 @@ import 'package:flutter/material.dart';
 /// chart means the reader does not have to re-learn the mapping one screen
 /// later.
 ///
-/// Colours come from the [AurisScheme] rather than being hardcoded, so they
-/// follow the accent and the light/dark setting like everything else.
+/// Colours come from [AdaptiveScheme] rather than being hardcoded, so they
+/// follow the accent, the light/dark setting, and now the design system too —
+/// gold under Auris, whatever Fluent's accent is under Fluent.
 enum MetricKind {
   cpu('CPU'),
   memory('MEMORY'),
@@ -20,11 +22,11 @@ enum MetricKind {
 
   final String label;
 
-  Color color(AurisScheme scheme) => switch (this) {
-    MetricKind.cpu => scheme.primaryActive,
+  Color color(AdaptiveScheme scheme) => switch (this) {
+    MetricKind.cpu => scheme.accent,
     MetricKind.memory => scheme.secondary,
     MetricKind.disk => scheme.success,
-    MetricKind.connections => scheme.dangerBright,
+    MetricKind.connections => scheme.dangerStrong,
   };
 
   /// Whether Render reports a ceiling for this metric.
@@ -45,5 +47,5 @@ enum MetricKind {
 /// Red, except on a line that is already red — connections — where it would be
 /// invisible. That is the only collision, because red is the one line colour
 /// this borrows.
-Color scrubDotColor(AurisScheme scheme, Color lineColor) =>
-    lineColor == scheme.dangerBright ? scheme.textBright : scheme.dangerBright;
+Color scrubDotColor(AdaptiveScheme scheme, Color lineColor) =>
+    lineColor == scheme.dangerStrong ? scheme.textBright : scheme.dangerStrong;
