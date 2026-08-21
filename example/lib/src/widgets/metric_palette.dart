@@ -1,0 +1,36 @@
+import 'package:auris/auris_widgets.dart';
+import 'package:flutter/material.dart';
+
+/// The metrics a resource reports, each with a colour it keeps everywhere.
+///
+/// The colour is the identity. On the overview chart it is the only way to tell
+/// four overlaid lines apart, and carrying the same colour onto each detail
+/// chart means the reader does not have to re-learn the mapping one screen
+/// later.
+///
+/// Colours come from the [AurisScheme] rather than being hardcoded, so they
+/// follow the accent and the light/dark setting like everything else.
+enum MetricKind {
+  cpu('CPU'),
+  memory('MEMORY'),
+  disk('DISK'),
+  connections('CONNECTIONS');
+
+  const MetricKind(this.label);
+
+  final String label;
+
+  Color color(AurisScheme scheme) => switch (this) {
+    MetricKind.cpu => scheme.primaryActive,
+    MetricKind.memory => scheme.secondary,
+    MetricKind.disk => scheme.success,
+    MetricKind.connections => scheme.dangerBright,
+  };
+
+  /// Whether Render reports a ceiling for this metric.
+  ///
+  /// Connections has none — Postgres has a hard limit but the API does not
+  /// report it — so it cannot be a share of anything, which is what keeps it
+  /// off the shared percentage axis unless deliberately rescaled.
+  bool get hasLimit => this != MetricKind.connections;
+}

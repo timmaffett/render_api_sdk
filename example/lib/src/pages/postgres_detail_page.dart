@@ -6,6 +6,7 @@ import '../data/render_client.dart';
 import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
+import '../widgets/metric_palette.dart';
 import '../widgets/metric_panel.dart';
 
 /// One Postgres instance: what it is doing, and what it holds.
@@ -72,14 +73,14 @@ class _Metrics extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _Panel(title: 'CPU', load: () => client.cpuChart(id)),
+        _Panel(kind: MetricKind.cpu, load: () => client.cpuChart(id)),
         const SizedBox(height: 12),
-        _Panel(title: 'MEMORY', load: () => client.memoryChart(id)),
+        _Panel(kind: MetricKind.memory, load: () => client.memoryChart(id)),
         const SizedBox(height: 12),
-        _Panel(title: 'DISK', load: () => client.diskChart(id)),
+        _Panel(kind: MetricKind.disk, load: () => client.diskChart(id)),
         const SizedBox(height: 12),
         _Panel(
-          title: 'ACTIVE CONNECTIONS',
+          kind: MetricKind.connections,
           load: () => client.connectionsChart(id),
         ),
       ],
@@ -88,21 +89,21 @@ class _Metrics extends StatelessWidget {
 }
 
 class _Panel extends StatelessWidget {
-  const _Panel({required this.title, required this.load});
+  const _Panel({required this.kind, required this.load});
 
-  final String title;
+  final MetricKind kind;
   final Future<MetricChartData> Function() load;
 
   @override
   Widget build(BuildContext context) => LoadedPanel<MetricChartData>(
-    title: title,
+    title: kind.label,
     load: load,
     builder: (context, data) => data.isEmpty
         ? const SizedBox(
             height: 60,
             child: Center(child: Text('no data for this window')),
           )
-        : MetricChart(title: '', data: data),
+        : MetricChart(title: '', data: data, kind: kind),
   );
 }
 

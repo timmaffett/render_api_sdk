@@ -6,7 +6,8 @@ import '../data/render_client.dart';
 import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
-import '../widgets/metric_chart.dart';
+import '../widgets/combined_metric_chart.dart';
+import '../widgets/metric_palette.dart';
 import 'postgres_detail_page.dart';
 
 /// render.Postgres and key value stores.
@@ -57,19 +58,20 @@ class DatabasesPage extends StatelessWidget {
                   AurisDataRow(label: 'region', value: db.region.wireValue),
                   AurisDataRow(label: 'version', value: db.version.wireValue),
                   const SizedBox(height: 16),
-                  LoadOnce<MetricChartData>(
+                  Text(
+                    'ALL METRICS · 24h',
+                    style: Theme.of(context).textTheme.labelSmall,
+                  ),
+                  const SizedBox(height: 6),
+                  LoadOnce<Map<MetricKind, MetricChartData>>(
                     refresh: RefreshScope.of(context),
-                    load: () => client.cpuChart(db.id),
-                    builder: (context, data) => data.isEmpty
+                    load: () => client.allCharts(db.id),
+                    builder: (context, metrics) => metrics.isEmpty
                         ? const SizedBox(
                             height: 48,
-                            child: Center(child: Text('no CPU data')),
+                            child: Center(child: Text('no metrics')),
                           )
-                        : MetricChart(
-                            title: 'CPU · 24h',
-                            data: data,
-                            height: 130,
-                          ),
+                        : CombinedMetricChart(metrics: metrics, height: 150),
                   ),
                 ],
               ),

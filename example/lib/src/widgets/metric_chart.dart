@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../data/render_client.dart';
+import 'metric_palette.dart';
 import '../theme/app_settings.dart';
 import 'data_time.dart';
 
@@ -31,11 +32,20 @@ class MetricChart extends StatefulWidget {
     required this.title,
     required this.data,
     this.height = 190,
+    this.kind,
   });
 
   final String title;
   final MetricChartData data;
   final double height;
+
+  /// Which metric this is, when it is one of the four a resource reports.
+  ///
+  /// Colour is the identity that ties this chart to its line on the overview,
+  /// so a reader who learned "green is disk" there does not have to learn it
+  /// again here. Null for anything with no place on that chart — a service's
+  /// bandwidth, say — which falls back to the generic palette.
+  final MetricKind? kind;
 
   @override
   State<MetricChart> createState() => _MetricChartState();
@@ -80,12 +90,16 @@ class _MetricChartState extends State<MetricChart> {
         .reduce((a, b) => a.isBefore(b) ? a : b);
     double x(DateTime at) => at.difference(origin).inSeconds / 60;
 
-    final palette = <Color>[
-      scheme.primaryActive,
-      scheme.secondary,
-      scheme.success,
-      scheme.dangerBright,
-    ];
+    // One metric, one colour — repeated for each instance of it, since two
+    // instances of the same metric are still that metric.
+    final palette = widget.kind != null
+        ? <Color>[widget.kind!.color(scheme)]
+        : <Color>[
+            scheme.primaryActive,
+            scheme.secondary,
+            scheme.success,
+            scheme.dangerBright,
+          ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

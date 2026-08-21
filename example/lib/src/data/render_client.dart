@@ -3,6 +3,7 @@
 // README for why the pages spell it `render.Service` instead.
 import 'package:render_api/render_api.dart';
 
+import '../widgets/metric_palette.dart';
 import 'response_cache.dart';
 
 /// One [RenderApi] for the whole app, plus a loader per view.
@@ -248,6 +249,27 @@ class RenderClient {
     ),
     limit: Future.value(null),
   );
+
+  /// Every metric a database reports, keyed by kind.
+  ///
+  /// Seven requests. They all go through the cache, so the overview and the
+  /// detail page share them rather than each paying again.
+  Future<Map<MetricKind, MetricChartData>> allCharts(
+    String id, {
+    Duration window = _day,
+  }) async {
+    final loaders = <MetricKind, Future<MetricChartData>>{
+      MetricKind.cpu: cpuChart(id, window: window),
+      MetricKind.memory: memoryChart(id, window: window),
+      MetricKind.disk: diskChart(id, window: window),
+      MetricKind.connections: connectionsChart(id, window: window),
+    };
+    final resolved = await Future.wait(loaders.values);
+    return {
+      for (final (index, kind) in loaders.keys.indexed)
+        if (!resolved[index].isEmpty) kind: resolved[index],
+    };
+  }
 
   // --- Postgres introspection ----------------------------------------------
   //

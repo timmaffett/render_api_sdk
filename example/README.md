@@ -119,6 +119,29 @@ Where a whole tab comes from one response — sizes, queries, activity are one
 call each — there is one stamp for the tab rather than the same time repeated
 on every row.
 
+## One chart, four metrics
+
+The database card overlays every metric on a shared percentage axis, each line
+in a colour it keeps on the detail page too — so "green is disk" is learned
+once. Most of these are already drawn as a share of their own ceiling, which is
+what makes them comparable: 20% of memory and 5% of CPU are the same kind of
+statement.
+
+Two things fell out of trying it.
+
+**Connections cannot go on that axis.** Render reports no ceiling for it, and
+scaling it against its own peak — the obvious workaround — is worse than
+useless: a database holding one or two connections becomes a line swinging
+between 50% and 100%, the loudest thing on the chart and the least meaningful,
+while CPU at 5% is squashed into the baseline. A percentage needs a real
+denominator. It keeps its colour and its own chart, where a count is a count.
+
+**A fixed 0–100% axis wastes its height.** An idle database runs at 5% CPU, 6%
+disk and 20% memory, so everything piles into the bottom quarter and disk hides
+under CPU. The axis fits the data with a little headroom instead, so it reads
+0–32% here. Still a percentage of each metric's real ceiling — zoomed, not
+distorted.
+
 ## Times
 
 Settings carries two, because a timestamp answers different questions in
