@@ -187,10 +187,100 @@ class RenderClient {
     return [for (final s in raw) MetricSeries.from(s.labels, s.values, s.unit)];
   }
 
+  /// A metric with the instance limit it should be read against.
+  ///
+  /// Render's own dashboard plots CPU and memory against the plan's ceiling
+  /// rather than against the data's own range, which is why an idle service
+  /// there reads as a low line on a full axis instead of noise filling the
+  /// frame. `getCpuLimit` and `getMemoryLimit` are what make that possible;
+  /// they are separate operations, and easy to miss.
+  Future<MetricChartData> cpuChart(
+    String resourceId, {
+    Duration window = _day,
+  }) => _chart(
+    series: cpu(resourceId, window: window),
+    limit: _latestOf(
+      () => _api.getCpuLimit(resource: resourceId, startTime: _since(window)),
+    ),
+  );
+
+  Future<MetricChartData> memoryChart(
+    String resourceId, {
+    Duration window = _day,
+  }) => _chart(
+    series: memory(resourceId, window: window),
+    limit: _latestOf(
+      () =>
+          _api.getMemoryLimit(resource: resourceId, startTime: _since(window)),
+    ),
+  );
+
+  /// Bandwidth and HTTP requests have no ceiling to plot against, so their
+  /// charts scale to their own data.
+  Future<MetricChartData> bandwidthChart(String id, {Duration window = _day}) =>
+      _chart(
+        series: bandwidth(id, window: window),
+        limit: Future.value(null),
+      );
+
+  Future<MetricChartData> httpRequestsChart(
+    String id, {
+    Duration window = _day,
+  }) => _chart(
+    series: httpRequests(id, window: window),
+    limit: Future.value(null),
+  );
+
+  static Future<MetricChartData> _chart({
+    required Future<List<MetricSeries>> series,
+    required Future<double?> limit,
+  }) async {
+    final resolved = await series;
+    return MetricChartData(
+      series: resolved.where((s) => !s.isEmpty).toList(),
+      limit: await limit,
+      unit: resolved.isEmpty ? null : resolved.first.unit,
+    );
+  }
+
+  /// The most recent value of a limit series, or null if the plan does not
+  /// report one. A limit is flat, so the last point is the whole story.
+  static Future<double?> _latestOf(
+    Future<List<dynamic>> Function() call,
+  ) async {
+    try {
+      for (final series in await call()) {
+        final values = (series.values as List?) ?? const [];
+        if (values.isNotEmpty) {
+          return ((values.last as dynamic).value as num?)?.toDouble();
+        }
+      }
+    } on RenderApiException {
+      // Limits are plan-gated in the same way the HTTP metrics are; a chart
+      // without one still draws, scaled to its own data.
+    }
+    return null;
+  }
+
   static const _day = Duration(hours: 24);
 
   static String _since(Duration window) =>
       DateTime.now().toUtc().subtract(window).toIso8601String();
+}
+
+/// Everything one chart needs: its lines, and the ceiling to draw them against.
+class MetricChartData {
+  const MetricChartData({required this.series, this.limit, this.unit});
+
+  final List<MetricSeries> series;
+
+  /// The instance's ceiling — cores for CPU, bytes for memory. Null when the
+  /// plan does not report one, in which case the chart scales to its own data.
+  final double? limit;
+
+  final String? unit;
+
+  bool get isEmpty => series.every((s) => s.isEmpty);
 }
 
 /// One line on a chart.

@@ -5,7 +5,7 @@ import 'package:render_api/render_api.dart' as render;
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
 import '../widgets/responsive_scaffold.dart';
-import '../widgets/sparkline.dart';
+import '../widgets/metric_chart.dart';
 
 /// render.Postgres and key value stores.
 ///
@@ -46,25 +46,22 @@ class DatabasesPage extends StatelessWidget {
                 ),
                 AurisDataRow(label: 'region', value: db.region.wireValue),
                 AurisDataRow(label: 'version', value: db.version.wireValue),
-                const SizedBox(height: 12),
-                Text(
-                  'CPU · 24h',
-                  style: Theme.of(context).textTheme.labelSmall,
+                const SizedBox(height: 16),
+                AsyncView<MetricChartData>(
+                  future: client.cpuChart(db.id),
+                  builder: (context, data) => data.isEmpty
+                      ? const SizedBox(
+                          height: 48,
+                          child: Center(child: Text('no CPU data')),
+                        )
+                      : MetricChart(title: 'CPU · 24h', data: data),
                 ),
-                const SizedBox(height: 4),
-                AsyncView<List<MetricSeries>>(
-                  future: client.cpu(db.id),
-                  emptyMessage: 'No CPU data for this window.',
-                  builder: (context, series) {
-                    final withData = series.where((s) => !s.isEmpty).toList();
-                    if (withData.isEmpty) {
-                      return const SizedBox(
-                        height: 48,
-                        child: Center(child: Text('no data')),
-                      );
-                    }
-                    return Sparkline(series: withData.first);
-                  },
+                const SizedBox(height: 16),
+                AsyncView<MetricChartData>(
+                  future: client.memoryChart(db.id),
+                  builder: (context, data) => data.isEmpty
+                      ? const SizedBox.shrink()
+                      : MetricChart(title: 'MEMORY · 24h', data: data),
                 ),
               ],
             ),

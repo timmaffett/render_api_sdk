@@ -41,6 +41,13 @@ plan does not include. `RenderApiException.hint` explains those, and
 `lib/src/widgets/async_view.dart` shows it verbatim rather than paraphrasing.
 `RenderAuthException` is handled separately — it signs the app out.
 
+**Charts are plotted against the plan's ceiling.** `getCpuLimit` and
+`getMemoryLimit` are separate operations from `getCpu` and `getMemory`, and
+easy to miss — without them a chart scales to its own data, so an idle service
+looks like a noisy full-height waveform instead of a flat line near zero. The
+axis runs 0 to the limit, the toggle switches the labels between a share of
+that ceiling and the raw reading, and hovering scrubs a readout along the line.
+
 **Three names collide with Flutter**, and the fix is a prefix. The spec has
 schemas called `State`, `Route` and `Image`; the generator takes its names from
 the spec, and that correspondence is the package's whole promise, so it cannot

@@ -4,7 +4,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
-import '../widgets/sparkline.dart';
+import '../widgets/metric_chart.dart';
 
 /// One service: deploys, events, environment and metrics.
 ///
@@ -147,19 +147,22 @@ class _Metrics extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        _MetricPanel(title: 'CPU', load: () => client.cpu(service.id)),
+        _ChartPanel(title: 'CPU', load: () => client.cpuChart(service.id)),
         const SizedBox(height: 12),
-        _MetricPanel(title: 'MEMORY', load: () => client.memory(service.id)),
-        const SizedBox(height: 12),
-        _MetricPanel(
-          title: 'BANDWIDTH',
-          load: () => client.bandwidth(service.id),
+        _ChartPanel(
+          title: 'MEMORY',
+          load: () => client.memoryChart(service.id),
         ),
         const SizedBox(height: 12),
-        _MetricPanel(
+        _ChartPanel(
+          title: 'BANDWIDTH',
+          load: () => client.bandwidthChart(service.id),
+        ),
+        const SizedBox(height: 12),
+        _ChartPanel(
           title: 'HTTP REQUESTS',
-          load: () => client.httpRequests(service.id),
-          // Not a bug and not an empty service: HTTP metrics are gated by the
+          load: () => client.httpRequestsChart(service.id),
+          // Not a bug and not an idle service: HTTP metrics are gated by the
           // instance plan, and Render returns 200 with no series rather than
           // saying so. Its sibling getHttpLatency answers 400 outright.
           emptyMessage:
@@ -171,50 +174,38 @@ class _Metrics extends StatelessWidget {
   }
 }
 
-class _MetricPanel extends StatelessWidget {
-  const _MetricPanel({
+class _ChartPanel extends StatelessWidget {
+  const _ChartPanel({
     required this.title,
     required this.load,
     this.emptyMessage = 'No data for this window.',
   });
 
   final String title;
-  final Future<List<MetricSeries>> Function() load;
+  final Future<MetricChartData> Function() load;
   final String emptyMessage;
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).extension<AurisScheme>()!;
     return AurisPanel(
       title: title,
-      child: SizedBox(
-        height: 120,
-        child: AsyncView<List<MetricSeries>>(
-          future: load(),
-          emptyMessage: emptyMessage,
-          builder: (context, series) {
-            final withData = series.where((s) => !s.isEmpty).toList();
-            if (withData.isEmpty) {
-              return AsyncView<List<MetricSeries>>(
-                future: Future.value(const <MetricSeries>[]),
-                emptyMessage: emptyMessage,
-                builder: (_, _) => const SizedBox.shrink(),
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final s in withData.take(2)) ...[
-                  Text(
-                    '${s.label}   ${s.formattedLatest}',
-                    style: Theme.of(context).textTheme.bodySmall,
+      child: AsyncView<MetricChartData>(
+        future: load(),
+        builder: (context, data) => data.isEmpty
+            ? SizedBox(
+                height: 90,
+                child: Center(
+                  child: Text(
+                    emptyMessage,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: scheme.textDim),
                   ),
-                  const SizedBox(height: 4),
-                  Expanded(child: Sparkline(series: s)),
-                ],
-              ],
-            );
-          },
-        ),
+                ),
+              )
+            : MetricChart(title: title, data: data),
       ),
     );
   }
