@@ -4,6 +4,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/load_once.dart';
+import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
 
 /// One service: deploys, events, environment and metrics.
@@ -29,6 +30,7 @@ class ServiceDetailPage extends StatelessWidget {
         backgroundColor: scheme.surfacePage,
         appBar: AppBar(
           title: Text(service.name.toUpperCase()),
+          actions: const [RefreshButton()],
           bottom: const TabBar(
             tabs: [
               Tab(text: 'DEPLOYS'),
@@ -60,6 +62,7 @@ class _Deploys extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<render.Deploy>>(
+      refresh: RefreshScope.of(context),
       load: () => client.deploys(service.id),
       emptyMessage: 'No deploys yet.',
       builder: (context, deploys) => ListView.builder(
@@ -98,6 +101,7 @@ class _Events extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<render.ServiceEventWithCursorEvent>>(
+      refresh: RefreshScope.of(context),
       load: () => client.events(service.id),
       emptyMessage: 'No events.',
       builder: (context, events) => ListView.builder(
@@ -121,6 +125,7 @@ class _EnvVars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<render.EnvVar>>(
+      refresh: RefreshScope.of(context),
       load: () => client.envVars(service.id),
       emptyMessage: 'No environment variables set on this service.',
       builder: (context, vars) => ListView.builder(
@@ -191,6 +196,7 @@ class _ChartPanel extends StatelessWidget {
     return AurisPanel(
       title: title,
       child: LoadOnce<MetricChartData>(
+        refresh: RefreshScope.of(context),
         load: () => load(),
         builder: (context, data) => data.isEmpty
             ? SizedBox(

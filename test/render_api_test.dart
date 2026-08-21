@@ -174,6 +174,56 @@ void main() {
       },
     );
 
+    test('a long Retry-After fails fast instead of sleeping', () async {
+      // Measured against the live API: the Postgres introspection endpoints
+      // allow about one request per window and answer `Retry-After: 51`.
+      // Honouring that three times is two and a half minutes of silence, which
+      // from a UI cannot be told apart from a hang.
+      var calls = 0;
+      final api = apiWith((_) async {
+        calls++;
+        return http.Response(
+          'rate limit exceeded',
+          429,
+          headers: {'retry-after': '51'},
+        );
+      });
+
+      final watch = Stopwatch()..start();
+      await expectLater(
+        api.listPostgresTopQueries(postgresId: 'dpg-abc'),
+        throwsA(
+          isA<RenderRateLimitException>().having(
+            (e) => e.retryAfter,
+            'retryAfter',
+            const Duration(seconds: 51),
+          ),
+        ),
+      );
+      watch.stop();
+
+      expect(calls, 1, reason: 'should not have retried');
+      expect(watch.elapsed, lessThan(const Duration(seconds: 1)));
+    });
+
+    test('a short Retry-After is still honoured', () async {
+      var calls = 0;
+      final api = apiWith((_) async {
+        calls++;
+        return calls == 1
+            ? http.Response('slow down', 429, headers: {'retry-after': '0'})
+            : http.Response(
+                '{"id":"own-1","name":"A","email":"a@b.c","type":"user"}',
+                200,
+              );
+      });
+
+      final owner = await api.retrieveOwner(ownerId: 'own-1');
+
+      expect(owner.id, 'own-1');
+      expect(calls, 2, reason: 'a brief wait is worth retrying');
+    });
+
     test('404 is typed', () async {
       final api = apiWith((_) async => http.Response('', 404));
 

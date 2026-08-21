@@ -25,6 +25,7 @@ class RenderApiClient {
     http.Client? httpClient,
     this.maxRetries = 3,
     this.timeout = const Duration(seconds: 30),
+    this.maxRetryDelay = const Duration(seconds: 5),
   }) : _token = token ?? readEnv('RENDER_API_KEY'),
        baseUrl = _resolveBaseUrl(baseUrl),
        _http = httpClient ?? http.Client(),
@@ -76,6 +77,20 @@ class RenderApiClient {
   /// Per-attempt timeout.
   final Duration timeout;
 
+  /// The longest this client will wait before giving up rather than retrying.
+  ///
+  /// Render answers a rate limit with `Retry-After`, and honouring it without
+  /// a ceiling means blocking for as long as the server says — measured at 51
+  /// seconds on the Postgres introspection endpoints, which allow roughly one
+  /// request per window. Retried three times that is two and a half minutes of
+  /// silence, which from a UI is indistinguishable from a hang.
+  ///
+  /// Past this the call fails immediately with [RenderRateLimitException],
+  /// whose `retryAfter` says when it is worth trying again — a decision the
+  /// caller can make and a library cannot. Raise it to wait longer, or set
+  /// [Duration.zero] never to sleep at all.
+  final Duration maxRetryDelay;
+
   /// Sends a request and decodes the JSON response.
   ///
   /// Returns null for `204 No Content` and other empty successful responses.
@@ -113,9 +128,15 @@ class RenderApiClient {
 
         final retryAfter = _retryAfter(response.headers);
         if (_isRetryable(response.statusCode, method) && attempt < maxRetries) {
-          await Future<void>.delayed(_backoff(attempt, retryAfter));
-          attempt++;
-          continue;
+          final delay = _backoff(attempt, retryAfter);
+          // Waiting is only worth it if the wait is short. Beyond that the
+          // caller is better placed to decide, and gets `retryAfter` to
+          // decide with.
+          if (delay <= maxRetryDelay) {
+            await Future<void>.delayed(delay);
+            attempt++;
+            continue;
+          }
         }
 
         throw exceptionFor(

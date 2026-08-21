@@ -4,6 +4,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/load_once.dart';
+import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
 import '../widgets/metric_chart.dart';
 import 'postgres_detail_page.dart';
@@ -22,6 +23,7 @@ class DatabasesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<render.Postgres>>(
+      refresh: RefreshScope.of(context),
       load: () => client.postgres(),
       onUnauthorized: onUnauthorized,
       emptyMessage: 'No render.Postgres instances.',
@@ -56,6 +58,7 @@ class DatabasesPage extends StatelessWidget {
                   AurisDataRow(label: 'version', value: db.version.wireValue),
                   const SizedBox(height: 16),
                   LoadOnce<MetricChartData>(
+                    refresh: RefreshScope.of(context),
                     load: () => client.cpuChart(db.id),
                     builder: (context, data) => data.isEmpty
                         ? const SizedBox(

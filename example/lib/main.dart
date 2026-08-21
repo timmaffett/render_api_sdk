@@ -17,6 +17,8 @@ import 'src/pages/workflows_page.dart';
 import 'src/pages/workspace_page.dart';
 import 'src/theme/settings_page.dart';
 import 'src/theme/theme_settings.dart';
+import 'src/data/response_cache.dart';
+import 'src/widgets/refresh_scope.dart';
 import 'src/widgets/responsive_scaffold.dart';
 
 Future<void> main() async {
@@ -25,7 +27,18 @@ Future<void> main() async {
   final prefs = await SharedPreferences.getInstance();
   final tokens = TokenStore()..load();
 
-  runApp(RenderDashboardApp(settings: ThemeSettings(prefs), tokens: tokens));
+  // Every GET goes through here, so a rate-limited refresh replays the last
+  // good response instead of replacing real data with an error.
+  final cache = ResponseCache(prefs);
+
+  runApp(
+    RenderDashboardApp(
+      settings: ThemeSettings(prefs),
+      tokens: tokens,
+      cache: cache,
+      refresh: RefreshSignal(),
+    ),
+  );
 }
 
 class RenderDashboardApp extends StatelessWidget {
@@ -33,42 +46,51 @@ class RenderDashboardApp extends StatelessWidget {
     super.key,
     required this.settings,
     required this.tokens,
+    required this.cache,
+    required this.refresh,
   });
 
   final ThemeSettings settings;
   final TokenStore tokens;
+  final ResponseCache cache;
+  final RefreshSignal refresh;
 
   @override
   Widget build(BuildContext context) {
     // Two listenables, no state-management package: the theme rebuilds the
     // MaterialApp, the token decides which screen is under it.
-    return ListenableBuilder(
-      listenable: settings,
-      builder: (context, _) => MaterialApp(
-        title: 'Render Dashboard',
-        debugShowCheckedModeBanner: false,
-        theme: settings.theme,
-        home: ListenableBuilder(
-          listenable: tokens,
-          builder: (context, _) {
-            if (!tokens.loaded) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
+    return RefreshScope(
+      signal: refresh,
+      cache: cache,
+      child: ListenableBuilder(
+        listenable: settings,
+        builder: (context, _) => MaterialApp(
+          title: 'Render Dashboard',
+          debugShowCheckedModeBanner: false,
+          theme: settings.theme,
+          home: ListenableBuilder(
+            listenable: tokens,
+            builder: (context, _) {
+              if (!tokens.loaded) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final token = tokens.token;
+              if (token == null) {
+                return SignInPage(onSubmit: tokens.signIn);
+              }
+              return _Home(
+                // Keyed on the token so signing in with a different one builds a
+                // fresh RenderClient rather than reusing the old HTTP client.
+                key: ValueKey(token),
+                token: token,
+                settings: settings,
+                cache: cache,
+                onSignOut: tokens.signOut,
               );
-            }
-            final token = tokens.token;
-            if (token == null) {
-              return SignInPage(onSubmit: tokens.signIn);
-            }
-            return _Home(
-              // Keyed on the token so signing in with a different one builds a
-              // fresh RenderClient rather than reusing the old HTTP client.
-              key: ValueKey(token),
-              token: token,
-              settings: settings,
-              onSignOut: tokens.signOut,
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -80,11 +102,13 @@ class _Home extends StatefulWidget {
     super.key,
     required this.token,
     required this.settings,
+    required this.cache,
     required this.onSignOut,
   });
 
   final String token;
   final ThemeSettings settings;
+  final ResponseCache cache;
   final Future<void> Function() onSignOut;
 
   @override
@@ -92,7 +116,10 @@ class _Home extends StatefulWidget {
 }
 
 class _HomeState extends State<_Home> {
-  late final RenderClient _client = RenderClient(widget.token);
+  late final RenderClient _client = RenderClient(
+    widget.token,
+    cache: widget.cache,
+  );
   int _index = 0;
 
   @override
@@ -144,6 +171,7 @@ class _HomeState extends State<_Home> {
       destinations: destinations,
       selectedIndex: _index,
       onSelect: (index) => setState(() => _index = index),
+      actions: const [RefreshButton()],
     );
   }
 }

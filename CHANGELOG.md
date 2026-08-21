@@ -1,3 +1,18 @@
+## 0.1.5
+
+- **A long `Retry-After` no longer looks like a hang.** Rate limits were
+  honoured without a ceiling: Render answers `Retry-After: 51` on the Postgres
+  introspection endpoints, and retrying three times meant sleeping two and a
+  half minutes in silence before surfacing anything. Measured, not guessed —
+  the second call to `top-queries` in a row is refused.
+
+  `RenderApiClient.maxRetryDelay` (5 seconds by default) caps how long the
+  client will wait. Past it the call fails immediately with
+  `RenderRateLimitException`, whose `retryAfter` says when it is worth trying
+  again — a judgement the caller can make and a library cannot. Short waits are
+  still retried as before. Raise it to wait longer, or set `Duration.zero`
+  never to sleep.
+
 ## 0.1.4
 
 - **Every model keeps the JSON it was decoded from.** `rawJson` is the very map

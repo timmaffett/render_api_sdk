@@ -28,19 +28,18 @@ dependencies:
   # Theme settings, which are not secret.
   shared_preferences: ^2.5.5
 
-  # The metrics pages. Sparklines are painted by hand — see
-  # lib/src/widgets/sparkline.dart — but axes, tooltips and stacked bars are
-  # not worth reimplementing.
+  # The metrics pages: axes, tooltips and stacked bars.
   fl_chart: ^1.2.0
+
+  # The response cache is an http.Client decorator, so this is a real
+  # dependency rather than a test-only one.
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
 
-  # MockClient, for driving the pages against canned responses. render_api
-  # takes any http.Client, so the tests need no token and no network.
-  http: ^1.2.0
 
 flutter:
   uses-material-design: true

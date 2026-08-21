@@ -19,6 +19,7 @@ class LoadOnce<T> extends StatefulWidget {
     required this.builder,
     this.emptyMessage = 'Nothing here.',
     this.onUnauthorized,
+    this.refresh,
   });
 
   final Future<T> Function() load;
@@ -26,12 +27,33 @@ class LoadOnce<T> extends StatefulWidget {
   final String emptyMessage;
   final VoidCallback? onUnauthorized;
 
+  /// Bumped by the refresh button. Every view listening to it reloads, so one
+  /// control refreshes whatever is on screen without any page knowing about
+  /// the button.
+  final Listenable? refresh;
+
   @override
   State<LoadOnce<T>> createState() => _LoadOnceState<T>();
 }
 
 class _LoadOnceState<T> extends State<LoadOnce<T>> {
   late Future<T> _future = widget.load();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.refresh?.addListener(_reload);
+  }
+
+  @override
+  void dispose() {
+    widget.refresh?.removeListener(_reload);
+    super.dispose();
+  }
+
+  void _reload() {
+    if (mounted) setState(() => _future = widget.load());
+  }
 
   @override
   Widget build(BuildContext context) => AsyncView<T>(

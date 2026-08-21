@@ -3,6 +3,8 @@
 // README for why the pages spell it `render.Service` instead.
 import 'package:render_api/render_api.dart';
 
+import 'response_cache.dart';
+
 /// One [RenderApi] for the whole app, plus a loader per view.
 ///
 /// Two things about the package shape are worth seeing here, because every
@@ -17,14 +19,19 @@ import 'package:render_api/render_api.dart';
 ///   answers 500 for cases that are not server faults, and 400 for metrics
 ///   that a plan simply does not include.
 class RenderClient {
-  RenderClient(String token) : _api = RenderApi(token: token);
+  RenderClient(String token, {this.cache})
+    : _api = RenderApi(token: token, httpClient: cache);
 
   /// Wraps an API built elsewhere.
   ///
   /// `RenderApi.fromClient` takes any `http.Client`, which is how the widget
   /// tests drive these pages against canned responses without a token or a
   /// network — see `test/dashboard_test.dart`.
-  RenderClient.fromApi(this._api);
+  RenderClient.fromApi(this._api) : cache = null;
+
+  /// The response cache, when there is one. Null in tests, which drive the
+  /// pages through a MockClient instead.
+  final ResponseCache? cache;
 
   final RenderApi _api;
 

@@ -5,6 +5,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/load_once.dart';
+import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
 
 /// Workflow services, their tasks, and how their runs have been going.
@@ -25,6 +26,7 @@ class WorkflowsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<render.WorkflowWithCursorWorkflow>>(
+      refresh: RefreshScope.of(context),
       load: () => client.workflows(),
       onUnauthorized: onUnauthorized,
       emptyMessage: 'No workflow services.',
@@ -69,6 +71,7 @@ class _RunOutcomes extends StatelessWidget {
     final scheme = theme.extension<AurisScheme>()!;
 
     return LoadOnce<List<render.TaskRunWithCursorTaskRun>>(
+      refresh: RefreshScope.of(context),
       load: () => client.taskRuns(workflowId: workflowId),
       emptyMessage: 'No runs yet.',
       builder: (context, runs) {

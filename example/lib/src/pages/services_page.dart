@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
-import '../widgets/async_view.dart';
+import '../widgets/load_once.dart';
+import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
 import 'service_detail_page.dart';
 
@@ -27,16 +28,16 @@ class ServicesPage extends StatefulWidget {
 }
 
 class _ServicesPageState extends State<ServicesPage> {
-  late Future<List<render.Service>> _future = widget.client.services();
-
-  void _reload() => setState(() => _future = widget.client.services());
-
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async => _reload(),
-      child: AsyncView<List<render.Service>>(
-        future: _future,
+      onRefresh: () async {
+        RefreshScope.maybeOf(context)?.cache?.beginRefresh();
+        setState(() {});
+      },
+      child: LoadOnce<List<render.Service>>(
+        refresh: RefreshScope.of(context),
+        load: widget.client.services,
         onUnauthorized: widget.onUnauthorized,
         emptyMessage:
             'No services.\n\nWorkflow services do not appear here — they come '

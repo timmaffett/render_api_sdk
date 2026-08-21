@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../data/api_types.dart';
 import '../data/render_client.dart';
 import '../widgets/load_once.dart';
+import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
 
 /// One Postgres instance: what it is doing, and what it holds.
@@ -35,6 +36,7 @@ class PostgresDetailPage extends StatelessWidget {
         backgroundColor: scheme.surfacePage,
         appBar: AppBar(
           title: Text(database.name.toUpperCase()),
+          actions: const [RefreshButton()],
           bottom: const TabBar(
             isScrollable: true,
             tabs: [
@@ -95,6 +97,7 @@ class _Panel extends StatelessWidget {
     return AurisPanel(
       title: title,
       child: LoadOnce<MetricChartData>(
+        refresh: RefreshScope.of(context),
         load: () => load(),
         builder: (context, data) => data.isEmpty
             ? const SizedBox(
@@ -116,6 +119,7 @@ class _Sizes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<PostgresSize>>(
+      refresh: RefreshScope.of(context),
       load: () => client.sizes(id),
       emptyMessage: 'No tables yet.',
       builder: (context, sizes) {
@@ -155,6 +159,7 @@ class _Queries extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<TopQuery>>(
+      refresh: RefreshScope.of(context),
       load: () => client.topQueries(id),
       emptyMessage:
           'No statements recorded. Render reports these from '
@@ -202,6 +207,7 @@ class _Activity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<PostgresProcess>>(
+      refresh: RefreshScope.of(context),
       load: () => client.processes(id),
       emptyMessage: 'Nothing running.',
       builder: (context, processes) => ListView.builder(
