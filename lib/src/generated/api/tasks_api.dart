@@ -46,10 +46,15 @@ class TasksEndpoints {
         'workflowId': workflowId,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(TaskWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/tasks',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(TaskWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve task
@@ -57,6 +62,11 @@ class TasksEndpoints {
   /// Retrieve the workflow task with the provided ID.
   Future<GetTaskResponse> getTask({required String taskId}) async {
     final json = await _client.sendObject('GET', '/tasks/$taskId');
-    return GetTaskResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/tasks/$taskId',
+      json,
+      () => GetTaskResponse.fromJson(json),
+    );
   }
 }

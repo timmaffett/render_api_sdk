@@ -62,10 +62,15 @@ class KeyValueEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(KeyValueWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/key-value',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(KeyValueWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create Key Value instance
@@ -79,7 +84,12 @@ class KeyValueEndpoints {
       '/key-value',
       body: body.toJson(),
     );
-    return KeyValueDetail.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/key-value',
+      json,
+      () => KeyValueDetail.fromJson(json),
+    );
   }
 
   /// Retrieve Key Value instance
@@ -87,7 +97,12 @@ class KeyValueEndpoints {
   /// Retrieve a Key Value instance by ID.
   Future<KeyValueDetail> retrieveKeyValue({required String redisId}) async {
     final json = await _client.sendObject('GET', '/key-value/$redisId');
-    return KeyValueDetail.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/key-value/$redisId',
+      json,
+      () => KeyValueDetail.fromJson(json),
+    );
   }
 
   /// Update Key Value instance
@@ -102,7 +117,12 @@ class KeyValueEndpoints {
       '/key-value/$redisId',
       body: body.toJson(),
     );
-    return KeyValueDetail.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/key-value/$redisId',
+      json,
+      () => KeyValueDetail.fromJson(json),
+    );
   }
 
   /// Delete Key Value instance
@@ -122,7 +142,12 @@ class KeyValueEndpoints {
       'GET',
       '/key-value/$redisId/connection-info',
     );
-    return KeyValueConnectionInfo.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/key-value/$redisId/connection-info',
+      json,
+      () => KeyValueConnectionInfo.fromJson(json),
+    );
   }
 
   /// Suspend Key Value instance

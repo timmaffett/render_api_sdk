@@ -44,9 +44,14 @@ class OrganizationsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(AuditLogWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/organizations/$orgId/audit-logs',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(AuditLogWithCursor.fromJson)
+          .toList(),
+    );
   }
 }

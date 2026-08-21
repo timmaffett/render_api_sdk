@@ -29,10 +29,15 @@ class DedicatedIpsEndpoints {
       '/dedicated-ips',
       query: {'ownerId': ownerId, 'environmentId': environmentId},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(DedicatedIp.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/dedicated-ips',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(DedicatedIp.fromJson)
+          .toList(),
+    );
   }
 
   /// Create dedicated IP set
@@ -46,7 +51,12 @@ class DedicatedIpsEndpoints {
       '/dedicated-ips',
       body: body.toJson(),
     );
-    return DedicatedIp.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/dedicated-ips',
+      json,
+      () => DedicatedIp.fromJson(json),
+    );
   }
 
   /// Retrieve dedicated IP set
@@ -59,7 +69,12 @@ class DedicatedIpsEndpoints {
       'GET',
       '/dedicated-ips/$dedicatedIpId',
     );
-    return DedicatedIp.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/dedicated-ips/$dedicatedIpId',
+      json,
+      () => DedicatedIp.fromJson(json),
+    );
   }
 
   /// Update dedicated IP set
@@ -74,7 +89,12 @@ class DedicatedIpsEndpoints {
       '/dedicated-ips/$dedicatedIpId',
       body: body.toJson(),
     );
-    return DedicatedIp.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/dedicated-ips/$dedicatedIpId',
+      json,
+      () => DedicatedIp.fromJson(json),
+    );
   }
 
   /// Delete dedicated IP set

@@ -78,10 +78,15 @@ class ServicesEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ServiceWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ServiceWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create service
@@ -93,7 +98,12 @@ class ServicesEndpoints {
       '/services',
       body: body.toJson(),
     );
-    return ServiceAndDeploy.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services',
+      json,
+      () => ServiceAndDeploy.fromJson(json),
+    );
   }
 
   /// Retrieve service
@@ -101,7 +111,12 @@ class ServicesEndpoints {
   /// Retrieve the service with the provided ID.
   Future<Service> retrieveService({required String serviceId}) async {
     final json = await _client.sendObject('GET', '/services/$serviceId');
-    return Service.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId',
+      json,
+      () => Service.fromJson(json),
+    );
   }
 
   /// Update service
@@ -116,7 +131,12 @@ class ServicesEndpoints {
       '/services/$serviceId',
       body: body.toJson(),
     );
-    return Service.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/services/$serviceId',
+      json,
+      () => Service.fromJson(json),
+    );
   }
 
   /// Delete service
@@ -181,10 +201,15 @@ class ServicesEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(DeployWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/deploys',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(DeployWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Trigger deploy
@@ -199,7 +224,12 @@ class ServicesEndpoints {
       '/services/$serviceId/deploys',
       body: body.toJson(),
     );
-    return Deploy.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/deploys',
+      json,
+      () => Deploy.fromJson(json),
+    );
   }
 
   /// Retrieve deploy
@@ -213,7 +243,12 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/deploys/$deployId',
     );
-    return Deploy.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/deploys/$deployId',
+      json,
+      () => Deploy.fromJson(json),
+    );
   }
 
   /// Cancel deploy
@@ -229,7 +264,12 @@ class ServicesEndpoints {
       'POST',
       '/services/$serviceId/deploys/$deployId/cancel',
     );
-    return Deploy.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/deploys/$deployId/cancel',
+      json,
+      () => Deploy.fromJson(json),
+    );
   }
 
   /// Roll back deploy
@@ -248,7 +288,12 @@ class ServicesEndpoints {
       '/services/$serviceId/rollback',
       body: body.toJson(),
     );
-    return Deploy.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/rollback',
+      json,
+      () => Deploy.fromJson(json),
+    );
   }
 
   /// List environment variables
@@ -268,10 +313,15 @@ class ServicesEndpoints {
       '/services/$serviceId/env-vars',
       query: {'cursor': cursor, 'limit': limit},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(EnvVarWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/env-vars',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(EnvVarWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Update environment variables
@@ -286,10 +336,15 @@ class ServicesEndpoints {
       '/services/$serviceId/env-vars',
       body: body.map((e) => e.toJson()).toList(),
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(EnvVarWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/env-vars',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(EnvVarWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve environment variable
@@ -305,7 +360,12 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/env-vars/$envVarKey',
     );
-    return EnvVar.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/env-vars/$envVarKey',
+      json,
+      () => EnvVar.fromJson(json),
+    );
   }
 
   /// Add or update environment variable
@@ -323,7 +383,12 @@ class ServicesEndpoints {
       '/services/$serviceId/env-vars/$envVarKey',
       body: body.toJson(),
     );
-    return EnvVar.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/env-vars/$envVarKey',
+      json,
+      () => EnvVar.fromJson(json),
+    );
   }
 
   /// Delete environment variable
@@ -355,10 +420,15 @@ class ServicesEndpoints {
       '/services/$serviceId/secret-files',
       query: {'cursor': cursor, 'limit': limit},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(SecretFileWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/secret-files',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(SecretFileWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Update secret files
@@ -377,10 +447,15 @@ class ServicesEndpoints {
       '/services/$serviceId/secret-files',
       body: body.map((e) => e.toJson()).toList(),
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(SecretFileWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/secret-files',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(SecretFileWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve secret file
@@ -396,7 +471,12 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/secret-files/$envVarKey',
     );
-    return SecretFile.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/secret-files/$envVarKey',
+      json,
+      () => SecretFile.fromJson(json),
+    );
   }
 
   /// Add or update secret file
@@ -414,7 +494,12 @@ class ServicesEndpoints {
       '/services/$serviceId/secret-files/$envVarKey',
       body: body.toJson(),
     );
-    return SecretFile.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/secret-files/$envVarKey',
+      json,
+      () => SecretFile.fromJson(json),
+    );
   }
 
   /// Delete secret file
@@ -464,10 +549,15 @@ class ServicesEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ServiceEventWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/events',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ServiceEventWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// List header rules
@@ -502,10 +592,15 @@ class ServicesEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(HeaderWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/headers',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(HeaderWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Add header rule
@@ -520,7 +615,12 @@ class ServicesEndpoints {
       '/services/$serviceId/headers',
       body: body.toJson(),
     );
-    return AddHeadersResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/headers',
+      json,
+      () => AddHeadersResponse.fromJson(json),
+    );
   }
 
   /// Replace header rules
@@ -537,7 +637,13 @@ class ServicesEndpoints {
       '/services/$serviceId/headers',
       body: body.map((e) => e.toJson()).toList(),
     );
-    return json.whereType<Map<String, Object?>>().map(Header.fromJson).toList();
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/headers',
+      json,
+      () =>
+          json.whereType<Map<String, Object?>>().map(Header.fromJson).toList(),
+    );
   }
 
   /// Delete header rule
@@ -582,10 +688,15 @@ class ServicesEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(RouteWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/routes',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(RouteWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Add redirect/rewrite rules
@@ -600,7 +711,12 @@ class ServicesEndpoints {
       '/services/$serviceId/routes',
       body: body.toJson(),
     );
-    return Route.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/routes',
+      json,
+      () => Route.fromJson(json),
+    );
   }
 
   /// Update redirect/rewrite rules
@@ -619,7 +735,12 @@ class ServicesEndpoints {
       '/services/$serviceId/routes',
       body: body.map((e) => e.toJson()).toList(),
     );
-    return json.whereType<Map<String, Object?>>().map(Route.fromJson).toList();
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/routes',
+      json,
+      () => json.whereType<Map<String, Object?>>().map(Route.fromJson).toList(),
+    );
   }
 
   /// Update redirect/rewrite rule priority
@@ -639,7 +760,12 @@ class ServicesEndpoints {
       '/services/$serviceId/routes/$routeId',
       body: body.toJson(),
     );
-    return PatchRouteResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/services/$serviceId/routes/$routeId',
+      json,
+      () => PatchRouteResponse.fromJson(json),
+    );
   }
 
   /// Delete redirect/rewrite rule
@@ -692,10 +818,15 @@ class ServicesEndpoints {
         'createdAfter': createdAfter,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(CustomDomainWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/custom-domains',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(CustomDomainWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Add custom domain
@@ -710,10 +841,15 @@ class ServicesEndpoints {
       '/services/$serviceId/custom-domains',
       body: body.toJson(),
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(CustomDomain.fromJson)
-        .toList();
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/custom-domains',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(CustomDomain.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve custom domain
@@ -727,7 +863,12 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/custom-domains/$customDomainNameOrId',
     );
-    return CustomDomain.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/custom-domains/$customDomainNameOrId',
+      json,
+      () => CustomDomain.fromJson(json),
+    );
   }
 
   /// Delete custom domain
@@ -807,7 +948,12 @@ class ServicesEndpoints {
       '/services/$serviceId/autoscaling',
       body: body.toJson(),
     );
-    return AutoscaleServiceResponse.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/services/$serviceId/autoscaling',
+      json,
+      () => AutoscaleServiceResponse.fromJson(json),
+    );
   }
 
   /// Delete autoscaling config
@@ -833,7 +979,12 @@ class ServicesEndpoints {
       '/services/$serviceId/preview',
       body: body.toJson(),
     );
-    return ServiceAndDeploy.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/preview',
+      json,
+      () => ServiceAndDeploy.fromJson(json),
+    );
   }
 
   /// List jobs
@@ -884,10 +1035,15 @@ class ServicesEndpoints {
         'finishedAfter': finishedAfter,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(JobWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/jobs',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(JobWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create job
@@ -902,7 +1058,12 @@ class ServicesEndpoints {
       '/services/$serviceId/jobs',
       body: body.toJson(),
     );
-    return PostJobResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/jobs',
+      json,
+      () => PostJobResponse.fromJson(json),
+    );
   }
 
   /// Retrieve job
@@ -916,7 +1077,12 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/jobs/$jobId',
     );
-    return RetrieveJobResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/jobs/$jobId',
+      json,
+      () => RetrieveJobResponse.fromJson(json),
+    );
   }
 
   /// Cancel running job
@@ -930,7 +1096,12 @@ class ServicesEndpoints {
       'POST',
       '/services/$serviceId/jobs/$jobId/cancel',
     );
-    return CancelJobResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/services/$serviceId/jobs/$jobId/cancel',
+      json,
+      () => CancelJobResponse.fromJson(json),
+    );
   }
 
   /// List instances
@@ -943,10 +1114,15 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/instances',
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ServiceInstance.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/instances',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ServiceInstance.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve service outbound IPs
@@ -961,6 +1137,11 @@ class ServicesEndpoints {
       'GET',
       '/services/$serviceId/outbound-ips',
     );
-    return OutboundIps.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/services/$serviceId/outbound-ips',
+      json,
+      () => OutboundIps.fromJson(json),
+    );
   }
 }

@@ -50,10 +50,15 @@ class TaskRunsEndpoints {
         'workflowId': workflowId,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(TaskRunWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/task-runs',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(TaskRunWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Run task
@@ -67,7 +72,12 @@ class TaskRunsEndpoints {
       '/task-runs',
       body: body.toJson(),
     );
-    return CreateTaskResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/task-runs',
+      json,
+      () => CreateTaskResponse.fromJson(json),
+    );
   }
 
   /// Stream realtime events (SSE)
@@ -90,7 +100,12 @@ class TaskRunsEndpoints {
   /// Retrieve the workflow task run with the provided ID.
   Future<GetTaskRunResponse> getTaskRun({required String taskRunId}) async {
     final json = await _client.sendObject('GET', '/task-runs/$taskRunId');
-    return GetTaskRunResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/task-runs/$taskRunId',
+      json,
+      () => GetTaskRunResponse.fromJson(json),
+    );
   }
 
   /// Cancel task run

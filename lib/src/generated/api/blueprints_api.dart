@@ -30,10 +30,15 @@ class BlueprintsEndpoints {
       '/blueprints',
       query: {'ownerId': ownerId, 'cursor': cursor, 'limit': limit},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(BlueprintWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/blueprints',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(BlueprintWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Validate Blueprint
@@ -43,7 +48,12 @@ class BlueprintsEndpoints {
   /// Requests to this endpoint use `Content-Type: multipart/form-data`. The request body (including the Blueprint file) cannot exceed 10MB in size.
   Future<ValidateBlueprintResponse> validateBlueprint() async {
     final json = await _client.sendObject('POST', '/blueprints/validate');
-    return ValidateBlueprintResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/blueprints/validate',
+      json,
+      () => ValidateBlueprintResponse.fromJson(json),
+    );
   }
 
   /// Retrieve Blueprint
@@ -53,7 +63,12 @@ class BlueprintsEndpoints {
     required String blueprintId,
   }) async {
     final json = await _client.sendObject('GET', '/blueprints/$blueprintId');
-    return RetrieveBlueprintResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/blueprints/$blueprintId',
+      json,
+      () => RetrieveBlueprintResponse.fromJson(json),
+    );
   }
 
   /// Update Blueprint
@@ -68,7 +83,12 @@ class BlueprintsEndpoints {
       '/blueprints/$blueprintId',
       body: body.toJson(),
     );
-    return UpdateBlueprintResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/blueprints/$blueprintId',
+      json,
+      () => UpdateBlueprintResponse.fromJson(json),
+    );
   }
 
   /// Disconnect Blueprint
@@ -97,9 +117,14 @@ class BlueprintsEndpoints {
       '/blueprints/$blueprintId/syncs',
       query: {'cursor': cursor, 'limit': limit},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(SyncWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/blueprints/$blueprintId/syncs',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(SyncWithCursor.fromJson)
+          .toList(),
+    );
   }
 }

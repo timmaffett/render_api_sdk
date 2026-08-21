@@ -70,10 +70,15 @@ class PostgresEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(PostgresWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/postgres',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(PostgresWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create Postgres instance
@@ -87,7 +92,12 @@ class PostgresEndpoints {
       '/postgres',
       body: body.toJson(),
     );
-    return PostgresDetail.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/postgres',
+      json,
+      () => PostgresDetail.fromJson(json),
+    );
   }
 
   /// Retrieve Postgres instance
@@ -95,7 +105,12 @@ class PostgresEndpoints {
   /// Retrieve a Postgres instance by ID.
   Future<PostgresDetail> retrievePostgres({required String postgresId}) async {
     final json = await _client.sendObject('GET', '/postgres/$postgresId');
-    return PostgresDetail.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId',
+      json,
+      () => PostgresDetail.fromJson(json),
+    );
   }
 
   /// Update Postgres instance
@@ -110,7 +125,12 @@ class PostgresEndpoints {
       '/postgres/$postgresId',
       body: body.toJson(),
     );
-    return PostgresDetail.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/postgres/$postgresId',
+      json,
+      () => PostgresDetail.fromJson(json),
+    );
   }
 
   /// Delete Postgres instance
@@ -131,7 +151,12 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/connection-info',
     );
-    return PostgresConnectionInfo.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/connection-info',
+      json,
+      () => PostgresConnectionInfo.fromJson(json),
+    );
   }
 
   /// Retrieve point-in-time recovery status
@@ -144,7 +169,12 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/recovery',
     );
-    return RetrievePostgresRecoveryInfoResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/recovery',
+      json,
+      () => RetrievePostgresRecoveryInfoResponse.fromJson(json),
+    );
   }
 
   /// Trigger point-in-time recovery
@@ -159,7 +189,12 @@ class PostgresEndpoints {
       '/postgres/$postgresId/recovery',
       body: body.toJson(),
     );
-    return PostgresDetail.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/postgres/$postgresId/recovery',
+      json,
+      () => PostgresDetail.fromJson(json),
+    );
   }
 
   /// Suspend Postgres instance
@@ -197,10 +232,15 @@ class PostgresEndpoints {
     required String postgresId,
   }) async {
     final json = await _client.sendList('GET', '/postgres/$postgresId/export');
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ListPostgresExportResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/export',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ListPostgresExportResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Create Postgres export
@@ -220,10 +260,15 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/credentials',
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ListPostgresUsersResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/credentials',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ListPostgresUsersResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Create PostgreSQL User
@@ -260,7 +305,12 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/query/processes',
     );
-    return ListPostgresProcessesResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/query/processes',
+      json,
+      () => ListPostgresProcessesResponse.fromJson(json),
+    );
   }
 
   /// List top queries
@@ -273,7 +323,12 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/query/top-queries',
     );
-    return ListPostgresTopQueriesResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/query/top-queries',
+      json,
+      () => ListPostgresTopQueriesResponse.fromJson(json),
+    );
   }
 
   /// List database, table, and index sizes
@@ -286,7 +341,12 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/query/sizes',
     );
-    return ListPostgresSizesResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/query/sizes',
+      json,
+      () => ListPostgresSizesResponse.fromJson(json),
+    );
   }
 
   /// List table scans
@@ -299,6 +359,11 @@ class PostgresEndpoints {
       'GET',
       '/postgres/$postgresId/query/table-scans',
     );
-    return ListPostgresTableScansResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/postgres/$postgresId/query/table-scans',
+      json,
+      () => ListPostgresTableScansResponse.fromJson(json),
+    );
   }
 }

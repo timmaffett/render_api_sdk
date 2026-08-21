@@ -28,10 +28,15 @@ class WebhooksEndpoints {
       '/webhooks',
       query: {'cursor': cursor, 'limit': limit, 'ownerId': ownerId},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(WebhookWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/webhooks',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(WebhookWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create a webhook
@@ -45,7 +50,12 @@ class WebhooksEndpoints {
       '/webhooks',
       body: body.toJson(),
     );
-    return CreateWebhookResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/webhooks',
+      json,
+      () => CreateWebhookResponse.fromJson(json),
+    );
   }
 
   /// Retrieve a webhook
@@ -55,7 +65,12 @@ class WebhooksEndpoints {
     required String webhookId,
   }) async {
     final json = await _client.sendObject('GET', '/webhooks/$webhookId');
-    return RetrieveWebhookResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/webhooks/$webhookId',
+      json,
+      () => RetrieveWebhookResponse.fromJson(json),
+    );
   }
 
   /// Update a webhook
@@ -70,7 +85,12 @@ class WebhooksEndpoints {
       '/webhooks/$webhookId',
       body: body.toJson(),
     );
-    return UpdateWebhookResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/webhooks/$webhookId',
+      json,
+      () => UpdateWebhookResponse.fromJson(json),
+    );
   }
 
   /// Delete a webhook
@@ -108,9 +128,14 @@ class WebhooksEndpoints {
         'cursor': cursor,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(WebhookEventWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/webhooks/$webhookId/events',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(WebhookEventWithCursor.fromJson)
+          .toList(),
+    );
   }
 }

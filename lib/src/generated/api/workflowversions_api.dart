@@ -42,10 +42,15 @@ class WorkflowversionsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(WorkflowVersionWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/workflowversions',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(WorkflowVersionWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Deploy a workflow version
@@ -67,6 +72,11 @@ class WorkflowversionsEndpoints {
       'GET',
       '/workflowversions/$workflowVersionId',
     );
-    return GetWorkflowVersionResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/workflowversions/$workflowVersionId',
+      json,
+      () => GetWorkflowVersionResponse.fromJson(json),
+    );
   }
 }

@@ -18,7 +18,12 @@ class MetricsStreamEndpoints {
     required String ownerId,
   }) async {
     final json = await _client.sendObject('GET', '/metrics-stream/$ownerId');
-    return GetOwnerMetricsStreamResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/metrics-stream/$ownerId',
+      json,
+      () => GetOwnerMetricsStreamResponse.fromJson(json),
+    );
   }
 
   /// Create or update metrics stream
@@ -33,7 +38,12 @@ class MetricsStreamEndpoints {
       '/metrics-stream/$ownerId',
       body: body.toJson(),
     );
-    return UpsertOwnerMetricsStreamResponse.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/metrics-stream/$ownerId',
+      json,
+      () => UpsertOwnerMetricsStreamResponse.fromJson(json),
+    );
   }
 
   /// Delete metrics stream

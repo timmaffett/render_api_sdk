@@ -62,10 +62,15 @@ class EnvironmentsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(EnvironmentWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/environments',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(EnvironmentWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create environment
@@ -79,7 +84,12 @@ class EnvironmentsEndpoints {
       '/environments',
       body: body.toJson(),
     );
-    return Environment.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/environments',
+      json,
+      () => Environment.fromJson(json),
+    );
   }
 
   /// Retrieve environment
@@ -92,7 +102,12 @@ class EnvironmentsEndpoints {
       'GET',
       '/environments/$environmentId',
     );
-    return Environment.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/environments/$environmentId',
+      json,
+      () => Environment.fromJson(json),
+    );
   }
 
   /// Update environment
@@ -107,7 +122,12 @@ class EnvironmentsEndpoints {
       '/environments/$environmentId',
       body: body.toJson(),
     );
-    return Environment.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/environments/$environmentId',
+      json,
+      () => Environment.fromJson(json),
+    );
   }
 
   /// Delete environment
@@ -135,7 +155,12 @@ class EnvironmentsEndpoints {
       '/environments/$environmentId/resources',
       body: body.toJson(),
     );
-    return Environment.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/environments/$environmentId/resources',
+      json,
+      () => Environment.fromJson(json),
+    );
   }
 
   /// Remove resources from environment

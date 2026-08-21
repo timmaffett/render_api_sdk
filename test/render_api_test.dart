@@ -323,6 +323,107 @@ void main() {
 /// Getting that wrong would silently decode into the wrong variant, so each
 /// direction is pinned.
 void _unionTests() {
+  group('raw payload', () {
+    test('rawJson is the very map decoded, not a copy', () async {
+      // Kept by reference: nothing is walked or re-encoded on the way in.
+      final body = {
+        'id': 'own-1',
+        'name': 'A',
+        'email': 'a@b.c',
+        'type': 'user',
+      };
+      final owner = Owner.fromJson(body);
+
+      expect(identical(owner.rawJson, body), isTrue);
+    });
+
+    test('undocumented fields survive, and are findable', () async {
+      // Verified against the live API: /services sends autoDeployTrigger, and
+      // the spec does not declare it, so nothing typed can reach it.
+      final api = apiWith(
+        (_) async => http.Response(
+          '[{"cursor":"c","service":{"id":"srv-1","name":"web",'
+          '"type":"web_service","ownerId":"own-1","autoDeploy":"yes",'
+          '"createdAt":"2026-08-21T00:00:00Z","updatedAt":"2026-08-21T00:00:00Z",'
+          '"autoDeployTrigger":"commit"}}]',
+          200,
+        ),
+      );
+
+      final service = (await api.listServices()).first.service;
+
+      expect(service.name, 'web');
+      expect(service.rawJson['autoDeployTrigger'], 'commit');
+      expect(
+        service.unknownFields,
+        containsPair('autoDeployTrigger', 'commit'),
+      );
+    });
+
+    test('unknownFields is empty when the response matches the spec', () {
+      final owner = Owner.fromJson({
+        'id': 'own-1',
+        'name': 'A',
+        'email': 'a@b.c',
+        'type': 'user',
+      });
+
+      expect(owner.unknownFields, isEmpty);
+    });
+
+    test('a round-trip carries undocumented fields back out', () {
+      final owner = Owner.fromJson({
+        'id': 'own-1',
+        'name': 'A',
+        'email': 'a@b.c',
+        'type': 'user',
+        'somethingNew': 42,
+      });
+
+      // Fetch, then send back, without silently dropping what Render sent.
+      expect(owner.toJson()['somethingNew'], 42);
+      expect(owner.toJson()['id'], 'own-1');
+    });
+
+    test(
+      'a model built in Dart has no raw payload and round-trips cleanly',
+      () {
+        const owner = Owner(
+          id: 'own-1',
+          name: 'A',
+          email: 'a@b.c',
+          type: OwnerType.user,
+        );
+
+        expect(owner.rawJson, isEmpty);
+        expect(owner.unknownFields, isEmpty);
+        expect(owner.toJson()['id'], 'own-1');
+      },
+    );
+  });
+
+  group('a mis-described response', () {
+    test('keeps the payload reachable on the exception', () async {
+      // What a spec bug looks like from the inside: the declared type cannot
+      // decode what arrived. Before this the caller got nothing at all.
+      final api = apiWith((_) async => http.Response('{"id": 12345}', 200));
+
+      await expectLater(
+        api.retrieveOwner(ownerId: 'own-abc'),
+        throwsA(
+          isA<RenderDecodeException>()
+              .having((e) => e.path, 'path', '/owners/own-abc')
+              .having(
+                (e) => (e.payload as Map)['id'],
+                'payload survives',
+                12345,
+              )
+              .having((e) => e.hint, 'hint', contains('specification')),
+        ),
+      );
+    });
+  });
+
   group('discriminated unions', () {
     test('env var input picks the variant from the field present', () {
       final literal = AddUpdateEnvVarInput.fromJson({'value': 'secret'});

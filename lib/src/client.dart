@@ -149,6 +149,32 @@ class RenderApiClient {
     }
   }
 
+  /// Decodes a 2xx payload, keeping it reachable if the shape is wrong.
+  ///
+  /// Render's specification is the contract this package is generated from,
+  /// and it is occasionally wrong — see [RenderDecodeException]. When that
+  /// happens the typed view is lost, but the payload should not be.
+  T decode<T>(String method, String path, Object? payload, T Function() parse) {
+    try {
+      return parse();
+    } on RenderException {
+      rethrow;
+    } on Object catch (error) {
+      throw RenderDecodeException(
+        'The response did not match what the specification declares. $error',
+        method: method,
+        path: path,
+        payload: payload,
+        cause: error,
+        hint:
+            'This is Render\'s specification disagreeing with Render\'s API, '
+            'not a fault in the request. The payload is on the exception as '
+            '`payload`, so the data is still reachable untyped. Please report '
+            'it so the generator can override the response type.',
+      );
+    }
+  }
+
   /// Sends a request expecting a JSON object.
   Future<Map<String, Object?>> sendObject(
     String method,

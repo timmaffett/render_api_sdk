@@ -26,10 +26,15 @@ class MaintenanceEndpoints {
       '/maintenance',
       query: {'resourceId': resourceId, 'ownerId': ownerId, 'state': state},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ListMaintenanceResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/maintenance',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ListMaintenanceResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve maintenance run
@@ -42,7 +47,12 @@ class MaintenanceEndpoints {
       'GET',
       '/maintenance/$maintenanceRunId',
     );
-    return RetrieveMaintenanceResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/maintenance/$maintenanceRunId',
+      json,
+      () => RetrieveMaintenanceResponse.fromJson(json),
+    );
   }
 
   /// Update maintenance run

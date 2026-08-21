@@ -22,7 +22,12 @@ class NotificationSettingsEndpoints {
       'GET',
       '/notification-settings/owners/$ownerId',
     );
-    return RetrieveOwnerNotificationSettingsResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/notification-settings/owners/$ownerId',
+      json,
+      () => RetrieveOwnerNotificationSettingsResponse.fromJson(json),
+    );
   }
 
   /// Update notification settings
@@ -38,7 +43,12 @@ class NotificationSettingsEndpoints {
       '/notification-settings/owners/$ownerId',
       body: body.toJson(),
     );
-    return PatchOwnerNotificationSettingsResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/notification-settings/owners/$ownerId',
+      json,
+      () => PatchOwnerNotificationSettingsResponse.fromJson(json),
+    );
   }
 
   /// List notification overrides
@@ -68,10 +78,15 @@ class NotificationSettingsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(NotificationOverrideWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/notification-settings/overrides',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(NotificationOverrideWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve notification override
@@ -85,7 +100,12 @@ class NotificationSettingsEndpoints {
       'GET',
       '/notification-settings/overrides/services/$serviceId',
     );
-    return RetrieveServiceNotificationOverridesResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/notification-settings/overrides/services/$serviceId',
+      json,
+      () => RetrieveServiceNotificationOverridesResponse.fromJson(json),
+    );
   }
 
   /// Update notification override
@@ -101,6 +121,11 @@ class NotificationSettingsEndpoints {
       '/notification-settings/overrides/services/$serviceId',
       body: body.toJson(),
     );
-    return PatchServiceNotificationOverridesResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/notification-settings/overrides/services/$serviceId',
+      json,
+      () => PatchServiceNotificationOverridesResponse.fromJson(json),
+    );
   }
 }

@@ -1,5 +1,28 @@
 ## 0.1.4
 
+- **Every model keeps the JSON it was decoded from.** `rawJson` is the very map
+  the response decoded to — kept by reference, nothing copied, walked or
+  re-encoded — and `unknownFields` derives from it the keys the specification
+  does not declare. This is not hypothetical: `GET /services` sends
+  `autoDeployTrigger` on every service and the spec never mentions it, so until
+  now it was dropped on the floor with no way to reach it.
+
+  `toJson()` merges those keys back, so fetching an object and sending it again
+  no longer silently discards what Render sent but never documented. A model
+  built in Dart rather than decoded has an empty `rawJson` and is unaffected.
+
+- **A response that does not match the spec no longer costs you the payload.**
+  `RenderDecodeException` carries what actually arrived, decoded but untyped,
+  along with the method and path. Previously a specification error meant the
+  caller got nothing at all.
+
+- **`getBandwidthSources` works.** It never has. The spec declares an object
+  wrapping a `data` array, labels as an object and epoch-integer timestamps;
+  the API returns the same array-of-series every other metric returns, keyed by
+  a `trafficSource` label of `total` or `http`. The correction lives in
+  `tool/generate.dart`, so the vendored spec stays a faithful copy of Render's
+  and regeneration cannot undo it.
+
 - **A 429 now says which limit was hit.** Postgres introspection —
   `listPostgresProcesses`, `listPostgresSizes`, `listPostgresTableScans`,
   `listPostgresTopQueries` — is rate limited far more tightly than the metrics

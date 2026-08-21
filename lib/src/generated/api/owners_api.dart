@@ -24,7 +24,12 @@ class OwnersEndpoints {
       '/owners/$ownerId/members/$userId',
       body: body.toJson(),
     );
-    return TeamMember.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/owners/$ownerId/members/$userId',
+      json,
+      () => TeamMember.fromJson(json),
+    );
   }
 
   /// Remove workspace member
@@ -59,10 +64,15 @@ class OwnersEndpoints {
       '/owners',
       query: {'name': name, 'email': email, 'cursor': cursor, 'limit': limit},
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(OwnerWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/owners',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(OwnerWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve workspace
@@ -72,7 +82,12 @@ class OwnersEndpoints {
   /// Workspace IDs start with `tea-`. If you provide a user ID (starts with `own-`), this endpoint returns the user's default workspace.
   Future<Owner> retrieveOwner({required String ownerId}) async {
     final json = await _client.sendObject('GET', '/owners/$ownerId');
-    return Owner.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/owners/$ownerId',
+      json,
+      () => Owner.fromJson(json),
+    );
   }
 
   /// List workspace members
@@ -82,10 +97,15 @@ class OwnersEndpoints {
     required String ownerId,
   }) async {
     final json = await _client.sendList('GET', '/owners/$ownerId/members');
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(TeamMember.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/owners/$ownerId/members',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(TeamMember.fromJson)
+          .toList(),
+    );
   }
 
   /// List workspace audit logs
@@ -121,9 +141,14 @@ class OwnersEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(AuditLogWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/owners/$ownerId/audit-logs',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(AuditLogWithCursor.fromJson)
+          .toList(),
+    );
   }
 }

@@ -54,10 +54,15 @@ class ProjectsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ProjectWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/projects',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ProjectWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create project
@@ -69,7 +74,12 @@ class ProjectsEndpoints {
       '/projects',
       body: body.toJson(),
     );
-    return Project.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/projects',
+      json,
+      () => Project.fromJson(json),
+    );
   }
 
   /// Retrieve Project
@@ -77,7 +87,12 @@ class ProjectsEndpoints {
   /// Retrieve the project with the provided ID.
   Future<Project> retrieveProject({required String projectId}) async {
     final json = await _client.sendObject('GET', '/projects/$projectId');
-    return Project.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/projects/$projectId',
+      json,
+      () => Project.fromJson(json),
+    );
   }
 
   /// Update project
@@ -94,7 +109,12 @@ class ProjectsEndpoints {
       '/projects/$projectId',
       body: body.toJson(),
     );
-    return Project.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/projects/$projectId',
+      json,
+      () => Project.fromJson(json),
+    );
   }
 
   /// Delete project

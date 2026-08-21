@@ -95,7 +95,12 @@ class LogsEndpoints {
         'limit': limit,
       },
     );
-    return ListLogsResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/logs',
+      json,
+      () => ListLogsResponse.fromJson(json),
+    );
   }
 
   /// Subscribe to new logs
@@ -266,7 +271,7 @@ class LogsEndpoints {
         'limit': limit,
       },
     );
-    return json;
+    return _client.decode('GET', '/logs/values', json, () => json);
   }
 
   /// Retrieve log stream
@@ -279,7 +284,12 @@ class LogsEndpoints {
       'GET',
       '/logs/streams/owner/$ownerId',
     );
-    return GetOwnerLogStreamResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/logs/streams/owner/$ownerId',
+      json,
+      () => GetOwnerLogStreamResponse.fromJson(json),
+    );
   }
 
   /// Update log stream
@@ -294,7 +304,12 @@ class LogsEndpoints {
       '/logs/streams/owner/$ownerId',
       body: body.toJson(),
     );
-    return UpdateOwnerLogStreamResponse.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/logs/streams/owner/$ownerId',
+      json,
+      () => UpdateOwnerLogStreamResponse.fromJson(json),
+    );
   }
 
   /// Delete log stream
@@ -339,10 +354,15 @@ class LogsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ListResourceLogStreamsResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/logs/streams/resource',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ListResourceLogStreamsResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Retrieve log stream override
@@ -355,7 +375,12 @@ class LogsEndpoints {
       'GET',
       '/logs/streams/resource/$resourceId',
     );
-    return GetResourceLogStreamResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/logs/streams/resource/$resourceId',
+      json,
+      () => GetResourceLogStreamResponse.fromJson(json),
+    );
   }
 
   /// Update log stream override
@@ -370,7 +395,12 @@ class LogsEndpoints {
       '/logs/streams/resource/$resourceId',
       body: body.toJson(),
     );
-    return UpdateResourceLogStreamResponse.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/logs/streams/resource/$resourceId',
+      json,
+      () => UpdateResourceLogStreamResponse.fromJson(json),
+    );
   }
 
   /// Delete log stream override

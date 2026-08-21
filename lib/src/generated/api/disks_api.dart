@@ -62,10 +62,15 @@ class DisksEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(DiskWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/disks',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(DiskWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Add disk
@@ -79,7 +84,12 @@ class DisksEndpoints {
       '/disks',
       body: body.toJson(),
     );
-    return AddDiskResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/disks',
+      json,
+      () => AddDiskResponse.fromJson(json),
+    );
   }
 
   /// Retrieve disk
@@ -87,7 +97,12 @@ class DisksEndpoints {
   /// Retrieve the persistent disk with the provided ID.
   Future<RetrieveDiskResponse> retrieveDisk({required String diskId}) async {
     final json = await _client.sendObject('GET', '/disks/$diskId');
-    return RetrieveDiskResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/disks/$diskId',
+      json,
+      () => RetrieveDiskResponse.fromJson(json),
+    );
   }
 
   /// Update disk
@@ -106,7 +121,12 @@ class DisksEndpoints {
       '/disks/$diskId',
       body: body.toJson(),
     );
-    return UpdateDiskResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/disks/$diskId',
+      json,
+      () => UpdateDiskResponse.fromJson(json),
+    );
   }
 
   /// Delete disk
@@ -123,10 +143,15 @@ class DisksEndpoints {
   /// List snapshots for the persistent disk with the provided ID. Each snapshot is a point-in-time copy of the disk's data.
   Future<List<DiskSnapshot>> listSnapshots({required String diskId}) async {
     final json = await _client.sendList('GET', '/disks/$diskId/snapshots');
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(DiskSnapshot.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/disks/$diskId/snapshots',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(DiskSnapshot.fromJson)
+          .toList(),
+    );
   }
 
   /// Restore snapshot
@@ -145,6 +170,11 @@ class DisksEndpoints {
       '/disks/$diskId/snapshots/restore',
       body: body.toJson(),
     );
-    return RestoreSnapshotResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/disks/$diskId/snapshots/restore',
+      json,
+      () => RestoreSnapshotResponse.fromJson(json),
+    );
   }
 }

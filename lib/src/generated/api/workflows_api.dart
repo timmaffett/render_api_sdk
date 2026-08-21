@@ -46,10 +46,15 @@ class WorkflowsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(WorkflowWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/workflows',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(WorkflowWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create a workflow
@@ -63,7 +68,12 @@ class WorkflowsEndpoints {
       '/workflows',
       body: body.toJson(),
     );
-    return CreateWorkflowResponse.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/workflows',
+      json,
+      () => CreateWorkflowResponse.fromJson(json),
+    );
   }
 
   /// Retrieve workflow
@@ -71,7 +81,12 @@ class WorkflowsEndpoints {
   /// Retrieve the workflow service with the provided ID.
   Future<GetWorkflowResponse> getWorkflow({required String workflowId}) async {
     final json = await _client.sendObject('GET', '/workflows/$workflowId');
-    return GetWorkflowResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/workflows/$workflowId',
+      json,
+      () => GetWorkflowResponse.fromJson(json),
+    );
   }
 
   /// Update workflow
@@ -86,7 +101,12 @@ class WorkflowsEndpoints {
       '/workflows/$workflowId',
       body: body.toJson(),
     );
-    return UpdateWorkflowResponse.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/workflows/$workflowId',
+      json,
+      () => UpdateWorkflowResponse.fromJson(json),
+    );
   }
 
   /// Delete workflow

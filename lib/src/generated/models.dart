@@ -48,30 +48,85 @@ sealed class AddUpdateEnvVarInput {
 }
 
 final class AddUpdateEnvVarInputValue extends AddUpdateEnvVarInput {
-  const AddUpdateEnvVarInputValue({required this.value});
+  const AddUpdateEnvVarInputValue({
+    required this.value,
+    this.rawJson = const {},
+  });
 
   factory AddUpdateEnvVarInputValue.fromJson(Map<String, Object?> json) =>
-      AddUpdateEnvVarInputValue(value: json['value'] as String? ?? '');
+      AddUpdateEnvVarInputValue(
+        value: json['value'] as String? ?? '',
+        rawJson: json,
+      );
 
   final String value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
-  Map<String, Object?> toJson() => {'value': value};
+  Map<String, Object?> toJson() => {...unknownFields, 'value': value};
 }
 
 final class AddUpdateEnvVarInputGenerateValue extends AddUpdateEnvVarInput {
-  const AddUpdateEnvVarInputGenerateValue({required this.generateValue});
+  const AddUpdateEnvVarInputGenerateValue({
+    required this.generateValue,
+    this.rawJson = const {},
+  });
 
   factory AddUpdateEnvVarInputGenerateValue.fromJson(
     Map<String, Object?> json,
   ) => AddUpdateEnvVarInputGenerateValue(
     generateValue: json['generateValue'] as bool? ?? false,
+    rawJson: json,
   );
 
   final bool generateValue;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'generateValue'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
-  Map<String, Object?> toJson() => {'generateValue': generateValue};
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'generateValue': generateValue,
+  };
 }
 
 /// The type of event that occurred
@@ -211,12 +266,18 @@ enum Type {
 }
 
 class AuditLogActor {
-  const AuditLogActor({required this.type, this.email, this.id});
+  const AuditLogActor({
+    required this.type,
+    this.email,
+    this.id,
+    this.rawJson = const {},
+  });
 
   factory AuditLogActor.fromJson(Map<String, Object?> json) => AuditLogActor(
     type: Type.fromWire(json['type']),
     email: json['email'] as String?,
     id: json['id'] as String?,
+    rawJson: json,
   );
 
   /// The type of actor that performed the action
@@ -228,7 +289,29 @@ class AuditLogActor {
   /// Unique identifier of the actor (if applicable)
   final String? id;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'type', 'email', 'id'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'type': type.wireValue,
     if (email != null) 'email': email,
     if (id != null) 'id': id,
@@ -243,6 +326,7 @@ class AuditLog {
     required this.status,
     required this.actor,
     required this.metadata,
+    this.rawJson = const {},
   });
 
   factory AuditLog.fromJson(Map<String, Object?> json) => AuditLog(
@@ -255,6 +339,7 @@ class AuditLog {
       (json['actor'] as Map<String, Object?>?) ?? const {},
     ),
     metadata: (json['metadata'] as Map<String, Object?>?) ?? const {},
+    rawJson: json,
   );
 
   /// Unique identifier for the audit log entry
@@ -273,7 +358,36 @@ class AuditLog {
   /// Additional context information about the event
   final Map<String, Object?> metadata;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'timestamp',
+    'event',
+    'status',
+    'actor',
+    'metadata',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'timestamp': timestamp.toIso8601String(),
     'event': event.wireValue,
@@ -284,7 +398,11 @@ class AuditLog {
 }
 
 class AuditLogWithCursor {
-  const AuditLogWithCursor({required this.cursor, required this.auditLog});
+  const AuditLogWithCursor({
+    required this.cursor,
+    required this.auditLog,
+    this.rawJson = const {},
+  });
 
   factory AuditLogWithCursor.fromJson(Map<String, Object?> json) =>
       AuditLogWithCursor(
@@ -292,12 +410,35 @@ class AuditLogWithCursor {
         auditLog: AuditLog.fromJson(
           (json['auditLog'] as Map<String, Object?>?) ?? const {},
         ),
+        rawJson: json,
       );
 
   final String cursor;
   final AuditLog auditLog;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cursor', 'auditLog'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cursor': cursor,
     'auditLog': auditLog.toJson(),
   };
@@ -325,6 +466,7 @@ class BackgroundWorkerDetailsAutoscalingCriteriaCpu {
   const BackgroundWorkerDetailsAutoscalingCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsAutoscalingCriteriaCpu.fromJson(
@@ -332,6 +474,7 @@ class BackgroundWorkerDetailsAutoscalingCriteriaCpu {
   ) => BackgroundWorkerDetailsAutoscalingCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -339,7 +482,29 @@ class BackgroundWorkerDetailsAutoscalingCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -349,6 +514,7 @@ class BackgroundWorkerDetailsAutoscalingCriteriaMemory {
   const BackgroundWorkerDetailsAutoscalingCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsAutoscalingCriteriaMemory.fromJson(
@@ -356,6 +522,7 @@ class BackgroundWorkerDetailsAutoscalingCriteriaMemory {
   ) => BackgroundWorkerDetailsAutoscalingCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -363,7 +530,29 @@ class BackgroundWorkerDetailsAutoscalingCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -373,6 +562,7 @@ class BackgroundWorkerDetailsAutoscalingCriteria {
   const BackgroundWorkerDetailsAutoscalingCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsAutoscalingCriteria.fromJson(
@@ -384,12 +574,35 @@ class BackgroundWorkerDetailsAutoscalingCriteria {
     memory: BackgroundWorkerDetailsAutoscalingCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final BackgroundWorkerDetailsAutoscalingCriteriaCpu cpu;
   final BackgroundWorkerDetailsAutoscalingCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -401,6 +614,7 @@ class BackgroundWorkerDetailsAutoscaling {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsAutoscaling.fromJson(
@@ -412,6 +626,7 @@ class BackgroundWorkerDetailsAutoscaling {
     criteria: BackgroundWorkerDetailsAutoscalingCriteria.fromJson(
       (json['criteria'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final bool enabled;
@@ -423,7 +638,29 @@ class BackgroundWorkerDetailsAutoscaling {
   final int max;
   final BackgroundWorkerDetailsAutoscalingCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -437,6 +674,7 @@ class BackgroundWorkerDetailsDisk {
     required this.name,
     required this.sizeGb,
     required this.mountPath,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsDisk.fromJson(Map<String, Object?> json) =>
@@ -445,6 +683,7 @@ class BackgroundWorkerDetailsDisk {
         name: json['name'] as String? ?? '',
         sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
         mountPath: json['mountPath'] as String? ?? '',
+        rawJson: json,
       );
 
   final String id;
@@ -452,7 +691,29 @@ class BackgroundWorkerDetailsDisk {
   final int sizeGb;
   final String mountPath;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name', 'sizeGB', 'mountPath'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -533,6 +794,7 @@ class RegistryCredential {
     required this.registry,
     required this.username,
     required this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory RegistryCredential.fromJson(Map<String, Object?> json) =>
@@ -544,6 +806,7 @@ class RegistryCredential {
         updatedAt:
             parseDate(json['updatedAt']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
+        rawJson: json,
       );
 
   /// Unique identifier for this credential
@@ -561,7 +824,35 @@ class RegistryCredential {
   /// Last updated time for the credential
   final DateTime updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'registry',
+    'username',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'registry': registry.wireValue,
@@ -577,6 +868,7 @@ final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
     required this.dockerfilePath,
     this.preDeployCommand,
     this.registryCredential,
+    this.rawJson = const {},
   });
 
   factory EnvSpecificDetailsDocker.fromJson(Map<String, Object?> json) =>
@@ -590,6 +882,7 @@ final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
             : RegistryCredential.fromJson(
                 json['registryCredential']! as Map<String, Object?>,
               ),
+        rawJson: json,
       );
 
   final String dockerCommand;
@@ -598,8 +891,36 @@ final class EnvSpecificDetailsDocker extends EnvSpecificDetails {
   final String? preDeployCommand;
   final RegistryCredential? registryCredential;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'dockerCommand',
+    'dockerContext',
+    'dockerfilePath',
+    'preDeployCommand',
+    'registryCredential',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'dockerCommand': dockerCommand,
     'dockerContext': dockerContext,
     'dockerfilePath': dockerfilePath,
@@ -614,6 +935,7 @@ final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
     required this.buildCommand,
     required this.startCommand,
     this.preDeployCommand,
+    this.rawJson = const {},
   });
 
   factory EnvSpecificDetailsBuild.fromJson(Map<String, Object?> json) =>
@@ -621,14 +943,41 @@ final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         preDeployCommand: json['preDeployCommand'] as String?,
+        rawJson: json,
       );
 
   final String buildCommand;
   final String startCommand;
   final String? preDeployCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'buildCommand',
+    'startCommand',
+    'preDeployCommand',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'buildCommand': buildCommand,
     'startCommand': startCommand,
     if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
@@ -636,17 +985,43 @@ final class EnvSpecificDetailsBuild extends EnvSpecificDetails {
 }
 
 class Resource {
-  const Resource({required this.id, required this.name});
+  const Resource({
+    required this.id,
+    required this.name,
+    this.rawJson = const {},
+  });
 
   factory Resource.fromJson(Map<String, Object?> json) => Resource(
     id: json['id'] as String? ?? '',
     name: json['name'] as String? ?? '',
+    rawJson: json,
   );
 
   final String id;
   final String name;
 
-  Map<String, Object?> toJson() => {'id': id, 'name': name};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'id': id, 'name': name};
 }
 
 /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
@@ -721,15 +1096,39 @@ enum Generation {
 }
 
 class Previews {
-  const Previews({this.generation});
+  const Previews({this.generation, this.rawJson = const {}});
 
-  factory Previews.fromJson(Map<String, Object?> json) =>
-      Previews(generation: Generation.fromWire(json['generation']));
+  factory Previews.fromJson(Map<String, Object?> json) => Previews(
+    generation: Generation.fromWire(json['generation']),
+    rawJson: json,
+  );
 
   /// Defaults to "off"
   final Generation? generation;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'generation'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (generation != null) 'generation': generation!.wireValue,
   };
 }
@@ -815,6 +1214,7 @@ class BackgroundWorkerDetails {
     this.sshAddress,
     required this.buildPlan,
     this.maxShutdownDelaySeconds,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetails.fromJson(Map<String, Object?> json) =>
@@ -850,6 +1250,7 @@ class BackgroundWorkerDetails {
         buildPlan: BuildPlan.fromWire(json['buildPlan']),
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
             ?.toInt(),
+        rawJson: json,
       );
 
   final BackgroundWorkerDetailsAutoscaling? autoscaling;
@@ -883,7 +1284,44 @@ class BackgroundWorkerDetails {
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoscaling',
+    'disk',
+    'env',
+    'envSpecificDetails',
+    'numInstances',
+    'parentServer',
+    'plan',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'region',
+    'runtime',
+    'sshAddress',
+    'buildPlan',
+    'maxShutdownDelaySeconds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
     if (disk != null) 'disk': disk!.toJson(),
     'env': env.wireValue,
@@ -928,6 +1366,7 @@ final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
     this.dockerContext,
     this.dockerfilePath,
     this.registryCredentialId,
+    this.rawJson = const {},
   });
 
   factory EnvSpecificDetailsPatchDocker.fromJson(Map<String, Object?> json) =>
@@ -936,6 +1375,7 @@ final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
         registryCredentialId: json['registryCredentialId'] as String?,
+        rawJson: json,
       );
 
   final String? dockerCommand;
@@ -943,8 +1383,35 @@ final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
   final String? dockerfilePath;
   final String? registryCredentialId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'dockerCommand',
+    'dockerContext',
+    'dockerfilePath',
+    'registryCredentialId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (dockerCommand != null) 'dockerCommand': dockerCommand,
     if (dockerContext != null) 'dockerContext': dockerContext,
     if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
@@ -954,19 +1421,46 @@ final class EnvSpecificDetailsPatchDocker extends EnvSpecificDetailsPatch {
 }
 
 final class EnvSpecificDetailsPatchBuild extends EnvSpecificDetailsPatch {
-  const EnvSpecificDetailsPatchBuild({this.buildCommand, this.startCommand});
+  const EnvSpecificDetailsPatchBuild({
+    this.buildCommand,
+    this.startCommand,
+    this.rawJson = const {},
+  });
 
   factory EnvSpecificDetailsPatchBuild.fromJson(Map<String, Object?> json) =>
       EnvSpecificDetailsPatchBuild(
         buildCommand: json['buildCommand'] as String?,
         startCommand: json['startCommand'] as String?,
+        rawJson: json,
       );
 
   final String? buildCommand;
   final String? startCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'buildCommand', 'startCommand'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (buildCommand != null) 'buildCommand': buildCommand,
     if (startCommand != null) 'startCommand': startCommand,
   };
@@ -1004,6 +1498,7 @@ class BackgroundWorkerDetailsPatch {
     this.previews,
     this.runtime,
     this.maxShutdownDelaySeconds,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsPatch.fromJson(Map<String, Object?> json) =>
@@ -1024,6 +1519,7 @@ class BackgroundWorkerDetailsPatch {
         runtime: ServiceRuntime.fromWire(json['runtime']),
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
             ?.toInt(),
+        rawJson: json,
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
@@ -1042,7 +1538,37 @@ class BackgroundWorkerDetailsPatch {
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'envSpecificDetails',
+    'plan',
+    'preDeployCommand',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'runtime',
+    'maxShutdownDelaySeconds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (envSpecificDetails != null)
       'envSpecificDetails': envSpecificDetails!.toJson(),
     if (plan != null) 'plan': plan!.wireValue,
@@ -1060,6 +1586,7 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaCpu {
   const BackgroundWorkerDetailsPostAutoscalingCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsPostAutoscalingCriteriaCpu.fromJson(
@@ -1067,6 +1594,7 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaCpu {
   ) => BackgroundWorkerDetailsPostAutoscalingCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -1074,7 +1602,29 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -1084,6 +1634,7 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaMemory {
   const BackgroundWorkerDetailsPostAutoscalingCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsPostAutoscalingCriteriaMemory.fromJson(
@@ -1091,6 +1642,7 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaMemory {
   ) => BackgroundWorkerDetailsPostAutoscalingCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -1098,7 +1650,29 @@ class BackgroundWorkerDetailsPostAutoscalingCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -1108,6 +1682,7 @@ class BackgroundWorkerDetailsPostAutoscalingCriteria {
   const BackgroundWorkerDetailsPostAutoscalingCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsPostAutoscalingCriteria.fromJson(
@@ -1119,12 +1694,35 @@ class BackgroundWorkerDetailsPostAutoscalingCriteria {
     memory: BackgroundWorkerDetailsPostAutoscalingCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final BackgroundWorkerDetailsPostAutoscalingCriteriaCpu cpu;
   final BackgroundWorkerDetailsPostAutoscalingCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -1136,6 +1734,7 @@ class BackgroundWorkerDetailsPostAutoscaling {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsPostAutoscaling.fromJson(
@@ -1147,6 +1746,7 @@ class BackgroundWorkerDetailsPostAutoscaling {
     criteria: BackgroundWorkerDetailsPostAutoscalingCriteria.fromJson(
       (json['criteria'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final bool enabled;
@@ -1158,7 +1758,29 @@ class BackgroundWorkerDetailsPostAutoscaling {
   final int max;
   final BackgroundWorkerDetailsPostAutoscalingCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -1167,12 +1789,18 @@ class BackgroundWorkerDetailsPostAutoscaling {
 }
 
 class ServiceDisk {
-  const ServiceDisk({required this.name, required this.mountPath, this.sizeGb});
+  const ServiceDisk({
+    required this.name,
+    required this.mountPath,
+    this.sizeGb,
+    this.rawJson = const {},
+  });
 
   factory ServiceDisk.fromJson(Map<String, Object?> json) => ServiceDisk(
     name: json['name'] as String? ?? '',
     mountPath: json['mountPath'] as String? ?? '',
     sizeGb: (json['sizeGB'] as num?)?.toInt(),
+    rawJson: json,
   );
 
   final String name;
@@ -1181,7 +1809,29 @@ class ServiceDisk {
   /// Defaults to 1
   final int? sizeGb;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'mountPath', 'sizeGB'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'mountPath': mountPath,
     if (sizeGb != null) 'sizeGB': sizeGb,
@@ -1213,6 +1863,7 @@ final class EnvSpecificDetailsPostDocker extends EnvSpecificDetailsPost {
     this.dockerContext,
     this.dockerfilePath,
     this.registryCredentialId,
+    this.rawJson = const {},
   });
 
   factory EnvSpecificDetailsPostDocker.fromJson(Map<String, Object?> json) =>
@@ -1221,6 +1872,7 @@ final class EnvSpecificDetailsPostDocker extends EnvSpecificDetailsPost {
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
         registryCredentialId: json['registryCredentialId'] as String?,
+        rawJson: json,
       );
 
   final String? dockerCommand;
@@ -1230,8 +1882,35 @@ final class EnvSpecificDetailsPostDocker extends EnvSpecificDetailsPost {
   final String? dockerfilePath;
   final String? registryCredentialId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'dockerCommand',
+    'dockerContext',
+    'dockerfilePath',
+    'registryCredentialId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (dockerCommand != null) 'dockerCommand': dockerCommand,
     if (dockerContext != null) 'dockerContext': dockerContext,
     if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
@@ -1245,19 +1924,43 @@ final class EnvSpecificDetailsPostBuild extends EnvSpecificDetailsPost {
   const EnvSpecificDetailsPostBuild({
     required this.buildCommand,
     required this.startCommand,
+    this.rawJson = const {},
   });
 
   factory EnvSpecificDetailsPostBuild.fromJson(Map<String, Object?> json) =>
       EnvSpecificDetailsPostBuild(
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
+        rawJson: json,
       );
 
   final String buildCommand;
   final String startCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'buildCommand', 'startCommand'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'buildCommand': buildCommand,
     'startCommand': startCommand,
   };
@@ -1277,6 +1980,7 @@ class BackgroundWorkerDetailsPost {
     this.previews,
     this.region,
     this.maxShutdownDelaySeconds,
+    this.rawJson = const {},
   });
 
   factory BackgroundWorkerDetailsPost.fromJson(Map<String, Object?> json) =>
@@ -1308,6 +2012,7 @@ class BackgroundWorkerDetailsPost {
         region: Region.fromWire(json['region']),
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
             ?.toInt(),
+        rawJson: json,
       );
 
   final BackgroundWorkerDetailsPostAutoscaling? autoscaling;
@@ -1337,7 +2042,42 @@ class BackgroundWorkerDetailsPost {
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoscaling',
+    'disk',
+    'env',
+    'runtime',
+    'envSpecificDetails',
+    'numInstances',
+    'plan',
+    'preDeployCommand',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'region',
+    'maxShutdownDelaySeconds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
     if (disk != null) 'disk': disk!.toJson(),
     if (env != null) 'env': env!.wireValue,
@@ -1387,6 +2127,7 @@ class BlueprintWithCursorBlueprint {
     required this.branch,
     required this.path,
     this.lastSync,
+    this.rawJson = const {},
   });
 
   factory BlueprintWithCursorBlueprint.fromJson(Map<String, Object?> json) =>
@@ -1399,6 +2140,7 @@ class BlueprintWithCursorBlueprint {
         branch: json['branch'] as String? ?? '',
         path: json['path'] as String? ?? '',
         lastSync: parseDate(json['lastSync']),
+        rawJson: json,
       );
 
   final String id;
@@ -1414,7 +2156,38 @@ class BlueprintWithCursorBlueprint {
   final String path;
   final DateTime? lastSync;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'status',
+    'autoSync',
+    'repo',
+    'branch',
+    'path',
+    'lastSync',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'status': status.wireValue,
@@ -1428,7 +2201,11 @@ class BlueprintWithCursorBlueprint {
 
 /// A Blueprint with a cursor
 class BlueprintWithCursor {
-  const BlueprintWithCursor({required this.blueprint, required this.cursor});
+  const BlueprintWithCursor({
+    required this.blueprint,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory BlueprintWithCursor.fromJson(Map<String, Object?> json) =>
       BlueprintWithCursor(
@@ -1436,19 +2213,46 @@ class BlueprintWithCursor {
           (json['blueprint'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final BlueprintWithCursorBlueprint blueprint;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'blueprint', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'blueprint': blueprint.toJson(),
     'cursor': cursor,
   };
 }
 
 class BuildFilter {
-  const BuildFilter({required this.paths, required this.ignoredPaths});
+  const BuildFilter({
+    required this.paths,
+    required this.ignoredPaths,
+    this.rawJson = const {},
+  });
 
   factory BuildFilter.fromJson(Map<String, Object?> json) => BuildFilter(
     paths: ((json['paths'] as List<Object?>?) ?? const [])
@@ -1457,12 +2261,35 @@ class BuildFilter {
     ignoredPaths: ((json['ignoredPaths'] as List<Object?>?) ?? const [])
         .map((e) => e as String? ?? '')
         .toList(),
+    rawJson: json,
   );
 
   final List<String> paths;
   final List<String> ignoredPaths;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'paths', 'ignoredPaths'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'paths': paths.map((e) => e).toList(),
     'ignoredPaths': ignoredPaths.map((e) => e).toList(),
   };
@@ -1488,26 +2315,52 @@ enum Profile {
 }
 
 class Cache {
-  const Cache({required this.profile});
+  const Cache({required this.profile, this.rawJson = const {}});
 
   factory Cache.fromJson(Map<String, Object?> json) =>
-      Cache(profile: Profile.fromWire(json['profile']));
+      Cache(profile: Profile.fromWire(json['profile']), rawJson: json);
 
   final Profile profile;
 
-  Map<String, Object?> toJson() => {'profile': profile.wireValue};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'profile'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'profile': profile.wireValue,
+  };
 }
 
 class CidrBlockAndDescription {
   const CidrBlockAndDescription({
     required this.cidrBlock,
     required this.description,
+    this.rawJson = const {},
   });
 
   factory CidrBlockAndDescription.fromJson(Map<String, Object?> json) =>
       CidrBlockAndDescription(
         cidrBlock: json['cidrBlock'] as String? ?? '',
         description: json['description'] as String? ?? '',
+        rawJson: json,
       );
 
   final String cidrBlock;
@@ -1515,7 +2368,29 @@ class CidrBlockAndDescription {
   /// User-provided description of the CIDR block
   final String description;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cidrBlock', 'description'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cidrBlock': cidrBlock,
     'description': description,
   };
@@ -1531,6 +2406,7 @@ class CronJobDetails {
     required this.runtime,
     required this.schedule,
     required this.buildPlan,
+    this.rawJson = const {},
   });
 
   factory CronJobDetails.fromJson(Map<String, Object?> json) => CronJobDetails(
@@ -1544,6 +2420,7 @@ class CronJobDetails {
     runtime: ServiceRuntime.fromWire(json['runtime']),
     schedule: json['schedule'] as String? ?? '',
     buildPlan: BuildPlan.fromWire(json['buildPlan']),
+    rawJson: json,
   );
 
   /// This field has been deprecated, runtime should be used in its place.
@@ -1562,7 +2439,38 @@ class CronJobDetails {
   final String schedule;
   final BuildPlan buildPlan;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'env',
+    'envSpecificDetails',
+    'lastSuccessfulRunAt',
+    'plan',
+    'region',
+    'runtime',
+    'schedule',
+    'buildPlan',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'env': env.wireValue,
     'envSpecificDetails': envSpecificDetails.toJson(),
     if (lastSuccessfulRunAt != null)
@@ -1581,6 +2489,7 @@ class CronJobDetailsPatch {
     this.plan,
     this.schedule,
     this.runtime,
+    this.rawJson = const {},
   });
 
   factory CronJobDetailsPatch.fromJson(Map<String, Object?> json) =>
@@ -1593,6 +2502,7 @@ class CronJobDetailsPatch {
         plan: PaidPlan.fromWire(json['plan']),
         schedule: json['schedule'] as String?,
         runtime: ServiceRuntime.fromWire(json['runtime']),
+        rawJson: json,
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
@@ -1604,7 +2514,34 @@ class CronJobDetailsPatch {
   /// Runtime
   final ServiceRuntime? runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'envSpecificDetails',
+    'plan',
+    'schedule',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (envSpecificDetails != null)
       'envSpecificDetails': envSpecificDetails!.toJson(),
     if (plan != null) 'plan': plan!.wireValue,
@@ -1621,6 +2558,7 @@ class CronJobDetailsPost {
     this.plan,
     this.region,
     required this.schedule,
+    this.rawJson = const {},
   });
 
   factory CronJobDetailsPost.fromJson(Map<String, Object?> json) =>
@@ -1635,6 +2573,7 @@ class CronJobDetailsPost {
         plan: PaidPlan.fromWire(json['plan']),
         region: Region.fromWire(json['region']),
         schedule: json['schedule'] as String? ?? '',
+        rawJson: json,
       );
 
   /// This field has been deprecated, runtime should be used in its place.
@@ -1651,7 +2590,36 @@ class CronJobDetailsPost {
   final Region? region;
   final String schedule;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'env',
+    'runtime',
+    'envSpecificDetails',
+    'plan',
+    'region',
+    'schedule',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (env != null) 'env': env!.wireValue,
     'runtime': runtime.wireValue,
     if (envSpecificDetails != null)
@@ -1691,6 +2659,7 @@ class CronJobRun {
     this.finishedAt,
     this.triggeredBy,
     this.canceledBy,
+    this.rawJson = const {},
   });
 
   factory CronJobRun.fromJson(Map<String, Object?> json) => CronJobRun(
@@ -1700,6 +2669,7 @@ class CronJobRun {
     finishedAt: parseDate(json['finishedAt']),
     triggeredBy: json['triggeredBy'] as String?,
     canceledBy: json['canceledBy'] as String?,
+    rawJson: json,
   );
 
   /// The ID of the run
@@ -1714,7 +2684,36 @@ class CronJobRun {
   /// user who cancelled the cron job run
   final String? canceledBy;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'status',
+    'startedAt',
+    'finishedAt',
+    'triggeredBy',
+    'canceledBy',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'status': status.wireValue,
     if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
@@ -1761,18 +2760,41 @@ enum VerificationStatus {
 }
 
 class CustomDomainServer {
-  const CustomDomainServer({this.id, this.name});
+  const CustomDomainServer({this.id, this.name, this.rawJson = const {}});
 
   factory CustomDomainServer.fromJson(Map<String, Object?> json) =>
       CustomDomainServer(
         id: json['id'] as String?,
         name: json['name'] as String?,
+        rawJson: json,
       );
 
   final String? id;
   final String? name;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (id != null) 'id': id,
     if (name != null) 'name': name,
   };
@@ -1788,6 +2810,7 @@ class CustomDomain {
     required this.verificationStatus,
     required this.createdAt,
     this.server,
+    this.rawJson = const {},
   });
 
   factory CustomDomain.fromJson(Map<String, Object?> json) => CustomDomain(
@@ -1802,6 +2825,7 @@ class CustomDomain {
     server: json['server'] == null
         ? null
         : CustomDomainServer.fromJson(json['server']! as Map<String, Object?>),
+    rawJson: json,
   );
 
   final String id;
@@ -1813,7 +2837,38 @@ class CustomDomain {
   final DateTime createdAt;
   final CustomDomainServer? server;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'domainType',
+    'publicSuffix',
+    'redirectForName',
+    'verificationStatus',
+    'createdAt',
+    'server',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'domainType': domainType.wireValue,
@@ -1829,6 +2884,7 @@ class CustomDomainWithCursor {
   const CustomDomainWithCursor({
     required this.customDomain,
     required this.cursor,
+    this.rawJson = const {},
   });
 
   factory CustomDomainWithCursor.fromJson(Map<String, Object?> json) =>
@@ -1837,12 +2893,35 @@ class CustomDomainWithCursor {
           (json['customDomain'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final CustomDomain customDomain;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'customDomain', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'customDomain': customDomain.toJson(),
     'cursor': cursor,
   };
@@ -1929,6 +3008,7 @@ class DedicatedIp {
     required this.status,
     required this.createdAt,
     this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory DedicatedIp.fromJson(Map<String, Object?> json) => DedicatedIp(
@@ -1947,6 +3027,7 @@ class DedicatedIp {
     createdAt:
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     updatedAt: parseDate(json['updatedAt']),
+    rawJson: json,
   );
 
   /// Unique identifier for this dedicated IP set.
@@ -1979,7 +3060,40 @@ class DedicatedIp {
   /// Time the dedicated IP set was last updated.
   final DateTime? updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'description',
+    'ownerId',
+    'region',
+    'environmentIds',
+    'ips',
+    'status',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'description': description,
@@ -1995,7 +3109,12 @@ class DedicatedIp {
 
 /// Input for updating a dedicated IP set. All fields are optional. Omitted fields are left unchanged. Provide `environmentIds: []` to switch from environment-scoped to workspace-scoped.
 class DedicatedIppatch {
-  const DedicatedIppatch({this.name, this.description, this.environmentIds});
+  const DedicatedIppatch({
+    this.name,
+    this.description,
+    this.environmentIds,
+    this.rawJson = const {},
+  });
 
   factory DedicatedIppatch.fromJson(Map<String, Object?> json) =>
       DedicatedIppatch(
@@ -2004,13 +3123,36 @@ class DedicatedIppatch {
         environmentIds: (json['environmentIds'] as List<Object?>?)
             ?.map((e) => e as String? ?? '')
             .toList(),
+        rawJson: json,
       );
 
   final String? name;
   final String? description;
   final List<String>? environmentIds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'description', 'environmentIds'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (description != null) 'description': description,
     if (environmentIds != null)
@@ -2026,6 +3168,7 @@ class DedicatedIppost {
     required this.ownerId,
     required this.region,
     this.environmentIds,
+    this.rawJson = const {},
   });
 
   factory DedicatedIppost.fromJson(Map<String, Object?> json) =>
@@ -2037,6 +3180,7 @@ class DedicatedIppost {
         environmentIds: (json['environmentIds'] as List<Object?>?)
             ?.map((e) => e as String? ?? '')
             .toList(),
+        rawJson: json,
       );
 
   /// Name for the dedicated IP set.
@@ -2054,7 +3198,35 @@ class DedicatedIppost {
   /// Environments to scope the dedicated IP set to. If omitted or empty, it applies to all services in the workspace within its region.
   final List<String>? environmentIds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'description',
+    'ownerId',
+    'region',
+    'environmentIds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     if (description != null) 'description': description,
     'ownerId': ownerId,
@@ -2065,19 +3237,47 @@ class DedicatedIppost {
 }
 
 class DeployCommit {
-  const DeployCommit({this.id, this.message, this.createdAt});
+  const DeployCommit({
+    this.id,
+    this.message,
+    this.createdAt,
+    this.rawJson = const {},
+  });
 
   factory DeployCommit.fromJson(Map<String, Object?> json) => DeployCommit(
     id: json['id'] as String?,
     message: json['message'] as String?,
     createdAt: parseDate(json['createdAt']),
+    rawJson: json,
   );
 
   final String? id;
   final String? message;
   final DateTime? createdAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'message', 'createdAt'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (id != null) 'id': id,
     if (message != null) 'message': message,
     if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
@@ -2086,12 +3286,18 @@ class DeployCommit {
 
 /// Image information used when creating the deploy. Not present for Git-backed deploys
 class DeployImage {
-  const DeployImage({this.ref, this.sha, this.registryCredential});
+  const DeployImage({
+    this.ref,
+    this.sha,
+    this.registryCredential,
+    this.rawJson = const {},
+  });
 
   factory DeployImage.fromJson(Map<String, Object?> json) => DeployImage(
     ref: json['ref'] as String?,
     sha: json['sha'] as String?,
     registryCredential: json['registryCredential'] as String?,
+    rawJson: json,
   );
 
   /// Image reference used when creating the deploy
@@ -2103,7 +3309,29 @@ class DeployImage {
   /// Name of credential used to pull the image, if provided
   final String? registryCredential;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'ref', 'sha', 'registryCredential'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (ref != null) 'ref': ref,
     if (sha != null) 'sha': sha,
     if (registryCredential != null) 'registryCredential': registryCredential,
@@ -2174,6 +3402,7 @@ class Deploy {
     this.finishedAt,
     this.createdAt,
     this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory Deploy.fromJson(Map<String, Object?> json) => Deploy(
@@ -2190,6 +3419,7 @@ class Deploy {
     finishedAt: parseDate(json['finishedAt']),
     createdAt: parseDate(json['createdAt']),
     updatedAt: parseDate(json['updatedAt']),
+    rawJson: json,
   );
 
   final String id;
@@ -2204,7 +3434,39 @@ class Deploy {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'commit',
+    'image',
+    'status',
+    'trigger',
+    'startedAt',
+    'finishedAt',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     if (commit != null) 'commit': commit!.toJson(),
     if (image != null) 'image': image!.toJson(),
@@ -2218,7 +3480,7 @@ class Deploy {
 }
 
 class DeployWithCursor {
-  const DeployWithCursor({this.deploy, this.cursor});
+  const DeployWithCursor({this.deploy, this.cursor, this.rawJson = const {}});
 
   factory DeployWithCursor.fromJson(Map<String, Object?> json) =>
       DeployWithCursor(
@@ -2226,24 +3488,53 @@ class DeployWithCursor {
             ? null
             : Deploy.fromJson(json['deploy']! as Map<String, Object?>),
         cursor: json['cursor'] as String?,
+        rawJson: json,
       );
 
   final Deploy? deploy;
   final String? cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'deploy', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (deploy != null) 'deploy': deploy!.toJson(),
     if (cursor != null) 'cursor': cursor,
   };
 }
 
 class DiskSnapshot {
-  const DiskSnapshot({this.createdAt, this.snapshotKey, this.instanceId});
+  const DiskSnapshot({
+    this.createdAt,
+    this.snapshotKey,
+    this.instanceId,
+    this.rawJson = const {},
+  });
 
   factory DiskSnapshot.fromJson(Map<String, Object?> json) => DiskSnapshot(
     createdAt: parseDate(json['createdAt']),
     snapshotKey: json['snapshotKey'] as String?,
     instanceId: json['instanceId'] as String?,
+    rawJson: json,
   );
 
   final DateTime? createdAt;
@@ -2252,7 +3543,29 @@ class DiskSnapshot {
   /// When a service with a disk is scaled, the instanceId is used to identify the instance that the disk is attached to. Each instance's disks get their own snapshots, and can be restored separately.
   final String? instanceId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'createdAt', 'snapshotKey', 'instanceId'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
     if (snapshotKey != null) 'snapshotKey': snapshotKey,
     if (instanceId != null) 'instanceId': instanceId,
@@ -2268,6 +3581,7 @@ class DiskWithCursorDisk {
     this.serviceId,
     required this.createdAt,
     required this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory DiskWithCursorDisk.fromJson(
@@ -2282,6 +3596,7 @@ class DiskWithCursorDisk {
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     updatedAt:
         parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    rawJson: json,
   );
 
   final String id;
@@ -2292,7 +3607,37 @@ class DiskWithCursorDisk {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'sizeGB',
+    'mountPath',
+    'serviceId',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -2304,19 +3649,49 @@ class DiskWithCursorDisk {
 }
 
 class DiskWithCursor {
-  const DiskWithCursor({required this.disk, required this.cursor});
+  const DiskWithCursor({
+    required this.disk,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory DiskWithCursor.fromJson(Map<String, Object?> json) => DiskWithCursor(
     disk: DiskWithCursorDisk.fromJson(
       (json['disk'] as Map<String, Object?>?) ?? const {},
     ),
     cursor: json['cursor'] as String? ?? '',
+    rawJson: json,
   );
 
   final DiskWithCursorDisk disk;
   final String cursor;
 
-  Map<String, Object?> toJson() => {'disk': disk.toJson(), 'cursor': cursor};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'disk', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'disk': disk.toJson(),
+    'cursor': cursor,
+  };
 }
 
 class DockerDetails {
@@ -2326,6 +3701,7 @@ class DockerDetails {
     required this.dockerfilePath,
     this.preDeployCommand,
     this.registryCredential,
+    this.rawJson = const {},
   });
 
   factory DockerDetails.fromJson(Map<String, Object?> json) => DockerDetails(
@@ -2338,6 +3714,7 @@ class DockerDetails {
         : RegistryCredential.fromJson(
             json['registryCredential']! as Map<String, Object?>,
           ),
+    rawJson: json,
   );
 
   final String dockerCommand;
@@ -2346,7 +3723,35 @@ class DockerDetails {
   final String? preDeployCommand;
   final RegistryCredential? registryCredential;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'dockerCommand',
+    'dockerContext',
+    'dockerfilePath',
+    'preDeployCommand',
+    'registryCredential',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'dockerCommand': dockerCommand,
     'dockerContext': dockerContext,
     'dockerfilePath': dockerfilePath,
@@ -2362,6 +3767,7 @@ class DockerDetailsPatch {
     this.dockerContext,
     this.dockerfilePath,
     this.registryCredentialId,
+    this.rawJson = const {},
   });
 
   factory DockerDetailsPatch.fromJson(Map<String, Object?> json) =>
@@ -2370,6 +3776,7 @@ class DockerDetailsPatch {
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
         registryCredentialId: json['registryCredentialId'] as String?,
+        rawJson: json,
       );
 
   final String? dockerCommand;
@@ -2377,7 +3784,34 @@ class DockerDetailsPatch {
   final String? dockerfilePath;
   final String? registryCredentialId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'dockerCommand',
+    'dockerContext',
+    'dockerfilePath',
+    'registryCredentialId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (dockerCommand != null) 'dockerCommand': dockerCommand,
     if (dockerContext != null) 'dockerContext': dockerContext,
     if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
@@ -2392,6 +3826,7 @@ class DockerDetailsPost {
     this.dockerContext,
     this.dockerfilePath,
     this.registryCredentialId,
+    this.rawJson = const {},
   });
 
   factory DockerDetailsPost.fromJson(Map<String, Object?> json) =>
@@ -2400,6 +3835,7 @@ class DockerDetailsPost {
         dockerContext: json['dockerContext'] as String?,
         dockerfilePath: json['dockerfilePath'] as String?,
         registryCredentialId: json['registryCredentialId'] as String?,
+        rawJson: json,
       );
 
   final String? dockerCommand;
@@ -2409,7 +3845,34 @@ class DockerDetailsPost {
   final String? dockerfilePath;
   final String? registryCredentialId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'dockerCommand',
+    'dockerContext',
+    'dockerfilePath',
+    'registryCredentialId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (dockerCommand != null) 'dockerCommand': dockerCommand,
     if (dockerContext != null) 'dockerContext': dockerContext,
     if (dockerfilePath != null) 'dockerfilePath': dockerfilePath,
@@ -2444,19 +3907,43 @@ class EnvGroupLink {
     required this.id,
     required this.name,
     required this.type,
+    this.rawJson = const {},
   });
 
   factory EnvGroupLink.fromJson(Map<String, Object?> json) => EnvGroupLink(
     id: json['id'] as String? ?? '',
     name: json['name'] as String? ?? '',
     type: ServiceTypeShort.fromWire(json['type']),
+    rawJson: json,
   );
 
   final String id;
   final String name;
   final ServiceTypeShort type;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name', 'type'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'type': type.wireValue,
@@ -2464,31 +3951,91 @@ class EnvGroupLink {
 }
 
 class EnvVar {
-  const EnvVar({required this.key, required this.value});
+  const EnvVar({
+    required this.key,
+    required this.value,
+    this.rawJson = const {},
+  });
 
   factory EnvVar.fromJson(Map<String, Object?> json) => EnvVar(
     key: json['key'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String key;
   final String value;
 
-  Map<String, Object?> toJson() => {'key': key, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'key', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'key': key,
+    'value': value,
+  };
 }
 
 class SecretFile {
-  const SecretFile({required this.name, required this.content});
+  const SecretFile({
+    required this.name,
+    required this.content,
+    this.rawJson = const {},
+  });
 
   factory SecretFile.fromJson(Map<String, Object?> json) => SecretFile(
     name: json['name'] as String? ?? '',
     content: json['content'] as String? ?? '',
+    rawJson: json,
   );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {'name': name, 'content': content};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'content'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'name': name,
+    'content': content,
+  };
 }
 
 class EnvGroup {
@@ -2502,6 +4049,7 @@ class EnvGroup {
     this.environmentId,
     required this.envVars,
     required this.secretFiles,
+    this.rawJson = const {},
   });
 
   factory EnvGroup.fromJson(Map<String, Object?> json) => EnvGroup(
@@ -2527,6 +4075,7 @@ class EnvGroup {
           (e) => SecretFile.fromJson((e as Map<String, Object?>?) ?? const {}),
         )
         .toList(),
+    rawJson: json,
   );
 
   final String id;
@@ -2541,7 +4090,39 @@ class EnvGroup {
   final List<EnvVar> envVars;
   final List<SecretFile> secretFiles;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'ownerId',
+    'createdAt',
+    'updatedAt',
+    'serviceLinks',
+    'environmentId',
+    'envVars',
+    'secretFiles',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'ownerId': ownerId,
@@ -2563,6 +4144,7 @@ class EnvGroupMeta {
     required this.updatedAt,
     required this.serviceLinks,
     this.environmentId,
+    this.rawJson = const {},
   });
 
   factory EnvGroupMeta.fromJson(Map<String, Object?> json) => EnvGroupMeta(
@@ -2580,6 +4162,7 @@ class EnvGroupMeta {
         )
         .toList(),
     environmentId: json['environmentId'] as String?,
+    rawJson: json,
   );
 
   final String id;
@@ -2592,7 +4175,37 @@ class EnvGroupMeta {
   final List<EnvGroupLink> serviceLinks;
   final String? environmentId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'ownerId',
+    'createdAt',
+    'updatedAt',
+    'serviceLinks',
+    'environmentId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'ownerId': ownerId,
@@ -2604,20 +4217,42 @@ class EnvGroupMeta {
 }
 
 class EnvGroupPatchinput {
-  const EnvGroupPatchinput({required this.name});
+  const EnvGroupPatchinput({required this.name, this.rawJson = const {}});
 
   factory EnvGroupPatchinput.fromJson(Map<String, Object?> json) =>
-      EnvGroupPatchinput(name: json['name'] as String? ?? '');
+      EnvGroupPatchinput(name: json['name'] as String? ?? '', rawJson: json);
 
   final String name;
 
-  Map<String, Object?> toJson() => {'name': name};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'name': name};
 }
 
 class EnvGroupPostinputSecretFilesItem {
   const EnvGroupPostinputSecretFilesItem({
     required this.name,
     required this.content,
+    this.rawJson = const {},
   });
 
   factory EnvGroupPostinputSecretFilesItem.fromJson(
@@ -2625,12 +4260,38 @@ class EnvGroupPostinputSecretFilesItem {
   ) => EnvGroupPostinputSecretFilesItem(
     name: json['name'] as String? ?? '',
     content: json['content'] as String? ?? '',
+    rawJson: json,
   );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {'name': name, 'content': content};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'content'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'name': name,
+    'content': content,
+  };
 }
 
 class EnvGroupPostinput {
@@ -2641,6 +4302,7 @@ class EnvGroupPostinput {
     this.secretFiles,
     this.serviceIds,
     this.environmentId,
+    this.rawJson = const {},
   });
 
   factory EnvGroupPostinput.fromJson(Map<String, Object?> json) =>
@@ -2661,6 +4323,7 @@ class EnvGroupPostinput {
             ?.map((e) => e as String? ?? '')
             .toList(),
         environmentId: json['environmentId'] as String?,
+        rawJson: json,
       );
 
   final String name;
@@ -2670,7 +4333,36 @@ class EnvGroupPostinput {
   final List<String>? serviceIds;
   final String? environmentId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'ownerId',
+    'envVars',
+    'secretFiles',
+    'serviceIds',
+    'environmentId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'ownerId': ownerId,
     'envVars': envVars.map((e) => e).toList(),
@@ -2682,31 +4374,84 @@ class EnvGroupPostinput {
 }
 
 class EnvVarGenerateValue {
-  const EnvVarGenerateValue({required this.generateValue});
+  const EnvVarGenerateValue({
+    required this.generateValue,
+    this.rawJson = const {},
+  });
 
   factory EnvVarGenerateValue.fromJson(Map<String, Object?> json) =>
       EnvVarGenerateValue(
         generateValue: json['generateValue'] as bool? ?? false,
+        rawJson: json,
       );
 
   final bool generateValue;
 
-  Map<String, Object?> toJson() => {'generateValue': generateValue};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'generateValue'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'generateValue': generateValue,
+  };
 }
 
 class EnvVarValue {
-  const EnvVarValue({required this.value});
+  const EnvVarValue({required this.value, this.rawJson = const {}});
 
   factory EnvVarValue.fromJson(Map<String, Object?> json) =>
-      EnvVarValue(value: json['value'] as String? ?? '');
+      EnvVarValue(value: json['value'] as String? ?? '', rawJson: json);
 
   final String value;
 
-  Map<String, Object?> toJson() => {'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'value': value};
 }
 
 class EnvVarWithCursor {
-  const EnvVarWithCursor({required this.envVar, required this.cursor});
+  const EnvVarWithCursor({
+    required this.envVar,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory EnvVarWithCursor.fromJson(Map<String, Object?> json) =>
       EnvVarWithCursor(
@@ -2714,12 +4459,35 @@ class EnvVarWithCursor {
           (json['envVar'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final EnvVar envVar;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'envVar', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'envVar': envVar.toJson(),
     'cursor': cursor,
   };
@@ -2756,6 +4524,7 @@ class Environment {
     required this.envGroupIds,
     required this.protectedStatus,
     required this.networkIsolationEnabled,
+    this.rawJson = const {},
   });
 
   factory Environment.fromJson(Map<String, Object?> json) => Environment(
@@ -2783,6 +4552,7 @@ class Environment {
         .toList(),
     protectedStatus: ProtectedStatus.fromWire(json['protectedStatus']),
     networkIsolationEnabled: json['networkIsolationEnabled'] as bool? ?? false,
+    rawJson: json,
   );
 
   final String id;
@@ -2800,7 +4570,40 @@ class Environment {
   /// Indicates whether network connections across environments are allowed.
   final bool networkIsolationEnabled;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'projectId',
+    'databasesIds',
+    'ipAllowList',
+    'redisIds',
+    'serviceIds',
+    'envGroupIds',
+    'protectedStatus',
+    'networkIsolationEnabled',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'projectId': projectId,
@@ -2821,6 +4624,7 @@ class EnvironmentPatchinput {
     this.networkIsolationEnabled,
     this.protectedStatus,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory EnvironmentPatchinput.fromJson(Map<String, Object?> json) =>
@@ -2835,6 +4639,7 @@ class EnvironmentPatchinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String? name;
@@ -2846,7 +4651,34 @@ class EnvironmentPatchinput {
   final ProtectedStatus? protectedStatus;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'networkIsolationEnabled',
+    'protectedStatus',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (networkIsolationEnabled != null)
       'networkIsolationEnabled': networkIsolationEnabled,
@@ -2863,6 +4695,7 @@ class EnvironmentPostinput {
     this.protectedStatus,
     this.networkIsolationEnabled,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory EnvironmentPostinput.fromJson(Map<String, Object?> json) =>
@@ -2878,6 +4711,7 @@ class EnvironmentPostinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String name;
@@ -2890,7 +4724,35 @@ class EnvironmentPostinput {
   final bool? networkIsolationEnabled;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'projectId',
+    'protectedStatus',
+    'networkIsolationEnabled',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'projectId': projectId,
     if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
@@ -2902,18 +4764,44 @@ class EnvironmentPostinput {
 }
 
 class EnvironmentResourcesPostinput {
-  const EnvironmentResourcesPostinput({required this.resourceIds});
+  const EnvironmentResourcesPostinput({
+    required this.resourceIds,
+    this.rawJson = const {},
+  });
 
   factory EnvironmentResourcesPostinput.fromJson(Map<String, Object?> json) =>
       EnvironmentResourcesPostinput(
         resourceIds: ((json['resourceIds'] as List<Object?>?) ?? const [])
             .map((e) => e as String? ?? '')
             .toList(),
+        rawJson: json,
       );
 
   final List<String> resourceIds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'resourceIds'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'resourceIds': resourceIds.map((e) => e).toList(),
   };
 }
@@ -2923,6 +4811,7 @@ class EnvironmentWithCursor {
   const EnvironmentWithCursor({
     required this.environment,
     required this.cursor,
+    this.rawJson = const {},
   });
 
   factory EnvironmentWithCursor.fromJson(Map<String, Object?> json) =>
@@ -2931,24 +4820,48 @@ class EnvironmentWithCursor {
           (json['environment'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final Environment environment;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'environment', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'environment': environment.toJson(),
     'cursor': cursor,
   };
 }
 
 class Error {
-  const Error({this.id, this.message, this.code});
+  const Error({this.id, this.message, this.code, this.rawJson = const {}});
 
   factory Error.fromJson(Map<String, Object?> json) => Error(
     id: json['id'] as String?,
     message: json['message'] as String?,
     code: json['code'] as String?,
+    rawJson: json,
   );
 
   final String? id;
@@ -2957,7 +4870,29 @@ class Error {
   /// A stable, machine-readable identifier present on specific errors that clients can handle specially. Each endpoint documents the codes it can return. The errorCode schema lists the full vocabulary of codes.
   final String? code;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'message', 'code'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (id != null) 'id': id,
     if (message != null) 'message': message,
     if (code != null) 'code': code,
@@ -2990,6 +4925,7 @@ class Header {
     required this.path,
     required this.name,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory Header.fromJson(Map<String, Object?> json) => Header(
@@ -2997,6 +4933,7 @@ class Header {
     path: json['path'] as String? ?? '',
     name: json['name'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String id;
@@ -3004,7 +4941,29 @@ class Header {
   final String name;
   final String value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'path', 'name', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'path': path,
     'name': name,
@@ -3017,12 +4976,14 @@ class HeaderInput {
     required this.path,
     required this.name,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory HeaderInput.fromJson(Map<String, Object?> json) => HeaderInput(
     path: json['path'] as String? ?? '',
     name: json['name'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The request path to add the header to. Wildcards will cause headers to be applied to all matching paths.
@@ -3034,11 +4995,41 @@ class HeaderInput {
   /// Header value
   final String value;
 
-  Map<String, Object?> toJson() => {'path': path, 'name': name, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'path', 'name', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'path': path,
+    'name': name,
+    'value': value,
+  };
 }
 
 class HeaderWithCursor {
-  const HeaderWithCursor({required this.header, required this.cursor});
+  const HeaderWithCursor({
+    required this.header,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory HeaderWithCursor.fromJson(Map<String, Object?> json) =>
       HeaderWithCursor(
@@ -3046,12 +5037,35 @@ class HeaderWithCursor {
           (json['header'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final Header header;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'header', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'header': header.toJson(),
     'cursor': cursor,
   };
@@ -3062,12 +5076,14 @@ class Image {
     required this.ownerId,
     this.registryCredentialId,
     required this.imagePath,
+    this.rawJson = const {},
   });
 
   factory Image.fromJson(Map<String, Object?> json) => Image(
     ownerId: json['ownerId'] as String? ?? '',
     registryCredentialId: json['registryCredentialId'] as String?,
     imagePath: json['imagePath'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The ID of the owner for this image. This should match the owner of the service as well as the owner of any specified registry credential.
@@ -3079,7 +5095,33 @@ class Image {
   /// Path to the image used for this server (e.g docker.io/library/nginx:latest).
   final String imagePath;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'ownerId',
+    'registryCredentialId',
+    'imagePath',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'ownerId': ownerId,
     if (registryCredentialId != null)
       'registryCredentialId': registryCredentialId,
@@ -3118,6 +5160,7 @@ class JobWithCursorJob {
     required this.createdAt,
     this.startedAt,
     this.finishedAt,
+    this.rawJson = const {},
   });
 
   factory JobWithCursorJob.fromJson(Map<String, Object?> json) =>
@@ -3132,6 +5175,7 @@ class JobWithCursorJob {
             DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
+        rawJson: json,
       );
 
   final String id;
@@ -3143,7 +5187,38 @@ class JobWithCursorJob {
   final DateTime? startedAt;
   final DateTime? finishedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'serviceId',
+    'startCommand',
+    'planId',
+    'status',
+    'createdAt',
+    'startedAt',
+    'finishedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'serviceId': serviceId,
     'startCommand': startCommand,
@@ -3156,19 +5231,49 @@ class JobWithCursorJob {
 }
 
 class JobWithCursor {
-  const JobWithCursor({required this.job, required this.cursor});
+  const JobWithCursor({
+    required this.job,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory JobWithCursor.fromJson(Map<String, Object?> json) => JobWithCursor(
     job: JobWithCursorJob.fromJson(
       (json['job'] as Map<String, Object?>?) ?? const {},
     ),
     cursor: json['cursor'] as String? ?? '',
+    rawJson: json,
   );
 
   final JobWithCursorJob job;
   final String cursor;
 
-  Map<String, Object?> toJson() => {'job': job.toJson(), 'cursor': cursor};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'job', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'job': job.toJson(),
+    'cursor': cursor,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -3219,6 +5324,7 @@ class Owner {
     this.ipAllowList,
     this.twoFactorAuthEnabled,
     required this.type,
+    this.rawJson = const {},
   });
 
   factory Owner.fromJson(Map<String, Object?> json) => Owner(
@@ -3234,6 +5340,7 @@ class Owner {
         .toList(),
     twoFactorAuthEnabled: json['twoFactorAuthEnabled'] as bool?,
     type: OwnerType.fromWire(json['type']),
+    rawJson: json,
   );
 
   final String id;
@@ -3245,7 +5352,36 @@ class Owner {
   final bool? twoFactorAuthEnabled;
   final OwnerType type;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'email',
+    'ipAllowList',
+    'twoFactorAuthEnabled',
+    'type',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'email': email,
@@ -3279,12 +5415,17 @@ enum PersistenceMode {
 
 /// Options for a Key Value instance
 class KeyValueOptions {
-  const KeyValueOptions({this.maxmemoryPolicy, this.persistenceMode});
+  const KeyValueOptions({
+    this.maxmemoryPolicy,
+    this.persistenceMode,
+    this.rawJson = const {},
+  });
 
   factory KeyValueOptions.fromJson(Map<String, Object?> json) =>
       KeyValueOptions(
         maxmemoryPolicy: json['maxmemoryPolicy'] as String?,
         persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
+        rawJson: json,
       );
 
   final String? maxmemoryPolicy;
@@ -3292,7 +5433,29 @@ class KeyValueOptions {
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'maxmemoryPolicy', 'persistenceMode'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy,
     if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
   };
@@ -3314,6 +5477,7 @@ class KeyValue {
     this.environmentId,
     required this.version,
     required this.dashboardUrl,
+    this.rawJson = const {},
   });
 
   factory KeyValue.fromJson(Map<String, Object?> json) => KeyValue(
@@ -3340,6 +5504,7 @@ class KeyValue {
     environmentId: json['environmentId'] as String?,
     version: json['version'] as String? ?? '',
     dashboardUrl: json['dashboardUrl'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The ID of the Key Value instance
@@ -3375,7 +5540,43 @@ class KeyValue {
   /// The URL to view the Key Value instance in the Render Dashboard
   final String dashboardUrl;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'createdAt',
+    'updatedAt',
+    'status',
+    'region',
+    'plan',
+    'name',
+    'owner',
+    'options',
+    'ipAllowList',
+    'environmentId',
+    'version',
+    'dashboardUrl',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
@@ -3398,6 +5599,7 @@ class KeyValueConnectionInfo {
     required this.internalConnectionString,
     required this.externalConnectionString,
     required this.cliCommand,
+    this.rawJson = const {},
   });
 
   factory KeyValueConnectionInfo.fromJson(
@@ -3406,6 +5608,7 @@ class KeyValueConnectionInfo {
     internalConnectionString: json['internalConnectionString'] as String? ?? '',
     externalConnectionString: json['externalConnectionString'] as String? ?? '',
     cliCommand: json['cliCommand'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The connection string to use from within Render
@@ -3417,7 +5620,33 @@ class KeyValueConnectionInfo {
   /// The CLI (redis-cli or valkey-cli) command to connect to the Key Value instance
   final String cliCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'internalConnectionString',
+    'externalConnectionString',
+    'cliCommand',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'internalConnectionString': internalConnectionString,
     'externalConnectionString': externalConnectionString,
     'cliCommand': cliCommand,
@@ -3453,6 +5682,7 @@ class KeyValueDetailMaintenance {
     required this.scheduledAt,
     this.pendingMaintenanceBy,
     required this.state,
+    this.rawJson = const {},
   });
 
   factory KeyValueDetailMaintenance.fromJson(Map<String, Object?> json) =>
@@ -3464,6 +5694,7 @@ class KeyValueDetailMaintenance {
             DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
+        rawJson: json,
       );
 
   final String id;
@@ -3474,7 +5705,35 @@ class KeyValueDetailMaintenance {
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'type',
+    'scheduledAt',
+    'pendingMaintenanceBy',
+    'state',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'type': type,
     'scheduledAt': scheduledAt.toIso8601String(),
@@ -3500,6 +5759,7 @@ class KeyValueDetail {
     this.environmentId,
     required this.version,
     this.maintenance,
+    this.rawJson = const {},
   });
 
   factory KeyValueDetail.fromJson(Map<String, Object?> json) => KeyValueDetail(
@@ -3530,6 +5790,7 @@ class KeyValueDetail {
         : KeyValueDetailMaintenance.fromJson(
             json['maintenance']! as Map<String, Object?>,
           ),
+    rawJson: json,
   );
 
   /// The ID of the Key Value instance
@@ -3563,7 +5824,43 @@ class KeyValueDetail {
   final String version;
   final KeyValueDetailMaintenance? maintenance;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'createdAt',
+    'updatedAt',
+    'status',
+    'region',
+    'plan',
+    'name',
+    'owner',
+    'options',
+    'ipAllowList',
+    'environmentId',
+    'version',
+    'maintenance',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
@@ -3613,6 +5910,7 @@ class KeyValuePatchinput {
     this.maxmemoryPolicy,
     this.persistenceMode,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory KeyValuePatchinput.fromJson(Map<String, Object?> json) =>
@@ -3628,6 +5926,7 @@ class KeyValuePatchinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   /// The name of the Key Value instance
@@ -3641,7 +5940,35 @@ class KeyValuePatchinput {
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'plan',
+    'maxmemoryPolicy',
+    'persistenceMode',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (plan != null) 'plan': plan!.wireValue,
     if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
@@ -3662,6 +5989,7 @@ class KeyValuePostinput {
     this.maxmemoryPolicy,
     this.persistenceMode,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory KeyValuePostinput.fromJson(Map<String, Object?> json) =>
@@ -3680,6 +6008,7 @@ class KeyValuePostinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   /// The name of the Key Value instance
@@ -3700,7 +6029,38 @@ class KeyValuePostinput {
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'ownerId',
+    'plan',
+    'region',
+    'environmentId',
+    'maxmemoryPolicy',
+    'persistenceMode',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'ownerId': ownerId,
     'plan': plan.wireValue,
@@ -3714,7 +6074,11 @@ class KeyValuePostinput {
 }
 
 class KeyValueWithCursor {
-  const KeyValueWithCursor({required this.keyValue, required this.cursor});
+  const KeyValueWithCursor({
+    required this.keyValue,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory KeyValueWithCursor.fromJson(Map<String, Object?> json) =>
       KeyValueWithCursor(
@@ -3722,25 +6086,53 @@ class KeyValueWithCursor {
           (json['keyValue'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   /// A Key Value instance
   final KeyValue keyValue;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'keyValue', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'keyValue': keyValue.toJson(),
     'cursor': cursor,
   };
 }
 
 class MaintenanceMode {
-  const MaintenanceMode({required this.enabled, required this.uri});
+  const MaintenanceMode({
+    required this.enabled,
+    required this.uri,
+    this.rawJson = const {},
+  });
 
   factory MaintenanceMode.fromJson(Map<String, Object?> json) =>
       MaintenanceMode(
         enabled: json['enabled'] as bool? ?? false,
         uri: json['uri'] as String? ?? '',
+        rawJson: json,
       );
 
   final bool enabled;
@@ -3748,7 +6140,32 @@ class MaintenanceMode {
   /// The page to be served when [maintenance mode](https://render.com/docs/maintenance-mode) is enabled. When empty, the default maintenance mode page is served.
   final String uri;
 
-  Map<String, Object?> toJson() => {'enabled': enabled, 'uri': uri};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'uri'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'enabled': enabled,
+    'uri': uri,
+  };
 }
 
 class NativeEnvironmentDetails {
@@ -3756,6 +6173,7 @@ class NativeEnvironmentDetails {
     required this.buildCommand,
     required this.startCommand,
     this.preDeployCommand,
+    this.rawJson = const {},
   });
 
   factory NativeEnvironmentDetails.fromJson(Map<String, Object?> json) =>
@@ -3763,13 +6181,40 @@ class NativeEnvironmentDetails {
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
         preDeployCommand: json['preDeployCommand'] as String?,
+        rawJson: json,
       );
 
   final String buildCommand;
   final String startCommand;
   final String? preDeployCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'buildCommand',
+    'startCommand',
+    'preDeployCommand',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'buildCommand': buildCommand,
     'startCommand': startCommand,
     if (preDeployCommand != null) 'preDeployCommand': preDeployCommand,
@@ -3777,18 +6222,45 @@ class NativeEnvironmentDetails {
 }
 
 class NativeEnvironmentDetailsPatch {
-  const NativeEnvironmentDetailsPatch({this.buildCommand, this.startCommand});
+  const NativeEnvironmentDetailsPatch({
+    this.buildCommand,
+    this.startCommand,
+    this.rawJson = const {},
+  });
 
   factory NativeEnvironmentDetailsPatch.fromJson(Map<String, Object?> json) =>
       NativeEnvironmentDetailsPatch(
         buildCommand: json['buildCommand'] as String?,
         startCommand: json['startCommand'] as String?,
+        rawJson: json,
       );
 
   final String? buildCommand;
   final String? startCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'buildCommand', 'startCommand'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (buildCommand != null) 'buildCommand': buildCommand,
     if (startCommand != null) 'startCommand': startCommand,
   };
@@ -3799,18 +6271,42 @@ class NativeEnvironmentDetailsPost {
   const NativeEnvironmentDetailsPost({
     required this.buildCommand,
     required this.startCommand,
+    this.rawJson = const {},
   });
 
   factory NativeEnvironmentDetailsPost.fromJson(Map<String, Object?> json) =>
       NativeEnvironmentDetailsPost(
         buildCommand: json['buildCommand'] as String? ?? '',
         startCommand: json['startCommand'] as String? ?? '',
+        rawJson: json,
       );
 
   final String buildCommand;
   final String startCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'buildCommand', 'startCommand'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'buildCommand': buildCommand,
     'startCommand': startCommand,
   };
@@ -3861,6 +6357,7 @@ class NotificationOverrideWithCursorOverride {
     required this.serviceId,
     required this.previewNotificationsEnabled,
     required this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory NotificationOverrideWithCursorOverride.fromJson(
@@ -3874,6 +6371,7 @@ class NotificationOverrideWithCursorOverride {
         PatchServiceNotificationOverridesNotificationsToSend.fromWire(
           json['notificationsToSend'],
         ),
+    rawJson: json,
   );
 
   final String serviceId;
@@ -3881,7 +6379,33 @@ class NotificationOverrideWithCursorOverride {
   final PatchServiceNotificationOverridesNotificationsToSend
   notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'serviceId',
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'serviceId': serviceId,
     'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
     'notificationsToSend': notificationsToSend.wireValue,
@@ -3892,6 +6416,7 @@ class NotificationOverrideWithCursor {
   const NotificationOverrideWithCursor({
     required this.override,
     required this.cursor,
+    this.rawJson = const {},
   });
 
   factory NotificationOverrideWithCursor.fromJson(Map<String, Object?> json) =>
@@ -3900,12 +6425,35 @@ class NotificationOverrideWithCursor {
           (json['override'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final NotificationOverrideWithCursorOverride override;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'override', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'override': override.toJson(),
     'cursor': cursor,
   };
@@ -3954,6 +6502,7 @@ class OutboundIps {
     required this.type,
     this.dedicatedIpId,
     required this.ips,
+    this.rawJson = const {},
   });
 
   factory OutboundIps.fromJson(Map<String, Object?> json) => OutboundIps(
@@ -3962,6 +6511,7 @@ class OutboundIps {
     ips: ((json['ips'] as List<Object?>?) ?? const [])
         .map((e) => e as String? ?? '')
         .toList(),
+    rawJson: json,
   );
 
   /// `dedicated` if a dedicated IP set applies to the resource, `shared` if its traffic originates from the shared Render IPs for its region.
@@ -3973,7 +6523,29 @@ class OutboundIps {
   /// The IP addresses the resource's outbound traffic originates from.
   final List<String> ips;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'type', 'dedicatedIpId', 'ips'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'type': type.wireValue,
     if (dedicatedIpId != null) 'dedicatedIpId': dedicatedIpId,
     'ips': ips.map((e) => e).toList(),
@@ -3981,7 +6553,7 @@ class OutboundIps {
 }
 
 class OwnerWithCursor {
-  const OwnerWithCursor({this.owner, this.cursor});
+  const OwnerWithCursor({this.owner, this.cursor, this.rawJson = const {}});
 
   factory OwnerWithCursor.fromJson(Map<String, Object?> json) =>
       OwnerWithCursor(
@@ -3989,12 +6561,35 @@ class OwnerWithCursor {
             ? null
             : Owner.fromJson(json['owner']! as Map<String, Object?>),
         cursor: json['cursor'] as String?,
+        rawJson: json,
       );
 
   final Owner? owner;
   final String? cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'owner', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (owner != null) 'owner': owner!.toJson(),
     if (cursor != null) 'cursor': cursor,
   };
@@ -4049,12 +6644,14 @@ class ReadReplica {
     required this.id,
     required this.name,
     this.parameterOverrides,
+    this.rawJson = const {},
   });
 
   factory ReadReplica.fromJson(Map<String, Object?> json) => ReadReplica(
     id: json['id'] as String? ?? '',
     name: json['name'] as String? ?? '',
     parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
+    rawJson: json,
   );
 
   /// The replica instance identifier.
@@ -4064,7 +6661,29 @@ class ReadReplica {
   final String name;
   final Map<String, Object?>? parameterOverrides;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name', 'parameterOverrides'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
@@ -4163,6 +6782,7 @@ class Postgres {
     required this.dashboardUrl,
     required this.diskAutoscalingEnabled,
     required this.connectionPool,
+    this.rawJson = const {},
   });
 
   factory Postgres.fromJson(Map<String, Object?> json) => Postgres(
@@ -4204,6 +6824,7 @@ class Postgres {
     dashboardUrl: json['dashboardUrl'] as String? ?? '',
     diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
     connectionPool: json['connectionPool'] as String? ?? '',
+    rawJson: json,
   );
 
   final String id;
@@ -4241,7 +6862,54 @@ class Postgres {
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
   final String connectionPool;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'ipAllowList',
+    'createdAt',
+    'updatedAt',
+    'expiresAt',
+    'databaseName',
+    'databaseUser',
+    'environmentId',
+    'highAvailabilityEnabled',
+    'name',
+    'owner',
+    'plan',
+    'diskSizeGB',
+    'primaryPostgresID',
+    'region',
+    'readReplicas',
+    'role',
+    'status',
+    'version',
+    'suspended',
+    'suspenders',
+    'dashboardUrl',
+    'diskAutoscalingEnabled',
+    'connectionPool',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
     'createdAt': createdAt.toIso8601String(),
@@ -4277,6 +6945,7 @@ class PostgresConnectionInfo {
     this.internalConnectionPoolString,
     this.externalConnectionPoolString,
     required this.psqlCommand,
+    this.rawJson = const {},
   });
 
   factory PostgresConnectionInfo.fromJson(
@@ -4290,6 +6959,7 @@ class PostgresConnectionInfo {
     externalConnectionPoolString:
         json['externalConnectionPoolString'] as String?,
     psqlCommand: json['psqlCommand'] as String? ?? '',
+    rawJson: json,
   );
 
   final String password;
@@ -4299,7 +6969,36 @@ class PostgresConnectionInfo {
   final String? externalConnectionPoolString;
   final String psqlCommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'password',
+    'internalConnectionString',
+    'externalConnectionString',
+    'internalConnectionPoolString',
+    'externalConnectionPoolString',
+    'psqlCommand',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'password': password,
     'internalConnectionString': internalConnectionString,
     'externalConnectionString': externalConnectionString,
@@ -4318,6 +7017,7 @@ class PostgresDetailMaintenance {
     required this.scheduledAt,
     this.pendingMaintenanceBy,
     required this.state,
+    this.rawJson = const {},
   });
 
   factory PostgresDetailMaintenance.fromJson(Map<String, Object?> json) =>
@@ -4329,6 +7029,7 @@ class PostgresDetailMaintenance {
             DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
+        rawJson: json,
       );
 
   final String id;
@@ -4339,7 +7040,35 @@ class PostgresDetailMaintenance {
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'type',
+    'scheduledAt',
+    'pendingMaintenanceBy',
+    'state',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'type': type,
     'scheduledAt': scheduledAt.toIso8601String(),
@@ -4377,6 +7106,7 @@ class PostgresDetail {
     required this.suspenders,
     required this.diskAutoscalingEnabled,
     required this.connectionPool,
+    this.rawJson = const {},
   });
 
   factory PostgresDetail.fromJson(Map<String, Object?> json) => PostgresDetail(
@@ -4424,6 +7154,7 @@ class PostgresDetail {
         .toList(),
     diskAutoscalingEnabled: json['diskAutoscalingEnabled'] as bool? ?? false,
     connectionPool: json['connectionPool'] as String? ?? '',
+    rawJson: json,
   );
 
   final String id;
@@ -4463,7 +7194,56 @@ class PostgresDetail {
   /// What connection pool to use (if any) out of 'pgbouncer' and 'none'
   final String connectionPool;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'ipAllowList',
+    'createdAt',
+    'updatedAt',
+    'expiresAt',
+    'dashboardUrl',
+    'databaseName',
+    'databaseUser',
+    'environmentId',
+    'highAvailabilityEnabled',
+    'maintenance',
+    'name',
+    'owner',
+    'plan',
+    'diskSizeGB',
+    'parameterOverrides',
+    'primaryPostgresID',
+    'region',
+    'readReplicas',
+    'role',
+    'status',
+    'version',
+    'suspended',
+    'suspenders',
+    'diskAutoscalingEnabled',
+    'connectionPool',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'ipAllowList': ipAllowList.map((e) => e.toJson()).toList(),
     'createdAt': createdAt.toIso8601String(),
@@ -4494,19 +7274,46 @@ class PostgresDetail {
 }
 
 class ReadReplicaInput {
-  const ReadReplicaInput({required this.name, this.parameterOverrides});
+  const ReadReplicaInput({
+    required this.name,
+    this.parameterOverrides,
+    this.rawJson = const {},
+  });
 
   factory ReadReplicaInput.fromJson(Map<String, Object?> json) =>
       ReadReplicaInput(
         name: json['name'] as String? ?? '',
         parameterOverrides: json['parameterOverrides'] as Map<String, Object?>?,
+        rawJson: json,
       );
 
   /// The display name of the replica instance.
   final String name;
   final Map<String, Object?>? parameterOverrides;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'parameterOverrides'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     if (parameterOverrides != null) 'parameterOverrides': parameterOverrides,
   };
@@ -4525,6 +7332,7 @@ class PostgresPatchinput {
     this.ipAllowList,
     this.parameterOverrides,
     this.readReplicas,
+    this.rawJson = const {},
   });
 
   factory PostgresPatchinput.fromJson(Map<String, Object?> json) =>
@@ -4552,6 +7360,7 @@ class PostgresPatchinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String? name;
@@ -4574,7 +7383,41 @@ class PostgresPatchinput {
   final Map<String, Object?>? parameterOverrides;
   final List<ReadReplicaInput>? readReplicas;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'plan',
+    'diskSizeGB',
+    'enableDiskAutoscaling',
+    'connectionPool',
+    'enableHighAvailability',
+    'datadogAPIKey',
+    'datadogSite',
+    'ipAllowList',
+    'parameterOverrides',
+    'readReplicas',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (plan != null) 'plan': plan!.wireValue,
     if (diskSizeGb != null) 'diskSizeGB': diskSizeGb,
@@ -4613,6 +7456,7 @@ class PostgresPostinput {
     this.parameterOverrides,
     this.readReplicas,
     required this.version,
+    this.rawJson = const {},
   });
 
   factory PostgresPostinput.fromJson(Map<String, Object?> json) =>
@@ -4646,6 +7490,7 @@ class PostgresPostinput {
             )
             .toList(),
         version: PostgresVersion.fromWire(json['version']),
+        rawJson: json,
       );
 
   final String? databaseName;
@@ -4682,7 +7527,47 @@ class PostgresPostinput {
   /// The PostgreSQL version
   final PostgresVersion version;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'databaseName',
+    'databaseUser',
+    'datadogAPIKey',
+    'datadogSite',
+    'name',
+    'enableHighAvailability',
+    'environmentId',
+    'ownerId',
+    'plan',
+    'diskSizeGB',
+    'enableDiskAutoscaling',
+    'connectionPool',
+    'region',
+    'ipAllowList',
+    'parameterOverrides',
+    'readReplicas',
+    'version',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (databaseName != null) 'databaseName': databaseName,
     if (databaseUser != null) 'databaseUser': databaseUser,
     if (datadogApikey != null) 'datadogAPIKey': datadogApikey,
@@ -4718,10 +7603,21 @@ class PostgresParameterOverrides {
   final Map<String, Object?> json;
 
   Map<String, Object?> toJson() => json;
+
+  /// The decoded payload, for symmetry with every other
+  /// model. Here it is the whole type.
+  Map<String, Object?> get rawJson => json;
+
+  /// Nothing is undocumented here: the type is the payload.
+  Map<String, Object?> get unknownFields => const {};
 }
 
 class PostgresWithCursor {
-  const PostgresWithCursor({required this.postgres, required this.cursor});
+  const PostgresWithCursor({
+    required this.postgres,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory PostgresWithCursor.fromJson(Map<String, Object?> json) =>
       PostgresWithCursor(
@@ -4729,24 +7625,53 @@ class PostgresWithCursor {
           (json['postgres'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final Postgres postgres;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'postgres', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'postgres': postgres.toJson(),
     'cursor': cursor,
   };
 }
 
 class PreviewInput {
-  const PreviewInput({required this.imagePath, this.name, this.plan});
+  const PreviewInput({
+    required this.imagePath,
+    this.name,
+    this.plan,
+    this.rawJson = const {},
+  });
 
   factory PreviewInput.fromJson(Map<String, Object?> json) => PreviewInput(
     imagePath: json['imagePath'] as String? ?? '',
     name: json['name'] as String?,
     plan: Plan.fromWire(json['plan']),
+    rawJson: json,
   );
 
   /// Must be either a full URL or the relative path to an image. If a relative path, Render uses the base service's image URL as its root. For example, if the base service's image URL is `docker.io/library/nginx:latest`, then valid values are: `docker.io/library/nginx:<any tag or SHA>`, `library/nginx:<any tag or SHA>`, or `nginx:<any tag or SHA>`. Note that the path must match (only the tag or SHA can vary).
@@ -4758,7 +7683,29 @@ class PreviewInput {
   /// The instance type to use. Legacy variants (`*_legacy`) identify grandfathered plans no longer offered for new services. Note that base services on any paid instance type can't create preview instances with the `free` instance type.
   final Plan? plan;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'imagePath', 'name', 'plan'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'imagePath': imagePath,
     if (name != null) 'name': name,
     if (plan != null) 'plan': plan!.wireValue,
@@ -4769,6 +7716,7 @@ class PrivateServiceDetailsAutoscalingCriteriaCpu {
   const PrivateServiceDetailsAutoscalingCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsAutoscalingCriteriaCpu.fromJson(
@@ -4776,6 +7724,7 @@ class PrivateServiceDetailsAutoscalingCriteriaCpu {
   ) => PrivateServiceDetailsAutoscalingCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -4783,7 +7732,29 @@ class PrivateServiceDetailsAutoscalingCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -4793,6 +7764,7 @@ class PrivateServiceDetailsAutoscalingCriteriaMemory {
   const PrivateServiceDetailsAutoscalingCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsAutoscalingCriteriaMemory.fromJson(
@@ -4800,6 +7772,7 @@ class PrivateServiceDetailsAutoscalingCriteriaMemory {
   ) => PrivateServiceDetailsAutoscalingCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -4807,7 +7780,29 @@ class PrivateServiceDetailsAutoscalingCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -4817,6 +7812,7 @@ class PrivateServiceDetailsAutoscalingCriteria {
   const PrivateServiceDetailsAutoscalingCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsAutoscalingCriteria.fromJson(
@@ -4828,12 +7824,35 @@ class PrivateServiceDetailsAutoscalingCriteria {
     memory: PrivateServiceDetailsAutoscalingCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final PrivateServiceDetailsAutoscalingCriteriaCpu cpu;
   final PrivateServiceDetailsAutoscalingCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -4845,6 +7864,7 @@ class PrivateServiceDetailsAutoscaling {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsAutoscaling.fromJson(
@@ -4856,6 +7876,7 @@ class PrivateServiceDetailsAutoscaling {
     criteria: PrivateServiceDetailsAutoscalingCriteria.fromJson(
       (json['criteria'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final bool enabled;
@@ -4867,7 +7888,29 @@ class PrivateServiceDetailsAutoscaling {
   final int max;
   final PrivateServiceDetailsAutoscalingCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -4881,6 +7924,7 @@ class PrivateServiceDetailsDisk {
     required this.name,
     required this.sizeGb,
     required this.mountPath,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsDisk.fromJson(Map<String, Object?> json) =>
@@ -4889,6 +7933,7 @@ class PrivateServiceDetailsDisk {
         name: json['name'] as String? ?? '',
         sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
         mountPath: json['mountPath'] as String? ?? '',
+        rawJson: json,
       );
 
   final String id;
@@ -4896,7 +7941,29 @@ class PrivateServiceDetailsDisk {
   final int sizeGb;
   final String mountPath;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name', 'sizeGB', 'mountPath'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -4923,17 +7990,44 @@ enum Protocol {
 }
 
 class ServerPort {
-  const ServerPort({required this.port, required this.protocol});
+  const ServerPort({
+    required this.port,
+    required this.protocol,
+    this.rawJson = const {},
+  });
 
   factory ServerPort.fromJson(Map<String, Object?> json) => ServerPort(
     port: (json['port'] as num?)?.toInt() ?? 0,
     protocol: Protocol.fromWire(json['protocol']),
+    rawJson: json,
   );
 
   final int port;
   final Protocol protocol;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'port', 'protocol'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'port': port,
     'protocol': protocol.wireValue,
   };
@@ -4957,6 +8051,7 @@ class PrivateServiceDetails {
     required this.url,
     required this.buildPlan,
     this.maxShutdownDelaySeconds,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetails.fromJson(Map<String, Object?> json) =>
@@ -4999,6 +8094,7 @@ class PrivateServiceDetails {
         buildPlan: BuildPlan.fromWire(json['buildPlan']),
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
             ?.toInt(),
+        rawJson: json,
       );
 
   final PrivateServiceDetailsAutoscaling? autoscaling;
@@ -5034,7 +8130,46 @@ class PrivateServiceDetails {
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoscaling',
+    'disk',
+    'env',
+    'envSpecificDetails',
+    'numInstances',
+    'openPorts',
+    'parentServer',
+    'plan',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'region',
+    'runtime',
+    'sshAddress',
+    'url',
+    'buildPlan',
+    'maxShutdownDelaySeconds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
     if (disk != null) 'disk': disk!.toJson(),
     'env': env.wireValue,
@@ -5065,6 +8200,7 @@ class PrivateServiceDetailsPatch {
     this.previews,
     this.runtime,
     this.maxShutdownDelaySeconds,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsPatch.fromJson(Map<String, Object?> json) =>
@@ -5085,6 +8221,7 @@ class PrivateServiceDetailsPatch {
         runtime: ServiceRuntime.fromWire(json['runtime']),
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
             ?.toInt(),
+        rawJson: json,
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
@@ -5103,7 +8240,37 @@ class PrivateServiceDetailsPatch {
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'envSpecificDetails',
+    'plan',
+    'preDeployCommand',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'runtime',
+    'maxShutdownDelaySeconds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (envSpecificDetails != null)
       'envSpecificDetails': envSpecificDetails!.toJson(),
     if (plan != null) 'plan': plan!.wireValue,
@@ -5121,6 +8288,7 @@ class PrivateServiceDetailsPostAutoscalingCriteriaCpu {
   const PrivateServiceDetailsPostAutoscalingCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsPostAutoscalingCriteriaCpu.fromJson(
@@ -5128,6 +8296,7 @@ class PrivateServiceDetailsPostAutoscalingCriteriaCpu {
   ) => PrivateServiceDetailsPostAutoscalingCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -5135,7 +8304,29 @@ class PrivateServiceDetailsPostAutoscalingCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -5145,6 +8336,7 @@ class PrivateServiceDetailsPostAutoscalingCriteriaMemory {
   const PrivateServiceDetailsPostAutoscalingCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
@@ -5152,6 +8344,7 @@ class PrivateServiceDetailsPostAutoscalingCriteriaMemory {
   ) => PrivateServiceDetailsPostAutoscalingCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -5159,7 +8352,29 @@ class PrivateServiceDetailsPostAutoscalingCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -5169,6 +8384,7 @@ class PrivateServiceDetailsPostAutoscalingCriteria {
   const PrivateServiceDetailsPostAutoscalingCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsPostAutoscalingCriteria.fromJson(
@@ -5180,12 +8396,35 @@ class PrivateServiceDetailsPostAutoscalingCriteria {
     memory: PrivateServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final PrivateServiceDetailsPostAutoscalingCriteriaCpu cpu;
   final PrivateServiceDetailsPostAutoscalingCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -5197,6 +8436,7 @@ class PrivateServiceDetailsPostAutoscaling {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsPostAutoscaling.fromJson(
@@ -5208,6 +8448,7 @@ class PrivateServiceDetailsPostAutoscaling {
     criteria: PrivateServiceDetailsPostAutoscalingCriteria.fromJson(
       (json['criteria'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final bool enabled;
@@ -5219,7 +8460,29 @@ class PrivateServiceDetailsPostAutoscaling {
   final int max;
   final PrivateServiceDetailsPostAutoscalingCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -5241,6 +8504,7 @@ class PrivateServiceDetailsPost {
     this.previews,
     this.region,
     this.maxShutdownDelaySeconds,
+    this.rawJson = const {},
   });
 
   factory PrivateServiceDetailsPost.fromJson(Map<String, Object?> json) =>
@@ -5272,6 +8536,7 @@ class PrivateServiceDetailsPost {
         region: Region.fromWire(json['region']),
         maxShutdownDelaySeconds: (json['maxShutdownDelaySeconds'] as num?)
             ?.toInt(),
+        rawJson: json,
       );
 
   final PrivateServiceDetailsPostAutoscaling? autoscaling;
@@ -5301,7 +8566,42 @@ class PrivateServiceDetailsPost {
   /// The maximum amount of time (in seconds) that Render waits for your application process to exit gracefully after sending it a SIGTERM signal.
   final int? maxShutdownDelaySeconds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoscaling',
+    'disk',
+    'env',
+    'runtime',
+    'envSpecificDetails',
+    'numInstances',
+    'plan',
+    'preDeployCommand',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'region',
+    'maxShutdownDelaySeconds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
     if (disk != null) 'disk': disk!.toJson(),
     if (env != null) 'env': env!.wireValue,
@@ -5329,6 +8629,7 @@ class Project {
     required this.name,
     required this.owner,
     required this.environmentIds,
+    this.rawJson = const {},
   });
 
   factory Project.fromJson(Map<String, Object?> json) => Project(
@@ -5342,6 +8643,7 @@ class Project {
     environmentIds: ((json['environmentIds'] as List<Object?>?) ?? const [])
         .map((e) => e as String? ?? '')
         .toList(),
+    rawJson: json,
   );
 
   /// The ID of the project
@@ -5356,7 +8658,36 @@ class Project {
   /// The environments associated with the project
   final List<String> environmentIds;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'createdAt',
+    'updatedAt',
+    'name',
+    'owner',
+    'environmentIds',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
@@ -5368,14 +8699,38 @@ class Project {
 
 /// Input type for updating a project
 class ProjectPatchinput {
-  const ProjectPatchinput({this.name});
+  const ProjectPatchinput({this.name, this.rawJson = const {}});
 
   factory ProjectPatchinput.fromJson(Map<String, Object?> json) =>
-      ProjectPatchinput(name: json['name'] as String?);
+      ProjectPatchinput(name: json['name'] as String?, rawJson: json);
 
   final String? name;
 
-  Map<String, Object?> toJson() => {if (name != null) 'name': name};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    if (name != null) 'name': name,
+  };
 }
 
 class ProjectPostenvironmentInput {
@@ -5384,6 +8739,7 @@ class ProjectPostenvironmentInput {
     this.protectedStatus,
     this.networkIsolationEnabled,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory ProjectPostenvironmentInput.fromJson(Map<String, Object?> json) =>
@@ -5398,6 +8754,7 @@ class ProjectPostenvironmentInput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String name;
@@ -5409,7 +8766,34 @@ class ProjectPostenvironmentInput {
   final bool? networkIsolationEnabled;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'protectedStatus',
+    'networkIsolationEnabled',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     if (protectedStatus != null) 'protectedStatus': protectedStatus!.wireValue,
     if (networkIsolationEnabled != null)
@@ -5424,6 +8808,7 @@ class ProjectPostinput {
     required this.name,
     required this.ownerId,
     required this.environments,
+    this.rawJson = const {},
   });
 
   factory ProjectPostinput.fromJson(Map<String, Object?> json) =>
@@ -5437,6 +8822,7 @@ class ProjectPostinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   /// The name of the project
@@ -5448,7 +8834,29 @@ class ProjectPostinput {
   /// The environments to create when creating the project
   final List<ProjectPostenvironmentInput> environments;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'ownerId', 'environments'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'ownerId': ownerId,
     'environments': environments.map((e) => e.toJson()).toList(),
@@ -5456,7 +8864,11 @@ class ProjectPostinput {
 }
 
 class ProjectWithCursor {
-  const ProjectWithCursor({required this.project, required this.cursor});
+  const ProjectWithCursor({
+    required this.project,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory ProjectWithCursor.fromJson(Map<String, Object?> json) =>
       ProjectWithCursor(
@@ -5464,13 +8876,36 @@ class ProjectWithCursor {
           (json['project'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   /// A project is a collection of environments
   final Project project;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'project', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'project': project.toJson(),
     'cursor': cursor,
   };
@@ -5500,11 +8935,16 @@ enum RedisPlan {
 
 /// Options for a Redis instance
 class RedisOptions {
-  const RedisOptions({this.maxmemoryPolicy, this.persistenceMode});
+  const RedisOptions({
+    this.maxmemoryPolicy,
+    this.persistenceMode,
+    this.rawJson = const {},
+  });
 
   factory RedisOptions.fromJson(Map<String, Object?> json) => RedisOptions(
     maxmemoryPolicy: json['maxmemoryPolicy'] as String?,
     persistenceMode: PersistenceMode.fromWire(json['persistenceMode']),
+    rawJson: json,
   );
 
   final String? maxmemoryPolicy;
@@ -5512,7 +8952,29 @@ class RedisOptions {
   /// The persistence mode for the Key Value instance. The default for paid instances is journal_snapshot (both journaling and snapshots). Only turn off persistence if you're using this Key Value instance as a cache and are okay with losing data. Free instances do not have persistence.
   final PersistenceMode? persistenceMode;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'maxmemoryPolicy', 'persistenceMode'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy,
     if (persistenceMode != null) 'persistenceMode': persistenceMode!.wireValue,
   };
@@ -5534,6 +8996,7 @@ class Redis {
     this.environmentId,
     required this.version,
     required this.dashboardUrl,
+    this.rawJson = const {},
   });
 
   factory Redis.fromJson(Map<String, Object?> json) => Redis(
@@ -5560,6 +9023,7 @@ class Redis {
     environmentId: json['environmentId'] as String?,
     version: json['version'] as String? ?? '',
     dashboardUrl: json['dashboardUrl'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The ID of the Redis instance
@@ -5595,7 +9059,43 @@ class Redis {
   /// The URL to view the Redis instance in the Render Dashboard
   final String dashboardUrl;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'createdAt',
+    'updatedAt',
+    'status',
+    'region',
+    'plan',
+    'name',
+    'owner',
+    'options',
+    'ipAllowList',
+    'environmentId',
+    'version',
+    'dashboardUrl',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
@@ -5618,6 +9118,7 @@ class RedisConnectionInfo {
     required this.internalConnectionString,
     required this.externalConnectionString,
     required this.redisClicommand,
+    this.rawJson = const {},
   });
 
   factory RedisConnectionInfo.fromJson(
@@ -5626,6 +9127,7 @@ class RedisConnectionInfo {
     internalConnectionString: json['internalConnectionString'] as String? ?? '',
     externalConnectionString: json['externalConnectionString'] as String? ?? '',
     redisClicommand: json['redisCLICommand'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The connection string to use from within Render
@@ -5637,7 +9139,33 @@ class RedisConnectionInfo {
   /// The Redis CLI command to connect to the Redis instance
   final String redisClicommand;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'internalConnectionString',
+    'externalConnectionString',
+    'redisCLICommand',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'internalConnectionString': internalConnectionString,
     'externalConnectionString': externalConnectionString,
     'redisCLICommand': redisClicommand,
@@ -5651,6 +9179,7 @@ class RedisDetailMaintenance {
     required this.scheduledAt,
     this.pendingMaintenanceBy,
     required this.state,
+    this.rawJson = const {},
   });
 
   factory RedisDetailMaintenance.fromJson(Map<String, Object?> json) =>
@@ -5662,6 +9191,7 @@ class RedisDetailMaintenance {
             DateTime.fromMillisecondsSinceEpoch(0),
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
+        rawJson: json,
       );
 
   final String id;
@@ -5672,7 +9202,35 @@ class RedisDetailMaintenance {
   final DateTime? pendingMaintenanceBy;
   final KeyValueDetailMaintenanceState state;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'type',
+    'scheduledAt',
+    'pendingMaintenanceBy',
+    'state',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'type': type,
     'scheduledAt': scheduledAt.toIso8601String(),
@@ -5698,6 +9256,7 @@ class RedisDetail {
     this.environmentId,
     required this.version,
     this.maintenance,
+    this.rawJson = const {},
   });
 
   factory RedisDetail.fromJson(Map<String, Object?> json) => RedisDetail(
@@ -5728,6 +9287,7 @@ class RedisDetail {
         : RedisDetailMaintenance.fromJson(
             json['maintenance']! as Map<String, Object?>,
           ),
+    rawJson: json,
   );
 
   /// The ID of the Redis instance
@@ -5761,7 +9321,43 @@ class RedisDetail {
   final String version;
   final RedisDetailMaintenance? maintenance;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'createdAt',
+    'updatedAt',
+    'status',
+    'region',
+    'plan',
+    'name',
+    'owner',
+    'options',
+    'ipAllowList',
+    'environmentId',
+    'version',
+    'maintenance',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
@@ -5786,6 +9382,7 @@ class RedisPatchinput {
     this.maxmemoryPolicy,
     this.persistenceMode,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory RedisPatchinput.fromJson(Map<String, Object?> json) =>
@@ -5801,6 +9398,7 @@ class RedisPatchinput {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   /// The name of the Redis instance
@@ -5814,7 +9412,35 @@ class RedisPatchinput {
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'plan',
+    'maxmemoryPolicy',
+    'persistenceMode',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (plan != null) 'plan': plan!.wireValue,
     if (maxmemoryPolicy != null) 'maxmemoryPolicy': maxmemoryPolicy!.wireValue,
@@ -5835,6 +9461,7 @@ class RedisPostinput {
     this.maxmemoryPolicy,
     this.persistenceMode,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory RedisPostinput.fromJson(Map<String, Object?> json) => RedisPostinput(
@@ -5852,6 +9479,7 @@ class RedisPostinput {
           ),
         )
         .toList(),
+    rawJson: json,
   );
 
   /// The name of the Redis instance
@@ -5872,7 +9500,38 @@ class RedisPostinput {
   final PersistenceMode? persistenceMode;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'ownerId',
+    'plan',
+    'region',
+    'environmentId',
+    'maxmemoryPolicy',
+    'persistenceMode',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'ownerId': ownerId,
     'plan': plan.wireValue,
@@ -5886,7 +9545,11 @@ class RedisPostinput {
 }
 
 class RedisWithCursor {
-  const RedisWithCursor({required this.redis, required this.cursor});
+  const RedisWithCursor({
+    required this.redis,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory RedisWithCursor.fromJson(Map<String, Object?> json) =>
       RedisWithCursor(
@@ -5894,28 +9557,80 @@ class RedisWithCursor {
           (json['redis'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   /// A Redis instance
   final Redis redis;
   final String cursor;
 
-  Map<String, Object?> toJson() => {'redis': redis.toJson(), 'cursor': cursor};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'redis', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'redis': redis.toJson(),
+    'cursor': cursor,
+  };
 }
 
 class RegistryCredentialSummary {
-  const RegistryCredentialSummary({required this.id, required this.name});
+  const RegistryCredentialSummary({
+    required this.id,
+    required this.name,
+    this.rawJson = const {},
+  });
 
   factory RegistryCredentialSummary.fromJson(Map<String, Object?> json) =>
       RegistryCredentialSummary(
         id: json['id'] as String? ?? '',
         name: json['name'] as String? ?? '',
+        rawJson: json,
       );
 
   final String id;
   final String name;
 
-  Map<String, Object?> toJson() => {'id': id, 'name': name};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'id': id, 'name': name};
 }
 
 /// Controls whether render.com subdomains are available for the service
@@ -5962,6 +9677,7 @@ class Route {
     required this.source,
     required this.destination,
     required this.priority,
+    this.rawJson = const {},
   });
 
   factory Route.fromJson(Map<String, Object?> json) => Route(
@@ -5970,6 +9686,7 @@ class Route {
     source: json['source'] as String? ?? '',
     destination: json['destination'] as String? ?? '',
     priority: (json['priority'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final String id;
@@ -5980,7 +9697,35 @@ class Route {
   /// Redirect and Rewrite Rules are applied in priority order starting at 0
   final int priority;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'type',
+    'source',
+    'destination',
+    'priority',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'type': type.wireValue,
     'source': source,
@@ -5990,15 +9735,38 @@ class Route {
 }
 
 class RoutePatch {
-  const RoutePatch({required this.priority});
+  const RoutePatch({required this.priority, this.rawJson = const {}});
 
-  factory RoutePatch.fromJson(Map<String, Object?> json) =>
-      RoutePatch(priority: (json['priority'] as num?)?.toInt() ?? 0);
+  factory RoutePatch.fromJson(Map<String, Object?> json) => RoutePatch(
+    priority: (json['priority'] as num?)?.toInt() ?? 0,
+    rawJson: json,
+  );
 
   /// Redirect and Rewrite Rules are applied in priority order starting at 0. Moves this route to the specified priority and adjusts other route priorities accordingly.
   final int priority;
 
-  Map<String, Object?> toJson() => {'priority': priority};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'priority'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'priority': priority};
 }
 
 class RoutePost {
@@ -6007,6 +9775,7 @@ class RoutePost {
     required this.source,
     required this.destination,
     this.priority,
+    this.rawJson = const {},
   });
 
   factory RoutePost.fromJson(Map<String, Object?> json) => RoutePost(
@@ -6014,6 +9783,7 @@ class RoutePost {
     source: json['source'] as String? ?? '',
     destination: json['destination'] as String? ?? '',
     priority: (json['priority'] as num?)?.toInt(),
+    rawJson: json,
   );
 
   final RouteType type;
@@ -6023,7 +9793,34 @@ class RoutePost {
   /// Redirect and Rewrite Rules are applied in priority order starting at 0. Defaults to last in the priority list.
   final int? priority;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'type',
+    'source',
+    'destination',
+    'priority',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'type': type.wireValue,
     'source': source,
     'destination': destination,
@@ -6036,19 +9833,43 @@ class RoutePut {
     required this.type,
     required this.source,
     required this.destination,
+    this.rawJson = const {},
   });
 
   factory RoutePut.fromJson(Map<String, Object?> json) => RoutePut(
     type: RouteType.fromWire(json['type']),
     source: json['source'] as String? ?? '',
     destination: json['destination'] as String? ?? '',
+    rawJson: json,
   );
 
   final RouteType type;
   final String source;
   final String destination;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'type', 'source', 'destination'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'type': type.wireValue,
     'source': source,
     'destination': destination,
@@ -6056,7 +9877,11 @@ class RoutePut {
 }
 
 class RouteWithCursor {
-  const RouteWithCursor({required this.route, required this.cursor});
+  const RouteWithCursor({
+    required this.route,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory RouteWithCursor.fromJson(Map<String, Object?> json) =>
       RouteWithCursor(
@@ -6064,16 +9889,46 @@ class RouteWithCursor {
           (json['route'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final Route route;
   final String cursor;
 
-  Map<String, Object?> toJson() => {'route': route.toJson(), 'cursor': cursor};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'route', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'route': route.toJson(),
+    'cursor': cursor,
+  };
 }
 
 class SecretFileWithCursor {
-  const SecretFileWithCursor({required this.secretFile, required this.cursor});
+  const SecretFileWithCursor({
+    required this.secretFile,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory SecretFileWithCursor.fromJson(Map<String, Object?> json) =>
       SecretFileWithCursor(
@@ -6081,12 +9936,35 @@ class SecretFileWithCursor {
           (json['secretFile'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final SecretFile secretFile;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'secretFile', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'secretFile': secretFile.toJson(),
     'cursor': cursor,
   };
@@ -6135,6 +10013,7 @@ class Service {
     required this.type,
     required this.updatedAt,
     required this.serviceDetails,
+    this.rawJson = const {},
   });
 
   factory Service.fromJson(Map<String, Object?> json) => Service(
@@ -6168,6 +10047,7 @@ class Service {
     updatedAt:
         parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     serviceDetails: json['serviceDetails'],
+    rawJson: json,
   );
 
   final String id;
@@ -6193,7 +10073,50 @@ class Service {
   final DateTime updatedAt;
   final Object? serviceDetails;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'autoDeploy',
+    'branch',
+    'buildFilter',
+    'createdAt',
+    'dashboardUrl',
+    'environmentId',
+    'imagePath',
+    'name',
+    'notifyOnFail',
+    'ownerId',
+    'registryCredential',
+    'repo',
+    'rootDir',
+    'slug',
+    'suspended',
+    'suspenders',
+    'type',
+    'updatedAt',
+    'serviceDetails',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'autoDeploy': autoDeploy.wireValue,
     if (branch != null) 'branch': branch,
@@ -6219,7 +10142,11 @@ class Service {
 }
 
 class ServiceAndDeploy {
-  const ServiceAndDeploy({this.service, this.deployId});
+  const ServiceAndDeploy({
+    this.service,
+    this.deployId,
+    this.rawJson = const {},
+  });
 
   factory ServiceAndDeploy.fromJson(Map<String, Object?> json) =>
       ServiceAndDeploy(
@@ -6227,12 +10154,35 @@ class ServiceAndDeploy {
             ? null
             : Service.fromJson(json['service']! as Map<String, Object?>),
         deployId: json['deployId'] as String?,
+        rawJson: json,
       );
 
   final Service? service;
   final String? deployId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'service', 'deployId'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (service != null) 'service': service!.toJson(),
     if (deployId != null) 'deployId': deployId,
   };
@@ -6302,6 +10252,7 @@ class ServiceEventWithCursorEvent {
     required this.serviceId,
     required this.type,
     required this.details,
+    this.rawJson = const {},
   });
 
   factory ServiceEventWithCursorEvent.fromJson(Map<String, Object?> json) =>
@@ -6313,6 +10264,7 @@ class ServiceEventWithCursorEvent {
         serviceId: json['serviceId'] as String? ?? '',
         type: ServiceEventWithCursorEventType.fromWire(json['type']),
         details: json['details'],
+        rawJson: json,
       );
 
   final String id;
@@ -6321,7 +10273,35 @@ class ServiceEventWithCursorEvent {
   final ServiceEventWithCursorEventType type;
   final Object? details;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'timestamp',
+    'serviceId',
+    'type',
+    'details',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'timestamp': timestamp.toIso8601String(),
     'serviceId': serviceId,
@@ -6332,22 +10312,48 @@ class ServiceEventWithCursorEvent {
 
 /// A service event with a cursor
 class ServiceEventWithCursor {
-  const ServiceEventWithCursor({required this.event});
+  const ServiceEventWithCursor({required this.event, this.rawJson = const {}});
 
   factory ServiceEventWithCursor.fromJson(Map<String, Object?> json) =>
       ServiceEventWithCursor(
         event: ServiceEventWithCursorEvent.fromJson(
           (json['event'] as Map<String, Object?>?) ?? const {},
         ),
+        rawJson: json,
       );
 
   final ServiceEventWithCursorEvent event;
 
-  Map<String, Object?> toJson() => {'event': event.toJson()};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'event'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'event': event.toJson()};
 }
 
 class ServiceInstance {
-  const ServiceInstance({required this.id, required this.createdAt});
+  const ServiceInstance({
+    required this.id,
+    required this.createdAt,
+    this.rawJson = const {},
+  });
 
   factory ServiceInstance.fromJson(Map<String, Object?> json) =>
       ServiceInstance(
@@ -6355,12 +10361,35 @@ class ServiceInstance {
         createdAt:
             parseDate(json['createdAt']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
+        rawJson: json,
       );
 
   final String id;
   final DateTime createdAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'createdAt'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
   };
@@ -6376,6 +10405,7 @@ class ServicePatch {
     this.buildFilter,
     this.rootDir,
     this.serviceDetails,
+    this.rawJson = const {},
   });
 
   factory ServicePatch.fromJson(Map<String, Object?> json) => ServicePatch(
@@ -6391,6 +10421,7 @@ class ServicePatch {
         : BuildFilter.fromJson(json['buildFilter']! as Map<String, Object?>),
     rootDir: json['rootDir'] as String?,
     serviceDetails: json['serviceDetails'],
+    rawJson: json,
   );
 
   final AutoDeploy? autoDeploy;
@@ -6402,7 +10433,38 @@ class ServicePatch {
   final String? rootDir;
   final Object? serviceDetails;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoDeploy',
+    'repo',
+    'branch',
+    'image',
+    'name',
+    'buildFilter',
+    'rootDir',
+    'serviceDetails',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoDeploy != null) 'autoDeploy': autoDeploy!.wireValue,
     if (repo != null) 'repo': repo,
     if (branch != null) 'branch': branch,
@@ -6415,18 +10477,48 @@ class ServicePatch {
 }
 
 class ServicePostSecretFilesItem {
-  const ServicePostSecretFilesItem({required this.name, required this.content});
+  const ServicePostSecretFilesItem({
+    required this.name,
+    required this.content,
+    this.rawJson = const {},
+  });
 
   factory ServicePostSecretFilesItem.fromJson(Map<String, Object?> json) =>
       ServicePostSecretFilesItem(
         name: json['name'] as String? ?? '',
         content: json['content'] as String? ?? '',
+        rawJson: json,
       );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {'name': name, 'content': content};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'content'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'name': name,
+    'content': content,
+  };
 }
 
 class ServicePost {
@@ -6444,6 +10536,7 @@ class ServicePost {
     this.secretFiles,
     this.environmentId,
     this.serviceDetails,
+    this.rawJson = const {},
   });
 
   factory ServicePost.fromJson(Map<String, Object?> json) => ServicePost(
@@ -6472,6 +10565,7 @@ class ServicePost {
         .toList(),
     environmentId: json['environmentId'] as String?,
     serviceDetails: json['serviceDetails'],
+    rawJson: json,
   );
 
   final ServiceType type;
@@ -6498,7 +10592,43 @@ class ServicePost {
   final String? environmentId;
   final Object? serviceDetails;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'type',
+    'name',
+    'ownerId',
+    'repo',
+    'autoDeploy',
+    'branch',
+    'image',
+    'buildFilter',
+    'rootDir',
+    'envVars',
+    'secretFiles',
+    'environmentId',
+    'serviceDetails',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'type': type.wireValue,
     'name': name,
     'ownerId': ownerId,
@@ -6517,7 +10647,11 @@ class ServicePost {
 }
 
 class ServiceWithCursor {
-  const ServiceWithCursor({required this.service, required this.cursor});
+  const ServiceWithCursor({
+    required this.service,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory ServiceWithCursor.fromJson(Map<String, Object?> json) =>
       ServiceWithCursor(
@@ -6525,24 +10659,52 @@ class ServiceWithCursor {
           (json['service'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final Service service;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'service', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'service': service.toJson(),
     'cursor': cursor,
   };
 }
 
 class SnapshotRestorePost {
-  const SnapshotRestorePost({required this.snapshotKey, this.instanceId});
+  const SnapshotRestorePost({
+    required this.snapshotKey,
+    this.instanceId,
+    this.rawJson = const {},
+  });
 
   factory SnapshotRestorePost.fromJson(Map<String, Object?> json) =>
       SnapshotRestorePost(
         snapshotKey: json['snapshotKey'] as String? ?? '',
         instanceId: json['instanceId'] as String?,
+        rawJson: json,
       );
 
   final String snapshotKey;
@@ -6550,7 +10712,29 @@ class SnapshotRestorePost {
   /// When a service with a disk is scaled, the instanceId is used to identify the instance that the disk is attached to. Each instance's disks get their own snapshots, and can be restored separately.
   final String? instanceId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'snapshotKey', 'instanceId'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'snapshotKey': snapshotKey,
     if (instanceId != null) 'instanceId': instanceId,
   };
@@ -6567,6 +10751,7 @@ class StaticSiteDetails {
     required this.url,
     required this.buildPlan,
     this.renderSubdomainPolicy,
+    this.rawJson = const {},
   });
 
   factory StaticSiteDetails.fromJson(Map<String, Object?> json) =>
@@ -6594,6 +10779,7 @@ class StaticSiteDetails {
         renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
           json['renderSubdomainPolicy'],
         ),
+        rawJson: json,
       );
 
   final String buildCommand;
@@ -6610,7 +10796,39 @@ class StaticSiteDetails {
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'buildCommand',
+    'ipAllowList',
+    'parentServer',
+    'publishPath',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'url',
+    'buildPlan',
+    'renderSubdomainPolicy',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'buildCommand': buildCommand,
     if (ipAllowList != null)
       'ipAllowList': ipAllowList!.map((e) => e.toJson()).toList(),
@@ -6634,6 +10852,7 @@ class StaticSiteDetailsPatch {
     this.previews,
     this.renderSubdomainPolicy,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory StaticSiteDetailsPatch.fromJson(Map<String, Object?> json) =>
@@ -6656,6 +10875,7 @@ class StaticSiteDetailsPatch {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String? buildCommand;
@@ -6669,7 +10889,36 @@ class StaticSiteDetailsPatch {
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'buildCommand',
+    'publishPath',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'renderSubdomainPolicy',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (buildCommand != null) 'buildCommand': buildCommand,
     if (publishPath != null) 'publishPath': publishPath,
     if (pullRequestPreviewsEnabled != null)
@@ -6692,6 +10941,7 @@ class StaticSiteDetailsPost {
     this.routes,
     this.renderSubdomainPolicy,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory StaticSiteDetailsPost.fromJson(Map<String, Object?> json) =>
@@ -6727,6 +10977,7 @@ class StaticSiteDetailsPost {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String? buildCommand;
@@ -6744,7 +10995,38 @@ class StaticSiteDetailsPost {
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'buildCommand',
+    'headers',
+    'publishPath',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'routes',
+    'renderSubdomainPolicy',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (buildCommand != null) 'buildCommand': buildCommand,
     if (headers != null) 'headers': headers!.map((e) => e.toJson()).toList(),
     if (publishPath != null) 'publishPath': publishPath,
@@ -6760,14 +11042,35 @@ class StaticSiteDetailsPost {
 }
 
 class SyncWithCursorSyncCommit {
-  const SyncWithCursorSyncCommit({required this.id});
+  const SyncWithCursorSyncCommit({required this.id, this.rawJson = const {}});
 
   factory SyncWithCursorSyncCommit.fromJson(Map<String, Object?> json) =>
-      SyncWithCursorSyncCommit(id: json['id'] as String? ?? '');
+      SyncWithCursorSyncCommit(id: json['id'] as String? ?? '', rawJson: json);
 
   final String id;
 
-  Map<String, Object?> toJson() => {'id': id};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'id': id};
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -6798,6 +11101,7 @@ class SyncWithCursorSync {
     this.startedAt,
     this.completedAt,
     required this.state,
+    this.rawJson = const {},
   });
 
   factory SyncWithCursorSync.fromJson(Map<String, Object?> json) =>
@@ -6809,6 +11113,7 @@ class SyncWithCursorSync {
         startedAt: parseDate(json['startedAt']),
         completedAt: parseDate(json['completedAt']),
         state: State.fromWire(json['state']),
+        rawJson: json,
       );
 
   final String id;
@@ -6817,7 +11122,35 @@ class SyncWithCursorSync {
   final DateTime? completedAt;
   final State state;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'commit',
+    'startedAt',
+    'completedAt',
+    'state',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'commit': commit.toJson(),
     if (startedAt != null) 'startedAt': startedAt!.toIso8601String(),
@@ -6828,19 +11161,49 @@ class SyncWithCursorSync {
 
 /// A Blueprint sync with a cursor
 class SyncWithCursor {
-  const SyncWithCursor({required this.sync_, required this.cursor});
+  const SyncWithCursor({
+    required this.sync_,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory SyncWithCursor.fromJson(Map<String, Object?> json) => SyncWithCursor(
     sync_: SyncWithCursorSync.fromJson(
       (json['sync'] as Map<String, Object?>?) ?? const {},
     ),
     cursor: json['cursor'] as String? ?? '',
+    rawJson: json,
   );
 
   final SyncWithCursorSync sync_;
   final String cursor;
 
-  Map<String, Object?> toJson() => {'sync': sync_.toJson(), 'cursor': cursor};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'sync', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'sync': sync_.toJson(),
+    'cursor': cursor,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -6874,6 +11237,7 @@ class TaskRunWithCursorTaskRunAttemptsItem {
     this.enqueuedAt,
     required this.startedAt,
     this.completedAt,
+    this.rawJson = const {},
   });
 
   factory TaskRunWithCursorTaskRunAttemptsItem.fromJson(
@@ -6886,6 +11250,7 @@ class TaskRunWithCursorTaskRunAttemptsItem {
     startedAt:
         parseDate(json['startedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     completedAt: parseDate(json['completedAt']),
+    rawJson: json,
   );
 
   /// The ID of the task run this attempt belongs to.
@@ -6898,7 +11263,36 @@ class TaskRunWithCursorTaskRunAttemptsItem {
   final DateTime startedAt;
   final DateTime? completedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'taskRunId',
+    'attempt',
+    'status',
+    'enqueuedAt',
+    'startedAt',
+    'completedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (taskRunId != null) 'taskRunId': taskRunId,
     'attempt': attempt,
     'status': status.wireValue,
@@ -6920,6 +11314,7 @@ class TaskRunWithCursorTaskRun {
     required this.rootTaskRunId,
     required this.retries,
     required this.attempts,
+    this.rawJson = const {},
   });
 
   factory TaskRunWithCursorTaskRun.fromJson(Map<String, Object?> json) =>
@@ -6940,6 +11335,7 @@ class TaskRunWithCursorTaskRun {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -6955,7 +11351,40 @@ class TaskRunWithCursorTaskRun {
   final int retries;
   final List<TaskRunWithCursorTaskRunAttemptsItem> attempts;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'taskId',
+    'status',
+    'startedAt',
+    'completedAt',
+    'parentTaskRunId',
+    'parentTaskAttempt',
+    'rootTaskRunId',
+    'retries',
+    'attempts',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'taskId': taskId,
     'status': status.wireValue,
@@ -6970,7 +11399,11 @@ class TaskRunWithCursorTaskRun {
 }
 
 class TaskRunWithCursor {
-  const TaskRunWithCursor({required this.taskRun, required this.cursor});
+  const TaskRunWithCursor({
+    required this.taskRun,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory TaskRunWithCursor.fromJson(Map<String, Object?> json) =>
       TaskRunWithCursor(
@@ -6978,12 +11411,35 @@ class TaskRunWithCursor {
           (json['taskRun'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final TaskRunWithCursorTaskRun taskRun;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'taskRun', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'taskRun': taskRun.toJson(),
     'cursor': cursor,
   };
@@ -6996,6 +11452,7 @@ class TaskWithCursorTask {
     required this.createdAt,
     this.workflowId,
     this.workflowVersionId,
+    this.rawJson = const {},
   });
 
   factory TaskWithCursorTask.fromJson(Map<String, Object?> json) =>
@@ -7007,6 +11464,7 @@ class TaskWithCursorTask {
             DateTime.fromMillisecondsSinceEpoch(0),
         workflowId: json['workflowId'] as String?,
         workflowVersionId: json['workflowVersionId'] as String?,
+        rawJson: json,
       );
 
   final String id;
@@ -7015,7 +11473,35 @@ class TaskWithCursorTask {
   final String? workflowId;
   final String? workflowVersionId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'createdAt',
+    'workflowId',
+    'workflowVersionId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'createdAt': createdAt.toIso8601String(),
@@ -7025,19 +11511,49 @@ class TaskWithCursorTask {
 }
 
 class TaskWithCursor {
-  const TaskWithCursor({required this.task, required this.cursor});
+  const TaskWithCursor({
+    required this.task,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory TaskWithCursor.fromJson(Map<String, Object?> json) => TaskWithCursor(
     task: TaskWithCursorTask.fromJson(
       (json['task'] as Map<String, Object?>?) ?? const {},
     ),
     cursor: json['cursor'] as String? ?? '',
+    rawJson: json,
   );
 
   final TaskWithCursorTask task;
   final String cursor;
 
-  Map<String, Object?> toJson() => {'task': task.toJson(), 'cursor': cursor};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'task', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'task': task.toJson(),
+    'cursor': cursor,
+  };
 }
 
 /// Decodes unrecognised values to [unknown] rather than
@@ -7088,6 +11604,7 @@ class TeamMember {
     required this.status,
     required this.role,
     required this.mfaEnabled,
+    this.rawJson = const {},
   });
 
   factory TeamMember.fromJson(Map<String, Object?> json) => TeamMember(
@@ -7097,6 +11614,7 @@ class TeamMember {
     status: TeamMemberStatus.fromWire(json['status']),
     role: TeamMemberRole.fromWire(json['role']),
     mfaEnabled: json['mfaEnabled'] as bool? ?? false,
+    rawJson: json,
   );
 
   final String userId;
@@ -7108,7 +11626,36 @@ class TeamMember {
   final TeamMemberRole role;
   final bool mfaEnabled;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'userId',
+    'name',
+    'email',
+    'status',
+    'role',
+    'mfaEnabled',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'userId': userId,
     'name': name,
     'email': email,
@@ -7119,23 +11666,54 @@ class TeamMember {
 }
 
 class User {
-  const User({required this.email, required this.name});
+  const User({
+    required this.email,
+    required this.name,
+    this.rawJson = const {},
+  });
 
   factory User.fromJson(Map<String, Object?> json) => User(
     email: json['email'] as String? ?? '',
     name: json['name'] as String? ?? '',
+    rawJson: json,
   );
 
   final String email;
   final String name;
 
-  Map<String, Object?> toJson() => {'email': email, 'name': name};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'email', 'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'email': email,
+    'name': name,
+  };
 }
 
 class WebServiceDetailsAutoscalingCriteriaCpu {
   const WebServiceDetailsAutoscalingCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsAutoscalingCriteriaCpu.fromJson(
@@ -7143,6 +11721,7 @@ class WebServiceDetailsAutoscalingCriteriaCpu {
   ) => WebServiceDetailsAutoscalingCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -7150,7 +11729,29 @@ class WebServiceDetailsAutoscalingCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -7160,6 +11761,7 @@ class WebServiceDetailsAutoscalingCriteriaMemory {
   const WebServiceDetailsAutoscalingCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsAutoscalingCriteriaMemory.fromJson(
@@ -7167,6 +11769,7 @@ class WebServiceDetailsAutoscalingCriteriaMemory {
   ) => WebServiceDetailsAutoscalingCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -7174,7 +11777,29 @@ class WebServiceDetailsAutoscalingCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -7184,6 +11809,7 @@ class WebServiceDetailsAutoscalingCriteria {
   const WebServiceDetailsAutoscalingCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsAutoscalingCriteria.fromJson(
@@ -7195,12 +11821,35 @@ class WebServiceDetailsAutoscalingCriteria {
     memory: WebServiceDetailsAutoscalingCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final WebServiceDetailsAutoscalingCriteriaCpu cpu;
   final WebServiceDetailsAutoscalingCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -7212,6 +11861,7 @@ class WebServiceDetailsAutoscaling {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsAutoscaling.fromJson(Map<String, Object?> json) =>
@@ -7222,6 +11872,7 @@ class WebServiceDetailsAutoscaling {
         criteria: WebServiceDetailsAutoscalingCriteria.fromJson(
           (json['criteria'] as Map<String, Object?>?) ?? const {},
         ),
+        rawJson: json,
       );
 
   final bool enabled;
@@ -7233,7 +11884,29 @@ class WebServiceDetailsAutoscaling {
   final int max;
   final WebServiceDetailsAutoscalingCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -7247,6 +11920,7 @@ class WebServiceDetailsDisk {
     required this.name,
     required this.sizeGb,
     required this.mountPath,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsDisk.fromJson(Map<String, Object?> json) =>
@@ -7255,6 +11929,7 @@ class WebServiceDetailsDisk {
         name: json['name'] as String? ?? '',
         sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
         mountPath: json['mountPath'] as String? ?? '',
+        rawJson: json,
       );
 
   final String id;
@@ -7262,7 +11937,29 @@ class WebServiceDetailsDisk {
   final int sizeGb;
   final String mountPath;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name', 'sizeGB', 'mountPath'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -7293,6 +11990,7 @@ class WebServiceDetails {
     required this.buildPlan,
     this.maxShutdownDelaySeconds,
     this.renderSubdomainPolicy,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetails.fromJson(
@@ -7351,6 +12049,7 @@ class WebServiceDetails {
     renderSubdomainPolicy: RenderSubdomainPolicy.fromWire(
       json['renderSubdomainPolicy'],
     ),
+    rawJson: json,
   );
 
   final WebServiceDetailsAutoscaling? autoscaling;
@@ -7393,7 +12092,51 @@ class WebServiceDetails {
   /// Controls whether render.com subdomains are available for the service
   final RenderSubdomainPolicy? renderSubdomainPolicy;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoscaling',
+    'cache',
+    'disk',
+    'env',
+    'envSpecificDetails',
+    'healthCheckPath',
+    'ipAllowList',
+    'maintenanceMode',
+    'numInstances',
+    'openPorts',
+    'parentServer',
+    'plan',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'region',
+    'runtime',
+    'sshAddress',
+    'url',
+    'buildPlan',
+    'maxShutdownDelaySeconds',
+    'renderSubdomainPolicy',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
     if (cache != null) 'cache': cache!.toJson(),
     if (disk != null) 'disk': disk!.toJson(),
@@ -7436,6 +12179,7 @@ class WebServiceDetailsPatch {
     this.renderSubdomainPolicy,
     this.ipAllowList,
     this.cache,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsPatch.fromJson(Map<String, Object?> json) =>
@@ -7475,6 +12219,7 @@ class WebServiceDetailsPatch {
         cache: json['cache'] == null
             ? null
             : Cache.fromJson(json['cache']! as Map<String, Object?>),
+        rawJson: json,
       );
 
   final EnvSpecificDetailsPatch? envSpecificDetails;
@@ -7500,7 +12245,42 @@ class WebServiceDetailsPatch {
   final List<CidrBlockAndDescription>? ipAllowList;
   final Cache? cache;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'envSpecificDetails',
+    'healthCheckPath',
+    'maintenanceMode',
+    'plan',
+    'preDeployCommand',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'runtime',
+    'maxShutdownDelaySeconds',
+    'renderSubdomainPolicy',
+    'ipAllowList',
+    'cache',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (envSpecificDetails != null)
       'envSpecificDetails': envSpecificDetails!.toJson(),
     if (healthCheckPath != null) 'healthCheckPath': healthCheckPath,
@@ -7525,6 +12305,7 @@ class WebServiceDetailsPostAutoscalingCriteriaCpu {
   const WebServiceDetailsPostAutoscalingCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsPostAutoscalingCriteriaCpu.fromJson(
@@ -7532,6 +12313,7 @@ class WebServiceDetailsPostAutoscalingCriteriaCpu {
   ) => WebServiceDetailsPostAutoscalingCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -7539,7 +12321,29 @@ class WebServiceDetailsPostAutoscalingCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -7549,6 +12353,7 @@ class WebServiceDetailsPostAutoscalingCriteriaMemory {
   const WebServiceDetailsPostAutoscalingCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
@@ -7556,6 +12361,7 @@ class WebServiceDetailsPostAutoscalingCriteriaMemory {
   ) => WebServiceDetailsPostAutoscalingCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -7563,7 +12369,29 @@ class WebServiceDetailsPostAutoscalingCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -7573,6 +12401,7 @@ class WebServiceDetailsPostAutoscalingCriteria {
   const WebServiceDetailsPostAutoscalingCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsPostAutoscalingCriteria.fromJson(
@@ -7584,12 +12413,35 @@ class WebServiceDetailsPostAutoscalingCriteria {
     memory: WebServiceDetailsPostAutoscalingCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final WebServiceDetailsPostAutoscalingCriteriaCpu cpu;
   final WebServiceDetailsPostAutoscalingCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -7601,6 +12453,7 @@ class WebServiceDetailsPostAutoscaling {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsPostAutoscaling.fromJson(
@@ -7612,6 +12465,7 @@ class WebServiceDetailsPostAutoscaling {
     criteria: WebServiceDetailsPostAutoscalingCriteria.fromJson(
       (json['criteria'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final bool enabled;
@@ -7623,7 +12477,29 @@ class WebServiceDetailsPostAutoscaling {
   final int max;
   final WebServiceDetailsPostAutoscalingCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -7649,6 +12525,7 @@ class WebServiceDetailsPost {
     this.maxShutdownDelaySeconds,
     this.renderSubdomainPolicy,
     this.ipAllowList,
+    this.rawJson = const {},
   });
 
   factory WebServiceDetailsPost.fromJson(Map<String, Object?> json) =>
@@ -7696,6 +12573,7 @@ class WebServiceDetailsPost {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final WebServiceDetailsPostAutoscaling? autoscaling;
@@ -7731,7 +12609,46 @@ class WebServiceDetailsPost {
   final RenderSubdomainPolicy? renderSubdomainPolicy;
   final List<CidrBlockAndDescription>? ipAllowList;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'autoscaling',
+    'disk',
+    'env',
+    'runtime',
+    'envSpecificDetails',
+    'healthCheckPath',
+    'maintenanceMode',
+    'numInstances',
+    'plan',
+    'preDeployCommand',
+    'pullRequestPreviewsEnabled',
+    'previews',
+    'region',
+    'maxShutdownDelaySeconds',
+    'renderSubdomainPolicy',
+    'ipAllowList',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (autoscaling != null) 'autoscaling': autoscaling!.toJson(),
     if (disk != null) 'disk': disk!.toJson(),
     if (env != null) 'env': env!.wireValue,
@@ -7852,6 +12769,7 @@ class WebhookEventWithCursorWebhookEvent {
     this.statusCode,
     this.responseBody,
     this.error,
+    this.rawJson = const {},
   });
 
   factory WebhookEventWithCursorWebhookEvent.fromJson(
@@ -7864,6 +12782,7 @@ class WebhookEventWithCursorWebhookEvent {
     statusCode: (json['statusCode'] as num?)?.toInt(),
     responseBody: json['responseBody'] as String?,
     error: json['error'] as String?,
+    rawJson: json,
   );
 
   /// the id of the webhook event
@@ -7879,7 +12798,37 @@ class WebhookEventWithCursorWebhookEvent {
   /// error is populated when an error occurs without a response such as a timeout
   final String? error;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'eventId',
+    'eventType',
+    'sentAt',
+    'statusCode',
+    'responseBody',
+    'error',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'eventId': eventId,
     'eventType': eventType.wireValue,
@@ -7894,6 +12843,7 @@ class WebhookEventWithCursor {
   const WebhookEventWithCursor({
     required this.webhookEvent,
     required this.cursor,
+    this.rawJson = const {},
   });
 
   factory WebhookEventWithCursor.fromJson(Map<String, Object?> json) =>
@@ -7902,12 +12852,35 @@ class WebhookEventWithCursor {
           (json['webhookEvent'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final WebhookEventWithCursorWebhookEvent webhookEvent;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'webhookEvent', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'webhookEvent': webhookEvent.toJson(),
     'cursor': cursor,
   };
@@ -7921,6 +12894,7 @@ class WebhookWithCursorWebhook {
     required this.secret,
     required this.enabled,
     required this.eventFilter,
+    this.rawJson = const {},
   });
 
   factory WebhookWithCursorWebhook.fromJson(Map<String, Object?> json) =>
@@ -7933,6 +12907,7 @@ class WebhookWithCursorWebhook {
         eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
             .map((e) => RetrieveEventType.fromWire(e))
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -7944,7 +12919,36 @@ class WebhookWithCursorWebhook {
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'url',
+    'name',
+    'secret',
+    'enabled',
+    'eventFilter',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'url': url,
     'name': name,
@@ -7955,7 +12959,11 @@ class WebhookWithCursorWebhook {
 }
 
 class WebhookWithCursor {
-  const WebhookWithCursor({required this.webhook, required this.cursor});
+  const WebhookWithCursor({
+    required this.webhook,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory WebhookWithCursor.fromJson(Map<String, Object?> json) =>
       WebhookWithCursor(
@@ -7963,12 +12971,35 @@ class WebhookWithCursor {
           (json['webhook'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final WebhookWithCursorWebhook webhook;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'webhook', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'webhook': webhook.toJson(),
     'cursor': cursor,
   };
@@ -8003,6 +13034,7 @@ class WorkflowVersionWithCursorWorkflowVersion {
     required this.name,
     required this.createdAt,
     required this.status,
+    this.rawJson = const {},
   });
 
   factory WorkflowVersionWithCursorWorkflowVersion.fromJson(
@@ -8014,6 +13046,7 @@ class WorkflowVersionWithCursorWorkflowVersion {
     createdAt:
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     status: GetWorkflowVersionStatus.fromWire(json['status']),
+    rawJson: json,
   );
 
   final String id;
@@ -8022,7 +13055,35 @@ class WorkflowVersionWithCursorWorkflowVersion {
   final DateTime createdAt;
   final GetWorkflowVersionStatus status;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'workflowId',
+    'name',
+    'createdAt',
+    'status',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'workflowId': workflowId,
     'name': name,
@@ -8035,6 +13096,7 @@ class WorkflowVersionWithCursor {
   const WorkflowVersionWithCursor({
     required this.workflowVersion,
     required this.cursor,
+    this.rawJson = const {},
   });
 
   factory WorkflowVersionWithCursor.fromJson(Map<String, Object?> json) =>
@@ -8043,12 +13105,35 @@ class WorkflowVersionWithCursor {
           (json['workflowVersion'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final WorkflowVersionWithCursorWorkflowVersion workflowVersion;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'workflowVersion', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'workflowVersion': workflowVersion.toJson(),
     'cursor': cursor,
   };
@@ -8083,6 +13168,7 @@ class WorkflowWithCursorWorkflowBuildConfig {
     required this.repo,
     this.rootDir,
     required this.runtime,
+    this.rawJson = const {},
   });
 
   factory WorkflowWithCursorWorkflowBuildConfig.fromJson(
@@ -8093,6 +13179,7 @@ class WorkflowWithCursorWorkflowBuildConfig {
     repo: json['repo'] as String? ?? '',
     rootDir: json['rootDir'] as String?,
     runtime: Runtime.fromWire(json['runtime']),
+    rawJson: json,
   );
 
   /// The branch to use for the build, if applicable.
@@ -8110,7 +13197,35 @@ class WorkflowWithCursorWorkflowBuildConfig {
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'branch',
+    'buildCommand',
+    'repo',
+    'rootDir',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (branch != null) 'branch': branch,
     'buildCommand': buildCommand,
     'repo': repo,
@@ -8152,6 +13267,7 @@ class WorkflowWithCursorWorkflow {
     this.environmentId,
     this.slug,
     this.autoDeployTrigger,
+    this.rawJson = const {},
   });
 
   factory WorkflowWithCursorWorkflow.fromJson(
@@ -8172,6 +13288,7 @@ class WorkflowWithCursorWorkflow {
     environmentId: json['environmentId'] as String?,
     slug: json['slug'] as String?,
     autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+    rawJson: json,
   );
 
   final String id;
@@ -8192,7 +13309,41 @@ class WorkflowWithCursorWorkflow {
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'ownerId',
+    'createdAt',
+    'updatedAt',
+    'buildConfig',
+    'runCommand',
+    'region',
+    'environmentId',
+    'slug',
+    'autoDeployTrigger',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'ownerId': ownerId,
@@ -8209,7 +13360,11 @@ class WorkflowWithCursorWorkflow {
 }
 
 class WorkflowWithCursor {
-  const WorkflowWithCursor({required this.workflow, required this.cursor});
+  const WorkflowWithCursor({
+    required this.workflow,
+    required this.cursor,
+    this.rawJson = const {},
+  });
 
   factory WorkflowWithCursor.fromJson(Map<String, Object?> json) =>
       WorkflowWithCursor(
@@ -8217,12 +13372,35 @@ class WorkflowWithCursor {
           (json['workflow'] as Map<String, Object?>?) ?? const {},
         ),
         cursor: json['cursor'] as String? ?? '',
+        rawJson: json,
       );
 
   final WorkflowWithCursorWorkflow workflow;
   final String cursor;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'workflow', 'cursor'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'workflow': workflow.toJson(),
     'cursor': cursor,
   };
@@ -8239,6 +13417,7 @@ class ValidateBlueprintResponseErrorsItem {
     required this.error,
     this.line,
     this.column,
+    this.rawJson = const {},
   });
 
   factory ValidateBlueprintResponseErrorsItem.fromJson(
@@ -8248,6 +13427,7 @@ class ValidateBlueprintResponseErrorsItem {
     error: json['error'] as String? ?? '',
     line: (json['line'] as num?)?.toInt(),
     column: (json['column'] as num?)?.toInt(),
+    rawJson: json,
   );
 
   /// The path to the field with the error (e.g., `services[0].plan`)
@@ -8262,7 +13442,29 @@ class ValidateBlueprintResponseErrorsItem {
   /// The column number in the YAML file (1-indexed)
   final int? column;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'path', 'error', 'line', 'column'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (path != null) 'path': path,
     'error': error,
     if (line != null) 'line': line,
@@ -8278,6 +13480,7 @@ class ValidateBlueprintResponsePlan {
     this.keyValue,
     this.envGroups,
     this.totalActions,
+    this.rawJson = const {},
   });
 
   factory ValidateBlueprintResponsePlan.fromJson(Map<String, Object?> json) =>
@@ -8295,6 +13498,7 @@ class ValidateBlueprintResponsePlan {
             ?.map((e) => e as String? ?? '')
             .toList(),
         totalActions: (json['totalActions'] as num?)?.toInt(),
+        rawJson: json,
       );
 
   /// The names of services that would be created as part of the Blueprint.
@@ -8312,7 +13516,35 @@ class ValidateBlueprintResponsePlan {
   /// The total number of actions that would be performed by the Blueprint. In addition to created resources, this includes modifications to individual configuration fields.
   final int? totalActions;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'services',
+    'databases',
+    'keyValue',
+    'envGroups',
+    'totalActions',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (services != null) 'services': services!.map((e) => e).toList(),
     if (databases != null) 'databases': databases!.map((e) => e).toList(),
     if (keyValue != null) 'keyValue': keyValue!.map((e) => e).toList(),
@@ -8326,6 +13558,7 @@ class ValidateBlueprintResponse {
     required this.valid,
     this.errors,
     this.plan,
+    this.rawJson = const {},
   });
 
   factory ValidateBlueprintResponse.fromJson(Map<String, Object?> json) =>
@@ -8343,6 +13576,7 @@ class ValidateBlueprintResponse {
             : ValidateBlueprintResponsePlan.fromJson(
                 json['plan']! as Map<String, Object?>,
               ),
+        rawJson: json,
       );
 
   /// If `true`, the Blueprint validated successfully. If `false`, at least one validation error occurred.
@@ -8354,7 +13588,29 @@ class ValidateBlueprintResponse {
   /// A summary of the resources that would be created as part of the Blueprint. Only present if `valid` is `true`.
   final ValidateBlueprintResponsePlan? plan;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'valid', 'errors', 'plan'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'valid': valid,
     if (errors != null) 'errors': errors!.map((e) => e.toJson()).toList(),
     if (plan != null) 'plan': plan!.toJson(),
@@ -8393,6 +13649,7 @@ class RetrieveBlueprintResponseResourcesItem {
     required this.id,
     required this.name,
     required this.type,
+    this.rawJson = const {},
   });
 
   factory RetrieveBlueprintResponseResourcesItem.fromJson(
@@ -8401,6 +13658,7 @@ class RetrieveBlueprintResponseResourcesItem {
     id: json['id'] as String? ?? '',
     name: json['name'] as String? ?? '',
     type: RetrieveBlueprintType.fromWire(json['type']),
+    rawJson: json,
   );
 
   final String id;
@@ -8409,7 +13667,29 @@ class RetrieveBlueprintResponseResourcesItem {
   /// type of the resource (ex. web_service or postgres)
   final RetrieveBlueprintType type;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'name', 'type'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'type': type.wireValue,
@@ -8427,6 +13707,7 @@ class RetrieveBlueprintResponse {
     required this.path,
     this.lastSync,
     required this.resources,
+    this.rawJson = const {},
   });
 
   factory RetrieveBlueprintResponse.fromJson(Map<String, Object?> json) =>
@@ -8446,6 +13727,7 @@ class RetrieveBlueprintResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -8462,7 +13744,39 @@ class RetrieveBlueprintResponse {
   final DateTime? lastSync;
   final List<RetrieveBlueprintResponseResourcesItem> resources;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'status',
+    'autoSync',
+    'repo',
+    'branch',
+    'path',
+    'lastSync',
+    'resources',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'status': status.wireValue,
@@ -8476,13 +13790,19 @@ class RetrieveBlueprintResponse {
 }
 
 class UpdateBlueprintRequest {
-  const UpdateBlueprintRequest({this.name, this.autoSync, this.path});
+  const UpdateBlueprintRequest({
+    this.name,
+    this.autoSync,
+    this.path,
+    this.rawJson = const {},
+  });
 
   factory UpdateBlueprintRequest.fromJson(Map<String, Object?> json) =>
       UpdateBlueprintRequest(
         name: json['name'] as String?,
         autoSync: json['autoSync'] as bool?,
         path: json['path'] as String?,
+        rawJson: json,
       );
 
   final String? name;
@@ -8493,7 +13813,29 @@ class UpdateBlueprintRequest {
   /// Path to the Blueprint file in the repository
   final String? path;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'autoSync', 'path'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (autoSync != null) 'autoSync': autoSync,
     if (path != null) 'path': path,
@@ -8510,6 +13852,7 @@ class UpdateBlueprintResponse {
     required this.branch,
     required this.path,
     this.lastSync,
+    this.rawJson = const {},
   });
 
   factory UpdateBlueprintResponse.fromJson(Map<String, Object?> json) =>
@@ -8522,6 +13865,7 @@ class UpdateBlueprintResponse {
         branch: json['branch'] as String? ?? '',
         path: json['path'] as String? ?? '',
         lastSync: parseDate(json['lastSync']),
+        rawJson: json,
       );
 
   final String id;
@@ -8537,7 +13881,38 @@ class UpdateBlueprintResponse {
   final String path;
   final DateTime? lastSync;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'status',
+    'autoSync',
+    'repo',
+    'branch',
+    'path',
+    'lastSync',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'status': status.wireValue,
@@ -8555,6 +13930,7 @@ class AddDiskRequest {
     required this.sizeGb,
     required this.mountPath,
     required this.serviceId,
+    this.rawJson = const {},
   });
 
   factory AddDiskRequest.fromJson(Map<String, Object?> json) => AddDiskRequest(
@@ -8562,6 +13938,7 @@ class AddDiskRequest {
     sizeGb: (json['sizeGB'] as num?)?.toInt() ?? 0,
     mountPath: json['mountPath'] as String? ?? '',
     serviceId: json['serviceId'] as String? ?? '',
+    rawJson: json,
   );
 
   final String name;
@@ -8569,7 +13946,34 @@ class AddDiskRequest {
   final String mountPath;
   final String serviceId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'sizeGB',
+    'mountPath',
+    'serviceId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'sizeGB': sizeGb,
     'mountPath': mountPath,
@@ -8586,6 +13990,7 @@ class AddDiskResponse {
     this.serviceId,
     required this.createdAt,
     required this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory AddDiskResponse.fromJson(
@@ -8600,6 +14005,7 @@ class AddDiskResponse {
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     updatedAt:
         parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    rawJson: json,
   );
 
   final String id;
@@ -8610,7 +14016,37 @@ class AddDiskResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'sizeGB',
+    'mountPath',
+    'serviceId',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -8630,6 +14066,7 @@ class RetrieveDiskResponse {
     this.serviceId,
     required this.createdAt,
     required this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory RetrieveDiskResponse.fromJson(
@@ -8644,6 +14081,7 @@ class RetrieveDiskResponse {
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     updatedAt:
         parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    rawJson: json,
   );
 
   final String id;
@@ -8654,7 +14092,37 @@ class RetrieveDiskResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'sizeGB',
+    'mountPath',
+    'serviceId',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -8666,20 +14134,48 @@ class RetrieveDiskResponse {
 }
 
 class UpdateDiskRequest {
-  const UpdateDiskRequest({this.name, this.sizeGb, this.mountPath});
+  const UpdateDiskRequest({
+    this.name,
+    this.sizeGb,
+    this.mountPath,
+    this.rawJson = const {},
+  });
 
   factory UpdateDiskRequest.fromJson(Map<String, Object?> json) =>
       UpdateDiskRequest(
         name: json['name'] as String?,
         sizeGb: (json['sizeGB'] as num?)?.toInt(),
         mountPath: json['mountPath'] as String?,
+        rawJson: json,
       );
 
   final String? name;
   final int? sizeGb;
   final String? mountPath;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'sizeGB', 'mountPath'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (sizeGb != null) 'sizeGB': sizeGb,
     if (mountPath != null) 'mountPath': mountPath,
@@ -8695,6 +14191,7 @@ class UpdateDiskResponse {
     this.serviceId,
     required this.createdAt,
     required this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory UpdateDiskResponse.fromJson(
@@ -8709,6 +14206,7 @@ class UpdateDiskResponse {
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     updatedAt:
         parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    rawJson: json,
   );
 
   final String id;
@@ -8719,7 +14217,37 @@ class UpdateDiskResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'sizeGB',
+    'mountPath',
+    'serviceId',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -8739,6 +14267,7 @@ class RestoreSnapshotResponse {
     this.serviceId,
     required this.createdAt,
     required this.updatedAt,
+    this.rawJson = const {},
   });
 
   factory RestoreSnapshotResponse.fromJson(
@@ -8753,6 +14282,7 @@ class RestoreSnapshotResponse {
         parseDate(json['createdAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     updatedAt:
         parseDate(json['updatedAt']) ?? DateTime.fromMillisecondsSinceEpoch(0),
+    rawJson: json,
   );
 
   final String id;
@@ -8763,7 +14293,37 @@ class RestoreSnapshotResponse {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'sizeGB',
+    'mountPath',
+    'serviceId',
+    'createdAt',
+    'updatedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'sizeGB': sizeGb,
@@ -8775,14 +14335,44 @@ class RestoreSnapshotResponse {
 }
 
 class UpdateEnvGroupSecretFileRequest {
-  const UpdateEnvGroupSecretFileRequest({this.content});
+  const UpdateEnvGroupSecretFileRequest({
+    this.content,
+    this.rawJson = const {},
+  });
 
   factory UpdateEnvGroupSecretFileRequest.fromJson(Map<String, Object?> json) =>
-      UpdateEnvGroupSecretFileRequest(content: json['content'] as String?);
+      UpdateEnvGroupSecretFileRequest(
+        content: json['content'] as String?,
+        rawJson: json,
+      );
 
   final String? content;
 
-  Map<String, Object?> toJson() => {if (content != null) 'content': content};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'content'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    if (content != null) 'content': content,
+  };
 }
 
 class RetrieveEventResponse {
@@ -8792,6 +14382,7 @@ class RetrieveEventResponse {
     required this.serviceId,
     required this.type,
     required this.details,
+    this.rawJson = const {},
   });
 
   factory RetrieveEventResponse.fromJson(Map<String, Object?> json) =>
@@ -8803,6 +14394,7 @@ class RetrieveEventResponse {
         serviceId: json['serviceId'] as String? ?? '',
         type: RetrieveEventType.fromWire(json['type']),
         details: json['details'],
+        rawJson: json,
       );
 
   final String id;
@@ -8811,7 +14403,35 @@ class RetrieveEventResponse {
   final RetrieveEventType type;
   final Object? details;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'timestamp',
+    'serviceId',
+    'type',
+    'details',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'timestamp': timestamp.toIso8601String(),
     'serviceId': serviceId,
@@ -8857,6 +14477,7 @@ class ListLogsResponseLogsItemLabelsItem {
   const ListLogsResponseLogsItemLabelsItem({
     required this.name,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory ListLogsResponseLogsItemLabelsItem.fromJson(
@@ -8864,6 +14485,7 @@ class ListLogsResponseLogsItemLabelsItem {
   ) => ListLogsResponseLogsItemLabelsItem(
     name: Name.fromWire(json['name']),
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The name of the log label
@@ -8872,7 +14494,32 @@ class ListLogsResponseLogsItemLabelsItem {
   /// The value of the log label
   final String value;
 
-  Map<String, Object?> toJson() => {'name': name.wireValue, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'name': name.wireValue,
+    'value': value,
+  };
 }
 
 /// A log entry with metadata
@@ -8882,6 +14529,7 @@ class ListLogsResponseLogsItem {
     required this.message,
     required this.timestamp,
     required this.labels,
+    this.rawJson = const {},
   });
 
   factory ListLogsResponseLogsItem.fromJson(Map<String, Object?> json) =>
@@ -8898,6 +14546,7 @@ class ListLogsResponseLogsItem {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   /// A unique ID of the log entry
@@ -8910,7 +14559,29 @@ class ListLogsResponseLogsItem {
   final DateTime timestamp;
   final List<ListLogsResponseLogsItemLabelsItem> labels;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'message', 'timestamp', 'labels'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'message': message,
     'timestamp': timestamp.toIso8601String(),
@@ -8925,6 +14596,7 @@ class ListLogsResponse {
     required this.nextStartTime,
     required this.nextEndTime,
     required this.logs,
+    this.rawJson = const {},
   });
 
   factory ListLogsResponse.fromJson(Map<String, Object?> json) =>
@@ -8943,6 +14615,7 @@ class ListLogsResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   /// True if there are more logs to fetch
@@ -8955,7 +14628,34 @@ class ListLogsResponse {
   final DateTime nextEndTime;
   final List<ListLogsResponseLogsItem> logs;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'hasMore',
+    'nextStartTime',
+    'nextEndTime',
+    'logs',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'hasMore': hasMore,
     'nextStartTime': nextStartTime.toIso8601String(),
     'nextEndTime': nextEndTime.toIso8601String(),
@@ -8984,13 +14684,19 @@ enum Preview {
 
 /// Owner log stream settings
 class GetOwnerLogStreamResponse {
-  const GetOwnerLogStreamResponse({this.ownerId, this.endpoint, this.preview});
+  const GetOwnerLogStreamResponse({
+    this.ownerId,
+    this.endpoint,
+    this.preview,
+    this.rawJson = const {},
+  });
 
   factory GetOwnerLogStreamResponse.fromJson(Map<String, Object?> json) =>
       GetOwnerLogStreamResponse(
         ownerId: json['ownerId'] as String?,
         endpoint: json['endpoint'] as String?,
         preview: Preview.fromWire(json['preview']),
+        rawJson: json,
       );
 
   /// The ID of the owner.
@@ -9002,7 +14708,29 @@ class GetOwnerLogStreamResponse {
   /// Whether to send logs or drop them.
   final Preview? preview;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'ownerId', 'endpoint', 'preview'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (ownerId != null) 'ownerId': ownerId,
     if (endpoint != null) 'endpoint': endpoint,
     if (preview != null) 'preview': preview!.wireValue,
@@ -9014,6 +14742,7 @@ class UpdateOwnerLogStreamRequest {
     this.endpoint,
     this.token,
     required this.preview,
+    this.rawJson = const {},
   });
 
   factory UpdateOwnerLogStreamRequest.fromJson(Map<String, Object?> json) =>
@@ -9021,6 +14750,7 @@ class UpdateOwnerLogStreamRequest {
         endpoint: json['endpoint'] as String?,
         token: json['token'] as String?,
         preview: Preview.fromWire(json['preview']),
+        rawJson: json,
       );
 
   /// The endpoint to stream logs to.
@@ -9032,7 +14762,29 @@ class UpdateOwnerLogStreamRequest {
   /// Whether to send logs or drop them.
   final Preview preview;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'endpoint', 'token', 'preview'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (endpoint != null) 'endpoint': endpoint,
     if (token != null) 'token': token,
     'preview': preview.wireValue,
@@ -9045,6 +14797,7 @@ class UpdateOwnerLogStreamResponse {
     this.ownerId,
     this.endpoint,
     this.preview,
+    this.rawJson = const {},
   });
 
   factory UpdateOwnerLogStreamResponse.fromJson(Map<String, Object?> json) =>
@@ -9052,6 +14805,7 @@ class UpdateOwnerLogStreamResponse {
         ownerId: json['ownerId'] as String?,
         endpoint: json['endpoint'] as String?,
         preview: Preview.fromWire(json['preview']),
+        rawJson: json,
       );
 
   /// The ID of the owner.
@@ -9063,7 +14817,29 @@ class UpdateOwnerLogStreamResponse {
   /// Whether to send logs or drop them.
   final Preview? preview;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'ownerId', 'endpoint', 'preview'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (ownerId != null) 'ownerId': ownerId,
     if (endpoint != null) 'endpoint': endpoint,
     if (preview != null) 'preview': preview!.wireValue,
@@ -9076,6 +14852,7 @@ class ListResourceLogStreamsResponse {
     this.resourceId,
     this.endpoint,
     this.setting,
+    this.rawJson = const {},
   });
 
   factory ListResourceLogStreamsResponse.fromJson(Map<String, Object?> json) =>
@@ -9083,6 +14860,7 @@ class ListResourceLogStreamsResponse {
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
         setting: Preview.fromWire(json['setting']),
+        rawJson: json,
       );
 
   /// The ID of the resource.
@@ -9094,7 +14872,29 @@ class ListResourceLogStreamsResponse {
   /// Whether to send logs or drop them.
   final Preview? setting;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'resourceId', 'endpoint', 'setting'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (resourceId != null) 'resourceId': resourceId,
     if (endpoint != null) 'endpoint': endpoint,
     if (setting != null) 'setting': setting!.wireValue,
@@ -9107,6 +14907,7 @@ class GetResourceLogStreamResponse {
     this.resourceId,
     this.endpoint,
     this.setting,
+    this.rawJson = const {},
   });
 
   factory GetResourceLogStreamResponse.fromJson(Map<String, Object?> json) =>
@@ -9114,6 +14915,7 @@ class GetResourceLogStreamResponse {
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
         setting: Preview.fromWire(json['setting']),
+        rawJson: json,
       );
 
   /// The ID of the resource.
@@ -9125,7 +14927,29 @@ class GetResourceLogStreamResponse {
   /// Whether to send logs or drop them.
   final Preview? setting;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'resourceId', 'endpoint', 'setting'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (resourceId != null) 'resourceId': resourceId,
     if (endpoint != null) 'endpoint': endpoint,
     if (setting != null) 'setting': setting!.wireValue,
@@ -9137,6 +14961,7 @@ class UpdateResourceLogStreamRequest {
     this.endpoint,
     this.token,
     required this.setting,
+    this.rawJson = const {},
   });
 
   factory UpdateResourceLogStreamRequest.fromJson(Map<String, Object?> json) =>
@@ -9144,6 +14969,7 @@ class UpdateResourceLogStreamRequest {
         endpoint: json['endpoint'] as String?,
         token: json['token'] as String?,
         setting: Preview.fromWire(json['setting']),
+        rawJson: json,
       );
 
   /// The endpoint to stream logs to.
@@ -9155,7 +14981,29 @@ class UpdateResourceLogStreamRequest {
   /// Whether to send logs or drop them.
   final Preview setting;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'endpoint', 'token', 'setting'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (endpoint != null) 'endpoint': endpoint,
     if (token != null) 'token': token,
     'setting': setting.wireValue,
@@ -9168,6 +15016,7 @@ class UpdateResourceLogStreamResponse {
     this.resourceId,
     this.endpoint,
     this.setting,
+    this.rawJson = const {},
   });
 
   factory UpdateResourceLogStreamResponse.fromJson(Map<String, Object?> json) =>
@@ -9175,6 +15024,7 @@ class UpdateResourceLogStreamResponse {
         resourceId: json['resourceId'] as String?,
         endpoint: json['endpoint'] as String?,
         setting: Preview.fromWire(json['setting']),
+        rawJson: json,
       );
 
   /// The ID of the resource.
@@ -9186,7 +15036,29 @@ class UpdateResourceLogStreamResponse {
   /// Whether to send logs or drop them.
   final Preview? setting;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'resourceId', 'endpoint', 'setting'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (resourceId != null) 'resourceId': resourceId,
     if (endpoint != null) 'endpoint': endpoint,
     if (setting != null) 'setting': setting!.wireValue,
@@ -9201,6 +15073,7 @@ class ListMaintenanceResponse {
     this.pendingMaintenanceBy,
     required this.state,
     required this.resourceId,
+    this.rawJson = const {},
   });
 
   factory ListMaintenanceResponse.fromJson(Map<String, Object?> json) =>
@@ -9213,6 +15086,7 @@ class ListMaintenanceResponse {
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
         resourceId: json['resourceId'] as String? ?? '',
+        rawJson: json,
       );
 
   final String id;
@@ -9226,7 +15100,36 @@ class ListMaintenanceResponse {
   /// The Id of a resource that can undergo maintenance (Id of a service, a Postgres instance, or a Redis instance)
   final String resourceId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'type',
+    'scheduledAt',
+    'pendingMaintenanceBy',
+    'state',
+    'resourceId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'type': type,
     'scheduledAt': scheduledAt.toIso8601String(),
@@ -9245,6 +15148,7 @@ class RetrieveMaintenanceResponse {
     this.pendingMaintenanceBy,
     required this.state,
     required this.resourceId,
+    this.rawJson = const {},
   });
 
   factory RetrieveMaintenanceResponse.fromJson(Map<String, Object?> json) =>
@@ -9257,6 +15161,7 @@ class RetrieveMaintenanceResponse {
         pendingMaintenanceBy: parseDate(json['pendingMaintenanceBy']),
         state: KeyValueDetailMaintenanceState.fromWire(json['state']),
         resourceId: json['resourceId'] as String? ?? '',
+        rawJson: json,
       );
 
   final String id;
@@ -9270,7 +15175,36 @@ class RetrieveMaintenanceResponse {
   /// The Id of a resource that can undergo maintenance (Id of a service, a Postgres instance, or a Redis instance)
   final String resourceId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'type',
+    'scheduledAt',
+    'pendingMaintenanceBy',
+    'state',
+    'resourceId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'type': type,
     'scheduledAt': scheduledAt.toIso8601String(),
@@ -9282,33 +15216,88 @@ class RetrieveMaintenanceResponse {
 }
 
 class UpdateMaintenanceRequest {
-  const UpdateMaintenanceRequest({this.scheduledAt});
+  const UpdateMaintenanceRequest({this.scheduledAt, this.rawJson = const {}});
 
   factory UpdateMaintenanceRequest.fromJson(Map<String, Object?> json) =>
-      UpdateMaintenanceRequest(scheduledAt: parseDate(json['scheduledAt']));
+      UpdateMaintenanceRequest(
+        scheduledAt: parseDate(json['scheduledAt']),
+        rawJson: json,
+      );
 
   /// The date-time at which the maintenance is scheduled to start. This must be before the pendingMaintenanceBy date-time.
   final DateTime? scheduledAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'scheduledAt'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (scheduledAt != null) 'scheduledAt': scheduledAt!.toIso8601String(),
   };
 }
 
 /// A time series datapoint label
 class GetCpuResponseLabelsItem {
-  const GetCpuResponseLabelsItem({required this.field, required this.value});
+  const GetCpuResponseLabelsItem({
+    required this.field,
+    required this.value,
+    this.rawJson = const {},
+  });
 
   factory GetCpuResponseLabelsItem.fromJson(Map<String, Object?> json) =>
       GetCpuResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
+        rawJson: json,
       );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9316,6 +15305,7 @@ class GetCpuResponseValuesItem {
   const GetCpuResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetCpuResponseValuesItem.fromJson(Map<String, Object?> json) =>
@@ -9324,12 +15314,35 @@ class GetCpuResponseValuesItem {
             parseDate(json['timestamp']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
+        rawJson: json,
       );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9341,6 +15354,7 @@ class GetCpuResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetCpuResponse.fromJson(Map<String, Object?> json) => GetCpuResponse(
@@ -9359,6 +15373,7 @@ class GetCpuResponse {
         )
         .toList(),
     unit: json['unit'] as String? ?? '',
+    rawJson: json,
   );
 
   /// List of labels describing the time series
@@ -9368,7 +15383,29 @@ class GetCpuResponse {
   final List<GetCpuResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9380,18 +15417,45 @@ class GetCpuLimitResponseLabelsItem {
   const GetCpuLimitResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetCpuLimitResponseLabelsItem.fromJson(Map<String, Object?> json) =>
       GetCpuLimitResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
+        rawJson: json,
       );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9399,6 +15463,7 @@ class GetCpuLimitResponseValuesItem {
   const GetCpuLimitResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetCpuLimitResponseValuesItem.fromJson(Map<String, Object?> json) =>
@@ -9407,12 +15472,35 @@ class GetCpuLimitResponseValuesItem {
             parseDate(json['timestamp']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
+        rawJson: json,
       );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9424,6 +15512,7 @@ class GetCpuLimitResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetCpuLimitResponse.fromJson(Map<String, Object?> json) =>
@@ -9443,6 +15532,7 @@ class GetCpuLimitResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9452,7 +15542,29 @@ class GetCpuLimitResponse {
   final List<GetCpuLimitResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9464,18 +15576,45 @@ class GetCpuTargetResponseLabelsItem {
   const GetCpuTargetResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetCpuTargetResponseLabelsItem.fromJson(Map<String, Object?> json) =>
       GetCpuTargetResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
+        rawJson: json,
       );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9483,6 +15622,7 @@ class GetCpuTargetResponseValuesItem {
   const GetCpuTargetResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetCpuTargetResponseValuesItem.fromJson(Map<String, Object?> json) =>
@@ -9491,12 +15631,35 @@ class GetCpuTargetResponseValuesItem {
             parseDate(json['timestamp']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
+        rawJson: json,
       );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9508,6 +15671,7 @@ class GetCpuTargetResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetCpuTargetResponse.fromJson(Map<String, Object?> json) =>
@@ -9527,6 +15691,7 @@ class GetCpuTargetResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9536,7 +15701,29 @@ class GetCpuTargetResponse {
   final List<GetCpuTargetResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9545,18 +15732,48 @@ class GetCpuTargetResponse {
 
 /// A time series datapoint label
 class GetMemoryResponseLabelsItem {
-  const GetMemoryResponseLabelsItem({required this.field, required this.value});
+  const GetMemoryResponseLabelsItem({
+    required this.field,
+    required this.value,
+    this.rawJson = const {},
+  });
 
   factory GetMemoryResponseLabelsItem.fromJson(Map<String, Object?> json) =>
       GetMemoryResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
+        rawJson: json,
       );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9564,6 +15781,7 @@ class GetMemoryResponseValuesItem {
   const GetMemoryResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetMemoryResponseValuesItem.fromJson(Map<String, Object?> json) =>
@@ -9572,12 +15790,35 @@ class GetMemoryResponseValuesItem {
             parseDate(json['timestamp']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
+        rawJson: json,
       );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9589,6 +15830,7 @@ class GetMemoryResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetMemoryResponse.fromJson(Map<String, Object?> json) =>
@@ -9608,6 +15850,7 @@ class GetMemoryResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9617,7 +15860,29 @@ class GetMemoryResponse {
   final List<GetMemoryResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9629,6 +15894,7 @@ class GetMemoryLimitResponseLabelsItem {
   const GetMemoryLimitResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetMemoryLimitResponseLabelsItem.fromJson(
@@ -9636,12 +15902,38 @@ class GetMemoryLimitResponseLabelsItem {
   ) => GetMemoryLimitResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9649,6 +15941,7 @@ class GetMemoryLimitResponseValuesItem {
   const GetMemoryLimitResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetMemoryLimitResponseValuesItem.fromJson(
@@ -9657,12 +15950,35 @@ class GetMemoryLimitResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9674,6 +15990,7 @@ class GetMemoryLimitResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetMemoryLimitResponse.fromJson(Map<String, Object?> json) =>
@@ -9693,6 +16010,7 @@ class GetMemoryLimitResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9702,7 +16020,29 @@ class GetMemoryLimitResponse {
   final List<GetMemoryLimitResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9714,6 +16054,7 @@ class GetMemoryTargetResponseLabelsItem {
   const GetMemoryTargetResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetMemoryTargetResponseLabelsItem.fromJson(
@@ -9721,12 +16062,38 @@ class GetMemoryTargetResponseLabelsItem {
   ) => GetMemoryTargetResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9734,6 +16101,7 @@ class GetMemoryTargetResponseValuesItem {
   const GetMemoryTargetResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetMemoryTargetResponseValuesItem.fromJson(
@@ -9742,12 +16110,35 @@ class GetMemoryTargetResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9759,6 +16150,7 @@ class GetMemoryTargetResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetMemoryTargetResponse.fromJson(Map<String, Object?> json) =>
@@ -9778,6 +16170,7 @@ class GetMemoryTargetResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9787,7 +16180,29 @@ class GetMemoryTargetResponse {
   final List<GetMemoryTargetResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9799,6 +16214,7 @@ class GetHttpRequestsResponseLabelsItem {
   const GetHttpRequestsResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetHttpRequestsResponseLabelsItem.fromJson(
@@ -9806,12 +16222,38 @@ class GetHttpRequestsResponseLabelsItem {
   ) => GetHttpRequestsResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9819,6 +16261,7 @@ class GetHttpRequestsResponseValuesItem {
   const GetHttpRequestsResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetHttpRequestsResponseValuesItem.fromJson(
@@ -9827,12 +16270,35 @@ class GetHttpRequestsResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9844,6 +16310,7 @@ class GetHttpRequestsResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetHttpRequestsResponse.fromJson(Map<String, Object?> json) =>
@@ -9863,6 +16330,7 @@ class GetHttpRequestsResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9872,7 +16340,29 @@ class GetHttpRequestsResponse {
   final List<GetHttpRequestsResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9884,6 +16374,7 @@ class GetHttpLatencyResponseLabelsItem {
   const GetHttpLatencyResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetHttpLatencyResponseLabelsItem.fromJson(
@@ -9891,12 +16382,38 @@ class GetHttpLatencyResponseLabelsItem {
   ) => GetHttpLatencyResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9904,6 +16421,7 @@ class GetHttpLatencyResponseValuesItem {
   const GetHttpLatencyResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetHttpLatencyResponseValuesItem.fromJson(
@@ -9912,12 +16430,35 @@ class GetHttpLatencyResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -9929,6 +16470,7 @@ class GetHttpLatencyResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetHttpLatencyResponse.fromJson(Map<String, Object?> json) =>
@@ -9948,6 +16490,7 @@ class GetHttpLatencyResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -9957,7 +16500,29 @@ class GetHttpLatencyResponse {
   final List<GetHttpLatencyResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -9969,18 +16534,45 @@ class GetBandwidthResponseLabelsItem {
   const GetBandwidthResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetBandwidthResponseLabelsItem.fromJson(Map<String, Object?> json) =>
       GetBandwidthResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
+        rawJson: json,
       );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -9988,6 +16580,7 @@ class GetBandwidthResponseValuesItem {
   const GetBandwidthResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetBandwidthResponseValuesItem.fromJson(Map<String, Object?> json) =>
@@ -9996,12 +16589,35 @@ class GetBandwidthResponseValuesItem {
             parseDate(json['timestamp']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
+        rawJson: json,
       );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10013,6 +16629,7 @@ class GetBandwidthResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetBandwidthResponse.fromJson(Map<String, Object?> json) =>
@@ -10032,6 +16649,7 @@ class GetBandwidthResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10041,7 +16659,29 @@ class GetBandwidthResponse {
   final List<GetBandwidthResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10053,18 +16693,45 @@ class GetDiskUsageResponseLabelsItem {
   const GetDiskUsageResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetDiskUsageResponseLabelsItem.fromJson(Map<String, Object?> json) =>
       GetDiskUsageResponseLabelsItem(
         field: json['field'] as String? ?? '',
         value: json['value'] as String? ?? '',
+        rawJson: json,
       );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10072,6 +16739,7 @@ class GetDiskUsageResponseValuesItem {
   const GetDiskUsageResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetDiskUsageResponseValuesItem.fromJson(Map<String, Object?> json) =>
@@ -10080,12 +16748,35 @@ class GetDiskUsageResponseValuesItem {
             parseDate(json['timestamp']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         value: (json['value'] as num?)?.toDouble() ?? 0,
+        rawJson: json,
       );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10097,6 +16788,7 @@ class GetDiskUsageResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetDiskUsageResponse.fromJson(Map<String, Object?> json) =>
@@ -10116,6 +16808,7 @@ class GetDiskUsageResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10125,7 +16818,29 @@ class GetDiskUsageResponse {
   final List<GetDiskUsageResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10137,6 +16852,7 @@ class GetDiskCapacityResponseLabelsItem {
   const GetDiskCapacityResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetDiskCapacityResponseLabelsItem.fromJson(
@@ -10144,12 +16860,38 @@ class GetDiskCapacityResponseLabelsItem {
   ) => GetDiskCapacityResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10157,6 +16899,7 @@ class GetDiskCapacityResponseValuesItem {
   const GetDiskCapacityResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetDiskCapacityResponseValuesItem.fromJson(
@@ -10165,12 +16908,35 @@ class GetDiskCapacityResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10182,6 +16948,7 @@ class GetDiskCapacityResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetDiskCapacityResponse.fromJson(Map<String, Object?> json) =>
@@ -10201,6 +16968,7 @@ class GetDiskCapacityResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10210,7 +16978,29 @@ class GetDiskCapacityResponse {
   final List<GetDiskCapacityResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10222,6 +17012,7 @@ class GetInstanceCountResponseLabelsItem {
   const GetInstanceCountResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetInstanceCountResponseLabelsItem.fromJson(
@@ -10229,12 +17020,38 @@ class GetInstanceCountResponseLabelsItem {
   ) => GetInstanceCountResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10242,6 +17059,7 @@ class GetInstanceCountResponseValuesItem {
   const GetInstanceCountResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetInstanceCountResponseValuesItem.fromJson(
@@ -10250,12 +17068,35 @@ class GetInstanceCountResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10267,6 +17108,7 @@ class GetInstanceCountResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetInstanceCountResponse.fromJson(Map<String, Object?> json) =>
@@ -10286,6 +17128,7 @@ class GetInstanceCountResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10295,7 +17138,29 @@ class GetInstanceCountResponse {
   final List<GetInstanceCountResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10307,6 +17172,7 @@ class GetActiveConnectionsResponseLabelsItem {
   const GetActiveConnectionsResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetActiveConnectionsResponseLabelsItem.fromJson(
@@ -10314,12 +17180,38 @@ class GetActiveConnectionsResponseLabelsItem {
   ) => GetActiveConnectionsResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10327,6 +17219,7 @@ class GetActiveConnectionsResponseValuesItem {
   const GetActiveConnectionsResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetActiveConnectionsResponseValuesItem.fromJson(
@@ -10335,12 +17228,35 @@ class GetActiveConnectionsResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10352,6 +17268,7 @@ class GetActiveConnectionsResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetActiveConnectionsResponse.fromJson(Map<String, Object?> json) =>
@@ -10371,6 +17288,7 @@ class GetActiveConnectionsResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10380,7 +17298,29 @@ class GetActiveConnectionsResponse {
   final List<GetActiveConnectionsResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10392,6 +17332,7 @@ class GetReplicationLagResponseLabelsItem {
   const GetReplicationLagResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetReplicationLagResponseLabelsItem.fromJson(
@@ -10399,12 +17340,38 @@ class GetReplicationLagResponseLabelsItem {
   ) => GetReplicationLagResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10412,6 +17379,7 @@ class GetReplicationLagResponseValuesItem {
   const GetReplicationLagResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetReplicationLagResponseValuesItem.fromJson(
@@ -10420,12 +17388,35 @@ class GetReplicationLagResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10437,6 +17428,7 @@ class GetReplicationLagResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetReplicationLagResponse.fromJson(Map<String, Object?> json) =>
@@ -10456,6 +17448,7 @@ class GetReplicationLagResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10465,7 +17458,29 @@ class GetReplicationLagResponse {
   final List<GetReplicationLagResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10490,7 +17505,11 @@ enum Filter {
 }
 
 class ListApplicationFilterValuesResponse {
-  const ListApplicationFilterValuesResponse({this.filter, this.values});
+  const ListApplicationFilterValuesResponse({
+    this.filter,
+    this.values,
+    this.rawJson = const {},
+  });
 
   factory ListApplicationFilterValuesResponse.fromJson(
     Map<String, Object?> json,
@@ -10499,12 +17518,35 @@ class ListApplicationFilterValuesResponse {
     values: (json['values'] as List<Object?>?)
         ?.map((e) => e as String? ?? '')
         .toList(),
+    rawJson: json,
   );
 
   final Filter? filter;
   final List<String>? values;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'filter', 'values'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (filter != null) 'filter': filter!.wireValue,
     if (values != null) 'values': values!.map((e) => e).toList(),
   };
@@ -10529,7 +17571,11 @@ enum ListHttpFilterValuesFilter {
 }
 
 class ListHttpFilterValuesResponse {
-  const ListHttpFilterValuesResponse({this.filter, this.values});
+  const ListHttpFilterValuesResponse({
+    this.filter,
+    this.values,
+    this.rawJson = const {},
+  });
 
   factory ListHttpFilterValuesResponse.fromJson(Map<String, Object?> json) =>
       ListHttpFilterValuesResponse(
@@ -10537,12 +17583,35 @@ class ListHttpFilterValuesResponse {
         values: (json['values'] as List<Object?>?)
             ?.map((e) => e as String? ?? '')
             .toList(),
+        rawJson: json,
       );
 
   final ListHttpFilterValuesFilter? filter;
   final List<String>? values;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'filter', 'values'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (filter != null) 'filter': filter!.wireValue,
     if (values != null) 'values': values!.map((e) => e).toList(),
   };
@@ -10553,6 +17622,7 @@ class GetTaskRunsQueuedResponseLabelsItem {
   const GetTaskRunsQueuedResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunsQueuedResponseLabelsItem.fromJson(
@@ -10560,12 +17630,38 @@ class GetTaskRunsQueuedResponseLabelsItem {
   ) => GetTaskRunsQueuedResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10573,6 +17669,7 @@ class GetTaskRunsQueuedResponseValuesItem {
   const GetTaskRunsQueuedResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunsQueuedResponseValuesItem.fromJson(
@@ -10581,12 +17678,35 @@ class GetTaskRunsQueuedResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10598,6 +17718,7 @@ class GetTaskRunsQueuedResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunsQueuedResponse.fromJson(Map<String, Object?> json) =>
@@ -10617,6 +17738,7 @@ class GetTaskRunsQueuedResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10626,7 +17748,29 @@ class GetTaskRunsQueuedResponse {
   final List<GetTaskRunsQueuedResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10638,6 +17782,7 @@ class GetTaskRunsCompletedResponseLabelsItem {
   const GetTaskRunsCompletedResponseLabelsItem({
     required this.field,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunsCompletedResponseLabelsItem.fromJson(
@@ -10645,12 +17790,38 @@ class GetTaskRunsCompletedResponseLabelsItem {
   ) => GetTaskRunsCompletedResponseLabelsItem(
     field: json['field'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String field;
   final String value;
 
-  Map<String, Object?> toJson() => {'field': field, 'value': value};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'field', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'field': field,
+    'value': value,
+  };
 }
 
 /// A time series datapoint value
@@ -10658,6 +17829,7 @@ class GetTaskRunsCompletedResponseValuesItem {
   const GetTaskRunsCompletedResponseValuesItem({
     required this.timestamp,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunsCompletedResponseValuesItem.fromJson(
@@ -10666,12 +17838,35 @@ class GetTaskRunsCompletedResponseValuesItem {
     timestamp:
         parseDate(json['timestamp']) ?? DateTime.fromMillisecondsSinceEpoch(0),
     value: (json['value'] as num?)?.toDouble() ?? 0,
+    rawJson: json,
   );
 
   final DateTime timestamp;
   final double value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'timestamp', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'timestamp': timestamp.toIso8601String(),
     'value': value,
   };
@@ -10683,6 +17878,7 @@ class GetTaskRunsCompletedResponse {
     required this.labels,
     required this.values,
     required this.unit,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunsCompletedResponse.fromJson(Map<String, Object?> json) =>
@@ -10702,6 +17898,7 @@ class GetTaskRunsCompletedResponse {
             )
             .toList(),
         unit: json['unit'] as String? ?? '',
+        rawJson: json,
       );
 
   /// List of labels describing the time series
@@ -10711,7 +17908,29 @@ class GetTaskRunsCompletedResponse {
   final List<GetTaskRunsCompletedResponseValuesItem> values;
   final String unit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'labels', 'values', 'unit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'labels': labels.map((e) => e.toJson()).toList(),
     'values': values.map((e) => e.toJson()).toList(),
     'unit': unit,
@@ -10749,6 +17968,7 @@ class GetOwnerMetricsStreamResponse {
     required this.ownerId,
     required this.provider,
     required this.url,
+    this.rawJson = const {},
   });
 
   factory GetOwnerMetricsStreamResponse.fromJson(Map<String, Object?> json) =>
@@ -10756,6 +17976,7 @@ class GetOwnerMetricsStreamResponse {
         ownerId: json['ownerId'] as String? ?? '',
         provider: Provider.fromWire(json['provider']),
         url: json['url'] as String? ?? '',
+        rawJson: json,
       );
 
   /// The ID of the owner
@@ -10767,7 +17988,29 @@ class GetOwnerMetricsStreamResponse {
   /// The endpoint URL to stream metrics to
   final String url;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'ownerId', 'provider', 'url'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'ownerId': ownerId,
     'provider': provider.wireValue,
     'url': url,
@@ -10776,13 +18019,19 @@ class GetOwnerMetricsStreamResponse {
 
 /// Input for creating or updating a metrics stream
 class UpsertOwnerMetricsStreamRequest {
-  const UpsertOwnerMetricsStreamRequest({this.provider, this.url, this.token});
+  const UpsertOwnerMetricsStreamRequest({
+    this.provider,
+    this.url,
+    this.token,
+    this.rawJson = const {},
+  });
 
   factory UpsertOwnerMetricsStreamRequest.fromJson(Map<String, Object?> json) =>
       UpsertOwnerMetricsStreamRequest(
         provider: Provider.fromWire(json['provider']),
         url: json['url'] as String?,
         token: json['token'] as String?,
+        rawJson: json,
       );
 
   /// Provider to send metrics to
@@ -10794,7 +18043,29 @@ class UpsertOwnerMetricsStreamRequest {
   /// Authentication token for the metrics stream
   final String? token;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'provider', 'url', 'token'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (provider != null) 'provider': provider!.wireValue,
     if (url != null) 'url': url,
     if (token != null) 'token': token,
@@ -10806,6 +18077,7 @@ class UpsertOwnerMetricsStreamResponse {
     required this.ownerId,
     required this.provider,
     required this.url,
+    this.rawJson = const {},
   });
 
   factory UpsertOwnerMetricsStreamResponse.fromJson(
@@ -10814,6 +18086,7 @@ class UpsertOwnerMetricsStreamResponse {
     ownerId: json['ownerId'] as String? ?? '',
     provider: Provider.fromWire(json['provider']),
     url: json['url'] as String? ?? '',
+    rawJson: json,
   );
 
   /// The ID of the owner
@@ -10825,7 +18098,29 @@ class UpsertOwnerMetricsStreamResponse {
   /// The endpoint URL to stream metrics to
   final String url;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'ownerId', 'provider', 'url'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'ownerId': ownerId,
     'provider': provider.wireValue,
     'url': url,
@@ -10858,6 +18153,7 @@ class RetrieveOwnerNotificationSettingsResponse {
     required this.emailEnabled,
     required this.previewNotificationsEnabled,
     required this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory RetrieveOwnerNotificationSettingsResponse.fromJson(
@@ -10871,6 +18167,7 @@ class RetrieveOwnerNotificationSettingsResponse {
     notificationsToSend: NotificationsToSend.fromWire(
       json['notificationsToSend'],
     ),
+    rawJson: json,
   );
 
   final String ownerId;
@@ -10879,7 +18176,35 @@ class RetrieveOwnerNotificationSettingsResponse {
   final bool previewNotificationsEnabled;
   final NotificationsToSend notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'ownerId',
+    'slackEnabled',
+    'emailEnabled',
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'ownerId': ownerId,
     'slackEnabled': slackEnabled,
     'emailEnabled': emailEnabled,
@@ -10893,6 +18218,7 @@ class PatchOwnerNotificationSettingsRequest {
     this.emailEnabled,
     this.previewNotificationsEnabled,
     this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory PatchOwnerNotificationSettingsRequest.fromJson(
@@ -10903,13 +18229,40 @@ class PatchOwnerNotificationSettingsRequest {
     notificationsToSend: NotificationsToSend.fromWire(
       json['notificationsToSend'],
     ),
+    rawJson: json,
   );
 
   final bool? emailEnabled;
   final bool? previewNotificationsEnabled;
   final NotificationsToSend? notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'emailEnabled',
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (emailEnabled != null) 'emailEnabled': emailEnabled,
     if (previewNotificationsEnabled != null)
       'previewNotificationsEnabled': previewNotificationsEnabled,
@@ -10925,6 +18278,7 @@ class PatchOwnerNotificationSettingsResponse {
     required this.emailEnabled,
     required this.previewNotificationsEnabled,
     required this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory PatchOwnerNotificationSettingsResponse.fromJson(
@@ -10938,6 +18292,7 @@ class PatchOwnerNotificationSettingsResponse {
     notificationsToSend: NotificationsToSend.fromWire(
       json['notificationsToSend'],
     ),
+    rawJson: json,
   );
 
   final String ownerId;
@@ -10946,7 +18301,35 @@ class PatchOwnerNotificationSettingsResponse {
   final bool previewNotificationsEnabled;
   final NotificationsToSend notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'ownerId',
+    'slackEnabled',
+    'emailEnabled',
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'ownerId': ownerId,
     'slackEnabled': slackEnabled,
     'emailEnabled': emailEnabled,
@@ -10960,6 +18343,7 @@ class RetrieveServiceNotificationOverridesResponse {
     required this.serviceId,
     required this.previewNotificationsEnabled,
     required this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory RetrieveServiceNotificationOverridesResponse.fromJson(
@@ -10973,6 +18357,7 @@ class RetrieveServiceNotificationOverridesResponse {
         PatchServiceNotificationOverridesNotificationsToSend.fromWire(
           json['notificationsToSend'],
         ),
+    rawJson: json,
   );
 
   final String serviceId;
@@ -10980,7 +18365,33 @@ class RetrieveServiceNotificationOverridesResponse {
   final PatchServiceNotificationOverridesNotificationsToSend
   notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'serviceId',
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'serviceId': serviceId,
     'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
     'notificationsToSend': notificationsToSend.wireValue,
@@ -10991,6 +18402,7 @@ class PatchServiceNotificationOverridesRequest {
   const PatchServiceNotificationOverridesRequest({
     this.previewNotificationsEnabled,
     this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory PatchServiceNotificationOverridesRequest.fromJson(
@@ -11003,13 +18415,39 @@ class PatchServiceNotificationOverridesRequest {
         PatchServiceNotificationOverridesNotificationsToSend.fromWire(
           json['notificationsToSend'],
         ),
+    rawJson: json,
   );
 
   final PreviewNotificationsEnabled? previewNotificationsEnabled;
   final PatchServiceNotificationOverridesNotificationsToSend?
   notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (previewNotificationsEnabled != null)
       'previewNotificationsEnabled': previewNotificationsEnabled!.wireValue,
     if (notificationsToSend != null)
@@ -11022,6 +18460,7 @@ class PatchServiceNotificationOverridesResponse {
     required this.serviceId,
     required this.previewNotificationsEnabled,
     required this.notificationsToSend,
+    this.rawJson = const {},
   });
 
   factory PatchServiceNotificationOverridesResponse.fromJson(
@@ -11035,6 +18474,7 @@ class PatchServiceNotificationOverridesResponse {
         PatchServiceNotificationOverridesNotificationsToSend.fromWire(
           json['notificationsToSend'],
         ),
+    rawJson: json,
   );
 
   final String serviceId;
@@ -11042,7 +18482,33 @@ class PatchServiceNotificationOverridesResponse {
   final PatchServiceNotificationOverridesNotificationsToSend
   notificationsToSend;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'serviceId',
+    'previewNotificationsEnabled',
+    'notificationsToSend',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'serviceId': serviceId,
     'previewNotificationsEnabled': previewNotificationsEnabled.wireValue,
     'notificationsToSend': notificationsToSend.wireValue,
@@ -11050,15 +18516,42 @@ class PatchServiceNotificationOverridesResponse {
 }
 
 class UpdateWorkspaceMemberRequest {
-  const UpdateWorkspaceMemberRequest({required this.role});
+  const UpdateWorkspaceMemberRequest({
+    required this.role,
+    this.rawJson = const {},
+  });
 
   factory UpdateWorkspaceMemberRequest.fromJson(Map<String, Object?> json) =>
-      UpdateWorkspaceMemberRequest(role: TeamMemberRole.fromWire(json['role']));
+      UpdateWorkspaceMemberRequest(
+        role: TeamMemberRole.fromWire(json['role']),
+        rawJson: json,
+      );
 
   /// The member's workspace role. Values are always returned in uppercase.
   final TeamMemberRole role;
 
-  Map<String, Object?> toJson() => {'role': role.wireValue};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'role'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'role': role.wireValue};
 }
 
 /// Availability of point-in-time recovery.
@@ -11085,6 +18578,7 @@ class RetrievePostgresRecoveryInfoResponse {
   const RetrievePostgresRecoveryInfoResponse({
     required this.recoveryStatus,
     this.startsAt,
+    this.rawJson = const {},
   });
 
   factory RetrievePostgresRecoveryInfoResponse.fromJson(
@@ -11092,13 +18586,36 @@ class RetrievePostgresRecoveryInfoResponse {
   ) => RetrievePostgresRecoveryInfoResponse(
     recoveryStatus: RecoveryStatus.fromWire(json['recoveryStatus']),
     startsAt: parseDate(json['startsAt']),
+    rawJson: json,
   );
 
   /// Availability of point-in-time recovery.
   final RecoveryStatus recoveryStatus;
   final DateTime? startsAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'recoveryStatus', 'startsAt'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'recoveryStatus': recoveryStatus.wireValue,
     if (startsAt != null) 'startsAt': startsAt!.toIso8601String(),
   };
@@ -11112,6 +18629,7 @@ class RecoverPostgresRequest {
     this.datadogSite,
     this.plan,
     this.environmentId,
+    this.rawJson = const {},
   });
 
   factory RecoverPostgresRequest.fromJson(Map<String, Object?> json) =>
@@ -11124,6 +18642,7 @@ class RecoverPostgresRequest {
         datadogSite: json['datadogSite'] as String?,
         plan: json['plan'] as String?,
         environmentId: json['environmentId'] as String?,
+        rawJson: json,
       );
 
   /// Name of the new database.
@@ -11144,7 +18663,36 @@ class RecoverPostgresRequest {
   /// The environment to create the new database in. Defaults to the environment of the original database.
   final String? environmentId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'restoreName',
+    'restoreTime',
+    'datadogApiKey',
+    'datadogSite',
+    'plan',
+    'environmentId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (restoreName != null) 'restoreName': restoreName,
     'restoreTime': restoreTime.toIso8601String(),
     if (datadogApiKey != null) 'datadogApiKey': datadogApiKey,
@@ -11159,6 +18707,7 @@ class ListPostgresExportResponse {
     required this.id,
     required this.createdAt,
     this.url,
+    this.rawJson = const {},
   });
 
   factory ListPostgresExportResponse.fromJson(Map<String, Object?> json) =>
@@ -11168,6 +18717,7 @@ class ListPostgresExportResponse {
             parseDate(json['createdAt']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         url: json['url'] as String?,
+        rawJson: json,
       );
 
   final String id;
@@ -11176,7 +18726,29 @@ class ListPostgresExportResponse {
   /// URL to download the Postgres export
   final String? url;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'id', 'createdAt', 'url'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'createdAt': createdAt.toIso8601String(),
     if (url != null) 'url': url,
@@ -11189,6 +18761,7 @@ class ListPostgresUsersResponse {
     this.default_,
     this.createdAt,
     this.openConnections,
+    this.rawJson = const {},
   });
 
   factory ListPostgresUsersResponse.fromJson(Map<String, Object?> json) =>
@@ -11197,6 +18770,7 @@ class ListPostgresUsersResponse {
         default_: json['default'] as bool?,
         createdAt: json['createdAt'] as String?,
         openConnections: (json['openConnections'] as num?)?.toInt(),
+        rawJson: json,
       );
 
   final String? username;
@@ -11204,7 +18778,34 @@ class ListPostgresUsersResponse {
   final String? createdAt;
   final int? openConnections;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'username',
+    'default',
+    'createdAt',
+    'openConnections',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (username != null) 'username': username,
     if (default_ != null) 'default': default_,
     if (createdAt != null) 'createdAt': createdAt,
@@ -11213,15 +18814,42 @@ class ListPostgresUsersResponse {
 }
 
 class CreatePostgresUserRequest {
-  const CreatePostgresUserRequest({required this.username});
+  const CreatePostgresUserRequest({
+    required this.username,
+    this.rawJson = const {},
+  });
 
   factory CreatePostgresUserRequest.fromJson(Map<String, Object?> json) =>
-      CreatePostgresUserRequest(username: json['username'] as String? ?? '');
+      CreatePostgresUserRequest(
+        username: json['username'] as String? ?? '',
+        rawJson: json,
+      );
 
   /// Name of the new user.
   final String username;
 
-  Map<String, Object?> toJson() => {'username': username};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'username'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'username': username};
 }
 
 /// A single live process from pg_stat_activity.
@@ -11240,6 +18868,7 @@ class ListPostgresProcessesResponseProcessesItem {
     this.query,
     this.duration,
     this.isLeader,
+    this.rawJson = const {},
   });
 
   factory ListPostgresProcessesResponseProcessesItem.fromJson(
@@ -11258,6 +18887,7 @@ class ListPostgresProcessesResponseProcessesItem {
     query: json['query'] as String?,
     duration: (json['duration'] as num?)?.toDouble(),
     isLeader: json['isLeader'] as bool?,
+    rawJson: json,
   );
 
   final int? pid;
@@ -11278,7 +18908,43 @@ class ListPostgresProcessesResponseProcessesItem {
   /// Whether this process is running against the primary instance of a highly available database.
   final bool? isLeader;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'pid',
+    'databaseName',
+    'username',
+    'applicationName',
+    'clientAddr',
+    'backendStart',
+    'queryStart',
+    'state',
+    'waitEvent',
+    'waitEventType',
+    'query',
+    'duration',
+    'isLeader',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (pid != null) 'pid': pid,
     if (databaseName != null) 'databaseName': databaseName,
     if (username != null) 'username': username,
@@ -11296,7 +18962,10 @@ class ListPostgresProcessesResponseProcessesItem {
 }
 
 class ListPostgresProcessesResponse {
-  const ListPostgresProcessesResponse({required this.processes});
+  const ListPostgresProcessesResponse({
+    required this.processes,
+    this.rawJson = const {},
+  });
 
   factory ListPostgresProcessesResponse.fromJson(Map<String, Object?> json) =>
       ListPostgresProcessesResponse(
@@ -11307,11 +18976,34 @@ class ListPostgresProcessesResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final List<ListPostgresProcessesResponseProcessesItem> processes;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'processes'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'processes': processes.map((e) => e.toJson()).toList(),
   };
 }
@@ -11338,6 +19030,7 @@ class ListPostgresTopQueriesResponseTopQueriesItem {
     this.localBlocksWritten,
     this.tempBlocksRead,
     this.tempBlocksWritten,
+    this.rawJson = const {},
   });
 
   factory ListPostgresTopQueriesResponseTopQueriesItem.fromJson(
@@ -11362,6 +19055,7 @@ class ListPostgresTopQueriesResponseTopQueriesItem {
     localBlocksWritten: (json['localBlocksWritten'] as num?)?.toInt(),
     tempBlocksRead: (json['tempBlocksRead'] as num?)?.toInt(),
     tempBlocksWritten: (json['tempBlocksWritten'] as num?)?.toInt(),
+    rawJson: json,
   );
 
   final String? queryId;
@@ -11384,7 +19078,49 @@ class ListPostgresTopQueriesResponseTopQueriesItem {
   final int? tempBlocksRead;
   final int? tempBlocksWritten;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'queryId',
+    'query',
+    'calls',
+    'totalTimeMs',
+    'minTimeMs',
+    'maxTimeMs',
+    'meanTimeMs',
+    'stddevTimeMs',
+    'rows',
+    'sharedBlocksHit',
+    'sharedBlocksRead',
+    'sharedBlocksDirtied',
+    'sharedBlocksWritten',
+    'localBlocksHit',
+    'localBlocksRead',
+    'localBlocksDirtied',
+    'localBlocksWritten',
+    'tempBlocksRead',
+    'tempBlocksWritten',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (queryId != null) 'queryId': queryId,
     if (query != null) 'query': query,
     if (calls != null) 'calls': calls,
@@ -11408,7 +19144,10 @@ class ListPostgresTopQueriesResponseTopQueriesItem {
 }
 
 class ListPostgresTopQueriesResponse {
-  const ListPostgresTopQueriesResponse({required this.topQueries});
+  const ListPostgresTopQueriesResponse({
+    required this.topQueries,
+    this.rawJson = const {},
+  });
 
   factory ListPostgresTopQueriesResponse.fromJson(Map<String, Object?> json) =>
       ListPostgresTopQueriesResponse(
@@ -11419,11 +19158,34 @@ class ListPostgresTopQueriesResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final List<ListPostgresTopQueriesResponseTopQueriesItem> topQueries;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'topQueries'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'topQueries': topQueries.map((e) => e.toJson()).toList(),
   };
 }
@@ -11436,6 +19198,7 @@ class ListPostgresSizesResponseSizesItem {
     this.table,
     this.index,
     this.bytes,
+    this.rawJson = const {},
   });
 
   factory ListPostgresSizesResponseSizesItem.fromJson(
@@ -11446,6 +19209,7 @@ class ListPostgresSizesResponseSizesItem {
     table: json['Table'] as String?,
     index: json['Index'] as String?,
     bytes: (json['Bytes'] as num?)?.toInt(),
+    rawJson: json,
   );
 
   final String? database;
@@ -11454,7 +19218,35 @@ class ListPostgresSizesResponseSizesItem {
   final String? index;
   final int? bytes;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'Database',
+    'Schema',
+    'Table',
+    'Index',
+    'Bytes',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (database != null) 'Database': database,
     if (schema != null) 'Schema': schema,
     if (table != null) 'Table': table,
@@ -11464,7 +19256,10 @@ class ListPostgresSizesResponseSizesItem {
 }
 
 class ListPostgresSizesResponse {
-  const ListPostgresSizesResponse({required this.sizes});
+  const ListPostgresSizesResponse({
+    required this.sizes,
+    this.rawJson = const {},
+  });
 
   factory ListPostgresSizesResponse.fromJson(Map<String, Object?> json) =>
       ListPostgresSizesResponse(
@@ -11475,11 +19270,34 @@ class ListPostgresSizesResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final List<ListPostgresSizesResponseSizesItem> sizes;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'sizes'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'sizes': sizes.map((e) => e.toJson()).toList(),
   };
 }
@@ -11491,6 +19309,7 @@ class ListPostgresTableScansResponseTableScansItem {
     this.schema,
     this.table,
     this.scans,
+    this.rawJson = const {},
   });
 
   factory ListPostgresTableScansResponseTableScansItem.fromJson(
@@ -11500,6 +19319,7 @@ class ListPostgresTableScansResponseTableScansItem {
     schema: json['Schema'] as String?,
     table: json['Table'] as String?,
     scans: (json['Scans'] as num?)?.toInt(),
+    rawJson: json,
   );
 
   final String? database;
@@ -11507,7 +19327,29 @@ class ListPostgresTableScansResponseTableScansItem {
   final String? table;
   final int? scans;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'Database', 'Schema', 'Table', 'Scans'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (database != null) 'Database': database,
     if (schema != null) 'Schema': schema,
     if (table != null) 'Table': table,
@@ -11516,7 +19358,10 @@ class ListPostgresTableScansResponseTableScansItem {
 }
 
 class ListPostgresTableScansResponse {
-  const ListPostgresTableScansResponse({required this.tableScans});
+  const ListPostgresTableScansResponse({
+    required this.tableScans,
+    this.rawJson = const {},
+  });
 
   factory ListPostgresTableScansResponse.fromJson(Map<String, Object?> json) =>
       ListPostgresTableScansResponse(
@@ -11527,11 +19372,34 @@ class ListPostgresTableScansResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final List<ListPostgresTableScansResponseTableScansItem> tableScans;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'tableScans'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'tableScans': tableScans.map((e) => e.toJson()).toList(),
   };
 }
@@ -11543,6 +19411,7 @@ class CreateRegistryCredentialRequest {
     required this.username,
     required this.authToken,
     required this.ownerId,
+    this.rawJson = const {},
   });
 
   factory CreateRegistryCredentialRequest.fromJson(Map<String, Object?> json) =>
@@ -11552,6 +19421,7 @@ class CreateRegistryCredentialRequest {
         username: json['username'] as String? ?? '',
         authToken: json['authToken'] as String? ?? '',
         ownerId: json['ownerId'] as String? ?? '',
+        rawJson: json,
       );
 
   /// The registry to use this credential with
@@ -11561,7 +19431,35 @@ class CreateRegistryCredentialRequest {
   final String authToken;
   final String ownerId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'registry',
+    'name',
+    'username',
+    'authToken',
+    'ownerId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'registry': registry.wireValue,
     'name': name,
     'username': username,
@@ -11576,6 +19474,7 @@ class UpdateRegistryCredentialRequest {
     required this.name,
     required this.username,
     required this.authToken,
+    this.rawJson = const {},
   });
 
   factory UpdateRegistryCredentialRequest.fromJson(Map<String, Object?> json) =>
@@ -11584,6 +19483,7 @@ class UpdateRegistryCredentialRequest {
         name: json['name'] as String? ?? '',
         username: json['username'] as String? ?? '',
         authToken: json['authToken'] as String? ?? '',
+        rawJson: json,
       );
 
   /// The registry to use this credential with
@@ -11592,7 +19492,34 @@ class UpdateRegistryCredentialRequest {
   final String username;
   final String authToken;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'registry',
+    'name',
+    'username',
+    'authToken',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'registry': registry.wireValue,
     'name': name,
     'username': username,
@@ -11625,6 +19552,7 @@ class CreateDeployRequest {
     this.commitId,
     this.imageUrl,
     this.deployMode,
+    this.rawJson = const {},
   });
 
   factory CreateDeployRequest.fromJson(Map<String, Object?> json) =>
@@ -11633,6 +19561,7 @@ class CreateDeployRequest {
         commitId: json['commitId'] as String?,
         imageUrl: json['imageUrl'] as String?,
         deployMode: DeployMode.fromWire(json['deployMode']),
+        rawJson: json,
       );
 
   /// If `clear`, Render clears the service's build cache before deploying. This can be useful if you're experiencing issues with your build.
@@ -11661,7 +19590,34 @@ class CreateDeployRequest {
   /// as those are build related fields.
   final DeployMode? deployMode;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'clearCache',
+    'commitId',
+    'imageUrl',
+    'deployMode',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (clearCache != null) 'clearCache': clearCache!.wireValue,
     if (commitId != null) 'commitId': commitId,
     if (imageUrl != null) 'imageUrl': imageUrl,
@@ -11670,15 +19626,42 @@ class CreateDeployRequest {
 }
 
 class RollbackDeployRequest {
-  const RollbackDeployRequest({required this.deployId});
+  const RollbackDeployRequest({
+    required this.deployId,
+    this.rawJson = const {},
+  });
 
   factory RollbackDeployRequest.fromJson(Map<String, Object?> json) =>
-      RollbackDeployRequest(deployId: json['deployId'] as String? ?? '');
+      RollbackDeployRequest(
+        deployId: json['deployId'] as String? ?? '',
+        rawJson: json,
+      );
 
   /// The ID of the deploy to roll back to
   final String deployId;
 
-  Map<String, Object?> toJson() => {'deployId': deployId};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'deployId'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'deployId': deployId};
 }
 
 /// One of 2 shapes. Which one is decided by
@@ -11704,6 +19687,7 @@ final class UpdateEnvVarsForServiceRequestItemValue
   const UpdateEnvVarsForServiceRequestItemValue({
     required this.key,
     required this.value,
+    this.rawJson = const {},
   });
 
   factory UpdateEnvVarsForServiceRequestItemValue.fromJson(
@@ -11711,13 +19695,39 @@ final class UpdateEnvVarsForServiceRequestItemValue
   ) => UpdateEnvVarsForServiceRequestItemValue(
     key: json['key'] as String? ?? '',
     value: json['value'] as String? ?? '',
+    rawJson: json,
   );
 
   final String key;
   final String value;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'key', 'value'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
-  Map<String, Object?> toJson() => {'key': key, 'value': value};
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'key': key,
+    'value': value,
+  };
 }
 
 final class UpdateEnvVarsForServiceRequestItemGenerateValue
@@ -11725,6 +19735,7 @@ final class UpdateEnvVarsForServiceRequestItemGenerateValue
   const UpdateEnvVarsForServiceRequestItemGenerateValue({
     required this.key,
     required this.generateValue,
+    this.rawJson = const {},
   });
 
   factory UpdateEnvVarsForServiceRequestItemGenerateValue.fromJson(
@@ -11732,6 +19743,7 @@ final class UpdateEnvVarsForServiceRequestItemGenerateValue
   ) => UpdateEnvVarsForServiceRequestItemGenerateValue(
     key: json['key'] as String? ?? '',
     generateValue: json['generateValue'] as bool? ?? false,
+    rawJson: json,
   );
 
   final String key;
@@ -11739,14 +19751,40 @@ final class UpdateEnvVarsForServiceRequestItemGenerateValue
   /// If true, Render generates a strong random value for this environment variable on creation. Cannot be combined with `value`.
   final bool generateValue;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'key', 'generateValue'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   @override
-  Map<String, Object?> toJson() => {'key': key, 'generateValue': generateValue};
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'key': key,
+    'generateValue': generateValue,
+  };
 }
 
 class UpdateSecretFilesForServiceRequestItem {
   const UpdateSecretFilesForServiceRequestItem({
     required this.name,
     required this.content,
+    this.rawJson = const {},
   });
 
   factory UpdateSecretFilesForServiceRequestItem.fromJson(
@@ -11754,87 +19792,242 @@ class UpdateSecretFilesForServiceRequestItem {
   ) => UpdateSecretFilesForServiceRequestItem(
     name: json['name'] as String? ?? '',
     content: json['content'] as String? ?? '',
+    rawJson: json,
   );
 
   final String name;
   final String content;
 
-  Map<String, Object?> toJson() => {'name': name, 'content': content};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'content'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'name': name,
+    'content': content,
+  };
 }
 
 class AddOrUpdateSecretFileRequest {
-  const AddOrUpdateSecretFileRequest({this.content});
+  const AddOrUpdateSecretFileRequest({this.content, this.rawJson = const {}});
 
   factory AddOrUpdateSecretFileRequest.fromJson(Map<String, Object?> json) =>
-      AddOrUpdateSecretFileRequest(content: json['content'] as String?);
+      AddOrUpdateSecretFileRequest(
+        content: json['content'] as String?,
+        rawJson: json,
+      );
 
   final String? content;
 
-  Map<String, Object?> toJson() => {if (content != null) 'content': content};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'content'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    if (content != null) 'content': content,
+  };
 }
 
 class AddHeadersResponse {
-  const AddHeadersResponse({this.headers});
+  const AddHeadersResponse({this.headers, this.rawJson = const {}});
 
   factory AddHeadersResponse.fromJson(Map<String, Object?> json) =>
       AddHeadersResponse(
         headers: json['headers'] == null
             ? null
             : Header.fromJson(json['headers']! as Map<String, Object?>),
+        rawJson: json,
       );
 
   final Header? headers;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'headers'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (headers != null) 'headers': headers!.toJson(),
   };
 }
 
 class PatchRouteResponse {
-  const PatchRouteResponse({this.headers});
+  const PatchRouteResponse({this.headers, this.rawJson = const {}});
 
   factory PatchRouteResponse.fromJson(Map<String, Object?> json) =>
       PatchRouteResponse(
         headers: json['headers'] == null
             ? null
             : Route.fromJson(json['headers']! as Map<String, Object?>),
+        rawJson: json,
       );
 
   final Route? headers;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'headers'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (headers != null) 'headers': headers!.toJson(),
   };
 }
 
 class CreateCustomDomainRequest {
-  const CreateCustomDomainRequest({required this.name});
+  const CreateCustomDomainRequest({
+    required this.name,
+    this.rawJson = const {},
+  });
 
   factory CreateCustomDomainRequest.fromJson(Map<String, Object?> json) =>
-      CreateCustomDomainRequest(name: json['name'] as String? ?? '');
+      CreateCustomDomainRequest(
+        name: json['name'] as String? ?? '',
+        rawJson: json,
+      );
 
   final String name;
 
-  Map<String, Object?> toJson() => {'name': name};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {...unknownFields, 'name': name};
 }
 
 class ScaleServiceRequest {
-  const ScaleServiceRequest({required this.numInstances});
+  const ScaleServiceRequest({
+    required this.numInstances,
+    this.rawJson = const {},
+  });
 
   factory ScaleServiceRequest.fromJson(Map<String, Object?> json) =>
       ScaleServiceRequest(
         numInstances: (json['numInstances'] as num?)?.toInt() ?? 0,
+        rawJson: json,
       );
 
   final int numInstances;
 
-  Map<String, Object?> toJson() => {'numInstances': numInstances};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'numInstances'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'numInstances': numInstances,
+  };
 }
 
 class AutoscaleServiceRequestCriteriaCpu {
   const AutoscaleServiceRequestCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceRequestCriteriaCpu.fromJson(
@@ -11842,6 +20035,7 @@ class AutoscaleServiceRequestCriteriaCpu {
   ) => AutoscaleServiceRequestCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -11849,7 +20043,29 @@ class AutoscaleServiceRequestCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -11859,6 +20075,7 @@ class AutoscaleServiceRequestCriteriaMemory {
   const AutoscaleServiceRequestCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceRequestCriteriaMemory.fromJson(
@@ -11866,6 +20083,7 @@ class AutoscaleServiceRequestCriteriaMemory {
   ) => AutoscaleServiceRequestCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -11873,7 +20091,29 @@ class AutoscaleServiceRequestCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -11883,6 +20123,7 @@ class AutoscaleServiceRequestCriteria {
   const AutoscaleServiceRequestCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceRequestCriteria.fromJson(Map<String, Object?> json) =>
@@ -11893,12 +20134,35 @@ class AutoscaleServiceRequestCriteria {
         memory: AutoscaleServiceRequestCriteriaMemory.fromJson(
           (json['memory'] as Map<String, Object?>?) ?? const {},
         ),
+        rawJson: json,
       );
 
   final AutoscaleServiceRequestCriteriaCpu cpu;
   final AutoscaleServiceRequestCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -11910,6 +20174,7 @@ class AutoscaleServiceRequest {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceRequest.fromJson(Map<String, Object?> json) =>
@@ -11920,6 +20185,7 @@ class AutoscaleServiceRequest {
         criteria: AutoscaleServiceRequestCriteria.fromJson(
           (json['criteria'] as Map<String, Object?>?) ?? const {},
         ),
+        rawJson: json,
       );
 
   final bool enabled;
@@ -11931,7 +20197,29 @@ class AutoscaleServiceRequest {
   final int max;
   final AutoscaleServiceRequestCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -11943,6 +20231,7 @@ class AutoscaleServiceResponseCriteriaCpu {
   const AutoscaleServiceResponseCriteriaCpu({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceResponseCriteriaCpu.fromJson(
@@ -11950,6 +20239,7 @@ class AutoscaleServiceResponseCriteriaCpu {
   ) => AutoscaleServiceResponseCriteriaCpu(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -11957,7 +20247,29 @@ class AutoscaleServiceResponseCriteriaCpu {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -11967,6 +20279,7 @@ class AutoscaleServiceResponseCriteriaMemory {
   const AutoscaleServiceResponseCriteriaMemory({
     required this.enabled,
     required this.percentage,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceResponseCriteriaMemory.fromJson(
@@ -11974,6 +20287,7 @@ class AutoscaleServiceResponseCriteriaMemory {
   ) => AutoscaleServiceResponseCriteriaMemory(
     enabled: json['enabled'] as bool? ?? false,
     percentage: (json['percentage'] as num?)?.toInt() ?? 0,
+    rawJson: json,
   );
 
   final bool enabled;
@@ -11981,7 +20295,29 @@ class AutoscaleServiceResponseCriteriaMemory {
   /// Determines when your service will be scaled. If the average resource utilization is significantly above/below the target, we will increase/decrease the number of instances.
   final int percentage;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'percentage'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'percentage': percentage,
   };
@@ -11991,6 +20327,7 @@ class AutoscaleServiceResponseCriteria {
   const AutoscaleServiceResponseCriteria({
     required this.cpu,
     required this.memory,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceResponseCriteria.fromJson(
@@ -12002,12 +20339,35 @@ class AutoscaleServiceResponseCriteria {
     memory: AutoscaleServiceResponseCriteriaMemory.fromJson(
       (json['memory'] as Map<String, Object?>?) ?? const {},
     ),
+    rawJson: json,
   );
 
   final AutoscaleServiceResponseCriteriaCpu cpu;
   final AutoscaleServiceResponseCriteriaMemory memory;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'cpu', 'memory'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'cpu': cpu.toJson(),
     'memory': memory.toJson(),
   };
@@ -12019,6 +20379,7 @@ class AutoscaleServiceResponse {
     required this.min,
     required this.max,
     required this.criteria,
+    this.rawJson = const {},
   });
 
   factory AutoscaleServiceResponse.fromJson(Map<String, Object?> json) =>
@@ -12029,6 +20390,7 @@ class AutoscaleServiceResponse {
         criteria: AutoscaleServiceResponseCriteria.fromJson(
           (json['criteria'] as Map<String, Object?>?) ?? const {},
         ),
+        rawJson: json,
       );
 
   final bool enabled;
@@ -12040,7 +20402,29 @@ class AutoscaleServiceResponse {
   final int max;
   final AutoscaleServiceResponseCriteria criteria;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'enabled', 'min', 'max', 'criteria'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'enabled': enabled,
     'min': min,
     'max': max,
@@ -12049,17 +20433,44 @@ class AutoscaleServiceResponse {
 }
 
 class PostJobRequest {
-  const PostJobRequest({required this.startCommand, this.planId});
+  const PostJobRequest({
+    required this.startCommand,
+    this.planId,
+    this.rawJson = const {},
+  });
 
   factory PostJobRequest.fromJson(Map<String, Object?> json) => PostJobRequest(
     startCommand: json['startCommand'] as String? ?? '',
     planId: json['planId'] as String?,
+    rawJson: json,
   );
 
   final String startCommand;
   final String? planId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'startCommand', 'planId'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'startCommand': startCommand,
     if (planId != null) 'planId': planId,
   };
@@ -12075,6 +20486,7 @@ class PostJobResponse {
     required this.createdAt,
     this.startedAt,
     this.finishedAt,
+    this.rawJson = const {},
   });
 
   factory PostJobResponse.fromJson(Map<String, Object?> json) =>
@@ -12089,6 +20501,7 @@ class PostJobResponse {
             DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
+        rawJson: json,
       );
 
   final String id;
@@ -12100,7 +20513,38 @@ class PostJobResponse {
   final DateTime? startedAt;
   final DateTime? finishedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'serviceId',
+    'startCommand',
+    'planId',
+    'status',
+    'createdAt',
+    'startedAt',
+    'finishedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'serviceId': serviceId,
     'startCommand': startCommand,
@@ -12122,6 +20566,7 @@ class RetrieveJobResponse {
     required this.createdAt,
     this.startedAt,
     this.finishedAt,
+    this.rawJson = const {},
   });
 
   factory RetrieveJobResponse.fromJson(Map<String, Object?> json) =>
@@ -12136,6 +20581,7 @@ class RetrieveJobResponse {
             DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
+        rawJson: json,
       );
 
   final String id;
@@ -12147,7 +20593,38 @@ class RetrieveJobResponse {
   final DateTime? startedAt;
   final DateTime? finishedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'serviceId',
+    'startCommand',
+    'planId',
+    'status',
+    'createdAt',
+    'startedAt',
+    'finishedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'serviceId': serviceId,
     'startCommand': startCommand,
@@ -12169,6 +20646,7 @@ class CancelJobResponse {
     required this.createdAt,
     this.startedAt,
     this.finishedAt,
+    this.rawJson = const {},
   });
 
   factory CancelJobResponse.fromJson(Map<String, Object?> json) =>
@@ -12183,6 +20661,7 @@ class CancelJobResponse {
             DateTime.fromMillisecondsSinceEpoch(0),
         startedAt: parseDate(json['startedAt']),
         finishedAt: parseDate(json['finishedAt']),
+        rawJson: json,
       );
 
   final String id;
@@ -12194,7 +20673,38 @@ class CancelJobResponse {
   final DateTime? startedAt;
   final DateTime? finishedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'serviceId',
+    'startCommand',
+    'planId',
+    'status',
+    'createdAt',
+    'startedAt',
+    'finishedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'serviceId': serviceId,
     'startCommand': startCommand,
@@ -12207,12 +20717,17 @@ class CancelJobResponse {
 }
 
 class CreateTaskRequest {
-  const CreateTaskRequest({required this.task, required this.input});
+  const CreateTaskRequest({
+    required this.task,
+    required this.input,
+    this.rawJson = const {},
+  });
 
   factory CreateTaskRequest.fromJson(Map<String, Object?> json) =>
       CreateTaskRequest(
         task: json['task'] as String? ?? '',
         input: json['input'],
+        rawJson: json,
       );
 
   /// A task slug in the format workflow-slug/task-name. An optional version can be appended (workflow-slug/task-name:version). If no version is provided, the latest version is used.
@@ -12221,7 +20736,32 @@ class CreateTaskRequest {
   /// Input data for a task. Can be either an array (for positional arguments) or an object (for named parameters).
   final Object? input;
 
-  Map<String, Object?> toJson() => {'task': task, 'input': input};
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'task', 'input'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
+  Map<String, Object?> toJson() => {
+    ...unknownFields,
+    'task': task,
+    'input': input,
+  };
 }
 
 class CreateTaskResponseAttemptsItem {
@@ -12232,6 +20772,7 @@ class CreateTaskResponseAttemptsItem {
     this.enqueuedAt,
     required this.startedAt,
     this.completedAt,
+    this.rawJson = const {},
   });
 
   factory CreateTaskResponseAttemptsItem.fromJson(Map<String, Object?> json) =>
@@ -12244,6 +20785,7 @@ class CreateTaskResponseAttemptsItem {
             parseDate(json['startedAt']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         completedAt: parseDate(json['completedAt']),
+        rawJson: json,
       );
 
   /// The ID of the task run this attempt belongs to.
@@ -12256,7 +20798,36 @@ class CreateTaskResponseAttemptsItem {
   final DateTime startedAt;
   final DateTime? completedAt;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'taskRunId',
+    'attempt',
+    'status',
+    'enqueuedAt',
+    'startedAt',
+    'completedAt',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (taskRunId != null) 'taskRunId': taskRunId,
     'attempt': attempt,
     'status': status.wireValue,
@@ -12278,6 +20849,7 @@ class CreateTaskResponse {
     required this.rootTaskRunId,
     required this.retries,
     required this.attempts,
+    this.rawJson = const {},
   });
 
   factory CreateTaskResponse.fromJson(Map<String, Object?> json) =>
@@ -12298,6 +20870,7 @@ class CreateTaskResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -12313,7 +20886,40 @@ class CreateTaskResponse {
   final int retries;
   final List<CreateTaskResponseAttemptsItem> attempts;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'taskId',
+    'status',
+    'startedAt',
+    'completedAt',
+    'parentTaskRunId',
+    'parentTaskAttempt',
+    'rootTaskRunId',
+    'retries',
+    'attempts',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'taskId': taskId,
     'status': status.wireValue,
@@ -12337,6 +20943,7 @@ class GetTaskRunResponseAttemptsItem {
     this.completedAt,
     this.error,
     this.results,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunResponseAttemptsItem.fromJson(Map<String, Object?> json) =>
@@ -12351,6 +20958,7 @@ class GetTaskRunResponseAttemptsItem {
         completedAt: parseDate(json['completedAt']),
         error: json['error'] as String?,
         results: (json['results'] as List<Object?>?)?.map((e) => e).toList(),
+        rawJson: json,
       );
 
   /// The ID of the task run this attempt belongs to.
@@ -12367,7 +20975,38 @@ class GetTaskRunResponseAttemptsItem {
   final String? error;
   final List<Object?>? results;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'taskRunId',
+    'attempt',
+    'status',
+    'enqueuedAt',
+    'startedAt',
+    'completedAt',
+    'error',
+    'results',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (taskRunId != null) 'taskRunId': taskRunId,
     'attempt': attempt,
     'status': status.wireValue,
@@ -12394,6 +21033,7 @@ class GetTaskRunResponse {
     required this.rootTaskRunId,
     required this.retries,
     required this.attempts,
+    this.rawJson = const {},
   });
 
   factory GetTaskRunResponse.fromJson(Map<String, Object?> json) =>
@@ -12419,6 +21059,7 @@ class GetTaskRunResponse {
               ),
             )
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -12441,7 +21082,43 @@ class GetTaskRunResponse {
   final int retries;
   final List<GetTaskRunResponseAttemptsItem> attempts;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'taskId',
+    'status',
+    'results',
+    'error',
+    'startedAt',
+    'completedAt',
+    'input',
+    'parentTaskRunId',
+    'parentTaskAttempt',
+    'rootTaskRunId',
+    'retries',
+    'attempts',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'taskId': taskId,
     'status': status.wireValue,
@@ -12465,6 +21142,7 @@ class GetTaskResponse {
     required this.createdAt,
     this.workflowId,
     this.workflowVersionId,
+    this.rawJson = const {},
   });
 
   factory GetTaskResponse.fromJson(Map<String, Object?> json) =>
@@ -12476,6 +21154,7 @@ class GetTaskResponse {
             DateTime.fromMillisecondsSinceEpoch(0),
         workflowId: json['workflowId'] as String?,
         workflowVersionId: json['workflowVersionId'] as String?,
+        rawJson: json,
       );
 
   final String id;
@@ -12484,7 +21163,35 @@ class GetTaskResponse {
   final String? workflowId;
   final String? workflowVersionId;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'createdAt',
+    'workflowId',
+    'workflowVersionId',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'createdAt': createdAt.toIso8601String(),
@@ -12500,6 +21207,7 @@ class CreateWebhookRequest {
     required this.name,
     required this.enabled,
     required this.eventFilter,
+    this.rawJson = const {},
   });
 
   factory CreateWebhookRequest.fromJson(Map<String, Object?> json) =>
@@ -12511,6 +21219,7 @@ class CreateWebhookRequest {
         eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
             .map((e) => RetrieveEventType.fromWire(e))
             .toList(),
+        rawJson: json,
       );
 
   /// The ID of the owner (team or personal user) whose resources should be returned
@@ -12522,7 +21231,35 @@ class CreateWebhookRequest {
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'ownerId',
+    'url',
+    'name',
+    'enabled',
+    'eventFilter',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'ownerId': ownerId,
     'url': url,
     'name': name,
@@ -12539,6 +21276,7 @@ class CreateWebhookResponse {
     required this.secret,
     required this.enabled,
     required this.eventFilter,
+    this.rawJson = const {},
   });
 
   factory CreateWebhookResponse.fromJson(Map<String, Object?> json) =>
@@ -12551,6 +21289,7 @@ class CreateWebhookResponse {
         eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
             .map((e) => RetrieveEventType.fromWire(e))
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -12562,7 +21301,36 @@ class CreateWebhookResponse {
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'url',
+    'name',
+    'secret',
+    'enabled',
+    'eventFilter',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'url': url,
     'name': name,
@@ -12580,6 +21348,7 @@ class RetrieveWebhookResponse {
     required this.secret,
     required this.enabled,
     required this.eventFilter,
+    this.rawJson = const {},
   });
 
   factory RetrieveWebhookResponse.fromJson(Map<String, Object?> json) =>
@@ -12592,6 +21361,7 @@ class RetrieveWebhookResponse {
         eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
             .map((e) => RetrieveEventType.fromWire(e))
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -12603,7 +21373,36 @@ class RetrieveWebhookResponse {
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'url',
+    'name',
+    'secret',
+    'enabled',
+    'eventFilter',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'url': url,
     'name': name,
@@ -12619,6 +21418,7 @@ class UpdateWebhookRequest {
     this.url,
     this.enabled,
     this.eventFilter,
+    this.rawJson = const {},
   });
 
   factory UpdateWebhookRequest.fromJson(Map<String, Object?> json) =>
@@ -12629,6 +21429,7 @@ class UpdateWebhookRequest {
         eventFilter: (json['eventFilter'] as List<Object?>?)
             ?.map((e) => RetrieveEventType.fromWire(e))
             .toList(),
+        rawJson: json,
       );
 
   final String? name;
@@ -12638,7 +21439,29 @@ class UpdateWebhookRequest {
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType>? eventFilter;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'name', 'url', 'enabled', 'eventFilter'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (url != null) 'url': url,
     if (enabled != null) 'enabled': enabled,
@@ -12655,6 +21478,7 @@ class UpdateWebhookResponse {
     required this.secret,
     required this.enabled,
     required this.eventFilter,
+    this.rawJson = const {},
   });
 
   factory UpdateWebhookResponse.fromJson(Map<String, Object?> json) =>
@@ -12667,6 +21491,7 @@ class UpdateWebhookResponse {
         eventFilter: ((json['eventFilter'] as List<Object?>?) ?? const [])
             .map((e) => RetrieveEventType.fromWire(e))
             .toList(),
+        rawJson: json,
       );
 
   final String id;
@@ -12678,7 +21503,36 @@ class UpdateWebhookResponse {
   /// The event types that will trigger the webhook. An empty list means all event types will trigger the webhook.
   final List<RetrieveEventType> eventFilter;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'url',
+    'name',
+    'secret',
+    'enabled',
+    'eventFilter',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'url': url,
     'name': name,
@@ -12695,6 +21549,7 @@ class CreateWorkflowRequestBuildConfig {
     required this.repo,
     this.rootDir,
     required this.runtime,
+    this.rawJson = const {},
   });
 
   factory CreateWorkflowRequestBuildConfig.fromJson(
@@ -12705,6 +21560,7 @@ class CreateWorkflowRequestBuildConfig {
     repo: json['repo'] as String? ?? '',
     rootDir: json['rootDir'] as String?,
     runtime: Runtime.fromWire(json['runtime']),
+    rawJson: json,
   );
 
   /// The branch to use for the build, if applicable.
@@ -12722,7 +21578,35 @@ class CreateWorkflowRequestBuildConfig {
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'branch',
+    'buildCommand',
+    'repo',
+    'rootDir',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (branch != null) 'branch': branch,
     'buildCommand': buildCommand,
     'repo': repo,
@@ -12740,6 +21624,7 @@ class CreateWorkflowRequest {
     required this.region,
     this.autoDeployTrigger,
     this.envVars,
+    this.rawJson = const {},
   });
 
   factory CreateWorkflowRequest.fromJson(Map<String, Object?> json) =>
@@ -12755,6 +21640,7 @@ class CreateWorkflowRequest {
         envVars: (json['envVars'] as List<Object?>?)
             ?.map((e) => (e as Map<String, Object?>?) ?? const {})
             .toList(),
+        rawJson: json,
       );
 
   final String name;
@@ -12771,7 +21657,37 @@ class CreateWorkflowRequest {
   final NewTrigger? autoDeployTrigger;
   final List<Map<String, Object?>>? envVars;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'ownerId',
+    'buildConfig',
+    'runCommand',
+    'region',
+    'autoDeployTrigger',
+    'envVars',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'name': name,
     'ownerId': ownerId,
     'buildConfig': buildConfig.toJson(),
@@ -12790,6 +21706,7 @@ class CreateWorkflowResponseBuildConfig {
     required this.repo,
     this.rootDir,
     required this.runtime,
+    this.rawJson = const {},
   });
 
   factory CreateWorkflowResponseBuildConfig.fromJson(
@@ -12800,6 +21717,7 @@ class CreateWorkflowResponseBuildConfig {
     repo: json['repo'] as String? ?? '',
     rootDir: json['rootDir'] as String?,
     runtime: Runtime.fromWire(json['runtime']),
+    rawJson: json,
   );
 
   /// The branch to use for the build, if applicable.
@@ -12817,7 +21735,35 @@ class CreateWorkflowResponseBuildConfig {
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'branch',
+    'buildCommand',
+    'repo',
+    'rootDir',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (branch != null) 'branch': branch,
     'buildCommand': buildCommand,
     'repo': repo,
@@ -12839,6 +21785,7 @@ class CreateWorkflowResponse {
     this.environmentId,
     this.slug,
     this.autoDeployTrigger,
+    this.rawJson = const {},
   });
 
   factory CreateWorkflowResponse.fromJson(
@@ -12859,6 +21806,7 @@ class CreateWorkflowResponse {
     environmentId: json['environmentId'] as String?,
     slug: json['slug'] as String?,
     autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+    rawJson: json,
   );
 
   final String id;
@@ -12879,7 +21827,41 @@ class CreateWorkflowResponse {
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'ownerId',
+    'createdAt',
+    'updatedAt',
+    'buildConfig',
+    'runCommand',
+    'region',
+    'environmentId',
+    'slug',
+    'autoDeployTrigger',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'ownerId': ownerId,
@@ -12902,6 +21884,7 @@ class GetWorkflowResponseBuildConfig {
     required this.repo,
     this.rootDir,
     required this.runtime,
+    this.rawJson = const {},
   });
 
   factory GetWorkflowResponseBuildConfig.fromJson(Map<String, Object?> json) =>
@@ -12911,6 +21894,7 @@ class GetWorkflowResponseBuildConfig {
         repo: json['repo'] as String? ?? '',
         rootDir: json['rootDir'] as String?,
         runtime: Runtime.fromWire(json['runtime']),
+        rawJson: json,
       );
 
   /// The branch to use for the build, if applicable.
@@ -12928,7 +21912,35 @@ class GetWorkflowResponseBuildConfig {
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'branch',
+    'buildCommand',
+    'repo',
+    'rootDir',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (branch != null) 'branch': branch,
     'buildCommand': buildCommand,
     'repo': repo,
@@ -12950,6 +21962,7 @@ class GetWorkflowResponse {
     this.environmentId,
     this.slug,
     this.autoDeployTrigger,
+    this.rawJson = const {},
   });
 
   factory GetWorkflowResponse.fromJson(
@@ -12970,6 +21983,7 @@ class GetWorkflowResponse {
     environmentId: json['environmentId'] as String?,
     slug: json['slug'] as String?,
     autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+    rawJson: json,
   );
 
   final String id;
@@ -12990,7 +22004,41 @@ class GetWorkflowResponse {
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'ownerId',
+    'createdAt',
+    'updatedAt',
+    'buildConfig',
+    'runCommand',
+    'region',
+    'environmentId',
+    'slug',
+    'autoDeployTrigger',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'ownerId': ownerId,
@@ -13013,6 +22061,7 @@ class UpdateWorkflowRequestBuildConfig {
     required this.repo,
     this.rootDir,
     required this.runtime,
+    this.rawJson = const {},
   });
 
   factory UpdateWorkflowRequestBuildConfig.fromJson(
@@ -13023,6 +22072,7 @@ class UpdateWorkflowRequestBuildConfig {
     repo: json['repo'] as String? ?? '',
     rootDir: json['rootDir'] as String?,
     runtime: Runtime.fromWire(json['runtime']),
+    rawJson: json,
   );
 
   /// The branch to use for the build, if applicable.
@@ -13040,7 +22090,35 @@ class UpdateWorkflowRequestBuildConfig {
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'branch',
+    'buildCommand',
+    'repo',
+    'rootDir',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (branch != null) 'branch': branch,
     'buildCommand': buildCommand,
     'repo': repo,
@@ -13055,6 +22133,7 @@ class UpdateWorkflowRequest {
     this.buildConfig,
     this.runCommand,
     this.autoDeployTrigger,
+    this.rawJson = const {},
   });
 
   factory UpdateWorkflowRequest.fromJson(Map<String, Object?> json) =>
@@ -13067,6 +22146,7 @@ class UpdateWorkflowRequest {
               ),
         runCommand: json['runCommand'] as String?,
         autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+        rawJson: json,
       );
 
   final String? name;
@@ -13078,7 +22158,34 @@ class UpdateWorkflowRequest {
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'name',
+    'buildConfig',
+    'runCommand',
+    'autoDeployTrigger',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (name != null) 'name': name,
     if (buildConfig != null) 'buildConfig': buildConfig!.toJson(),
     if (runCommand != null) 'runCommand': runCommand,
@@ -13094,6 +22201,7 @@ class UpdateWorkflowResponseBuildConfig {
     required this.repo,
     this.rootDir,
     required this.runtime,
+    this.rawJson = const {},
   });
 
   factory UpdateWorkflowResponseBuildConfig.fromJson(
@@ -13104,6 +22212,7 @@ class UpdateWorkflowResponseBuildConfig {
     repo: json['repo'] as String? ?? '',
     rootDir: json['rootDir'] as String?,
     runtime: Runtime.fromWire(json['runtime']),
+    rawJson: json,
   );
 
   /// The branch to use for the build, if applicable.
@@ -13121,7 +22230,35 @@ class UpdateWorkflowResponseBuildConfig {
   /// The runtime environment for the workflow (e.g., node, python, etc.).
   final Runtime runtime;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'branch',
+    'buildCommand',
+    'repo',
+    'rootDir',
+    'runtime',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     if (branch != null) 'branch': branch,
     'buildCommand': buildCommand,
     'repo': repo,
@@ -13143,6 +22280,7 @@ class UpdateWorkflowResponse {
     this.environmentId,
     this.slug,
     this.autoDeployTrigger,
+    this.rawJson = const {},
   });
 
   factory UpdateWorkflowResponse.fromJson(
@@ -13163,6 +22301,7 @@ class UpdateWorkflowResponse {
     environmentId: json['environmentId'] as String?,
     slug: json['slug'] as String?,
     autoDeployTrigger: NewTrigger.fromWire(json['autoDeployTrigger']),
+    rawJson: json,
   );
 
   final String id;
@@ -13183,7 +22322,41 @@ class UpdateWorkflowResponse {
   /// Controls autodeploy behavior. "commit" deploys when a commit is pushed to the branch. "checksPass" waits for CI checks to pass before deploying. "off" disables autodeploy.
   final NewTrigger? autoDeployTrigger;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'name',
+    'ownerId',
+    'createdAt',
+    'updatedAt',
+    'buildConfig',
+    'runCommand',
+    'region',
+    'environmentId',
+    'slug',
+    'autoDeployTrigger',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'name': name,
     'ownerId': ownerId,
@@ -13200,18 +22373,45 @@ class UpdateWorkflowResponse {
 }
 
 class CreateWorkflowVersionRequest {
-  const CreateWorkflowVersionRequest({required this.workflowId, this.commit});
+  const CreateWorkflowVersionRequest({
+    required this.workflowId,
+    this.commit,
+    this.rawJson = const {},
+  });
 
   factory CreateWorkflowVersionRequest.fromJson(Map<String, Object?> json) =>
       CreateWorkflowVersionRequest(
         workflowId: json['workflowId'] as String? ?? '',
         commit: json['commit'] as String?,
+        rawJson: json,
       );
 
   final String workflowId;
   final String? commit;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{'workflowId', 'commit'};
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'workflowId': workflowId,
     if (commit != null) 'commit': commit,
   };
@@ -13224,6 +22424,7 @@ class GetWorkflowVersionResponse {
     required this.name,
     required this.createdAt,
     required this.status,
+    this.rawJson = const {},
   });
 
   factory GetWorkflowVersionResponse.fromJson(Map<String, Object?> json) =>
@@ -13235,6 +22436,7 @@ class GetWorkflowVersionResponse {
             parseDate(json['createdAt']) ??
             DateTime.fromMillisecondsSinceEpoch(0),
         status: GetWorkflowVersionStatus.fromWire(json['status']),
+        rawJson: json,
       );
 
   final String id;
@@ -13243,7 +22445,35 @@ class GetWorkflowVersionResponse {
   final DateTime createdAt;
   final GetWorkflowVersionStatus status;
 
+  /// Exactly the map this was decoded from, kept by reference.
+  ///
+  /// Nothing is copied, walked or re-encoded — Render sends
+  /// fields the specification does not document, and this is
+  /// where they remain reachable. Empty for an instance built
+  /// in Dart rather than decoded from a response.
+  final Map<String, Object?> rawJson;
+
+  static const _knownKeys = <String>{
+    'id',
+    'workflowId',
+    'name',
+    'createdAt',
+    'status',
+  };
+
+  /// What Render sent that this type does not declare.
+  ///
+  /// Empty when the response matches the specification, which
+  /// makes a non-empty result worth looking at: it is the spec
+  /// falling behind the API. Derived from [rawJson], so it
+  /// costs nothing until asked for.
+  Map<String, Object?> get unknownFields => {
+    for (final entry in rawJson.entries)
+      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,
+  };
+
   Map<String, Object?> toJson() => {
+    ...unknownFields,
     'id': id,
     'workflowId': workflowId,
     'name': name,

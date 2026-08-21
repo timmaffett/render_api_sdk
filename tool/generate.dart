@@ -609,6 +609,13 @@ String _emitClass(
     buf.writeln('  final Map<String, Object?> json;');
     buf.writeln();
     buf.writeln('  Map<String, Object?> toJson() => json;');
+    buf.writeln();
+    buf.writeln('  /// The decoded payload, for symmetry with every other');
+    buf.writeln('  /// model. Here it is the whole type.');
+    buf.writeln('  Map<String, Object?> get rawJson => json;');
+    buf.writeln();
+    buf.writeln('  /// Nothing is undocumented here: the type is the payload.');
+    buf.writeln('  Map<String, Object?> get unknownFields => const {};');
     buf.writeln('}');
     buf.writeln();
     return nested.toString() + buf.toString();
@@ -623,6 +630,7 @@ String _emitClass(
   for (final f in fields) {
     buf.writeln('    ${f.nullable ? '' : 'required '}this.${f.dartName},');
   }
+  buf.writeln('    this.rawJson = const {},');
   buf.writeln('  });');
   buf.writeln();
 
@@ -631,6 +639,8 @@ String _emitClass(
   for (final f in fields) {
     buf.writeln('        ${f.dartName}: ${f.decode},');
   }
+  // The same map, not a copy: nothing is re-encoded and nothing is walked.
+  buf.writeln('        rawJson: json,');
   buf.writeln('      );');
   buf.writeln();
 
@@ -642,12 +652,48 @@ String _emitClass(
   }
   buf.writeln();
 
+  buf.writeln(
+    '  /// Exactly the map this was decoded from, kept by reference.',
+  );
+  buf.writeln('  ///');
+  buf.writeln('  /// Nothing is copied, walked or re-encoded — Render sends');
+  buf.writeln('  /// fields the specification does not document, and this is');
+  buf.writeln('  /// where they remain reachable. Empty for an instance built');
+  buf.writeln('  /// in Dart rather than decoded from a response.');
+  buf.writeln('  final Map<String, Object?> rawJson;');
+  buf.writeln();
+  buf.writeln('  static const _knownKeys = <String>{');
+  for (final f in fields) {
+    buf.writeln("    '${f.wireName}',");
+  }
+  buf.writeln('  };');
+  buf.writeln();
+  buf.writeln('  /// What Render sent that this type does not declare.');
+  buf.writeln('  ///');
+  buf.writeln('  /// Empty when the response matches the specification, which');
+  buf.writeln(
+    '  /// makes a non-empty result worth looking at: it is the spec',
+  );
+  buf.writeln('  /// falling behind the API. Derived from [rawJson], so it');
+  buf.writeln('  /// costs nothing until asked for.');
+  buf.writeln('  Map<String, Object?> get unknownFields => {');
+  buf.writeln('    for (final entry in rawJson.entries)');
+  buf.writeln(
+    '      if (!_knownKeys.contains(entry.key)) entry.key: entry.value,',
+  );
+  buf.writeln('  };');
+  buf.writeln();
+
   // toJson — omits nulls so PATCH bodies only carry what was set.
   buf.writeln(
     extendsName == null
         ? '  Map<String, Object?> toJson() => {'
         : '  @override\n  Map<String, Object?> toJson() => {',
   );
+  // Undocumented keys first, so the typed fields win where they overlap. A
+  // fetched object can be sent back without silently dropping what Render
+  // sent but never wrote down.
+  buf.writeln('        ...unknownFields,');
   for (final f in fields) {
     if (f.nullable) {
       buf.writeln(
@@ -1042,7 +1088,19 @@ String _emitMethod(String name, _Op op) {
   call.writeln('    );');
   buf.write(call);
 
-  if (ret.needsResult) buf.writeln('    return ${ret.parse};');
+  if (ret.needsResult) {
+    // Decoding goes through the client so that a payload Render's own
+    // specification mis-describes reaches the caller on the exception rather
+    // than being lost. `json` is already decoded; this only types it.
+    buf.writeln(
+      "    return _client.decode(\n"
+      "      '${op.method.toUpperCase()}',\n"
+      "      '$dartPath',\n"
+      "      json,\n"
+      "      () => ${ret.parse},\n"
+      "    );",
+    );
+  }
   buf.writeln('  }');
   buf.writeln();
   return buf.toString();

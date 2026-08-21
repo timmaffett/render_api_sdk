@@ -63,10 +63,15 @@ class RedisEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(RedisWithCursor.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/redis',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(RedisWithCursor.fromJson)
+          .toList(),
+    );
   }
 
   /// Create Redis instance
@@ -78,7 +83,12 @@ class RedisEndpoints {
       '/redis',
       body: body.toJson(),
     );
-    return RedisDetail.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/redis',
+      json,
+      () => RedisDetail.fromJson(json),
+    );
   }
 
   /// Retrieve Redis instance
@@ -86,7 +96,12 @@ class RedisEndpoints {
   /// Retrieve a Redis instance by ID. This API is deprecated in favor of the Key Value API.
   Future<RedisDetail> retrieveRedis({required String redisId}) async {
     final json = await _client.sendObject('GET', '/redis/$redisId');
-    return RedisDetail.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/redis/$redisId',
+      json,
+      () => RedisDetail.fromJson(json),
+    );
   }
 
   /// Update Redis instance
@@ -101,7 +116,12 @@ class RedisEndpoints {
       '/redis/$redisId',
       body: body.toJson(),
     );
-    return RedisDetail.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/redis/$redisId',
+      json,
+      () => RedisDetail.fromJson(json),
+    );
   }
 
   /// Delete Redis instance
@@ -122,7 +142,12 @@ class RedisEndpoints {
       'GET',
       '/redis/$redisId/connection-info',
     );
-    return RedisConnectionInfo.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/redis/$redisId/connection-info',
+      json,
+      () => RedisConnectionInfo.fromJson(json),
+    );
   }
 
   /// Suspend Redis instance

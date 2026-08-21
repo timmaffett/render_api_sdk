@@ -38,6 +38,41 @@ final class RenderNetworkException extends RenderException {
       '${hint == null ? '' : '\n  $hint'}';
 }
 
+/// A 2xx response that did not decode into the type the specification
+/// declares.
+///
+/// Always a divergence between Render's API and Render's specification, never
+/// a caller's mistake — `/metrics/bandwidth-sources` declared an object and
+/// sent an array, and every field of its declared model was wrong too.
+///
+/// [payload] is what actually arrived, decoded but untyped. Without it a spec
+/// bug costs the caller everything; with it they lose the typed view and keep
+/// the data.
+final class RenderDecodeException extends RenderException {
+  const RenderDecodeException(
+    super.message, {
+    required this.method,
+    required this.path,
+    required this.payload,
+    this.cause,
+    super.hint,
+  });
+
+  final String method;
+  final String path;
+
+  /// The decoded response, exactly as it arrived.
+  final Object? payload;
+
+  final Object? cause;
+
+  @override
+  String toString() =>
+      'RenderDecodeException: $message\n'
+      '  $method $path'
+      '${hint == null ? '' : '\n  $hint'}';
+}
+
 /// Render returned a response outside the 2xx range.
 sealed class RenderApiException extends RenderException {
   const RenderApiException(

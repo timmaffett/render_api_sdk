@@ -58,10 +58,15 @@ class EnvGroupsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(EnvGroupMeta.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/env-groups',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(EnvGroupMeta.fromJson)
+          .toList(),
+    );
   }
 
   /// Create environment group
@@ -73,7 +78,12 @@ class EnvGroupsEndpoints {
       '/env-groups',
       body: body.toJson(),
     );
-    return EnvGroup.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/env-groups',
+      json,
+      () => EnvGroup.fromJson(json),
+    );
   }
 
   /// Retrieve environment group
@@ -81,7 +91,12 @@ class EnvGroupsEndpoints {
   /// Retrieve an environment group by ID.
   Future<EnvGroup> retrieveEnvGroup({required String envGroupId}) async {
     final json = await _client.sendObject('GET', '/env-groups/$envGroupId');
-    return EnvGroup.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/env-groups/$envGroupId',
+      json,
+      () => EnvGroup.fromJson(json),
+    );
   }
 
   /// Update environment group
@@ -96,7 +111,12 @@ class EnvGroupsEndpoints {
       '/env-groups/$envGroupId',
       body: body.toJson(),
     );
-    return EnvGroup.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/env-groups/$envGroupId',
+      json,
+      () => EnvGroup.fromJson(json),
+    );
   }
 
   /// Delete environment group
@@ -119,7 +139,12 @@ class EnvGroupsEndpoints {
       'POST',
       '/env-groups/$envGroupId/services/$serviceId',
     );
-    return EnvGroup.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/env-groups/$envGroupId/services/$serviceId',
+      json,
+      () => EnvGroup.fromJson(json),
+    );
   }
 
   /// Unlink service
@@ -145,7 +170,12 @@ class EnvGroupsEndpoints {
       'GET',
       '/env-groups/$envGroupId/env-vars/$envVarKey',
     );
-    return EnvVar.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/env-groups/$envGroupId/env-vars/$envVarKey',
+      json,
+      () => EnvVar.fromJson(json),
+    );
   }
 
   /// Add or update environment variable
@@ -161,7 +191,12 @@ class EnvGroupsEndpoints {
       '/env-groups/$envGroupId/env-vars/$envVarKey',
       body: body.toJson(),
     );
-    return EnvGroup.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/env-groups/$envGroupId/env-vars/$envVarKey',
+      json,
+      () => EnvGroup.fromJson(json),
+    );
   }
 
   /// Remove environment variable
@@ -185,7 +220,12 @@ class EnvGroupsEndpoints {
       'GET',
       '/env-groups/$envGroupId/secret-files/$envVarKey',
     );
-    return SecretFile.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/env-groups/$envGroupId/secret-files/$envVarKey',
+      json,
+      () => SecretFile.fromJson(json),
+    );
   }
 
   /// Add or update secret file
@@ -201,7 +241,12 @@ class EnvGroupsEndpoints {
       '/env-groups/$envGroupId/secret-files/$envVarKey',
       body: body.toJson(),
     );
-    return EnvGroup.fromJson(json);
+    return _client.decode(
+      'PUT',
+      '/env-groups/$envGroupId/secret-files/$envVarKey',
+      json,
+      () => EnvGroup.fromJson(json),
+    );
   }
 
   /// Remove secret file

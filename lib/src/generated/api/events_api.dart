@@ -16,6 +16,11 @@ class EventsEndpoints {
   /// Retrieve the details of a particular event
   Future<RetrieveEventResponse> retrieveEvent({required String eventId}) async {
     final json = await _client.sendObject('GET', '/events/$eventId');
-    return RetrieveEventResponse.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/events/$eventId',
+      json,
+      () => RetrieveEventResponse.fromJson(json),
+    );
   }
 }

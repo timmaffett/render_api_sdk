@@ -50,10 +50,15 @@ class MetricsEndpoints {
         'aggregationMethod': aggregationMethod,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetCpuResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/cpu',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetCpuResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get CPU limit
@@ -91,10 +96,15 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetCpuLimitResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/cpu-limit',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetCpuLimitResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get CPU target
@@ -132,10 +142,15 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetCpuTargetResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/cpu-target',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetCpuTargetResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get memory usage
@@ -173,10 +188,15 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetMemoryResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/memory',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetMemoryResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get memory limit
@@ -214,10 +234,15 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetMemoryLimitResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/memory-limit',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetMemoryLimitResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get memory target
@@ -255,10 +280,15 @@ class MetricsEndpoints {
         'instance': instance,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetMemoryTargetResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/memory-target',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetMemoryTargetResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get HTTP request count
@@ -304,10 +334,15 @@ class MetricsEndpoints {
         'aggregateBy': aggregateBy,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetHttpRequestsResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/http-requests',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetHttpRequestsResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get HTTP latency
@@ -353,10 +388,15 @@ class MetricsEndpoints {
         'quantile': quantile,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetHttpLatencyResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/http-latency',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetHttpLatencyResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get bandwidth usage
@@ -386,10 +426,15 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetBandwidthResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/bandwidth',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetBandwidthResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get bandwidth usage breakdown by traffic source
@@ -422,10 +467,15 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetBandwidthResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/bandwidth-sources',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetBandwidthResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get disk usage
@@ -459,10 +509,15 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetDiskUsageResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/disk-usage',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetDiskUsageResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get disk capacity
@@ -496,10 +551,15 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetDiskCapacityResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/disk-capacity',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetDiskCapacityResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get instance count
@@ -533,10 +593,15 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetInstanceCountResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/instance-count',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetInstanceCountResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get active connection count
@@ -566,10 +631,15 @@ class MetricsEndpoints {
         'resource': resource,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetActiveConnectionsResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/active-connections',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetActiveConnectionsResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get replica lag
@@ -599,10 +669,15 @@ class MetricsEndpoints {
         'resource': resource,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetReplicationLagResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/replication-lag',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetReplicationLagResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// List queryable instance values
@@ -637,10 +712,15 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ListApplicationFilterValuesResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/filters/application',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ListApplicationFilterValuesResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// List queryable status codes and host values
@@ -682,10 +762,15 @@ class MetricsEndpoints {
         'statusCode': statusCode,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(ListHttpFilterValuesResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/filters/http',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(ListHttpFilterValuesResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// List queryable paths
@@ -731,7 +816,7 @@ class MetricsEndpoints {
         'path': path,
       },
     );
-    return json;
+    return _client.decode('GET', '/metrics/filters/path', json, () => json);
   }
 
   /// Get task runs queued count
@@ -761,10 +846,15 @@ class MetricsEndpoints {
         'resource': resource,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetTaskRunsQueuedResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/task-runs-queued',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetTaskRunsQueuedResponse.fromJson)
+          .toList(),
+    );
   }
 
   /// Get task runs completed count
@@ -802,9 +892,14 @@ class MetricsEndpoints {
         'aggregateBy': aggregateBy,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(GetTaskRunsCompletedResponse.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/metrics/task-runs-completed',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(GetTaskRunsCompletedResponse.fromJson)
+          .toList(),
+    );
   }
 }

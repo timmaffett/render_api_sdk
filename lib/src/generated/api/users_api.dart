@@ -16,6 +16,6 @@ class UsersEndpoints {
   /// Retrieve the user associated with the provided API key.
   Future<User> getUser() async {
     final json = await _client.sendObject('GET', '/users');
-    return User.fromJson(json);
+    return _client.decode('GET', '/users', json, () => User.fromJson(json));
   }
 }

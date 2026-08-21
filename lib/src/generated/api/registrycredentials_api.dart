@@ -62,10 +62,15 @@ class RegistrycredentialsEndpoints {
         'limit': limit,
       },
     );
-    return json
-        .whereType<Map<String, Object?>>()
-        .map(RegistryCredential.fromJson)
-        .toList();
+    return _client.decode(
+      'GET',
+      '/registrycredentials',
+      json,
+      () => json
+          .whereType<Map<String, Object?>>()
+          .map(RegistryCredential.fromJson)
+          .toList(),
+    );
   }
 
   /// Create registry credential
@@ -79,7 +84,12 @@ class RegistrycredentialsEndpoints {
       '/registrycredentials',
       body: body.toJson(),
     );
-    return RegistryCredential.fromJson(json);
+    return _client.decode(
+      'POST',
+      '/registrycredentials',
+      json,
+      () => RegistryCredential.fromJson(json),
+    );
   }
 
   /// Retrieve registry credential
@@ -92,7 +102,12 @@ class RegistrycredentialsEndpoints {
       'GET',
       '/registrycredentials/$registryCredentialId',
     );
-    return RegistryCredential.fromJson(json);
+    return _client.decode(
+      'GET',
+      '/registrycredentials/$registryCredentialId',
+      json,
+      () => RegistryCredential.fromJson(json),
+    );
   }
 
   /// Update registry credential
@@ -107,7 +122,12 @@ class RegistrycredentialsEndpoints {
       '/registrycredentials/$registryCredentialId',
       body: body.toJson(),
     );
-    return RegistryCredential.fromJson(json);
+    return _client.decode(
+      'PATCH',
+      '/registrycredentials/$registryCredentialId',
+      json,
+      () => RegistryCredential.fromJson(json),
+    );
   }
 
   /// Delete registry credential
