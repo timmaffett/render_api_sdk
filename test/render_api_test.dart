@@ -146,6 +146,34 @@ void main() {
       },
     );
 
+    test(
+      'bandwidth-sources is generated against the API, not the spec',
+      () async {
+        // Render's spec is wrong for this path in three ways at once: it
+        // declares an object wrapping a `data` array, labels as an object, and
+        // epoch-integer timestamps. The API sends the same array-of-series
+        // every other metric sends, keyed by a `trafficSource` label. Generated
+        // from the spec the call could not be made at all, so
+        // tool/generate.dart overrides its response type.
+        final api = apiWith(
+          (_) async => http.Response(
+            '[{"labels":[{"field":"trafficSource","value":"http"}],'
+            '"unit":"mb",'
+            '"values":[{"timestamp":"2026-08-21T00:00:00Z","value":12}]}]',
+            200,
+          ),
+        );
+
+        final response = await api.getBandwidthSources(resource: 'srv-abc');
+        expect(response, hasLength(1));
+        expect(response.first.unit, 'mb');
+        expect(
+          response.first.labels.map((label) => label.field),
+          contains('trafficSource'),
+        );
+      },
+    );
+
     test('404 is typed', () async {
       final api = apiWith((_) async => http.Response('', 404));
 

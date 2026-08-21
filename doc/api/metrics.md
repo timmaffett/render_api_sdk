@@ -98,7 +98,7 @@ Queries for earlier dates will return a 400 Bad Request error.
 
 
 ```dart
-Future<GetBandwidthSourcesResponse> getBandwidthSources({String? startTime, String? endTime, String? resource, String? service})
+Future<List<GetBandwidthResponse>> getBandwidthSources({String? startTime, String? endTime, String? resource, String? service})
 ```
 
 `GET /metrics/bandwidth-sources`
@@ -110,11 +110,13 @@ Future<GetBandwidthSourcesResponse> getBandwidthSources({String? startTime, Stri
 | `resource` | `String` | query | no | Service ID to query. When multiple service ids are provided, they are ORed together |
 | `service` | `String` | query | no | This parameter is deprecated. Please use `resource` instead |
 
-Returns `GetBandwidthSourcesResponse`.
+Returns `List<GetBandwidthResponse>` — each element carries:
 
 | Field | Type | |
 | --- | --- | --- |
-| `data` | `List<GetBandwidthSourcesResponseDataItem>?` |  |
+| `labels` | `List<GetBandwidthResponseLabelsItem>` | List of labels describing the time series |
+| `values` | `List<GetBandwidthResponseValuesItem>` | The values of the time series |
+| `unit` | `String` |  |
 
 [Render documentation](https://api-docs.render.com/reference/get-bandwidth-sources)
 

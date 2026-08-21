@@ -406,13 +406,13 @@ class MetricsEndpoints {
   /// [resource] Service ID to query. When multiple service ids are provided, they are ORed together
   ///
   /// [service] This parameter is deprecated. Please use `resource` instead
-  Future<GetBandwidthSourcesResponse> getBandwidthSources({
+  Future<List<GetBandwidthResponse>> getBandwidthSources({
     String? startTime,
     String? endTime,
     String? resource,
     String? service,
   }) async {
-    final json = await _client.sendObject(
+    final json = await _client.sendList(
       'GET',
       '/metrics/bandwidth-sources',
       query: {
@@ -422,7 +422,10 @@ class MetricsEndpoints {
         'service': service,
       },
     );
-    return GetBandwidthSourcesResponse.fromJson(json);
+    return json
+        .whereType<Map<String, Object?>>()
+        .map(GetBandwidthResponse.fromJson)
+        .toList();
   }
 
   /// Get disk usage

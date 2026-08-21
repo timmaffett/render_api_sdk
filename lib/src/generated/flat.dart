@@ -315,7 +315,7 @@ extension RenderRestApi on RenderApi {
   );
 
   /// Get bandwidth usage breakdown by traffic source
-  Future<GetBandwidthSourcesResponse> getBandwidthSources({
+  Future<List<GetBandwidthResponse>> getBandwidthSources({
     String? startTime,
     String? endTime,
     String? resource,

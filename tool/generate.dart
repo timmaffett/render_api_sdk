@@ -1155,14 +1155,40 @@ String _queryType(Map<String, dynamic> schema) {
 }
 
 class _Return {
-  _Return(this.type, this.clientMethod, this.parse, this.needsResult);
+  const _Return(this.type, this.clientMethod, this.parse, this.needsResult);
   final String type;
   final String clientMethod;
   final String parse;
   final bool needsResult;
 }
 
+/// Operations where Render's specification does not describe what the API
+/// sends, and the generated code would therefore be unusable.
+///
+/// The spec is this package's contract, so the vendored copy stays a faithful
+/// mirror of Render's and is never edited. Correcting the response here means
+/// the fix survives regeneration, which a hand-edit of the output would not.
+///
+/// `get-bandwidth-sources` declares an object wrapping a `data` array, with
+/// labels as an object and timestamps as epoch integers. The live API returns
+/// the same array-of-series every other metrics endpoint returns — labels as
+/// {field, value} pairs, ISO-8601 timestamps — distinguished by a
+/// `trafficSource` label carrying `total` or `http`. Verified against the API
+/// on 2026-08-21; decoded against the spec it throws before a caller sees
+/// anything.
+const _responseOverrides = <String, _Return>{
+  'get-bandwidth-sources': _Return(
+    'List<GetBandwidthResponse>',
+    'sendList',
+    'json.whereType<Map<String, Object?>>().map(GetBandwidthResponse.fromJson).toList()',
+    true,
+  ),
+};
+
 _Return _returnType(_Op op) {
+  final override = _responseOverrides[op.id];
+  if (override != null) return override;
+
   final inlineName = '${_className(op.id)}Response';
   final responses = (op.op['responses'] as Map<String, dynamic>?) ?? const {};
   final ok = responses.entries

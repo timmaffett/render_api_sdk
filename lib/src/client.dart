@@ -158,6 +158,7 @@ class RenderApiClient {
   }) async {
     final decoded = await send(method, path, query: query, body: body);
     if (decoded is Map<String, Object?>) return decoded;
+
     throw RenderNetworkException(
       'Expected a JSON object from $method $path but got '
       '${decoded.runtimeType}.',
