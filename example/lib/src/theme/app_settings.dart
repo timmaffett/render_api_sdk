@@ -2,6 +2,8 @@ import 'package:auris/auris.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../design/design_system.dart';
+
 /// How a timestamp is written.
 enum ClockFormat {
   /// 2:47 pm — the default, because most people read it faster.
@@ -33,6 +35,7 @@ class AppSettings extends ChangeNotifier {
     _glowScale = _prefs.getDouble(_kGlow) ?? 1.0;
     final accent = _prefs.getInt(_kAccent);
     _accent = accent == null ? null : Color(accent);
+    _system = AppDesignSystem.values[_prefs.getInt(_kSystem) ?? 0];
     _clock = ClockFormat.values[_prefs.getInt(_kClock) ?? 0];
     _metricTime = MetricTimeDisplay.values[_prefs.getInt(_kMetricTime) ?? 0];
   }
@@ -41,6 +44,7 @@ class AppSettings extends ChangeNotifier {
   static const _kBevel = 'theme.bevelScale';
   static const _kGlow = 'theme.glowScale';
   static const _kAccent = 'theme.accent';
+  static const _kSystem = 'design.system';
   static const _kClock = 'display.clock';
   static const _kMetricTime = 'display.metricTime';
 
@@ -55,6 +59,7 @@ class AppSettings extends ChangeNotifier {
 
   final SharedPreferences _prefs;
 
+  late AppDesignSystem _system;
   late ClockFormat _clock;
   late MetricTimeDisplay _metricTime;
   late bool _dark;
@@ -62,6 +67,7 @@ class AppSettings extends ChangeNotifier {
   late double _glowScale;
   late Color? _accent;
 
+  AppDesignSystem get system => _system;
   ClockFormat get clock => _clock;
   MetricTimeDisplay get metricTime => _metricTime;
   bool get dark => _dark;
@@ -81,6 +87,12 @@ class AppSettings extends ChangeNotifier {
           bevelScale: _bevelScale,
           glowScale: _glowScale,
         );
+
+  set system(AppDesignSystem value) {
+    _system = value;
+    _prefs.setInt(_kSystem, value.index);
+    notifyListeners();
+  }
 
   set clock(ClockFormat value) {
     _clock = value;
@@ -137,6 +149,7 @@ class AppSettings extends ChangeNotifier {
   }
 
   void reset() {
+    _system = AppDesignSystem.auris;
     _clock = ClockFormat.twelveHour;
     _metricTime = MetricTimeDisplay.age;
     _dark = true;
@@ -144,6 +157,7 @@ class AppSettings extends ChangeNotifier {
     _glowScale = 1.0;
     _accent = null;
     _prefs
+      ..remove(_kSystem)
       ..remove(_kClock)
       ..remove(_kMetricTime)
       ..remove(_kDark)
