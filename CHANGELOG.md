@@ -1,5 +1,11 @@
 ## 0.1.4
 
+- **A 429 now says which limit was hit.** Postgres introspection —
+  `listPostgresProcesses`, `listPostgresSizes`, `listPostgresTableScans`,
+  `listPostgresTopQueries` — is rate limited far more tightly than the metrics
+  endpoints: two calls in a row were enough to trip it against a live database.
+  The hint says so, and points at `retryAfter`.
+
 - **A 400 on a metric now says why.** HTTP request and latency metrics are gated
   by the resource's instance plan: on the free tier Render answers
   `400 {"message":"query is not allowed for plan: Hobby"}`, which reads like a

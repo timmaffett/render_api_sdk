@@ -124,6 +124,28 @@ void main() {
       );
     });
 
+    test(
+      '429 on a Postgres query endpoint says it is the tighter limit',
+      () async {
+        // Verified live: listPostgresSizes, then listPostgresTopQueries, and the
+        // second call was already refused. The metrics endpoints take far more.
+        final api = apiWith(
+          (_) async => http.Response('rate limit exceeded', 429),
+        );
+
+        await expectLater(
+          api.listPostgresTopQueries(postgresId: 'dpg-abc'),
+          throwsA(
+            isA<RenderRateLimitException>().having(
+              (e) => e.hint,
+              'hint',
+              contains('rate limited far more tightly'),
+            ),
+          ),
+        );
+      },
+    );
+
     test('404 is typed', () async {
       final api = apiWith((_) async => http.Response('', 404));
 

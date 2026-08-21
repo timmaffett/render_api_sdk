@@ -215,6 +215,96 @@ class RenderClient {
     ),
   );
 
+  /// Disk usage, plotted against the disk's capacity.
+  ///
+  /// `getDiskCapacity` is a metric in its own right rather than a field on the
+  /// database, so the ceiling comes from a second call — the same shape as
+  /// CPU and memory.
+  Future<MetricChartData> diskChart(String id, {Duration window = _day}) =>
+      _chart(
+        series: _series(
+          () => _api.getDiskUsage(resource: id, startTime: _since(window)),
+        ),
+        limit: _latestOf(
+          () => _api.getDiskCapacity(resource: id, startTime: _since(window)),
+        ),
+      );
+
+  /// Open connections. Postgres has a hard ceiling on these, but the API does
+  /// not report it, so the chart scales to its own data.
+  Future<MetricChartData> connectionsChart(
+    String id, {
+    Duration window = _day,
+  }) => _chart(
+    series: _series(
+      () => _api.getActiveConnections(resource: id, startTime: _since(window)),
+    ),
+    limit: Future.value(null),
+  );
+
+  // --- Postgres introspection ----------------------------------------------
+  //
+  // These are not metrics: Render runs them against the database itself, so
+  // they answer questions a time series cannot — which tables are large, which
+  // queries are slow, what is running right now.
+
+  Future<List<PostgresSize>> sizes(String id) async {
+    final response = await _api.listPostgresSizes(postgresId: id);
+    return [
+      for (final item in response.sizes)
+        PostgresSize(
+          database: item.database ?? '',
+          schema: item.schema ?? '',
+          table: item.table ?? '',
+          // Render sends an empty string, not null, for a table's own row.
+          index: (item.index ?? '').isEmpty ? null : item.index,
+          bytes: item.bytes ?? 0,
+        ),
+    ]..sort((a, b) => b.bytes.compareTo(a.bytes));
+  }
+
+  Future<List<TopQuery>> topQueries(String id) async {
+    final response = await _api.listPostgresTopQueries(postgresId: id);
+    return [
+      for (final item in response.topQueries)
+        TopQuery(
+          query: item.query ?? '',
+          calls: item.calls ?? 0,
+          meanMs: item.meanTimeMs ?? 0,
+          totalMs: item.totalTimeMs ?? 0,
+          rows: item.rows ?? 0,
+        ),
+    ]..sort((a, b) => b.totalMs.compareTo(a.totalMs));
+  }
+
+  Future<List<PostgresProcess>> processes(String id) async {
+    final response = await _api.listPostgresProcesses(postgresId: id);
+    return [
+      for (final item in response.processes)
+        PostgresProcess(
+          pid: item.pid ?? 0,
+          state: item.state ?? 'unknown',
+          application: item.applicationName ?? '',
+          query: item.query ?? '',
+          seconds: item.duration ?? 0,
+        ),
+    ];
+  }
+
+  Future<List<MetricSeries>> _series(
+    Future<List<dynamic>> Function() call,
+  ) async {
+    final raw = await call();
+    return [
+      for (final s in raw)
+        MetricSeries.from(
+          s.labels as List<Object?>?,
+          s.values as List<Object?>?,
+          s.unit as String?,
+        ),
+    ];
+  }
+
   /// Bandwidth and HTTP requests have no ceiling to plot against, so their
   /// charts scale to their own data.
   Future<MetricChartData> bandwidthChart(String id, {Duration window = _day}) =>
@@ -266,6 +356,63 @@ class RenderClient {
 
   static String _since(Duration window) =>
       DateTime.now().toUtc().subtract(window).toIso8601String();
+}
+
+/// A table or index, and what it occupies.
+class PostgresSize {
+  const PostgresSize({
+    required this.database,
+    required this.schema,
+    required this.table,
+    required this.index,
+    required this.bytes,
+  });
+
+  final String database;
+  final String schema;
+  final String table;
+
+  /// Null for a table's own size; set for an index on it.
+  final String? index;
+
+  final int bytes;
+
+  String get name =>
+      index == null ? '$schema.$table' : '$schema.$table → $index';
+}
+
+/// One entry from `pg_stat_statements`.
+class TopQuery {
+  const TopQuery({
+    required this.query,
+    required this.calls,
+    required this.meanMs,
+    required this.totalMs,
+    required this.rows,
+  });
+
+  final String query;
+  final int calls;
+  final double meanMs;
+  final double totalMs;
+  final int rows;
+}
+
+/// A backend, as `pg_stat_activity` sees it.
+class PostgresProcess {
+  const PostgresProcess({
+    required this.pid,
+    required this.state,
+    required this.application,
+    required this.query,
+    required this.seconds,
+  });
+
+  final int pid;
+  final String state;
+  final String application;
+  final String query;
+  final double seconds;
 }
 
 /// Everything one chart needs: its lines, and the ceiling to draw them against.

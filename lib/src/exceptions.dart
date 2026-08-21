@@ -266,6 +266,17 @@ String? hintFor({
         'bandwidth are returned on every plan.';
   }
 
+  if (statusCode == 429) {
+    return path.contains('/query/')
+        ? 'Postgres introspection endpoints — processes, sizes, table-scans '
+              'and top-queries — are rate limited far more tightly than the '
+              'metrics endpoints, and a handful of calls in a row is enough to '
+              'trip it. Fetch them on demand rather than eagerly, and honour '
+              'retryAfter.'
+        : 'Slow down and retry after retryAfter, which this exception carries '
+              'when Render sends it.';
+  }
+
   if (statusCode == 401 || statusCode == 403) {
     return 'Check that RENDER_API_KEY is set and still valid.';
   }
