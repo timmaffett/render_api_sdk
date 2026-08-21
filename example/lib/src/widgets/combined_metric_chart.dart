@@ -40,11 +40,16 @@ class CombinedMetricChart extends StatelessWidget {
     // resource is the only one.
     final lines = <_Line>[];
     final excluded = <MetricKind>[];
+    final offAxis = <MetricKind, MetricSeries>{};
     for (final entry in metrics.entries) {
       final series = entry.value.series.where((s) => !s.isEmpty).toList();
       if (series.isEmpty) continue;
       if (!entry.key.hasLimit || entry.value.limit == null) {
         excluded.add(entry.key);
+        // Kept even though it is not drawn: it still has a value at whatever
+        // moment is being scrubbed, and that is worth reading even when it
+        // cannot be a percentage.
+        offAxis[entry.key] = series.first;
         continue;
       }
       lines.add(
@@ -124,17 +129,48 @@ class CombinedMetricChart extends StatelessWidget {
                 ),
               ),
               lineTouchData: LineTouchData(
+                getTouchedSpotIndicator: (bar, indexes) => [
+                  for (final _ in indexes)
+                    TouchedSpotIndicatorData(
+                      FlLine(color: scheme.textDim, strokeWidth: 1),
+                      // A quarter of fl_chart's default. On a line of a thousand
+                      // points a fat dot covers the very shape being read.
+                      FlDotData(
+                        getDotPainter: (spot, percent, barData, index) =>
+                            FlDotCirclePainter(
+                              radius: 1,
+                              color: bar.color ?? scheme.primaryActive,
+                              strokeWidth: 0,
+                            ),
+                      ),
+                    ),
+                ],
                 touchTooltipData: LineTouchTooltipData(
                   getTooltipColor: (_) => scheme.surfaceInset,
                   tooltipBorder: BorderSide(color: scheme.primaryDim),
                   maxContentWidth: 260,
                   getTooltipItems: (spots) => [
-                    for (final spot in spots)
+                    for (final (index, spot) in spots.indexed)
                       LineTooltipItem(
                         lines[spot.barIndex].readout(spot.y),
                         text.bodySmall!.copyWith(
                           color: lines[spot.barIndex].kind.color(scheme),
                         ),
+                        // The metrics with no ceiling ride along on the last
+                        // line, so a scrub still answers "and how many
+                        // connections was that?".
+                        children: index != spots.length - 1
+                            ? null
+                            : [
+                                for (final entry in offAxis.entries)
+                                  TextSpan(
+                                    text:
+                                        '\n${_at(entry.value, origin, spot.x, entry.key)}',
+                                    style: text.labelSmall?.copyWith(
+                                      color: entry.key.color(scheme),
+                                    ),
+                                  ),
+                              ],
                       ),
                   ],
                 ),
@@ -193,6 +229,30 @@ class CombinedMetricChart extends StatelessWidget {
       ],
     );
   }
+}
+
+/// The reading nearest a scrubbed position, for a series that is not drawn.
+///
+/// The x axis is minutes since [origin], so the moment is recoverable and the
+/// nearest sample can be found even though this series has no line to hit.
+String _at(MetricSeries series, DateTime origin, double x, MetricKind kind) {
+  final at = origin.add(Duration(seconds: (x * 60).round()));
+  var nearest = series.points.first;
+  var best = Duration(days: 4000);
+  for (final point in series.points) {
+    final gap = point.at.difference(at).abs();
+    if (gap < best) {
+      best = gap;
+      nearest = point;
+    }
+  }
+  // Parenthesised, because it is an aside: this metric has no line on the
+  // chart, so the number answers a question the axis cannot.
+  final count = nearest.value.round();
+  final noun = kind == MetricKind.connections
+      ? (count == 1 ? 'connection' : 'connections')
+      : kind.label.toLowerCase();
+  return '($count $noun)';
 }
 
 /// One metric's line, and how to read a point on it.

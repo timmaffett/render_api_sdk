@@ -134,7 +134,9 @@ scaling it against its own peak — the obvious workaround — is worse than
 useless: a database holding one or two connections becomes a line swinging
 between 50% and 100%, the loudest thing on the chart and the least meaningful,
 while CPU at 5% is squashed into the baseline. A percentage needs a real
-denominator. It keeps its colour and its own chart, where a count is a count.
+denominator. It keeps its colour and its own chart, where a count is a count — and it still
+appears in the scrub readout, parenthesised and de-scaled to `(4 connections)`,
+because being unplottable is not a reason to be unreadable.
 
 **A fixed 0–100% axis wastes its height.** An idle database runs at 5% CPU, 6%
 disk and 20% memory, so everything piles into the bottom quarter and disk hides
