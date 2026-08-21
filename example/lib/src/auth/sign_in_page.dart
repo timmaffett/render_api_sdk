@@ -1,5 +1,6 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show PlatformException;
 
 /// Where the API token is pasted in.
 ///
@@ -18,6 +19,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final _controller = TextEditingController();
   bool _busy = false;
+  String? _error;
 
   @override
   void dispose() {
@@ -27,10 +29,32 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> _submit() async {
     if (_controller.text.trim().isEmpty) return;
-    setState(() => _busy = true);
-    await widget.onSubmit(_controller.text);
-    if (mounted) setState(() => _busy = false);
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await widget.onSubmit(_controller.text);
+    } on Object catch (error) {
+      // Storing the token can fail for reasons that have nothing to do with
+      // the token — a macOS build missing the keychain entitlement returns
+      // -34018 here. Without this the button sat on CHECKING… forever and
+      // said nothing, because the exception skipped the line that clears it.
+      if (mounted) setState(() => _error = _describe(error));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
   }
+
+  /// The actionable part of a failure, rather than a raw toString.
+  String _describe(Object error) => switch (error) {
+    PlatformException e
+        when e.code.contains('-34018') || '${e.details}'.contains('-34018') =>
+      'The keychain rejected the write: the app is missing the '
+          'keychain-access-groups entitlement. See macos/Runner/*.entitlements.',
+    PlatformException e => e.message ?? e.code,
+    _ => error.toString(),
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +96,22 @@ class _SignInPageState extends State<SignInPage> {
                     'Dashboard → Account Settings → API Keys',
                     style: text.labelSmall?.copyWith(color: scheme.textDim),
                   ),
+                  if (_error != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: scheme.surfaceInset,
+                        border: Border(
+                          left: BorderSide(color: scheme.danger, width: 2),
+                        ),
+                      ),
+                      child: SelectableText(
+                        _error!,
+                        style: text.bodySmall?.copyWith(color: scheme.textMid),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   FilledButton(
                     onPressed: _busy ? null : _submit,

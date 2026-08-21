@@ -4,6 +4,12 @@
 <dict>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
+	<!-- Outgoing network. A sandboxed macOS app cannot reach api.render.com
+	     without this, and `flutter create` does not add it: the template only
+	     grants network.server, for the debug tooling. Every request fails
+	     without it, in release as well as debug. -->
+	<key>com.apple.security.network.client</key>
+	<true/>
 	<key>com.apple.security.cs.allow-jit</key>
 	<true/>
 	<key>com.apple.security.network.server</key>

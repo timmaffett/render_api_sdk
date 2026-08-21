@@ -6,7 +6,6 @@
 // There is no web build. Render's API sends no CORS headers, so a browser
 // blocks every response — see README.md. Desktop and mobile are unaffected.
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/auth/sign_in_page.dart';
@@ -24,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final prefs = await SharedPreferences.getInstance();
-  final tokens = TokenStore(const FlutterSecureStorage())..load();
+  final tokens = TokenStore()..load();
 
   runApp(RenderDashboardApp(settings: ThemeSettings(prefs), tokens: tokens));
 }
