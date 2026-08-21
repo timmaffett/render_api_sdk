@@ -3,6 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../data/render_client.dart';
+import '../theme/app_settings.dart';
+import 'data_time.dart';
 
 /// How a metric's values are labelled.
 enum MetricScale {
@@ -47,6 +49,9 @@ class _MetricChartState extends State<MetricChart> {
     final scheme = Theme.of(context).extension<AurisScheme>()!;
     final text = Theme.of(context).textTheme;
     final data = widget.data;
+    // A tooltip marks when a *reading* was taken, so it is always a clock —
+    // but it follows the 12/24 hour setting like every other time on screen.
+    final settings = SettingsScope.maybeOf(context);
     final limit = data.limit;
 
     // Percent is meaningless without a ceiling to be a percentage of.
@@ -161,7 +166,7 @@ class _MetricChartState extends State<MetricChart> {
                         // tail of a resource id and says nothing.
                         '${series.length > 1 ? '${_shortLabel(series[spot.barIndex].label)}  ' : ''}'
                         '${_reading(spot.y, ceiling, data.unit, scale)}'
-                        '\n${_clock(origin.add(Duration(seconds: (spot.x * 60).round())))}',
+                        '\n${_stamp(settings, origin.add(Duration(seconds: (spot.x * 60).round())))}',
                         text.bodySmall!.copyWith(
                           color: palette[spot.barIndex % palette.length],
                         ),
@@ -283,11 +288,13 @@ class _MetricChartState extends State<MetricChart> {
         : label;
   }
 
-  static String _clock(DateTime at) {
+  /// The settings own every time format; this falls back only when there is
+  /// no scope, which is the case in widget tests.
+  static String _stamp(AppSettings? settings, DateTime at) {
+    if (settings != null) return settings.formatClock(at);
     final local = at.toLocal();
-    final hour = local.hour.toString().padLeft(2, '0');
-    final minute = local.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
+    return '${local.hour.toString().padLeft(2, '0')}:'
+        '${local.minute.toString().padLeft(2, '0')}';
   }
 }
 

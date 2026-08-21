@@ -2,6 +2,7 @@ import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../data/response_cache.dart';
+import 'data_time.dart';
 
 /// A bare notifier: the refresh button pokes it, every view listens.
 class RefreshSignal extends ChangeNotifier {
@@ -69,12 +70,20 @@ class RefreshButton extends StatelessWidget {
             if (stale)
               Padding(
                 padding: const EdgeInsets.only(right: 4),
-                child: Text(
-                  since == null ? 'CACHED' : 'CACHED ${_clock(since)}',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelSmall?.copyWith(color: scheme.textDim),
-                ),
+                child: since == null
+                    ? Text(
+                        'CACHED',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelSmall?.copyWith(color: scheme.textDim),
+                      )
+                    : DataTime(
+                        at: since,
+                        prefix: 'CACHED',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelSmall?.copyWith(color: scheme.textDim),
+                      ),
               ),
             IconButton(
               tooltip: stale
@@ -91,10 +100,4 @@ class RefreshButton extends StatelessWidget {
       },
     );
   }
-}
-
-String _clock(DateTime at) {
-  final local = at.toLocal();
-  return '${local.hour.toString().padLeft(2, '0')}:'
-      '${local.minute.toString().padLeft(2, '0')}';
 }

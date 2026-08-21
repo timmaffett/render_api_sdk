@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../data/response_cache.dart';
 import 'async_view.dart';
+import 'data_time.dart';
 import 'refresh_scope.dart';
 
 /// Starts a load once, and offers to run it again.
@@ -99,8 +100,9 @@ class _LoadOnceState<T> extends State<LoadOnce<T>> {
       children: [
         Align(
           alignment: Alignment.centerRight,
-          child: Text(
-            '${age.fromCache ? 'cached' : 'read'} ${_clock(at)}',
+          child: DataTime(
+            at: at,
+            prefix: age.fromCache ? 'cached' : 'read',
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: age.fromCache ? scheme.secondary : scheme.textDim,
             ),
@@ -111,10 +113,4 @@ class _LoadOnceState<T> extends State<LoadOnce<T>> {
       ],
     );
   }
-}
-
-String _clock(DateTime at) {
-  final local = at.toLocal();
-  return '${local.hour.toString().padLeft(2, '0')}:'
-      '${local.minute.toString().padLeft(2, '0')}';
 }

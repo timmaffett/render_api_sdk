@@ -1,7 +1,7 @@
 import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
-import 'theme_settings.dart';
+import 'app_settings.dart';
 
 /// Live theme controls.
 ///
@@ -15,7 +15,7 @@ class SettingsPage extends StatelessWidget {
     required this.onSignOut,
   });
 
-  final ThemeSettings settings;
+  final AppSettings settings;
   final VoidCallback onSignOut;
 
   @override
@@ -46,7 +46,7 @@ class SettingsPage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    for (final (label, color) in ThemeSettings.accents)
+                    for (final (label, color) in AppSettings.accents)
                       _Swatch(
                         label: label,
                         color: color ?? scheme.primaryActive,
@@ -83,6 +83,59 @@ class SettingsPage extends StatelessWidget {
                 OutlinedButton(
                   onPressed: settings.reset,
                   child: const Text('RESET'),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          AurisPanel(
+            title: 'TIME',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('CLOCK', style: text.labelSmall),
+                const SizedBox(height: 8),
+                SegmentedButton<ClockFormat>(
+                  segments: const [
+                    ButtonSegment(
+                      value: ClockFormat.twelveHour,
+                      label: Text('12 HOUR'),
+                    ),
+                    ButtonSegment(
+                      value: ClockFormat.twentyFourHour,
+                      label: Text('24 HOUR'),
+                    ),
+                  ],
+                  selected: {settings.clock},
+                  onSelectionChanged: (values) => settings.clock = values.first,
+                ),
+                const SizedBox(height: 24),
+                Text('METRIC PANELS', style: text.labelSmall),
+                const SizedBox(height: 8),
+                SegmentedButton<MetricTimeDisplay>(
+                  segments: const [
+                    ButtonSegment(
+                      value: MetricTimeDisplay.age,
+                      label: Text('AGE'),
+                    ),
+                    ButtonSegment(
+                      value: MetricTimeDisplay.clock,
+                      label: Text('CLOCK TIME'),
+                    ),
+                  ],
+                  selected: {settings.metricTime},
+                  onSelectionChanged: (values) =>
+                      settings.metricTime = values.first,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  settings.metricTime == MetricTimeDisplay.age
+                      ? 'Panels count up from when their data was read — '
+                            '"14 seconds ago" — and tick every second. A clock '
+                            'time cannot show that a reload just happened.'
+                      : 'Panels show the wall-clock time their data was read, '
+                            'written as ${settings.formatClock(DateTime.now())}.',
+                  style: text.bodySmall?.copyWith(color: scheme.textMid),
                 ),
               ],
             ),

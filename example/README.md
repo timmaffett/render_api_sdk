@@ -119,6 +119,21 @@ Where a whole tab comes from one response — sizes, queries, activity are one
 call each — there is one stamp for the tab rather than the same time repeated
 on every row.
 
+## Times
+
+Settings carries two, because a timestamp answers different questions in
+different places.
+
+**Clock format** — 12 hour with an `am`/`pm` suffix by default, or 24 hour.
+Everything that writes a time obeys it: the panel headers, the cached indicator,
+and the readout when you scrub a chart.
+
+**What a metric panel shows** — `age` by default, or `clock time`. Age counts
+up from when that panel's data was read and **ticks every second**, which is
+the only form that answers "did that just reload"; a clock time cannot, because
+`read 5:36am` looks the same one second and ten minutes later. The ticker exists
+only in age mode and only while the widget is mounted.
+
 ## Tests
 
 ```bash

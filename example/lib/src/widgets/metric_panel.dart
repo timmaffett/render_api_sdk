@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../data/response_cache.dart';
 import 'async_view.dart';
+import 'data_time.dart';
 import 'refresh_scope.dart';
 
 /// A titled panel whose header carries controls, not just text.
@@ -208,8 +209,9 @@ class _LoadedPanelState<T> extends State<LoadedPanel<T>> {
       onReload: _reload,
       status: at == null
           ? null
-          : Text(
-              '${age!.fromCache ? 'cached' : 'read'} ${_clock(at)}',
+          : DataTime(
+              at: at,
+              prefix: age!.fromCache ? 'cached' : 'read',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 color: age.fromCache ? scheme.secondary : scheme.textDim,
               ),
@@ -221,10 +223,4 @@ class _LoadedPanelState<T> extends State<LoadedPanel<T>> {
       ),
     );
   }
-}
-
-String _clock(DateTime at) {
-  final local = at.toLocal();
-  return '${local.hour.toString().padLeft(2, '0')}:'
-      '${local.minute.toString().padLeft(2, '0')}';
 }
