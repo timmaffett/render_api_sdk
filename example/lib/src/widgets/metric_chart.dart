@@ -89,9 +89,13 @@ class _MetricChartState extends State<MetricChart> {
           children: [
             Expanded(
               child: Text(
-                limit == null
-                    ? widget.title
-                    : '${widget.title}   limit ${_format(ceiling, data.unit, MetricScale.total)}',
+                // Inside a titled panel the name is already above the chart,
+                // so an empty title leaves just the ceiling.
+                [
+                  if (widget.title.isNotEmpty) widget.title,
+                  if (limit != null)
+                    'limit ${_format(ceiling, data.unit, MetricScale.total)}',
+                ].join('   '),
                 style: text.labelSmall,
               ),
             ),

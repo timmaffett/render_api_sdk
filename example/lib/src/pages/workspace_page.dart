@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
-import '../widgets/async_view.dart';
+import '../widgets/load_once.dart';
 import '../widgets/responsive_scaffold.dart';
 
 /// Workspaces, and the projects inside them.
@@ -20,8 +20,8 @@ class WorkspacePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<render.Owner>>(
-      future: client.owners(),
+    return LoadOnce<List<render.Owner>>(
+      load: () => client.owners(),
       onUnauthorized: onUnauthorized,
       emptyMessage: 'No workspaces for this token.',
       builder: (context, owners) => ListView(
@@ -57,8 +57,8 @@ class _Projects extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<render.Project>>(
-      future: client.projects(ownerId: ownerId),
+    return LoadOnce<List<render.Project>>(
+      load: () => client.projects(ownerId: ownerId),
       emptyMessage: 'No projects — services can live outside one.',
       builder: (context, projects) => Column(
         children: [
@@ -82,8 +82,8 @@ class _Environments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<render.Environment>>(
-      future: client.environments(projectId),
+    return LoadOnce<List<render.Environment>>(
+      load: () => client.environments(projectId),
       emptyMessage: 'No environments.',
       builder: (context, environments) => Column(
         children: [

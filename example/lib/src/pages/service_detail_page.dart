@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
-import '../widgets/async_view.dart';
+import '../widgets/load_once.dart';
 import '../widgets/metric_chart.dart';
 
 /// One service: deploys, events, environment and metrics.
@@ -59,8 +59,8 @@ class _Deploys extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<render.Deploy>>(
-      future: client.deploys(service.id),
+    return LoadOnce<List<render.Deploy>>(
+      load: () => client.deploys(service.id),
       emptyMessage: 'No deploys yet.',
       builder: (context, deploys) => ListView.builder(
         padding: const EdgeInsets.all(16),
@@ -97,8 +97,8 @@ class _Events extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<render.ServiceEventWithCursorEvent>>(
-      future: client.events(service.id),
+    return LoadOnce<List<render.ServiceEventWithCursorEvent>>(
+      load: () => client.events(service.id),
       emptyMessage: 'No events.',
       builder: (context, events) => ListView.builder(
         padding: const EdgeInsets.all(16),
@@ -120,8 +120,8 @@ class _EnvVars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AsyncView<List<render.EnvVar>>(
-      future: client.envVars(service.id),
+    return LoadOnce<List<render.EnvVar>>(
+      load: () => client.envVars(service.id),
       emptyMessage: 'No environment variables set on this service.',
       builder: (context, vars) => ListView.builder(
         padding: const EdgeInsets.all(16),
@@ -190,8 +190,8 @@ class _ChartPanel extends StatelessWidget {
     final scheme = Theme.of(context).extension<AurisScheme>()!;
     return AurisPanel(
       title: title,
-      child: AsyncView<MetricChartData>(
-        future: load(),
+      child: LoadOnce<MetricChartData>(
+        load: () => load(),
         builder: (context, data) => data.isEmpty
             ? SizedBox(
                 height: 90,
@@ -205,7 +205,7 @@ class _ChartPanel extends StatelessWidget {
                   ),
                 ),
               )
-            : MetricChart(title: title, data: data),
+            : MetricChart(title: '', data: data),
       ),
     );
   }

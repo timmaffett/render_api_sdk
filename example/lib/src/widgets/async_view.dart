@@ -17,6 +17,7 @@ class AsyncView<T> extends StatelessWidget {
     required this.builder,
     this.emptyMessage = 'Nothing here.',
     this.onUnauthorized,
+    this.onRetry,
   });
 
   final Future<T> future;
@@ -26,6 +27,10 @@ class AsyncView<T> extends StatelessWidget {
   /// Called when Render rejects the token, so the app can sign out rather than
   /// showing an error the user cannot act on.
   final VoidCallback? onUnauthorized;
+
+  /// Runs the load again. Offered on the error panel, because the failure a
+  /// user hits most often here is a rate limit, which clears by itself.
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +57,7 @@ class AsyncView<T> extends StatelessWidget {
               WidgetsBinding.instance.addPostFrameCallback((_) => callback());
             }
           }
-          return _ErrorPanel(error: error);
+          return _ErrorPanel(error: error, onRetry: onRetry);
         }
 
         final value = snapshot.data as T;
@@ -66,9 +71,10 @@ class AsyncView<T> extends StatelessWidget {
 }
 
 class _ErrorPanel extends StatelessWidget {
-  const _ErrorPanel({required this.error});
+  const _ErrorPanel({required this.error, this.onRetry});
 
   final Object error;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +121,13 @@ class _ErrorPanel extends StatelessWidget {
                     hint,
                     style: text.bodySmall?.copyWith(color: scheme.textMid),
                   ),
+                ),
+              ],
+              if (onRetry != null) ...[
+                const SizedBox(height: 16),
+                OutlinedButton(
+                  onPressed: onRetry,
+                  child: const Text('TRY AGAIN'),
                 ),
               ],
             ],
