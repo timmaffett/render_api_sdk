@@ -6,6 +6,7 @@ import '../data/render_client.dart';
 import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
+import '../widgets/metric_panel.dart';
 
 /// One service: deploys, events, environment and metrics.
 ///
@@ -193,30 +194,23 @@ class _ChartPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).extension<AurisScheme>()!;
-    return AurisPanel(
+    return LoadedPanel<MetricChartData>(
       title: title,
-      child: LoadOnce<MetricChartData>(
-        // These panels each make their own requests and do not fail together,
-        // so each says when its own data was read. The indicator in the app
-        // bar is the whole screen's oldest, which cannot express that.
-        stamp: true,
-        refresh: RefreshScope.of(context),
-        load: () => load(),
-        builder: (context, data) => data.isEmpty
-            ? SizedBox(
-                height: 90,
-                child: Center(
-                  child: Text(
-                    emptyMessage,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: scheme.textDim),
-                  ),
+      load: load,
+      builder: (context, data) => data.isEmpty
+          ? SizedBox(
+              height: 90,
+              child: Center(
+                child: Text(
+                  emptyMessage,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: scheme.textDim),
                 ),
-              )
-            : MetricChart(title: '', data: data),
-      ),
+              ),
+            )
+          : MetricChart(title: '', data: data),
     );
   }
 }

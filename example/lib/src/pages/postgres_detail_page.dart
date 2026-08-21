@@ -6,6 +6,7 @@ import '../data/render_client.dart';
 import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
+import '../widgets/metric_panel.dart';
 
 /// One Postgres instance: what it is doing, and what it holds.
 ///
@@ -93,25 +94,16 @@ class _Panel extends StatelessWidget {
   final Future<MetricChartData> Function() load;
 
   @override
-  Widget build(BuildContext context) {
-    return AurisPanel(
-      title: title,
-      child: LoadOnce<MetricChartData>(
-        // These panels each make their own requests and do not fail together,
-        // so each says when its own data was read. The indicator in the app
-        // bar is the whole screen's oldest, which cannot express that.
-        stamp: true,
-        refresh: RefreshScope.of(context),
-        load: () => load(),
-        builder: (context, data) => data.isEmpty
-            ? const SizedBox(
-                height: 60,
-                child: Center(child: Text('no data for this window')),
-              )
-            : MetricChart(title: '', data: data),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => LoadedPanel<MetricChartData>(
+    title: title,
+    load: load,
+    builder: (context, data) => data.isEmpty
+        ? const SizedBox(
+            height: 60,
+            child: Center(child: Text('no data for this window')),
+          )
+        : MetricChart(title: '', data: data),
+  );
 }
 
 class _Sizes extends StatelessWidget {

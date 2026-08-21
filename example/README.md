@@ -105,9 +105,15 @@ Cached and stale beats blank and correct.
 
 That indicator is the whole screen's *oldest* reading, which says less than it
 looks like on a page of several independent requests — the metrics tab makes
-seven, and CPU can be live while disk is replayed. So views that own their
-request carry their own `read 14:32` / `cached 14:29`, attributed by running
-each loader in a zone the cache records against.
+seven, and CPU can be live while disk is replayed. So each chart panel carries
+its own `read 14:32` / `cached 14:29` **in its header bar**, next to a reload
+that refetches that panel alone. Both live in the header because four stacked
+charts cannot afford a status line each, and because Render rate limits per
+endpoint: refreshing everything can be refused while refreshing one thing
+succeeds.
+
+Attribution comes from running each loader in a zone the cache records
+against, so nothing threads a cache key through the typed loaders.
 
 Where a whole tab comes from one response — sizes, queries, activity are one
 call each — there is one stamp for the tab rather than the same time repeated
