@@ -219,15 +219,49 @@ class MetricSeries {
     return MetricSeries(
       label: labelValues.isEmpty ? 'value' : labelValues.first,
       unit: unit,
-      points: [
+      points: _withoutLeadingSpike([
         for (final v in values ?? const [])
           if ((v as dynamic).timestamp != null)
             MetricPoint(
               (v as dynamic).timestamp as DateTime,
               ((v as dynamic).value as num?)?.toDouble() ?? 0,
             ),
-      ],
+      ]),
     );
+  }
+
+  /// Drops a leading sample that is an artifact rather than a reading.
+  ///
+  /// CPU is a rate, and the first sample of a series has nothing before it to
+  /// compute that rate against, so it comes back inflated. Measured on a live
+  /// Postgres instance: the first point was 3.08e-2 against a median of
+  /// 5.12e-3 and a maximum across the *other 1095 points* of 7.52e-3 — four
+  /// times the highest real reading. Scaled to it, every real value sat in the
+  /// bottom eighth of the chart and the line looked flat.
+  ///
+  /// Confirmed to be an artifact rather than a real event two ways: it is a
+  /// single isolated sample where real work shows as sustained elevation
+  /// across many, and it stays pinned to the first sample of available history
+  /// no matter what `startTime` is asked for.
+  ///
+  /// Deliberately not "drop the first N points". It removes at most two, only
+  /// from the front, and only while a point towers over the rest — so a
+  /// genuine opening spike is kept on a short series, and a gauge like memory,
+  /// which has no such artifact, is never touched.
+  static List<MetricPoint> _withoutLeadingSpike(List<MetricPoint> points) {
+    const minimumLength = 10;
+    const outlierFactor = 2.0;
+    const maximumDropped = 2;
+
+    var result = points;
+    for (var dropped = 0; dropped < maximumDropped; dropped++) {
+      if (result.length < minimumLength) break;
+      final rest = result.skip(1).map((point) => point.value).toList()..sort();
+      final p99 = rest[(rest.length * 0.99).floor().clamp(0, rest.length - 1)];
+      if (p99 <= 0 || result.first.value <= p99 * outlierFactor) break;
+      result = result.sublist(1);
+    }
+    return result;
   }
 
   final String label;

@@ -44,8 +44,8 @@ class DatabasesPage extends StatelessWidget {
                     variant: AurisBadgeVariant.slate,
                   ),
                 ),
-                AurisDataRow(label: 'region', value: db.region.toString()),
-                AurisDataRow(label: 'version', value: db.version.toString()),
+                AurisDataRow(label: 'region', value: db.region.wireValue),
+                AurisDataRow(label: 'version', value: db.version.wireValue),
                 const SizedBox(height: 12),
                 Text(
                   'CPU · 24h',
