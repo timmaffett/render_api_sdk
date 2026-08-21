@@ -4,6 +4,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
+import '../widgets/responsive_scaffold.dart';
 import 'service_detail_page.dart';
 
 /// Every service in the workspace.
@@ -73,7 +74,7 @@ class _ServiceCard extends StatelessWidget {
       ),
       child: AurisPanel(
         title: service.name,
-        code: service.id,
+        code: codeFor(context, service.id),
         child: Column(
           children: [
             AurisDataRow(

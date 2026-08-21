@@ -89,3 +89,13 @@ class ResponsiveScaffold extends StatelessWidget {
     );
   }
 }
+
+/// A resource id to show beside a panel title, or null on a narrow screen.
+///
+/// Render's ids are long — `tea-da0sn77lk1mc738mu2h0` — and `AurisPanel` lays
+/// the title and the code on one row. On a phone the id wins and the name is
+/// ellipsised to "TIMS W…", which is the half that matters. Dropping the id
+/// below the breakpoint keeps the name whole; there is room for both on a
+/// desktop, where it is genuinely useful for copying.
+String? codeFor(BuildContext context, String id) =>
+    MediaQuery.sizeOf(context).width >= kWideBreakpoint ? id : null;

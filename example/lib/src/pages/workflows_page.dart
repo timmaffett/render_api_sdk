@@ -5,6 +5,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
+import '../widgets/responsive_scaffold.dart';
 
 /// Workflow services, their tasks, and how their runs have been going.
 ///
@@ -35,7 +36,7 @@ class WorkflowsPage extends StatelessWidget {
           final workflow = workflows[i];
           return AurisPanel(
             title: workflow.name,
-            code: workflow.id,
+            code: codeFor(context, workflow.id),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

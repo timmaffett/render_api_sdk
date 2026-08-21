@@ -4,6 +4,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
+import '../widgets/responsive_scaffold.dart';
 import '../widgets/sparkline.dart';
 
 /// render.Postgres and key value stores.
@@ -31,7 +32,7 @@ class DatabasesPage extends StatelessWidget {
           final db = databases[i];
           return AurisPanel(
             title: db.name,
-            code: db.id,
+            code: codeFor(context, db.id),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

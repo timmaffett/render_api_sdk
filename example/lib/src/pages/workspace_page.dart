@@ -4,6 +4,7 @@ import 'package:render_api/render_api.dart' as render;
 
 import '../data/render_client.dart';
 import '../widgets/async_view.dart';
+import '../widgets/responsive_scaffold.dart';
 
 /// Workspaces, and the projects inside them.
 ///
@@ -29,7 +30,7 @@ class WorkspacePage extends StatelessWidget {
           for (final owner in owners) ...[
             AurisPanel(
               title: owner.name,
-              code: owner.id,
+              code: codeFor(context, owner.id),
               accent: true,
               child: Column(
                 children: [
@@ -64,7 +65,7 @@ class _Projects extends StatelessWidget {
           for (final project in projects)
             AurisPanel(
               title: project.name,
-              code: project.id,
+              code: codeFor(context, project.id),
               child: _Environments(client: client, projectId: project.id),
             ),
         ],
@@ -87,7 +88,16 @@ class _Environments extends StatelessWidget {
       builder: (context, environments) => Column(
         children: [
           for (final environment in environments)
-            AurisDataRow(label: environment.name, value: environment.id),
+            // On a phone the id squeezes the name to "TESTING AND EXPERIM…",
+            // so the name gets the row to itself; AurisDataRow needs one of
+            // value or trailing, hence the empty trailing.
+            AurisDataRow(
+              label: environment.name,
+              value: codeFor(context, environment.id),
+              trailing: codeFor(context, environment.id) == null
+                  ? const SizedBox.shrink()
+                  : null,
+            ),
         ],
       ),
     );
