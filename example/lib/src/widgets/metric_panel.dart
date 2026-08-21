@@ -65,21 +65,32 @@ class MetricPanel extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  _Tick(color: scheme.primaryDim, left: true),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: Text(
-                      title.toUpperCase(),
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: scheme.textBright,
-                        letterSpacing: 2,
-                      ),
+                  // The title group takes every spare pixel, so the trailing
+                  // controls sit hard right. A `Flexible` title beside a
+                  // `Spacer` does not: both carry flex 1, so they split the
+                  // free space, the title uses only part of its half, and the
+                  // remainder lands after the controls and drifts them inward.
+                  Expanded(
+                    child: Row(
+                      children: [
+                        _Tick(color: scheme.primaryDim, left: true),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: Text(
+                            title.toUpperCase(),
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  color: scheme.textBright,
+                                  letterSpacing: 2,
+                                ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        _Tick(color: scheme.primaryDim, left: false),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  _Tick(color: scheme.primaryDim, left: false),
-                  const Spacer(),
                   ?status,
                   if (onReload != null)
                     IconButton(
