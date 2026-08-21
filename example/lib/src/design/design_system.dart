@@ -60,12 +60,47 @@ enum AppDesignSystem {
               bevelScale: bevelScale,
               glowScale: glowScale,
             ),
-    forui =>
+    forui => _withReadableText(
       (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
           .touch
           .toApproximateMaterialTheme(),
+      (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
+          .touch
+          .colors
+          .foreground,
+    ),
     fluent || shadcn => null,
   };
+
+  /// Forces the text palette to match the surfaces this app paints.
+  ///
+  /// Found by running it: under Forui half the labels vanished. The bridge
+  /// approximates a Material TextTheme against Forui's *own* surfaces, and any
+  /// `Text` without an explicit colour inherits that — which is the wrong
+  /// colour for the panels and rails here.
+  ///
+  /// The lesson is that a design-system seam has to cover typography, not only
+  /// colour and components. A theme that agrees about backgrounds and disagrees
+  /// about foregrounds is worse than one that disagrees about both, because it
+  /// fails silently and only on some screens.
+  static ThemeData _withReadableText(ThemeData base, Color foreground) =>
+      base.copyWith(
+        textTheme: base.textTheme.apply(
+          bodyColor: foreground,
+          displayColor: foreground,
+        ),
+      );
+
+  /// Forui's own theme, which has to be installed as well as converted.
+  ///
+  /// `FTheme.of(context)` falls back to `FTheme.neutral.light.touch` when there
+  /// is no ancestor, silently — so without this the app was themed dark by the
+  /// converted Material theme while AdaptiveScheme read Forui's *light*
+  /// colours, and half the labels were white on white. Two sources of truth,
+  /// agreeing about nothing and complaining about nothing.
+  forui_kit.FThemeData foruiTheme({required bool dark}) =>
+      (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
+          .touch;
 
   /// Fluent's own theme, for the root it insists on.
   fluent_kit.FluentThemeData fluentTheme({required bool dark}) => dark

@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart' as fluent_kit;
 import 'package:flutter/material.dart';
+import 'package:forui/forui.dart' as forui_kit;
 import 'package:shadcn_flutter/shadcn_flutter.dart' as shadcn_kit;
 
 import '../theme/app_settings.dart';
@@ -43,6 +44,15 @@ class AdaptiveApp extends StatelessWidget {
           bevelScale: settings.bevelScale,
           glowScale: settings.glowScale,
         ),
+        // Forui needs its own theme installed as well as converted: without an
+        // ancestor FTheme, `FTheme.of` quietly returns the default light theme,
+        // so AdaptiveScheme read light colours onto dark surfaces.
+        builder: settings.system != AppDesignSystem.forui
+            ? null
+            : (context, child) => forui_kit.FTheme(
+                data: settings.system.foruiTheme(dark: dark),
+                child: child ?? const SizedBox.shrink(),
+              ),
         home: home,
       ),
 
