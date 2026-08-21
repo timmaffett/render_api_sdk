@@ -133,12 +133,13 @@ class CombinedMetricChart extends StatelessWidget {
                   for (final _ in indexes)
                     TouchedSpotIndicatorData(
                       FlLine(color: scheme.textDim, strokeWidth: 1),
-                      // A quarter of fl_chart's default. On a line of a thousand
-                      // points a fat dot covers the very shape being read.
+                      // Small, because on a line of a thousand points a fat
+                      // dot covers the shape being read — but not so small it
+                      // cannot be found. 1 was invisible.
                       FlDotData(
                         getDotPainter: (spot, percent, barData, index) =>
                             FlDotCirclePainter(
-                              radius: 1,
+                              radius: 2,
                               color: bar.color ?? scheme.primaryActive,
                               strokeWidth: 0,
                             ),

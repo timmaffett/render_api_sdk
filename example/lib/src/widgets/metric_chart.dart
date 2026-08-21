@@ -194,10 +194,10 @@ class _MetricChartState extends State<MetricChart> {
                       FlDotData(
                         getDotPainter: (spot, percent, barData, index) =>
                             FlDotCirclePainter(
-                              // A quarter of what it was: on a line of a
-                              // thousand points a fat dot covers the shape
-                              // being read.
-                              radius: 1,
+                              // Small, because on a line of a thousand points
+                              // a fat dot covers the shape being read — but not
+                              // so small it cannot be found. 1 was invisible.
+                              radius: 2,
                               color: bar.color ?? scheme.primaryActive,
                               strokeWidth: 0,
                             ),
