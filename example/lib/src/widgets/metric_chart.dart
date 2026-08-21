@@ -198,7 +198,10 @@ class _MetricChartState extends State<MetricChart> {
                               // a fat dot covers the shape being read — but not
                               // so small it cannot be found. 1 was invisible.
                               radius: 2,
-                              color: bar.color ?? scheme.primaryActive,
+                              color: scrubDotColor(
+                                scheme,
+                                bar.color ?? scheme.primaryActive,
+                              ),
                               strokeWidth: 0,
                             ),
                       ),

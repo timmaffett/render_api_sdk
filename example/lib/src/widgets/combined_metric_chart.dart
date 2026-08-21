@@ -140,7 +140,10 @@ class CombinedMetricChart extends StatelessWidget {
                         getDotPainter: (spot, percent, barData, index) =>
                             FlDotCirclePainter(
                               radius: 2,
-                              color: bar.color ?? scheme.primaryActive,
+                              color: scrubDotColor(
+                                scheme,
+                                bar.color ?? scheme.primaryActive,
+                              ),
                               strokeWidth: 0,
                             ),
                       ),

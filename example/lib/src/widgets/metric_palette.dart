@@ -34,3 +34,16 @@ enum MetricKind {
   /// off the shared percentage axis unless deliberately rescaled.
   bool get hasLimit => this != MetricKind.connections;
 }
+
+/// The colour every scrub dot uses, whatever line it lands on.
+///
+/// A dot that matches its line is hard to find — it is the same colour as the
+/// thing it is marking. One contrasting colour across every chart means the eye
+/// looks for one thing, and position is read from where the dot sits rather
+/// than from its hue, which the line already carries.
+///
+/// Red, except on a line that is already red — connections — where it would be
+/// invisible. That is the only collision, because red is the one line colour
+/// this borrows.
+Color scrubDotColor(AurisScheme scheme, Color lineColor) =>
+    lineColor == scheme.dangerBright ? scheme.textBright : scheme.dangerBright;
