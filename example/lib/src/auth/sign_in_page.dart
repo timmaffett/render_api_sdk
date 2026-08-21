@@ -1,7 +1,7 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_panel.dart';
 
 /// Where the API token is pasted in.
 ///
@@ -69,7 +69,7 @@ class _SignInPageState extends State<SignInPage> {
           padding: const EdgeInsets.all(24),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 460),
-            child: AurisPanel(
+            child: AdaptivePanel(
               title: 'RENDER DASHBOARD',
               code: 'render_api',
               accent: true,

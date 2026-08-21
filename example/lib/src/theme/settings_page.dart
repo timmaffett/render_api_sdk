@@ -1,8 +1,13 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'app_settings.dart';
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_surface.dart';
+import '../design/components/adaptive_panel.dart';
+import '../design/components/adaptive_data_row.dart';
+import '../design/components/adaptive_controls.dart';
+import '../design/components/adaptive_badge.dart';
+import '../design/design_system.dart';
 
 /// Live theme controls.
 ///
@@ -29,15 +34,68 @@ class SettingsPage extends StatelessWidget {
       builder: (context, _) => ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          AurisPanel(
+          AdaptivePanel(
+            title: 'DESIGN SYSTEM',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final system in AppDesignSystem.values)
+                  InkWell(
+                    onTap: () => settings.system = system,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Row(
+                        children: [
+                          Icon(
+                            system == settings.system
+                                ? Icons.radio_button_checked
+                                : Icons.radio_button_unchecked,
+                            size: 18,
+                            color: system == settings.system
+                                ? scheme.accent
+                                : scheme.textDim,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(system.label, style: text.bodyMedium),
+                                Text(
+                                  system.isMaterialTheme
+                                      ? '${system.description} · a Material theme'
+                                      : '${system.description} · replaces MaterialApp',
+                                  style: text.bodySmall?.copyWith(
+                                    color: scheme.textMid,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 8),
+                Text(
+                  'Auris and Forui are Material themes, so ordinary widgets '
+                  'restyle themselves. Fluent and Shadcn bring their own root '
+                  'widget instead — every control there goes through an '
+                  'adapter, which is what this experiment is measuring.',
+                  style: text.bodySmall?.copyWith(color: scheme.textDim),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          AdaptivePanel(
             title: 'APPEARANCE',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AurisSwitch(
+                AdaptiveSwitch(
                   value: settings.dark,
                   label: 'DARK',
-                  statusLabels: const ('DARK', 'LIGHT'),
                   onChanged: (value) => settings.dark = value,
                 ),
                 const SizedBox(height: 20),
@@ -89,7 +147,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          AurisPanel(
+          AdaptivePanel(
             title: 'TIME',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -142,7 +200,7 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          AurisPanel(
+          AdaptivePanel(
             title: 'ACCOUNT',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -162,18 +220,18 @@ class SettingsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          AurisPanel(
+          AdaptivePanel(
             title: 'ABOUT',
             child: Column(
               children: [
-                const AurisDataRow(label: 'package', value: 'render_api'),
-                const AurisDataRow(label: 'mode', value: 'read-only'),
-                AurisDataRow(
+                const AdaptiveDataRow(label: 'package', value: 'render_api'),
+                const AdaptiveDataRow(label: 'mode', value: 'read-only'),
+                AdaptiveDataRow(
                   label: 'theme',
                   value: 'auris',
-                  trailing: const AurisBadge(
+                  trailing: const AdaptiveBadge(
                     'FLUTTER',
-                    variant: AurisBadgeVariant.slate,
+                    tone: AdaptiveBadgeTone.quiet,
                   ),
                 ),
               ],
@@ -203,10 +261,9 @@ class _Swatch extends StatelessWidget {
     final scheme = AdaptiveScheme.of(context);
     return GestureDetector(
       onTap: onTap,
-      child: AurisContainer(
+      child: AdaptiveSurface(
         width: 78,
         height: 44,
-        cut: 6,
         fill: color.withValues(alpha: selected ? 0.28 : 0.12),
         borderColor: selected ? color : scheme.border,
         borderWidth: selected ? 2 : 1,

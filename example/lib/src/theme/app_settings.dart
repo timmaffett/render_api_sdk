@@ -1,4 +1,3 @@
-import 'package:auris/auris.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -75,18 +74,17 @@ class AppSettings extends ChangeNotifier {
   double get glowScale => _glowScale;
   Color? get accent => _accent;
 
-  /// Rebuilt on every change, which is what makes the settings page live.
-  ThemeData get theme => _dark
-      ? AurisTheme.dark(
-          accent: _accent,
-          bevelScale: _bevelScale,
-          glowScale: _glowScale,
-        )
-      : AurisTheme.light(
-          accent: _accent,
-          bevelScale: _bevelScale,
-          glowScale: _glowScale,
-        );
+  /// The Material theme, when the chosen system has one.
+  ///
+  /// Null for Fluent and Shadcn, which bring their own root instead — see
+  /// AdaptiveApp. Kept here so the settings page can rebuild the app when any
+  /// of these change, which is what makes the controls live.
+  ThemeData? get materialTheme => _system.materialTheme(
+    dark: _dark,
+    accent: _accent,
+    bevelScale: _bevelScale,
+    glowScale: _glowScale,
+  );
 
   set system(AppDesignSystem value) {
     _system = value;

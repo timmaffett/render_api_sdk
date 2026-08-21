@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
@@ -7,6 +6,9 @@ import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
 import 'service_detail_page.dart';
+import '../design/components/adaptive_panel.dart';
+import '../design/components/adaptive_data_row.dart';
+import '../design/components/adaptive_badge.dart';
 
 /// Every service in the workspace.
 ///
@@ -73,26 +75,26 @@ class _ServiceCard extends StatelessWidget {
           builder: (_) => ServiceDetailPage(client: client, service: service),
         ),
       ),
-      child: AurisPanel(
+      child: AdaptivePanel(
         title: service.name,
         code: codeFor(context, service.id),
         child: Column(
           children: [
-            AurisDataRow(
+            AdaptiveDataRow(
               label: 'type',
               value: service.type.wireValue,
-              trailing: AurisBadge(
+              trailing: AdaptiveBadge(
                 detail('runtime').toUpperCase(),
-                variant: switch (detail('runtime')) {
-                  'docker' => AurisBadgeVariant.gold,
-                  '—' => AurisBadgeVariant.slate,
-                  _ => AurisBadgeVariant.amber,
+                tone: switch (detail('runtime')) {
+                  'docker' => AdaptiveBadgeTone.good,
+                  '—' => AdaptiveBadgeTone.quiet,
+                  _ => AdaptiveBadgeTone.neutral,
                 },
               ),
             ),
-            AurisDataRow(label: 'plan', value: detail('plan')),
-            AurisDataRow(label: 'region', value: detail('region')),
-            AurisDataRow(
+            AdaptiveDataRow(label: 'plan', value: detail('plan')),
+            AdaptiveDataRow(label: 'region', value: detail('region')),
+            AdaptiveDataRow(
               label: 'repo',
               value: (service.repo ?? '—').replaceFirst(
                 'https://github.com/',

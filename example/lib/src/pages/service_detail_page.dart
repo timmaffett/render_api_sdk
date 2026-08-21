@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
@@ -8,6 +7,8 @@ import '../widgets/refresh_scope.dart';
 import '../widgets/metric_chart.dart';
 import '../widgets/metric_panel.dart';
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_data_row.dart';
+import '../design/components/adaptive_badge.dart';
 
 /// One service: deploys, events, environment and metrics.
 ///
@@ -73,18 +74,18 @@ class _Deploys extends StatelessWidget {
         itemBuilder: (context, i) {
           final deploy = deploys[i];
           final status = deploy.status?.wireValue ?? 'unknown';
-          return AurisDataRow(
+          return AdaptiveDataRow(
             label: _shortSha(deploy.commit?.id) ?? deploy.id,
             value: _ago(deploy.createdAt),
             highlight: i == 0,
-            trailing: AurisBadge(
+            trailing: AdaptiveBadge(
               status.toUpperCase(),
-              variant: switch (status) {
-                'live' => AurisBadgeVariant.gold,
+              tone: switch (status) {
+                'live' => AdaptiveBadgeTone.good,
                 'build_failed' ||
                 'update_failed' ||
-                'canceled' => AurisBadgeVariant.danger,
-                _ => AurisBadgeVariant.slate,
+                'canceled' => AdaptiveBadgeTone.bad,
+                _ => AdaptiveBadgeTone.quiet,
               },
             ),
           );
@@ -109,7 +110,7 @@ class _Events extends StatelessWidget {
       builder: (context, events) => ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: events.length,
-        itemBuilder: (context, i) => AurisDataRow(
+        itemBuilder: (context, i) => AdaptiveDataRow(
           label: events[i].type.toString(),
           value: _ago(events[i].timestamp),
         ),
@@ -137,7 +138,7 @@ class _EnvVars extends StatelessWidget {
         // exactly where a credential lives — this app is read-only in the
         // stronger sense of not putting secrets on screen either.
         itemBuilder: (context, i) =>
-            AurisDataRow(label: vars[i].key, value: '•' * 12),
+            AdaptiveDataRow(label: vars[i].key, value: '•' * 12),
       ),
     );
   }

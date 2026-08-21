@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../data/response_cache.dart';
@@ -6,6 +5,7 @@ import 'async_view.dart';
 import 'data_time.dart';
 import 'refresh_scope.dart';
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_surface.dart';
 
 /// A titled panel whose header carries controls, not just text.
 ///
@@ -46,8 +46,7 @@ class MetricPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = AdaptiveScheme.of(context);
 
-    return AurisContainer(
-      cut: scheme.cornerCut,
+    return AdaptiveSurface(
       borderColor: scheme.borderStrong,
       padding: EdgeInsets.zero,
       child: Column(

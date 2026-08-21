@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
@@ -6,6 +5,8 @@ import '../data/render_client.dart';
 import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
+import '../design/components/adaptive_panel.dart';
+import '../design/components/adaptive_data_row.dart';
 
 /// Workspaces, and the projects inside them.
 ///
@@ -30,14 +31,14 @@ class WorkspacePage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           for (final owner in owners) ...[
-            AurisPanel(
+            AdaptivePanel(
               title: owner.name,
               code: codeFor(context, owner.id),
               accent: true,
               child: Column(
                 children: [
-                  AurisDataRow(label: 'email', value: owner.email),
-                  AurisDataRow(label: 'type', value: owner.type.wireValue),
+                  AdaptiveDataRow(label: 'email', value: owner.email),
+                  AdaptiveDataRow(label: 'type', value: owner.type.wireValue),
                 ],
               ),
             ),
@@ -66,7 +67,7 @@ class _Projects extends StatelessWidget {
       builder: (context, projects) => Column(
         children: [
           for (final project in projects)
-            AurisPanel(
+            AdaptivePanel(
               title: project.name,
               code: codeFor(context, project.id),
               child: _Environments(client: client, projectId: project.id),
@@ -95,7 +96,7 @@ class _Environments extends StatelessWidget {
             // On a phone the id squeezes the name to "TESTING AND EXPERIM…",
             // so the name gets the row to itself; AurisDataRow needs one of
             // value or trailing, hence the empty trailing.
-            AurisDataRow(
+            AdaptiveDataRow(
               label: environment.name,
               value: codeFor(context, environment.id),
               trailing: codeFor(context, environment.id) == null

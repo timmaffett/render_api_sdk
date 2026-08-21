@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../data/api_types.dart';
@@ -9,6 +8,10 @@ import '../widgets/metric_chart.dart';
 import '../widgets/metric_palette.dart';
 import '../widgets/metric_panel.dart';
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_panel.dart';
+import '../design/components/adaptive_data_row.dart';
+import '../design/components/adaptive_controls.dart';
+import '../design/components/adaptive_badge.dart';
 
 /// One Postgres instance: what it is doing, and what it holds.
 ///
@@ -132,16 +135,13 @@ class _Sizes extends StatelessWidget {
             final size = sizes[i];
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: AurisProgressBar(
+              child: AdaptiveProgressBar(
                 // Relative to the largest object, so the bar compares things
                 // rather than implying a capacity it does not know.
                 value: largest == 0 ? 0 : size.bytes / largest,
                 label: size.name,
                 valueLabel: _bytes(size.bytes),
-                segments: 24,
-                variant: size.index == null
-                    ? AurisProgressVariant.primary
-                    : AurisProgressVariant.secondary,
+                secondary: size.index != null,
               ),
             );
           },
@@ -175,7 +175,7 @@ class _Queries extends StatelessWidget {
           final query = queries[i];
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: AurisPanel(
+            child: AdaptivePanel(
               title: '${query.calls} calls',
               code: '${query.meanMs.toStringAsFixed(2)} ms mean',
               child: Column(
@@ -187,11 +187,11 @@ class _Queries extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 8),
-                  AurisDataRow(
+                  AdaptiveDataRow(
                     label: 'total',
                     value: '${query.totalMs.toStringAsFixed(1)} ms',
                   ),
-                  AurisDataRow(label: 'rows', value: '${query.rows}'),
+                  AdaptiveDataRow(label: 'rows', value: '${query.rows}'),
                 ],
               ),
             ),
@@ -222,16 +222,16 @@ class _Activity extends StatelessWidget {
         itemCount: processes.length,
         itemBuilder: (context, i) {
           final process = processes[i];
-          return AurisDataRow(
+          return AdaptiveDataRow(
             label: 'pid ${process.pid}',
             value: process.application.isEmpty
                 ? process.state
                 : '${process.state} · ${process.application}',
-            trailing: AurisBadge(
+            trailing: AdaptiveBadge(
               '${process.seconds.toStringAsFixed(1)}s',
-              variant: process.seconds > 5
-                  ? AurisBadgeVariant.danger
-                  : AurisBadgeVariant.slate,
+              tone: process.seconds > 5
+                  ? AdaptiveBadgeTone.bad
+                  : AdaptiveBadgeTone.quiet,
             ),
           );
         },

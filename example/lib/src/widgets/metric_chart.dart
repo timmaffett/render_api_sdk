@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +6,7 @@ import 'metric_palette.dart';
 import '../theme/app_settings.dart';
 import 'data_time.dart';
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_surface.dart';
 
 /// How a metric's values are labelled.
 enum MetricScale {
@@ -334,8 +334,7 @@ class _ScaleToggle extends StatelessWidget {
       final selected = value == scale;
       return GestureDetector(
         onTap: () => onChanged(value),
-        child: AurisContainer(
-          cut: 4,
+        child: AdaptiveSurface(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           fill: selected ? scheme.accentDim.withValues(alpha: 0.3) : null,
           borderColor: selected ? scheme.accent : scheme.border,

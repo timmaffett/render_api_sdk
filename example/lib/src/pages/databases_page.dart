@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
 
@@ -9,6 +8,9 @@ import '../widgets/responsive_scaffold.dart';
 import '../widgets/combined_metric_chart.dart';
 import '../widgets/metric_palette.dart';
 import 'postgres_detail_page.dart';
+import '../design/components/adaptive_panel.dart';
+import '../design/components/adaptive_data_row.dart';
+import '../design/components/adaptive_badge.dart';
 
 /// render.Postgres and key value stores.
 ///
@@ -41,22 +43,25 @@ class DatabasesPage extends StatelessWidget {
                     PostgresDetailPage(client: client, database: db),
               ),
             ),
-            child: AurisPanel(
+            child: AdaptivePanel(
               title: db.name,
               code: codeFor(context, db.id),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  AurisDataRow(
+                  AdaptiveDataRow(
                     label: 'status',
                     value: db.status.wireValue,
-                    trailing: AurisBadge(
+                    trailing: AdaptiveBadge(
                       (db.plan.wireValue).toUpperCase(),
-                      variant: AurisBadgeVariant.slate,
+                      tone: AdaptiveBadgeTone.quiet,
                     ),
                   ),
-                  AurisDataRow(label: 'region', value: db.region.wireValue),
-                  AurisDataRow(label: 'version', value: db.version.wireValue),
+                  AdaptiveDataRow(label: 'region', value: db.region.wireValue),
+                  AdaptiveDataRow(
+                    label: 'version',
+                    value: db.version.wireValue,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'ALL METRICS · 24h',

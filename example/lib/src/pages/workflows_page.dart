@@ -1,4 +1,3 @@
-import 'package:auris/auris_widgets.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:render_api/render_api.dart' as render;
@@ -8,6 +7,8 @@ import '../widgets/load_once.dart';
 import '../widgets/refresh_scope.dart';
 import '../widgets/responsive_scaffold.dart';
 import '../design/adaptive_scheme.dart';
+import '../design/components/adaptive_panel.dart';
+import '../design/components/adaptive_data_row.dart';
 
 /// Workflow services, their tasks, and how their runs have been going.
 ///
@@ -37,17 +38,20 @@ class WorkflowsPage extends StatelessWidget {
         separatorBuilder: (_, _) => const SizedBox(height: 12),
         itemBuilder: (context, i) {
           final workflow = workflows[i];
-          return AurisPanel(
+          return AdaptivePanel(
             title: workflow.name,
             code: codeFor(context, workflow.id),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                AurisDataRow(
+                AdaptiveDataRow(
                   label: 'root dir',
                   value: workflow.buildConfig.rootDir ?? '/',
                 ),
-                AurisDataRow(label: 'region', value: workflow.region.wireValue),
+                AdaptiveDataRow(
+                  label: 'region',
+                  value: workflow.region.wireValue,
+                ),
                 const SizedBox(height: 12),
                 _RunOutcomes(client: client, workflowId: workflow.id),
               ],
