@@ -93,6 +93,28 @@ maintenance liability — a new colliding schema breaks the build somewhere else
 entirely. Reach for `hide` only in a narrow file where you know you want
 Flutter's meaning of every shared name.
 
+**The spec is the contract, and it is sometimes wrong.** Two failure modes,
+both real:
+
+- *Fields it does not declare.* `GET /services` sends `autoDeployTrigger` and
+  the spec never mentions it. Every model keeps `rawJson` — the map it decoded
+  from, by reference — and derives `unknownFields` from it, so nothing is lost.
+  `render_probes/bin/spec_drift.dart` reports them across an account.
+- *Shapes it describes wrongly.* `/metrics/bandwidth-sources` declares an
+  object wrapping `data`, labels as an object and epoch timestamps; the API
+  sends the ordinary array-of-series. Generated from the spec the call could
+  not be made at all.
+
+Corrections go in `_responseOverrides` in `tool/generate.dart`, never in the
+generated output and never in the vendored spec. The output is regenerated;
+the spec must stay a faithful mirror of Render's, because `test/parity_test.dart`
+and `doc/api/` derive from it too.
+
+**A response that will not decode must not lose the payload.** All 208
+operations decode through `RenderApiClient.decode`, which wraps a failure in
+`RenderDecodeException` carrying what actually arrived. Keep that: a spec bug
+should cost the typed view, not the data.
+
 **Verify a doc snippet by compiling it.** The README shipped a non-compiling
 example in 0.1.0 and the library doc comment shipped a different one through
 0.1.3, both referring to a facade removed before release. Reading them found

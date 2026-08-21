@@ -176,6 +176,28 @@ endpoints wrap their results, which errors carry a hint worth showing, and the
 three schema names that collide with Flutter's own. It is macOS, iOS and
 Android — Render's API sends no CORS headers, so there is no useful web build.
 
+### When the spec and the API disagree
+
+Every model keeps the JSON it decoded from, because Render's specification does
+not always describe what Render sends:
+
+```dart
+final service = (await render.listServices(limit: 1)).first.service;
+
+service.name;              // typed, from the spec
+service.unknownFields;     // {autoDeployTrigger: commit} — sent, undeclared
+service.rawJson;           // the whole map, by reference
+```
+
+`rawJson` is the very map the response decoded to — nothing is copied or
+re-encoded — and `unknownFields` derives from it the keys the type does not
+declare. `toJson()` merges them back, so fetching an object and sending it
+again does not silently drop them.
+
+If a response cannot be decoded at all, `RenderDecodeException` carries the
+payload, the method and the path. A specification error costs you the typed
+view, never the data.
+
 ### Using it with Flutter
 
 Render's spec has schemas called `State`, `Route` and `Image`, and this package
