@@ -76,9 +76,14 @@ class _SparklinePainter extends CustomPainter {
     final points = series.points;
     if (points.isEmpty) return;
 
-    // A flat series would divide by zero; give it a baseline instead so it
-    // draws along the bottom rather than vanishing.
-    final maxValue = series.max == 0 ? 1.0 : series.max;
+    // Scaled to the data's own range, not to zero. Memory sits at a high,
+    // nearly constant value, so a zero-based axis painted it as a solid filled
+    // block that showed nothing; against its own range the variation is
+    // visible. A perfectly flat series would divide by zero, so it gets a
+    // nominal range and draws through the middle.
+    final low = series.min;
+    final high = series.max;
+    final span = (high - low).abs() < 1e-9 ? 1.0 : high - low;
     const inset = 3.0;
     final width = size.width - inset * 2;
     final usable = size.height - inset * 2;
@@ -87,7 +92,9 @@ class _SparklinePainter extends CustomPainter {
       final x = points.length == 1
           ? inset + width / 2
           : inset + width * (i / (points.length - 1));
-      final y = inset + usable * (1 - points[i].value / maxValue);
+      final y = (high - low).abs() < 1e-9
+          ? inset + usable / 2
+          : inset + usable * (1 - (points[i].value - low) / span);
       return Offset(x, y);
     }
 

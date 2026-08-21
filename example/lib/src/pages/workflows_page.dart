@@ -119,10 +119,17 @@ class _RunOutcomes extends StatelessWidget {
                         toY: entries[i].value.toDouble(),
                         width: 18,
                         borderRadius: BorderRadius.zero,
+                        // The spec has both 'completed' and 'succeeded';
+                        // Render returns 'completed' in practice, so matching
+                        // only 'succeeded' left every good run painted in the
+                        // neutral colour. Both are a success.
                         color: switch (entries[i].key) {
-                          'succeeded' => scheme.success,
+                          'completed' || 'succeeded' => scheme.success,
                           'failed' => scheme.danger,
                           'canceled' => scheme.secondary,
+                          'running' ||
+                          'pending' ||
+                          'paused' => scheme.primaryActive,
                           _ => scheme.primaryDim,
                         },
                       ),

@@ -205,7 +205,7 @@ class _MetricPanel extends StatelessWidget {
               children: [
                 for (final s in withData.take(2)) ...[
                   Text(
-                    '${s.label}   ${s.latest.toStringAsFixed(1)} ${s.unit ?? ''}',
+                    '${s.label}   ${s.formattedLatest}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(height: 4),

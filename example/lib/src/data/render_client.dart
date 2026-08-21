@@ -202,19 +202,22 @@ class MetricSeries {
     List<Object?>? values,
     String? unit,
   ) {
-    // Labels are {field, value} pairs. Render commonly repeats the same
-    // resource id across several fields — service, resource and instance all
-    // carry it — so joining them raw gives "srv-abc · srv-abc · srv-abc".
-    // Deduplicating leaves the part that actually distinguishes one series
-    // from its siblings, which for a multi-instance service is the instance.
-    final label = labels == null || labels.isEmpty
-        ? 'value'
-        : {
-            for (final l in labels) (l as dynamic).value?.toString() ?? '',
-          }.where((v) => v.isNotEmpty).join(' · ');
+    // Labels are {field, value} pairs, and Render repeats the resource id
+    // across several of them — service, resource and instance all carry it,
+    // with the instance value having the service id as its prefix. Joining
+    // them raw gave "srv-abc-drv8w · srv-abc · srv-abc" on every chart.
+    // Keeping the longest distinct value leaves the one that actually
+    // identifies this series, which for a multi-instance service is the
+    // instance.
+    final labelValues =
+        {
+            for (final label in labels ?? const [])
+              (label as dynamic).value?.toString() ?? '',
+          }.where((value) => value.isNotEmpty).toList()
+          ..sort((a, b) => b.length.compareTo(a.length));
 
     return MetricSeries(
-      label: label.isEmpty ? 'value' : label,
+      label: labelValues.isEmpty ? 'value' : labelValues.first,
       unit: unit,
       points: [
         for (final v in values ?? const [])
@@ -238,6 +241,36 @@ class MetricSeries {
       : points.map((p) => p.value).reduce((a, b) => a > b ? a : b);
 
   double get latest => points.isEmpty ? 0 : points.last.value;
+
+  double get min => points.isEmpty
+      ? 0
+      : points.map((p) => p.value).reduce((a, b) => a < b ? a : b);
+
+  /// The latest reading, scaled to a unit a person can read.
+  ///
+  /// Render reports memory in bytes and CPU in cores, so the raw numbers are
+  /// "60145664.0 bytes" and "0.0 cpu" — one unreadable, the other rounded away
+  /// entirely, since a mostly-idle service uses a few thousandths of a core.
+  String get formattedLatest => switch (unit) {
+    'bytes' => _bytes(latest),
+    // Render reports CPU in cores, and an idle free instance sits in the
+    // thousandths — "0.000 cores" at three decimals, which reads as broken.
+    // Millicores keep it legible without inventing precision.
+    'cpu' =>
+      latest < 0.1
+          ? '${(latest * 1000).toStringAsFixed(1)} mCPU'
+          : '${latest.toStringAsFixed(2)} cores',
+    'mb' => '${latest.toStringAsFixed(1)} MB',
+    final other =>
+      '${latest.toStringAsFixed(1)}${other == null ? '' : ' $other'}',
+  };
+
+  static String _bytes(double value) {
+    if (value >= 1e9) return '${(value / 1e9).toStringAsFixed(2)} GB';
+    if (value >= 1e6) return '${(value / 1e6).toStringAsFixed(1)} MB';
+    if (value >= 1e3) return '${(value / 1e3).toStringAsFixed(1)} kB';
+    return '${value.toStringAsFixed(0)} B';
+  }
 }
 
 class MetricPoint {
