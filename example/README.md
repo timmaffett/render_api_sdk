@@ -85,6 +85,24 @@ No state-management package. A `ChangeNotifier` for the theme, another for the
 token, `FutureBuilder` for loads. An example for an API client should be about
 the API client.
 
+## Cached, and refreshed on demand
+
+Render rate limits hard — the Postgres introspection endpoints allow about one
+request a minute and answer `Retry-After: 51`. Reloading a tab twice in a row
+would otherwise replace real data with an error, so the app forgets something
+it already knew.
+
+`lib/src/data/response_cache.dart` is an `http.Client` decorator that keeps the
+last good response for every GET, in memory and in `shared_preferences`, and
+replays it when a fresh one cannot be had. It sits at the HTTP layer rather
+than around the typed loaders, so every endpoint gets it without knowing and a
+replayed body decodes through exactly the same path a live one does.
+
+Nothing reloads on its own. The refresh button in the top right reloads
+whatever is on screen; when the refresh cannot get through, the data stays and
+the button is labelled `CACHED 14:32` with the time it was actually read.
+Cached and stale beats blank and correct.
+
 ## Tests
 
 ```bash
