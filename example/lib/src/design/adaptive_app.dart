@@ -4,6 +4,7 @@ import 'package:forui/forui.dart' as forui_kit;
 import 'package:shadcn_flutter/shadcn_flutter.dart' as shadcn_kit;
 
 import '../theme/app_settings.dart';
+import 'adaptive_scheme.dart';
 import 'design_system.dart';
 
 /// The root, chosen by the current design system.
@@ -61,11 +62,26 @@ class AdaptiveApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: settings.system.fluentTheme(dark: dark),
         // Material widgets below still need a Material ancestor for ink and
-        // text styling, and FluentApp does not provide one.
-        builder: (context, child) => Material(
-          color: fluent_kit.FluentTheme.of(context).scaffoldBackgroundColor,
-          child: child ?? const SizedBox.shrink(),
-        ),
+        // text styling, and FluentApp does not provide one. The text colour
+        // matters as much as the background: without it every unstyled Text
+        // inherits Material's default, which is near-black on Fluent's dark
+        // surfaces.
+        builder: (context, child) {
+          final theme = fluent_kit.FluentTheme.of(context);
+          // Composited, because Fluent's own background colour is translucent
+          // — see AdaptiveScheme.fluentBase.
+          final base = AdaptiveScheme.fluentBase(theme.brightness);
+          return Material(
+            color: Color.alphaBlend(theme.scaffoldBackgroundColor, base),
+            textStyle: TextStyle(
+              color: Color.alphaBlend(
+                theme.resources.textFillColorPrimary,
+                base,
+              ),
+            ),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         home: home,
       ),
 
@@ -73,10 +89,14 @@ class AdaptiveApp extends StatelessWidget {
         title: title,
         debugShowCheckedModeBanner: false,
         theme: settings.system.shadcnTheme(dark: dark),
-        builder: (context, child) => Material(
-          color: shadcn_kit.Theme.of(context).colorScheme.background,
-          child: child ?? const SizedBox.shrink(),
-        ),
+        builder: (context, child) {
+          final theme = shadcn_kit.Theme.of(context);
+          return Material(
+            color: theme.colorScheme.background,
+            textStyle: TextStyle(color: theme.colorScheme.foreground),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         home: home,
       ),
     };

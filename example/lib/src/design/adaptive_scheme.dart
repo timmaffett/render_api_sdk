@@ -131,16 +131,37 @@ class AdaptiveScheme {
     );
   }
 
+  /// The opaque colour Fluent expects to be composited over.
+  ///
+  /// Measured, because guessing was wrong twice: Fluent's own
+  /// `scaffoldBackgroundColor` is `#40ffffff` in light and `#09ffffff` in dark
+  /// — translucent white, both of them. *Every* colour in the theme is an
+  /// overlay, because Windows paints them over mica and the theme never carries
+  /// the backdrop. An app that paints them flat gets grey, which is exactly
+  /// what happened.
+  ///
+  /// These are Windows 11's mica base colours, and supplying one is the only
+  /// way to recover the colour Fluent intends a reader to see.
+  static Color fluentBase(Brightness brightness) =>
+      brightness == Brightness.dark
+      ? const Color(0xFF202020)
+      : const Color(0xFFF3F3F3);
+
   static AdaptiveScheme _fromFluent(fluent_kit.FluentThemeData t) {
     final r = t.resources;
+    final base = fluentBase(t.brightness);
+    final page = Color.alphaBlend(t.scaffoldBackgroundColor, base);
+
+    Color over(Color c) => Color.alphaBlend(c, page);
+
     return AdaptiveScheme(
-      page: t.scaffoldBackgroundColor,
-      panel: r.cardBackgroundFillColorDefault,
-      inset: r.subtleFillColorSecondary,
-      textBright: r.textFillColorPrimary,
-      textMid: r.textFillColorSecondary,
-      textDim: r.textFillColorTertiary,
-      border: r.controlStrokeColorDefault,
+      page: page,
+      panel: over(r.cardBackgroundFillColorDefault),
+      inset: over(r.subtleFillColorSecondary),
+      textBright: over(r.textFillColorPrimary),
+      textMid: over(r.textFillColorSecondary),
+      textDim: over(r.textFillColorTertiary),
+      border: over(r.controlStrokeColorDefault),
       accent: t.accentColor.defaultBrushFor(t.brightness),
       danger: fluent_kit.Colors.red,
       dangerStrong: fluent_kit.Colors.red.lighter,
@@ -149,7 +170,7 @@ class AdaptiveScheme {
       accentDim: t.accentColor
           .defaultBrushFor(t.brightness)
           .withValues(alpha: 0.5),
-      borderStrong: r.controlStrongStrokeColorDefault,
+      borderStrong: over(r.controlStrongStrokeColorDefault),
       cornerCut: 0,
     );
   }
