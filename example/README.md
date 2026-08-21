@@ -103,6 +103,16 @@ whatever is on screen; when the refresh cannot get through, the data stays and
 the button is labelled `CACHED 14:32` with the time it was actually read.
 Cached and stale beats blank and correct.
 
+That indicator is the whole screen's *oldest* reading, which says less than it
+looks like on a page of several independent requests — the metrics tab makes
+seven, and CPU can be live while disk is replayed. So views that own their
+request carry their own `read 14:32` / `cached 14:29`, attributed by running
+each loader in a zone the cache records against.
+
+Where a whole tab comes from one response — sizes, queries, activity are one
+call each — there is one stamp for the tab rather than the same time repeated
+on every row.
+
 ## Tests
 
 ```bash

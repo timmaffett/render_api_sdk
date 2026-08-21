@@ -1,6 +1,9 @@
+import 'package:auris/auris_widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../data/response_cache.dart';
 import 'async_view.dart';
+import 'refresh_scope.dart';
 
 /// Starts a load once, and offers to run it again.
 ///
@@ -20,6 +23,7 @@ class LoadOnce<T> extends StatefulWidget {
     this.emptyMessage = 'Nothing here.',
     this.onUnauthorized,
     this.refresh,
+    this.stamp = false,
   });
 
   final Future<T> Function() load;
@@ -32,12 +36,32 @@ class LoadOnce<T> extends StatefulWidget {
   /// the button.
   final Listenable? refresh;
 
+  /// Shows when this view's own data was read.
+  ///
+  /// Worth it where a page makes several independent requests — the metrics
+  /// tab makes seven, and one panel can be live while another is replayed from
+  /// cache, which the single indicator in the app bar cannot express. Not worth
+  /// it where a whole tab comes from one response and every stamp would read
+  /// the same.
+  final bool stamp;
+
   @override
   State<LoadOnce<T>> createState() => _LoadOnceState<T>();
 }
 
 class _LoadOnceState<T> extends State<LoadOnce<T>> {
-  late Future<T> _future = widget.load();
+  late Future<T> _future = _start();
+  DataAge? _age;
+
+  Future<T> _start() {
+    final cache = RefreshScope.maybeOf(context)?.cache;
+    if (cache == null || !widget.stamp) return widget.load();
+    return cache.observe(widget.load).then((result) {
+      final (value, age) = result;
+      if (mounted) setState(() => _age = age);
+      return value;
+    });
+  }
 
   @override
   void initState() {
@@ -52,15 +76,45 @@ class _LoadOnceState<T> extends State<LoadOnce<T>> {
   }
 
   void _reload() {
-    if (mounted) setState(() => _future = widget.load());
+    if (mounted) setState(() => _future = _start());
   }
 
   @override
-  Widget build(BuildContext context) => AsyncView<T>(
-    future: _future,
-    emptyMessage: widget.emptyMessage,
-    onUnauthorized: widget.onUnauthorized,
-    onRetry: () => setState(() => _future = widget.load()),
-    builder: widget.builder,
-  );
+  Widget build(BuildContext context) {
+    final view = AsyncView<T>(
+      future: _future,
+      emptyMessage: widget.emptyMessage,
+      onUnauthorized: widget.onUnauthorized,
+      onRetry: () => setState(() => _future = _start()),
+      builder: widget.builder,
+    );
+    final age = _age;
+    final at = age?.at;
+    if (!widget.stamp || age == null || at == null) return view;
+
+    final scheme = Theme.of(context).extension<AurisScheme>()!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
+            '${age.fromCache ? 'cached' : 'read'} ${_clock(at)}',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: age.fromCache ? scheme.secondary : scheme.textDim,
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Flexible(child: view),
+      ],
+    );
+  }
+}
+
+String _clock(DateTime at) {
+  final local = at.toLocal();
+  return '${local.hour.toString().padLeft(2, '0')}:'
+      '${local.minute.toString().padLeft(2, '0')}';
 }

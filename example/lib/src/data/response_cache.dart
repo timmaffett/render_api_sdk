@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -41,10 +42,38 @@ class ResponseCache extends http.BaseClient with ChangeNotifier {
   DateTime? get staleSince => _staleSince;
   DateTime? _staleSince;
 
+  /// When the data a single view is showing was actually read from Render.
+  ///
+  /// The indicator in the app bar is the whole screen's oldest reading, which
+  /// on a page of several independent requests says less than it appears to:
+  /// the metrics tab makes seven, and CPU can be live while disk is replayed
+  /// from cache.
+  ///
+  /// Requests are attributed to a view by running its loader in a zone, so
+  /// nothing has to thread a key through the typed loaders, and a view that
+  /// makes three calls is stamped with the oldest of them.
+  Future<(T, DataAge)> observe<T>(Future<T> Function() load) async {
+    final touched = <String>[];
+    final value = await runZoned(load, zoneValues: {#renderCacheKeys: touched});
+
+    DateTime? oldest;
+    var replayed = false;
+    for (final key in touched) {
+      if (_replayed.contains(key)) replayed = true;
+      final at = _freshAt[key] ?? _storedAt(key);
+      if (at != null && (oldest == null || at.isBefore(oldest))) oldest = at;
+    }
+    return (value, DataAge(at: oldest, fromCache: replayed));
+  }
+
+  /// Keys whose last answer came from here rather than from Render.
+  final _replayed = <String>{};
+
   /// Forgets that anything was stale, before a refresh re-establishes it.
   void beginRefresh() {
     _servingStale = false;
     _staleSince = null;
+    _replayed.clear();
     notifyListeners();
   }
 
@@ -52,6 +81,7 @@ class ResponseCache extends http.BaseClient with ChangeNotifier {
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     if (request.method != 'GET') return _inner.send(request);
     final key = request.url.toString();
+    (Zone.current[#renderCacheKeys] as List<String>?)?.add(key);
 
     try {
       final response = await http.Response.fromStream(
@@ -60,6 +90,7 @@ class ResponseCache extends http.BaseClient with ChangeNotifier {
       if (response.statusCode >= 200 && response.statusCode < 300) {
         _store(key, response.body);
         _freshAt[key] = DateTime.now();
+        _replayed.remove(key);
         return _streamed(response, request);
       }
       final cached = _read(key);
@@ -77,6 +108,7 @@ class ResponseCache extends http.BaseClient with ChangeNotifier {
 
   void _markStale(String key) {
     _servingStale = true;
+    _replayed.add(key);
     final at = _freshAt[key] ?? _storedAt(key);
     if (at != null && (_staleSince == null || at.isBefore(_staleSince!))) {
       _staleSince = at;
@@ -152,4 +184,15 @@ class _Entry {
   const _Entry(this.body, this.at);
   final String body;
   final DateTime at;
+}
+
+/// When one view's data was read, and whether Render answered.
+class DataAge {
+  const DataAge({this.at, this.fromCache = false});
+
+  /// Null when nothing was fetched — a view built entirely from memory.
+  final DateTime? at;
+
+  /// True if any of this view's requests were replayed rather than answered.
+  final bool fromCache;
 }

@@ -196,6 +196,10 @@ class _ChartPanel extends StatelessWidget {
     return AurisPanel(
       title: title,
       child: LoadOnce<MetricChartData>(
+        // These panels each make their own requests and do not fail together,
+        // so each says when its own data was read. The indicator in the app
+        // bar is the whole screen's oldest, which cannot express that.
+        stamp: true,
         refresh: RefreshScope.of(context),
         load: () => load(),
         builder: (context, data) => data.isEmpty

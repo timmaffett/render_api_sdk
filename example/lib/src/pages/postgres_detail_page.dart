@@ -97,6 +97,10 @@ class _Panel extends StatelessWidget {
     return AurisPanel(
       title: title,
       child: LoadOnce<MetricChartData>(
+        // These panels each make their own requests and do not fail together,
+        // so each says when its own data was read. The indicator in the app
+        // bar is the whole screen's oldest, which cannot express that.
+        stamp: true,
         refresh: RefreshScope.of(context),
         load: () => load(),
         builder: (context, data) => data.isEmpty
@@ -119,6 +123,9 @@ class _Sizes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<PostgresSize>>(
+      // One request answers this whole tab, so one stamp covers every row in
+      // it; a note per card would repeat the same time down the page.
+      stamp: true,
       refresh: RefreshScope.of(context),
       load: () => client.sizes(id),
       emptyMessage: 'No tables yet.',
@@ -159,6 +166,9 @@ class _Queries extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<TopQuery>>(
+      // One request answers this whole tab, so one stamp covers every row in
+      // it; a note per card would repeat the same time down the page.
+      stamp: true,
       refresh: RefreshScope.of(context),
       load: () => client.topQueries(id),
       emptyMessage:
@@ -207,6 +217,9 @@ class _Activity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoadOnce<List<PostgresProcess>>(
+      // One request answers this whole tab, so one stamp covers every row in
+      // it; a note per card would repeat the same time down the page.
+      stamp: true,
       refresh: RefreshScope.of(context),
       load: () => client.processes(id),
       emptyMessage: 'Nothing running.',
