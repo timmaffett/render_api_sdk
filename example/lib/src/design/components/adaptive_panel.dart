@@ -42,7 +42,9 @@ class AdaptivePanel extends StatelessWidget {
     final scheme = AdaptiveScheme.of(context);
 
     // Auris's own panel, when nothing extra is needed from the header.
-    if (system == AppDesignSystem.auris && trailing == null) {
+    if (system == AppDesignSystem.auris &&
+        trailing == null &&
+        aurisThemeReady(context)) {
       return auris_kit.AurisPanel(
         title: title,
         code: code,

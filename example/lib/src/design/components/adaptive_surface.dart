@@ -38,7 +38,7 @@ class AdaptiveSurface extends StatelessWidget {
     final scheme = AdaptiveScheme.of(context);
     final system = DesignScope.of(context);
 
-    if (system == AppDesignSystem.auris) {
+    if (system == AppDesignSystem.auris && aurisThemeReady(context)) {
       return auris_kit.AurisContainer(
         cut: scheme.cornerCut,
         fill: fill,

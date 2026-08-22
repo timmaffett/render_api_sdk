@@ -26,7 +26,8 @@ class AdaptiveBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = AdaptiveScheme.of(context);
 
-    if (DesignScope.of(context) == AppDesignSystem.auris) {
+    if (DesignScope.of(context) == AppDesignSystem.auris &&
+        aurisThemeReady(context)) {
       return auris_kit.AurisBadge(
         label,
         variant: switch (tone) {

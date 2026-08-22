@@ -28,7 +28,10 @@ class AdaptiveDecorator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (DesignScope.of(context) != AppDesignSystem.auris) return child;
+    if (DesignScope.of(context) != AppDesignSystem.auris ||
+        !aurisThemeReady(context)) {
+      return child;
+    }
 
     final scheme = AdaptiveScheme.of(context);
     return switch (ornament) {

@@ -60,14 +60,16 @@ enum AppDesignSystem {
               bevelScale: bevelScale,
               glowScale: glowScale,
             ),
-    forui => _withReadableText(
-      (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
-          .touch
-          .toApproximateMaterialTheme(),
-      (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
-          .touch
-          .colors
-          .foreground,
+    forui => _consistentText(
+      _withReadableText(
+        (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
+            .touch
+            .toApproximateMaterialTheme(),
+        (dark ? forui_kit.FTheme.neutral.dark : forui_kit.FTheme.neutral.light)
+            .touch
+            .colors
+            .foreground,
+      ),
     ),
     fluent || shadcn => null,
   };
@@ -90,6 +92,46 @@ enum AppDesignSystem {
           displayColor: foreground,
         ),
       );
+
+  /// Makes every text style agree about `inherit`.
+  ///
+  /// Found by switching Auris to Forui and reading the error rather than
+  /// guessing at it. Every `Material` wraps its child in an
+  /// `AnimatedDefaultTextStyle` that cross-fades when the theme changes, and
+  /// `TextStyle.lerp` refuses outright to interpolate two styles whose
+  /// `inherit` flags differ. Auris's styles are fully resolved — `inherit:
+  /// false` — while Forui's converted ones are `inherit: true`, so the very
+  /// first frame of the transition threw.
+  ///
+  /// Nothing in either package is wrong. The fault only exists because these
+  /// themes are being swapped at runtime, which neither was written to expect:
+  /// a Flutter app normally picks a text theme once. Normalising to `inherit:
+  /// true` — Flutter's own default, and the forgiving one, since unspecified
+  /// fields fall back rather than resolving to nothing — makes any pair
+  /// interpolable.
+  static ThemeData _consistentText(ThemeData base) {
+    TextStyle? fix(TextStyle? style) => style?.copyWith(inherit: true);
+    final t = base.textTheme;
+    return base.copyWith(
+      textTheme: TextTheme(
+        displayLarge: fix(t.displayLarge),
+        displayMedium: fix(t.displayMedium),
+        displaySmall: fix(t.displaySmall),
+        headlineLarge: fix(t.headlineLarge),
+        headlineMedium: fix(t.headlineMedium),
+        headlineSmall: fix(t.headlineSmall),
+        titleLarge: fix(t.titleLarge),
+        titleMedium: fix(t.titleMedium),
+        titleSmall: fix(t.titleSmall),
+        bodyLarge: fix(t.bodyLarge),
+        bodyMedium: fix(t.bodyMedium),
+        bodySmall: fix(t.bodySmall),
+        labelLarge: fix(t.labelLarge),
+        labelMedium: fix(t.labelMedium),
+        labelSmall: fix(t.labelSmall),
+      ),
+    );
+  }
 
   /// Forui's own theme, which has to be installed as well as converted.
   ///

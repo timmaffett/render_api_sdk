@@ -30,7 +30,8 @@ class AdaptiveDataRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (DesignScope.of(context) == AppDesignSystem.auris) {
+    if (DesignScope.of(context) == AppDesignSystem.auris &&
+        aurisThemeReady(context)) {
       return auris_kit.AurisDataRow(
         label: label,
         value: value,

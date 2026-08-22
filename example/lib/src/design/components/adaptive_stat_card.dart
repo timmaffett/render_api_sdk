@@ -41,7 +41,15 @@ class AdaptiveStatCard extends StatelessWidget {
 
     return switch (system) {
       // Auris ships this one, so nothing is reinvented.
-      AppDesignSystem.auris => auris_kit.AurisStatCard(
+      AppDesignSystem.auris when aurisThemeReady(context) =>
+        auris_kit.AurisStatCard(
+          label: label,
+          value: value,
+          unit: unit,
+          delta: delta,
+        ),
+      AppDesignSystem.auris => _Body(
+        scheme: scheme,
         label: label,
         value: value,
         unit: unit,

@@ -171,11 +171,9 @@ class AdaptiveSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => switch (DesignScope.of(context)) {
-    AppDesignSystem.auris => auris_kit.AurisSwitch(
-      value: value,
-      onChanged: onChanged,
-      label: label,
-    ),
+    AppDesignSystem.auris when aurisThemeReady(context) =>
+      auris_kit.AurisSwitch(value: value, onChanged: onChanged, label: label),
+    AppDesignSystem.auris => Switch(value: value, onChanged: onChanged),
     AppDesignSystem.forui => Switch(value: value, onChanged: onChanged),
     AppDesignSystem.fluent => fluent_kit.ToggleSwitch(
       checked: value,
@@ -279,7 +277,8 @@ class AdaptiveProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = AdaptiveScheme.of(context);
 
-    if (DesignScope.of(context) == AppDesignSystem.auris) {
+    if (DesignScope.of(context) == AppDesignSystem.auris &&
+        aurisThemeReady(context)) {
       return auris_kit.AurisProgressBar(
         value: value,
         label: label,
